@@ -102,6 +102,20 @@ public sealed class UxWalkthroughTests
         Settle();
         ws.Environments!.Environments.Select(e => e.Name).ShouldContain("Prod");
 
+        // 6b. Import from Postman: the new collection opens in the tree; the report lists what needs attention.
+        dialogs.FilesToPick.AddRange([ImportTests.Sample("shop.postman_collection.json"), ImportTests.Sample("dev.postman_environment.json")]);
+        Click(window, Rail(window, 0));
+        await ws.ImportFromPostmanCommand.ExecuteAsync(null);
+        Settle();
+        ws.Collections.ShouldContain(c => c.Name == "Shop API");
+        ScreenTests.Capture(window, "ux-06b-imported-tree");
+        var reportWindow = new JetApi.Desktop.Views.Dialogs.ImportReportDialog(dialogs.ImportReports.Last());
+        reportWindow.Show();
+        Settle();
+        ScreenTests.Capture(reportWindow, "ux-06c-import-report");
+        reportWindow.Close();
+        Click(window, Rail(window, 1));
+
         // 7. History, then back to collections.
         Click(window, Rail(window, 2));
         ws.IsHistoryVisible.ShouldBeTrue();
@@ -167,10 +181,16 @@ public sealed class UxWalkthroughTests
         Dispatcher.UIThread.RunJobs();
     }
 
-    private static TextBlock TreeRow(Window window, string name) =>
-        window.GetVisualDescendants().OfType<TreeViewItem>()
-            .Select(item => item.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault(t => t.Text == name))
+    // Like a person, scrolls the row into view before clicking it.
+    private static TextBlock TreeRow(Window window, string name)
+    {
+        var row = window.GetVisualDescendants().OfType<TreeViewItem>()
+            .Select(item => item.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault(t => t.Text == name && t.IsEffectivelyVisible))
             .First(text => text is not null)!;
+        row.BringIntoView();
+        Settle();
+        return row;
+    }
 
     private static RadioButton Rail(Window window, int index) =>
         window.GetVisualDescendants().OfType<RadioButton>().Where(r => r.Classes.Contains("rail")).ElementAt(index);

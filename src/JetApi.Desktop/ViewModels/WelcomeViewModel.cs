@@ -83,6 +83,24 @@ public sealed partial class WelcomeViewModel : ViewModelBase
     [RelayCommand]
     private Task OpenRecentAsync(RecentItemViewModel item) => _host.OpenWorkspaceAsync(item.Path, offerCreate: false);
 
+    /// <summary>Moves from Postman: choose the exports, then the folder of the (new or existing) workspace.</summary>
+    [RelayCommand]
+    private async Task ImportFromPostmanAsync()
+    {
+        var files = await _host.Dialogs.PickJsonFilesAsync(Loc.Get("Import_PickFiles")).ConfigureAwait(true);
+        if (files.Count == 0)
+        {
+            return;
+        }
+
+        var folder = await _host.Dialogs.PickFolderAsync(Loc.Get("Import_PickWorkspace")).ConfigureAwait(true);
+        if (folder is not null)
+        {
+            await _host.OpenWorkspaceAsync(folder, offerCreate: true).ConfigureAwait(true);
+            await _host.ImportIntoWorkspaceAsync(files).ConfigureAwait(true);
+        }
+    }
+
     /// <summary>Removes a recent workspace from the list.</summary>
     [RelayCommand]
     private void RemoveRecent(RecentItemViewModel item)

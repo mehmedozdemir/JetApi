@@ -27,6 +27,12 @@ public interface IDialogService
     /// <summary>Lets the user choose where to save a file; <c>null</c> when cancelled.</summary>
     Task<string?> PickSaveFileAsync(string title, string suggestedName);
 
+    /// <summary>Lets the user choose one or more JSON files; empty when cancelled.</summary>
+    Task<IReadOnlyList<string>> PickJsonFilesAsync(string title);
+
+    /// <summary>Shows what an import brought in and what it could not carry over.</summary>
+    Task ShowImportReportAsync(ImportReport report);
+
     /// <summary>Asks for a single line of text; <c>null</c> when cancelled.</summary>
     Task<string?> PromptTextAsync(string title, string label, string initialValue);
 

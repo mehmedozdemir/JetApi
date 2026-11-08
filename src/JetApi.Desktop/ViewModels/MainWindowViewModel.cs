@@ -25,6 +25,9 @@ public interface IMainHost
 
     /// <summary>Sets the UI language.</summary>
     void SetLanguage(string? language);
+
+    /// <summary>Imports Postman exports into the open workspace; does nothing when none is open.</summary>
+    Task ImportIntoWorkspaceAsync(IReadOnlyList<string> files);
 }
 
 /// <summary>The main window: either the welcome screen or an open workspace.</summary>
@@ -134,6 +137,15 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
 
     /// <inheritdoc />
     public void RemoveRecent(string path) => UpdateSettings(Settings.WithoutRecent(path));
+
+    /// <inheritdoc />
+    public async Task ImportIntoWorkspaceAsync(IReadOnlyList<string> files)
+    {
+        if (Workspace is { } workspace)
+        {
+            await workspace.ImportFilesAsync(files).ConfigureAwait(true);
+        }
+    }
 
     /// <inheritdoc />
     public void SetLanguage(string? language)

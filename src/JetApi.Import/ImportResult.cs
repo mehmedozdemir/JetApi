@@ -16,7 +16,11 @@ public enum ImportIssueSeverity
 /// <param name="Location">Where in the source: "Users / Create user", or empty for the whole file.</param>
 /// <param name="Message">What happened, in the UI language.</param>
 /// <param name="Severity">How much it matters.</param>
-public sealed record ImportIssue(string Location, string Message, ImportIssueSeverity Severity = ImportIssueSeverity.Warning);
+public sealed record ImportIssue(string Location, string Message, ImportIssueSeverity Severity = ImportIssueSeverity.Warning)
+{
+    /// <summary>Needs the user's attention.</summary>
+    public bool IsWarning => Severity == ImportIssueSeverity.Warning;
+}
 
 /// <summary>What a file looks like.</summary>
 public enum ImportKind

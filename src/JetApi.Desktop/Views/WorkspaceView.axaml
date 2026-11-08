@@ -126,6 +126,7 @@
                       <MenuItem Header="{l:Tr Menu_NewFolder}" Command="{Binding NewFolderCommand}" />
                       <Separator />
                       <MenuItem Header="{l:Tr Cmd_NewCollection}" Command="{Binding NewCollectionCommand}" />
+                      <MenuItem Header="{l:Tr Cmd_ImportPostman}" Command="{Binding ImportFromPostmanCommand}" />
                     </MenuFlyout>
                   </Button.Flyout>
                 </Button>

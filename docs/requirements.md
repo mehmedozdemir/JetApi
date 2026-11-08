@@ -77,8 +77,8 @@
 
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
-| IMP-1 | Postman Collection v2.1 import (klasörler, auth, değişkenler, body türleri) | M2 | 🔜 |
-| IMP-2 | Postman Environment import | M2 | 🔜 |
+| IMP-1 | Postman Collection v2.1 import (klasörler, auth, değişkenler, body türleri) | M2 | ✅ v2.0/v2.1; aktarılamayanlar (script, OAuth 2.0, örnek yanıtlar) raporda ([import.md](import.md)) |
+| IMP-2 | Postman Environment import | M2 | ✅ |
 | IMP-3 | OpenAPI 3.x / Swagger 2.0 import | M2 | 🔜 |
 | IMP-4 | cURL import (yapıştır) ve cURL export | M2 | 🔜 |
 | IMP-5 | Kod parçası üretimi (C# HttpClient, curl, JavaScript fetch, Python requests) | M2 | 🔜 |

@@ -31,6 +31,7 @@
     <ProjectReference Include="..\JetApi.Storage\JetApi.Storage.csproj" />
     <ProjectReference Include="..\JetApi.Http\JetApi.Http.csproj" />
     <ProjectReference Include="..\JetApi.Grpc\JetApi.Grpc.csproj" />
+    <ProjectReference Include="..\JetApi.Import\JetApi.Import.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" />

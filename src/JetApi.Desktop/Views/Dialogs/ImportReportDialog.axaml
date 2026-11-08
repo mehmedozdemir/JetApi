@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:JetApi.Desktop.Localization"
+        xmlns:c="using:JetApi.Desktop.Controls"
+        xmlns:s="using:JetApi.Desktop.Services"
+        xmlns:i="using:JetApi.Import"
+        x:Class="JetApi.Desktop.Views.Dialogs.ImportReportDialog"
+        Width="620" SizeToContent="Height" MaxHeight="640" CanResize="False"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Background="{DynamicResource App.Surface}">
+  <!-- What each imported file brought in, and what could not be carried over. -->
+  <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+    <StackPanel Spacing="6" Margin="0,0,0,14">
+      <TextBlock x:Name="TitleText" Classes="h3" />
+      <TextBlock x:Name="BodyText" Classes="muted" TextWrapping="Wrap" LineHeight="19" />
+    </StackPanel>
+    <ScrollViewer Grid.Row="1" MaxHeight="440">
+      <ItemsControl x:Name="FileList" Margin="0,0,16,0">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Spacing="14" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="s:ImportFileReport">
+            <StackPanel Spacing="6">
+              <Grid ColumnDefinitions="Auto,*">
+                <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" Margin="0,2,8,0" VerticalAlignment="Top"
+                        Foreground="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding Succeeded}" />
+                <c:Icon Data="{StaticResource Icon.Warning}" Width="14" Height="14" Margin="0,2,8,0" VerticalAlignment="Top"
+                        Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding !Succeeded}" />
+                <StackPanel Grid.Column="1" Spacing="1">
+                  <TextBlock FontWeight="SemiBold" Text="{Binding Summary}" TextWrapping="Wrap" />
+                  <TextBlock Classes="mono faint" FontSize="12" Text="{Binding FileName}" />
+                </StackPanel>
+              </Grid>
+              <ItemsControl ItemsSource="{Binding Issues}" Margin="22,0,0,0">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="i:ImportIssue">
+                    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="0,6">
+                      <Grid ColumnDefinitions="Auto,*">
+                        <!-- Warnings need the user's attention; info notes only explain a conversion. -->
+                        <c:Icon Data="{StaticResource Icon.Warning}" Width="13" Height="13" Margin="0,2,8,0" VerticalAlignment="Top"
+                                Foreground="{DynamicResource Tone.Warning.Fg}" IsVisible="{Binding IsWarning}" />
+                        <c:Icon Data="{StaticResource Icon.Info}" Width="13" Height="13" Margin="0,2,8,0" VerticalAlignment="Top"
+                                Foreground="{DynamicResource App.TextFaint}" IsVisible="{Binding !IsWarning}" />
+                        <StackPanel Grid.Column="1" Spacing="1">
+                          <TextBlock Classes="faint small" Text="{Binding Location}" IsVisible="{Binding Location, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                          <SelectableTextBlock Classes="small" Text="{Binding Message}" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+    <Button Grid.Row="2" Classes="primary" HorizontalAlignment="Right" Margin="0,18,0,0" Content="{l:Tr Btn_Ok}" IsDefault="True" IsCancel="True" Click="OnClose" />
+  </Grid>
+</Window>

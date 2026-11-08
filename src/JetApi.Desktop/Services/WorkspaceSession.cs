@@ -188,6 +188,21 @@ public sealed class WorkspaceSession
         return key;
     }
 
+    /// <summary>Adds a complete collection with all its folders and requests (an import); its key must be new.</summary>
+    public async Task ImportCollectionAsync(ApiCollection collection, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+        if (Workspace.FindCollection(collection.Key) is not null)
+        {
+            throw new ArgumentException("A collection with this key already exists.", nameof(collection));
+        }
+
+        await WorkspaceStore.SaveCollectionAsync(Root, collection, cancellationToken).ConfigureAwait(false);
+        Workspace = Workspace.WithCollection(collection);
+        await SaveManifestAsync(cancellationToken).ConfigureAwait(false);
+        OnChanged();
+    }
+
     /// <summary>Replaces a collection's own settings (name, auth, variables, proto) and saves it.</summary>
     public async Task SaveCollectionAsync(ApiCollection collection, CancellationToken cancellationToken = default)
     {

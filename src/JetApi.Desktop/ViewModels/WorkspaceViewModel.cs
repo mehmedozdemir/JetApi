@@ -488,6 +488,35 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
     }
 
+    /// <summary>Asks for Postman exports and imports them (collections and environments).</summary>
+    [RelayCommand]
+    private async Task ImportFromPostmanAsync()
+    {
+        var files = await Dialogs.PickJsonFilesAsync(Loc.Get("Import_PickFiles")).ConfigureAwait(true);
+        if (files.Count > 0)
+        {
+            await ImportFilesAsync(files).ConfigureAwait(true);
+        }
+    }
+
+    /// <summary>Imports Postman exports, reveals the new collections and shows the import report.</summary>
+    public async Task<ImportReport> ImportFilesAsync(IReadOnlyList<string> files)
+    {
+        ArgumentNullException.ThrowIfNull(files);
+        ImportReport? report = null;
+        await RunSavingAsync(async () => report = await ImportRunner.ImportFilesAsync(Session, files).ConfigureAwait(true)).ConfigureAwait(true);
+        report ??= new ImportReport([], []);
+        // Show what arrived: the imported collections open in the tree (the tree was rebuilt while saving).
+        foreach (var node in Collections.Where(c => report.CollectionKeys.Contains(c.CollectionKey)))
+        {
+            node.IsExpanded = true;
+        }
+
+        SidebarMode = SidebarMode.Collections;
+        await Dialogs.ShowImportReportAsync(report).ConfigureAwait(true);
+        return report;
+    }
+
     /// <summary>The sidebar shows the history list.</summary>
     public bool IsHistoryVisible
     {
@@ -926,6 +955,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewHttp"), string.Empty, "Ctrl N", () => NewHttpRequestAsync(null)));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewGrpc"), string.Empty, string.Empty, () => NewGrpcRequestAsync(null)));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewCollection"), string.Empty, string.Empty, NewCollectionAsync));
+        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ImportPostman"), string.Empty, string.Empty, ImportFromPostmanAsync));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_Environments"), string.Empty, "Ctrl E", () =>
         {
             ShowEnvironments();

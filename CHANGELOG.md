@@ -7,6 +7,7 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Added
 
+- Postman’den içe aktarma: Collection v2.0/v2.1 ve environment dosyaları (birden fazla dosya birlikte). Kenar çubuğundaki + menüsünden, komut paletinden veya karşılama ekranından. İçe aktarma raporu, neyin farklı çevrildiğini ve neyin aktarılamadığını (script’ler, OAuth 2.0, örnek yanıtlar, kontrol edilecek dosya yolları) gösterir.
 - Ürün vizyonu, gereksinimler, mimari, dosya formatı, yol haritası ve ADR'ler.
 - `JetApi.Core`: workspace/koleksiyon/klasör/istek/environment modeli, auth mirası, katmanlı `{{değişken}}` çözümleme (iç içe değişkenler, döngü tespiti, dinamik değişkenler).
 - `JetApi.Storage`: Git dostu YAML workspace formatı (schemaVersion 1); atomik yazma, değişmeyen dosyaya dokunmama, hatalı dosyalar için tanılama.

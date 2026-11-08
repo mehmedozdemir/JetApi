@@ -8,5 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The Postman exports the import engine is tested with, reused for the import flow. -->
+    <None Include="..\JetApi.Import.Tests\Samples\*.json" Link="Samples\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -396,6 +396,7 @@
           "JetApi.Core": "[0.1.0-alpha.1, )",
           "JetApi.Grpc": "[0.1.0-alpha.1, )",
           "JetApi.Http": "[0.1.0-alpha.1, )",
+          "JetApi.Import": "[0.1.0-alpha.1, )",
           "JetApi.Storage": "[0.1.0-alpha.1, )",
           "TextMateSharp.Grammars": "[2.0.5, )"
         }
@@ -413,6 +414,12 @@
         }
       },
       "jetapi.http": {
+        "type": "Project",
+        "dependencies": {
+          "JetApi.Core": "[0.1.0-alpha.1, )"
+        }
+      },
+      "jetapi.import": {
         "type": "Project",
         "dependencies": {
           "JetApi.Core": "[0.1.0-alpha.1, )"

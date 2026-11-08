@@ -43,12 +43,8 @@
               <TextBlock Text="{l:Tr Welcome_Create}" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
-          <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" ToolTip.Tip="{l:Tr Welcome_ImportHint}">
-            <TextBlock Classes="faint small" Text="{l:Tr Welcome_Import}" VerticalAlignment="Center" />
-            <Border Classes="badge">
-              <TextBlock Text="v0.2" />
-            </Border>
-          </StackPanel>
+          <Button Grid.Column="3" Classes="link" VerticalAlignment="Center" Content="{l:Tr Welcome_Import}" Command="{Binding ImportFromPostmanCommand}"
+                  ToolTip.Tip="{l:Tr Welcome_ImportHint}" />
         </Grid>
 
         <StackPanel Spacing="8">

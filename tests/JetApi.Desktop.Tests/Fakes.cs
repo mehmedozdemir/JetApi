@@ -26,6 +26,18 @@ internal sealed class FakeDialogs : IDialogService
 
     public Task<string?> PickSaveFileAsync(string title, string suggestedName) => Task.FromResult<string?>(null);
 
+    public List<string> FilesToPick { get; } = [];
+
+    public List<ImportReport> ImportReports { get; } = [];
+
+    public Task<IReadOnlyList<string>> PickJsonFilesAsync(string title) => Task.FromResult<IReadOnlyList<string>>([.. FilesToPick]);
+
+    public Task ShowImportReportAsync(ImportReport report)
+    {
+        ImportReports.Add(report);
+        return Task.CompletedTask;
+    }
+
     public Task<string?> PromptTextAsync(string title, string label, string initialValue) =>
         Task.FromResult(Prompts.Count > 0 ? Prompts.Dequeue() : initialValue);
 
