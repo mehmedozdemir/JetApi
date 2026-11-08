@@ -7,7 +7,7 @@ Hedef kayıpsız taşımadır. Taşınamayan her şey içe aktarma raporunda lis
 
 ## Nasıl kullanılır
 
-- **Açık bir workspace'te:** Kenar çubuğunda Koleksiyonlar başlığındaki **+** menüsünden *Postman'den içe aktar…*
+- **Açık bir workspace'te:** Kenar çubuğunda Koleksiyonlar başlığındaki **+** menüsünden *İçe aktar (Postman, OpenAPI)…*
   seçilir ya da komut paletinde (Ctrl+K) aynı komut çalıştırılır.
 - **Karşılama ekranında:** *Postman'den taşı* önce dosyaları, sonra workspace klasörünü sorar. Boş bir klasör seçilirse
   yeni bir workspace oluşturulur.
