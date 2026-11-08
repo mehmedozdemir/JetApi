@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Http_BodyFile" xml:space="preserve"><value>Body dosyası</value></data>
+  <data name="Http_Cancelled" xml:space="preserve"><value>İstek iptal edildi.</value></data>
+  <data name="Http_Dns" xml:space="preserve"><value>Sunucu adı çözümlenemedi (DNS). URL'yi, ağ ya da VPN bağlantınızı kontrol edin.</value></data>
+  <data name="Http_EmptyUrl" xml:space="preserve"><value>URL boş.</value></data>
+  <data name="Http_FileNotFound" xml:space="preserve"><value>{0}: '{1}' bulunamadı.</value></data>
+  <data name="Http_InvalidMethod" xml:space="preserve"><value>'{0}' geçerli bir HTTP metodu değil.</value></data>
+  <data name="Http_InvalidUrl" xml:space="preserve"><value>'{0}' geçerli bir http veya https URL'si değil.</value></data>
+  <data name="Http_Network" xml:space="preserve"><value>Ağ hatası: {0}</value></data>
+  <data name="Http_NoFileSelected" xml:space="preserve"><value>{0}: dosya seçilmedi.</value></data>
+  <data name="Http_PartFile" xml:space="preserve"><value>'{0}' parçasının dosyası</value></data>
+  <data name="Http_Refused" xml:space="preserve"><value>Bağlantı reddedildi. Sunucu çalışıyor ve bu portu dinliyor mu?</value></data>
+  <data name="Http_TimedOut" xml:space="preserve"><value>{0} ms içinde yanıt gelmedi.</value></data>
+  <data name="Http_Tls" xml:space="preserve"><value>TLS el sıkışması başarısız: {0} Bu istek için sertifika doğrulamasını ayarlarından kapatabilirsiniz.</value></data>
+</root>

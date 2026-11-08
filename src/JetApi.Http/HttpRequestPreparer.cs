@@ -6,7 +6,7 @@ namespace JetApi.Http;
 
 /// <summary>The outcome of preparing a request.</summary>
 /// <param name="Request">The prepared request, or <c>null</c> when <see cref="Errors"/> is not empty.</param>
-/// <param name="Errors">Problems that prevent sending, in user-facing language.</param>
+/// <param name="Errors">Problems that prevent sending, in the current UI culture (English or Turkish).</param>
 /// <param name="VariableIssues">Placeholders that could not be resolved; they are sent verbatim.</param>
 public sealed record HttpPreparationResult(
     PreparedHttpRequest? Request,
@@ -49,7 +49,7 @@ public static class HttpRequestPreparer
         var method = context.Resolve(request.Method).Trim().ToUpperInvariant();
         if (method.Length == 0 || !method.All(c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_'))
         {
-            context.Errors.Add($"'{method}' is not a valid HTTP method.");
+            context.Errors.Add(Messages.Format("Http_InvalidMethod", method));
         }
 
         var headers = context.ResolveEntries(request.Headers);
@@ -107,7 +107,7 @@ public static class HttpRequestPreparer
         var url = rawUrl.Trim();
         if (url.Length == 0)
         {
-            context.Errors.Add("The URL is empty.");
+            context.Errors.Add(Messages.Get("Http_EmptyUrl"));
             return null;
         }
 
@@ -131,7 +131,7 @@ public static class HttpRequestPreparer
 
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
         {
-            context.Errors.Add($"'{rawUrl}' is not a valid http or https URL.");
+            context.Errors.Add(Messages.Format("Http_InvalidUrl", rawUrl));
             return null;
         }
 
@@ -145,7 +145,7 @@ public static class HttpRequestPreparer
         HttpBodyMode.Xml => new BytesBody(Encoding.UTF8.GetBytes(context.Resolve(body.Content)), XmlContentType),
         HttpBodyMode.Text => new BytesBody(Encoding.UTF8.GetBytes(context.Resolve(body.Content)), TextContentType),
         HttpBodyMode.FormUrlEncoded => new FormBody(context.ResolveEntries(body.FormFields)),
-        HttpBodyMode.File => context.ResolveFile(body.FilePath, "Body file") is { } path
+        HttpBodyMode.File => context.ResolveFile(body.FilePath, Messages.Get("Http_BodyFile")) is { } path
             ? new FileBody(path, BinaryContentType)
             : PreparedBody.None,
         HttpBodyMode.Multipart => new MultipartBody(
@@ -153,7 +153,7 @@ public static class HttpRequestPreparer
             .. body.MultipartFields
                 .Where(field => field.IsEnabled)
                 .Select(field => field.Kind == MultipartFieldKind.File
-                    ? new PreparedMultipartPart(context.Resolve(field.Name), context.ResolveFile(field.Value, $"File for part '{field.Name}'") ?? string.Empty, true, field.ContentType)
+                    ? new PreparedMultipartPart(context.Resolve(field.Name), context.ResolveFile(field.Value, Messages.Format("Http_PartFile", field.Name)) ?? string.Empty, true, field.ContentType)
                     : new PreparedMultipartPart(context.Resolve(field.Name), context.Resolve(field.Value), false, field.ContentType)),
         ]),
         _ => throw new NotSupportedException($"Unsupported body mode {body.Mode}."),
@@ -188,14 +188,14 @@ public static class HttpRequestPreparer
             var path = Resolve(template).Trim();
             if (path.Length == 0)
             {
-                Errors.Add($"{what}: no file selected.");
+                Errors.Add(Messages.Format("Http_NoFileSelected", what));
                 return null;
             }
 
             var fullPath = Path.GetFullPath(path, workspaceRoot);
             if (!File.Exists(fullPath))
             {
-                Errors.Add($"{what}: '{path}' does not exist.");
+                Errors.Add(Messages.Format("Http_FileNotFound", what, path));
                 return null;
             }
 

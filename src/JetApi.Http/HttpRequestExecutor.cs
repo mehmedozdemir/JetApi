@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Security;
@@ -68,21 +69,21 @@ public sealed class HttpRequestExecutor : IDisposable
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            return Failure(HttpExecutionOutcome.Cancelled, HttpErrorKind.Cancelled, message, recorder, stopwatch, "The request was cancelled.");
+            return Failure(HttpExecutionOutcome.Cancelled, HttpErrorKind.Cancelled, message, recorder, stopwatch, Messages.Get("Http_Cancelled"));
         }
         catch (OperationCanceledException) when (timeout.IsCancellationRequested)
         {
             var limit = request.Settings.Timeout ?? _options.DefaultTimeout;
-            return Failure(HttpExecutionOutcome.TimedOut, HttpErrorKind.TimedOut, message, recorder, stopwatch, $"No response within {limit.TotalMilliseconds:0} ms.");
+            return Failure(HttpExecutionOutcome.TimedOut, HttpErrorKind.TimedOut, message, recorder, stopwatch, Messages.Format("Http_TimedOut", limit.TotalMilliseconds.ToString("0", CultureInfo.CurrentCulture)));
         }
         catch (HttpRequestException exception)
         {
-            var (kind, description) = Describe(exception);
-            return Failure(HttpExecutionOutcome.Failed, kind, message, recorder, stopwatch, description);
+            var (kind, description, detail) = Describe(exception);
+            return Failure(HttpExecutionOutcome.Failed, kind, message, recorder, stopwatch, description, detail);
         }
         catch (IOException exception)
         {
-            return Failure(HttpExecutionOutcome.Failed, HttpErrorKind.Network, message, recorder, stopwatch, exception.Message);
+            return Failure(HttpExecutionOutcome.Failed, HttpErrorKind.Network, message, recorder, stopwatch, Messages.Format("Http_Network", exception.Message), exception.Message);
         }
     }
 
@@ -287,29 +288,31 @@ public sealed class HttpRequestExecutor : IDisposable
         HttpRequestMessage message,
         TimingRecorder recorder,
         Stopwatch stopwatch,
-        string error) => new()
+        string error,
+        string? detail = null) => new()
         {
             Outcome = outcome,
             Sent = DescribeSent(message),
             Timings = new HttpTimings(recorder.Dns, recorder.Connect, TimeSpan.Zero, TimeSpan.Zero, stopwatch.Elapsed),
             RemoteEndPoint = recorder.RemoteEndPoint,
             ErrorMessage = error,
+            ErrorDetail = detail,
             ErrorKind = kind,
         };
 
-    private static (HttpErrorKind Kind, string Message) Describe(HttpRequestException exception)
+    private static (HttpErrorKind Kind, string Message, string? Detail) Describe(HttpRequestException exception)
     {
         var root = exception.InnerException;
         return root switch
         {
             SocketException { SocketErrorCode: SocketError.HostNotFound or SocketError.NoData } =>
-                (HttpErrorKind.DnsFailure, "The host name could not be resolved (DNS). Check the URL and your network or VPN."),
+                (HttpErrorKind.DnsFailure, Messages.Get("Http_Dns"), root.Message),
             SocketException { SocketErrorCode: SocketError.ConnectionRefused } =>
-                (HttpErrorKind.ConnectionRefused, "Connection refused. Is the server running and listening on this port?"),
-            SocketException socket => (HttpErrorKind.Network, $"Network error: {socket.Message}"),
+                (HttpErrorKind.ConnectionRefused, Messages.Get("Http_Refused"), root.Message),
+            SocketException socket => (HttpErrorKind.Network, Messages.Format("Http_Network", socket.Message), socket.Message),
             AuthenticationException auth =>
-                (HttpErrorKind.TlsFailure, $"TLS handshake failed: {(auth.InnerException ?? auth).Message} You can disable certificate validation for this request in its settings."),
-            _ => (HttpErrorKind.Network, exception.Message),
+                (HttpErrorKind.TlsFailure, Messages.Format("Http_Tls", (auth.InnerException ?? auth).Message), (auth.InnerException ?? auth).Message),
+            _ => (HttpErrorKind.Network, Messages.Format("Http_Network", exception.Message), exception.Message),
         };
     }
 

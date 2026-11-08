@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Http_BodyFile" xml:space="preserve"><value>Body file</value></data>
+  <data name="Http_Cancelled" xml:space="preserve"><value>The request was cancelled.</value></data>
+  <data name="Http_Dns" xml:space="preserve"><value>The host name could not be resolved (DNS). Check the URL and your network or VPN.</value></data>
+  <data name="Http_EmptyUrl" xml:space="preserve"><value>The URL is empty.</value></data>
+  <data name="Http_FileNotFound" xml:space="preserve"><value>{0}: '{1}' does not exist.</value></data>
+  <data name="Http_InvalidMethod" xml:space="preserve"><value>'{0}' is not a valid HTTP method.</value></data>
+  <data name="Http_InvalidUrl" xml:space="preserve"><value>'{0}' is not a valid http or https URL.</value></data>
+  <data name="Http_Network" xml:space="preserve"><value>Network error: {0}</value></data>
+  <data name="Http_NoFileSelected" xml:space="preserve"><value>{0}: no file selected.</value></data>
+  <data name="Http_PartFile" xml:space="preserve"><value>File for part '{0}'</value></data>
+  <data name="Http_Refused" xml:space="preserve"><value>Connection refused. Is the server running and listening on this port?</value></data>
+  <data name="Http_TimedOut" xml:space="preserve"><value>No response within {0} ms.</value></data>
+  <data name="Http_Tls" xml:space="preserve"><value>TLS handshake failed: {0} You can disable certificate validation for this request in its settings.</value></data>
+</root>

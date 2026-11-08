@@ -150,8 +150,8 @@ public sealed partial class HttpResponseViewModel : ViewModelBase
         { ErrorKind: HttpErrorKind.ConnectionRefused } => Loc.Get("Err_Refused"),
         { ErrorKind: HttpErrorKind.TimedOut } => Loc.Format("Err_Timeout", DurationText),
         { ErrorKind: HttpErrorKind.Cancelled } => Loc.Get("Err_Cancelled"),
-        { ErrorKind: HttpErrorKind.TlsFailure } => Loc.Format("Err_Tls", _result.ErrorMessage),
-        _ => Loc.Format("Err_Network", _result.ErrorMessage),
+        { ErrorKind: HttpErrorKind.TlsFailure } => Loc.Format("Err_Tls", _result.ErrorDetail ?? _result.ErrorMessage),
+        _ => Loc.Format("Err_Network", _result.ErrorDetail ?? _result.ErrorMessage),
     };
 
     /// <summary>The body was cut off.</summary>

@@ -105,8 +105,11 @@ public sealed record HttpExecutionResult
     /// <summary>The remote IP endpoint of a newly opened connection.</summary>
     public string? RemoteEndPoint { get; init; }
 
-    /// <summary>Why the request failed, in English.</summary>
+    /// <summary>Why the request failed, in the current UI culture (English or Turkish).</summary>
     public string? ErrorMessage { get; init; }
+
+    /// <summary>The underlying system message (e.g. from the socket or TLS stack), without explanation; may be <c>null</c>.</summary>
+    public string? ErrorDetail { get; init; }
 
     /// <summary>Category of the failure.</summary>
     public HttpErrorKind ErrorKind { get; init; }
