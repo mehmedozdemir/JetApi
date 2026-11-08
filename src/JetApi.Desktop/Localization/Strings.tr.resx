@@ -98,6 +98,7 @@
   <data name="Err_Refused" xml:space="preserve"><value>Bağlantı reddedildi. Sunucu çalışıyor ve bu portu dinliyor mu?</value></data>
   <data name="Err_Timeout" xml:space="preserve"><value>{0} içinde yanıt gelmedi. Bu isteğin zaman aşımını Ayarlar sekmesinden artırabilirsiniz.</value></data>
   <data name="Err_Tls" xml:space="preserve"><value>TLS el sıkışması başarısız. Bu istek için sertifika doğrulamasını Ayarlar sekmesinden kapatabilirsiniz. Ayrıntı: {0}</value></data>
+  <data name="Error_WorkspaceExists" xml:space="preserve"><value>'{0}' zaten bir workspace içeriyor.</value></data>
   <data name="Error_Open" xml:space="preserve"><value>Workspace açılamadı: {0}</value></data>
   <data name="Error_Preparation" xml:space="preserve"><value>İstek gönderilmedi</value></data>
   <data name="Error_Save" xml:space="preserve"><value>Değişiklik kaydedilemedi: {0}</value></data>

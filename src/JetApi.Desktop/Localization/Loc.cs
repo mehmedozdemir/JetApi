@@ -55,7 +55,9 @@ public sealed class Loc : INotifyPropertyChanged
             "en" => English,
             _ => DefaultCulture(),
         };
+        // Engine messages (ADR-0006) follow the UI culture, also when produced on thread-pool threads.
         CultureInfo.CurrentUICulture = Culture;
+        CultureInfo.DefaultThreadCurrentUICulture = Culture;
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item"));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Culture)));

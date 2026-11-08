@@ -74,7 +74,7 @@ Kod üretimi yoktur. Mesajlar ham bayt olarak taşınır ve `ProtoJsonCodec` ile
 - **Hata yönetimi:** Kullanıcı girdisinden kaynaklanan sorunlar (geçersiz URL, JSON hatası, bozuk dosya) exception fırlatmaz. Kullanıcıya gösterilecek mesajlarla sonuç nesnesinde döner. Exception'lar programlama hataları ve geri dönülemez durumlar içindir.
 - **Immutable model:** Domain nesneleri `record`'dur. Arayüz düzenlemeleri `with` ile yeni nesne üretir. Bu yapı geri al/yinele (undo/redo) ve değişiklik tespitini kolaylaştırır.
 - **İş parçacığı güvenliği:** `HttpRequestExecutor` ve `GrpcInvoker` thread-safe'tir ve uygulama boyunca tek örnek olarak yaşar. Hazırlayıcılar saf fonksiyondur.
-- **Kullanıcıya dönük metinler:** Motorlardaki mesajlar şimdilik İngilizcedir. M1'de kaynak dosyalarına (`.resx`) taşınıp Türkçe ve İngilizce sunulacaktır (bkz. [ADR-0006](adr/0006-localization.md)).
+- **Kullanıcıya dönük metinler:** Her motor (`Http`, `Grpc`, `Storage`) kendi `Messages.resx` (İngilizce) ve `Messages.tr.resx` (Türkçe) dosyasını taşır ve mesajı `CurrentUICulture` diline göre üretir. Böylece CLI da aynı çevirileri kullanır. Arayüz dil değişince `CurrentUICulture` ve `DefaultThreadCurrentUICulture` değerlerini ayarlar. Dış kütüphanelerden gelen ayrıntılar (YAML/JSON ayrıştırıcı, soket, sunucu mesajları) çevrilmeden ayrıntı olarak eklenir. Her test projesi İngilizce kültürü sabitler, iki dilin anahtar eşitliğini ve kodda kullanılan her anahtarın var olduğunu denetler (bkz. [ADR-0006](adr/0006-localization.md)).
 - **Kod kalitesi:** Uyarılar hata sayılır (`TreatWarningsAsErrors`), .NET analizörleri `latest-recommended` seviyesindedir, public API XML ile belgelenir, paket sürümleri merkezi olarak sabitlenir ve lock dosyaları commit'lenir.
 
 ## Test stratejisi

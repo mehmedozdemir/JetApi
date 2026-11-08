@@ -1,5 +1,6 @@
 using System.Text.Json;
 using JetApi.Core.Model;
+using JetApi.Desktop.Localization;
 using JetApi.Storage;
 
 namespace JetApi.Desktop.Services;
@@ -64,7 +65,7 @@ public sealed class WorkspaceSession
         var fullRoot = Path.GetFullPath(root);
         if (WorkspaceStore.IsWorkspace(fullRoot))
         {
-            throw new WorkspaceStorageException($"'{fullRoot}' already contains a workspace.");
+            throw new WorkspaceStorageException(Loc.Format("Error_WorkspaceExists", fullRoot));
         }
 
         var workspace = new Workspace

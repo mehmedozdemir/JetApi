@@ -44,14 +44,20 @@ public sealed class LocalizationTests
         used.Except(keys).ShouldBeEmpty();
     }
 
+    // Switching the language notifies view models that earlier UI tests bound to controls, so it must run on
+    // the UI thread; on a test thread it fails, depending on test order, with "a different thread owns it".
     [Fact]
-    public void SwitchingLanguage_ChangesStrings()
+    public Task SwitchingLanguage_ChangesStrings() =>
+        HeadlessApp.Session.Dispatch(SwitchLanguage, TestContext.Current.CancellationToken);
+
+    private static Task<bool> SwitchLanguage()
     {
         try
         {
             Loc.Instance.SetLanguage("tr");
             Loc.Get("Btn_Send").ShouldBe("Gönder");
             Loc.Format("Status_Unsaved", 2).ShouldBe("Kaydedilmemiş: 2");
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture!.Name.ShouldBe("tr-TR");
 
             Loc.Instance.SetLanguage("en");
             Loc.Get("Btn_Send").ShouldBe("Send");
@@ -61,5 +67,7 @@ public sealed class LocalizationTests
         {
             Loc.Instance.SetLanguage("en");
         }
+
+        return Task.FromResult(true);
     }
 }
