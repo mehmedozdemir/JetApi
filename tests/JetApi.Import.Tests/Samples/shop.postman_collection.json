@@ -1,0 +1,145 @@
+{
+  "info": {
+    "_postman_id": "8a1f0c52-5d2e-4b7a-9d3e-1f2a3b4c5d6e",
+    "name": "Shop API",
+    "description": "Orders and customers.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+  },
+  "variable": [
+    { "key": "apiVersion", "value": "v2" },
+    { "key": "legacy", "value": "1", "disabled": true },
+    { "key": "signingKey", "value": "s3cret", "type": "secret" }
+  ],
+  "event": [
+    { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [ "pm.variables.set('t', Date.now());" ] } }
+  ],
+  "item": [
+    {
+      "name": "Orders",
+      "description": { "content": "Order endpoints", "type": "text/markdown" },
+      "item": [
+        {
+          "name": "List orders",
+          "request": {
+            "method": "get",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Debug", "value": "1", "disabled": true, "description": "only locally" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/orders?page=1&size=20#top",
+              "host": [ "{{baseUrl}}" ],
+              "path": [ "{{apiVersion}}", "orders" ],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "size", "value": "20", "disabled": true }
+              ]
+            }
+          },
+          "response": [ { "name": "200", "status": "OK", "code": 200, "body": "[]" } ]
+        },
+        {
+          "name": "Get order",
+          "event": [
+            { "listen": "test", "script": { "exec": [ "pm.test('ok', () => pm.response.to.have.status(200));" ] } }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/orders/:orderId/items/:itemId",
+              "variable": [ { "key": "orderId", "value": "42" }, { "key": "itemId", "value": "" } ]
+            }
+          }
+        },
+        {
+          "name": "Create order",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "basic", "basic": [ { "key": "username", "value": "admin" }, { "key": "password", "value": "pa$$" } ] },
+            "header": [ { "key": "X-Request-Id", "value": "{{$randomUUID}}" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"{{$randomEmail}}\",\n  \"total\": 10\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/orders"
+          }
+        },
+        {
+          "name": "Create order",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/xml" } ],
+            "body": { "mode": "raw", "raw": "<order />" },
+            "url": "{{baseUrl}}/orders"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "auth": { "type": "apikey", "apikey": [ { "key": "key", "value": "X-Api-Key" }, { "key": "value", "value": "{{apiKey}}" }, { "key": "in", "value": "query" } ] },
+      "item": [
+        {
+          "name": "Sign up",
+          "protocolProfileBehavior": { "followRedirects": false, "strictSSL": false },
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [ { "key": "email", "value": "a@b.c" }, { "key": "promo", "value": "x", "disabled": true } ]
+            },
+            "url": "{{baseUrl}}/signup"
+          }
+        },
+        {
+          "name": "Upload avatar",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Ayşe", "type": "text" },
+                { "key": "avatar", "type": "file", "src": "/Users/ayse/avatar.png", "contentType": "image/png" }
+              ]
+            },
+            "url": "{{baseUrl}}/avatar"
+          }
+        },
+        {
+          "name": "Import file",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "oauth2", "oauth2": [ { "key": "accessToken", "value": "abc" } ] },
+            "body": { "mode": "file", "file": { "src": "data/customers.csv" } },
+            "url": "{{baseUrl}}/import"
+          }
+        },
+        {
+          "name": "Search",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "graphql",
+              "graphql": { "query": "query { customers { id } }", "variables": "{\"first\": 10}" }
+            },
+            "url": "{{baseUrl}}/graphql"
+          }
+        },
+        {
+          "name": "Ping",
+          "request": "{{baseUrl}}/ping?verbose"
+        },
+        {
+          "name": "Disabled body",
+          "request": { "method": "DELETE", "body": { "mode": "raw", "raw": "ignored", "disabled": true }, "url": "{{baseUrl}}/x" }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JetApi.Import\JetApi.Import.csproj" />
+    <!-- Round-trip check: an imported collection must be writable to and readable from a YAML workspace. -->
+    <ProjectReference Include="..\..\src\JetApi.Storage\JetApi.Storage.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Samples\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

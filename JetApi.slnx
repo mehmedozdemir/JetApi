@@ -4,6 +4,7 @@
     <Project Path="src/JetApi.Desktop/JetApi.Desktop.csproj" />
     <Project Path="src/JetApi.Grpc/JetApi.Grpc.csproj" />
     <Project Path="src/JetApi.Http/JetApi.Http.csproj" />
+    <Project Path="src/JetApi.Import/JetApi.Import.csproj" />
     <Project Path="src/JetApi.Storage/JetApi.Storage.csproj" />
   </Folder>
   <Folder Name="/tests/">
@@ -11,6 +12,7 @@
     <Project Path="tests/JetApi.Desktop.Tests/JetApi.Desktop.Tests.csproj" />
     <Project Path="tests/JetApi.Grpc.Tests/JetApi.Grpc.Tests.csproj" />
     <Project Path="tests/JetApi.Http.Tests/JetApi.Http.Tests.csproj" />
+    <Project Path="tests/JetApi.Import.Tests/JetApi.Import.Tests.csproj" />
     <Project Path="tests/JetApi.Storage.Tests/JetApi.Storage.Tests.csproj" />
   </Folder>
 </Solution>

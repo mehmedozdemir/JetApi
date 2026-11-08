@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Import_AuthNotSupported" xml:space="preserve"><value>Auth type "{0}" is not supported yet, so it was set to No auth.</value></data>
+  <data name="Import_CollectionLocation" xml:space="preserve"><value>Collection</value></data>
+  <data name="Import_DynamicVariables" xml:space="preserve"><value>These dynamic variables are not supported and stay unresolved: {0}.</value></data>
+  <data name="Import_ExamplesSkipped" xml:space="preserve"><value>{0} saved example response(s) were not imported.</value></data>
+  <data name="Import_FilePath" xml:space="preserve"><value>Uses the file "{0}"; make sure it exists on this machine. Relative paths are resolved from the workspace folder.</value></data>
+  <data name="Import_GraphQl" xml:space="preserve"><value>The GraphQL body became a JSON body with query and variables, as Postman sends it.</value></data>
+  <data name="Import_InvalidJson" xml:space="preserve"><value>The file is not valid JSON: {0}</value></data>
+  <data name="Import_NotCollection" xml:space="preserve"><value>This file is not a Postman collection. In Postman, use Export and choose Collection v2.1.</value></data>
+  <data name="Import_NotEnvironment" xml:space="preserve"><value>This file is not a Postman environment export.</value></data>
+  <data name="Import_PathVariable" xml:space="preserve"><value>Path variable :{0} has no value, so it became {{{{{0}}}}}. Define {0} in an environment.</value></data>
+  <data name="Import_PreRequestScript" xml:space="preserve"><value>Pre-request script</value></data>
+  <data name="Import_ScriptSkipped" xml:space="preserve"><value>{0} was not imported; scripts arrive in a later version.</value></data>
+  <data name="Import_TestScript" xml:space="preserve"><value>Test script</value></data>
+  <data name="Import_Unnamed" xml:space="preserve"><value>Unnamed</value></data>
+  <data name="Import_UnnamedCollection" xml:space="preserve"><value>Imported collection</value></data>
+  <data name="Import_UnnamedEnvironment" xml:space="preserve"><value>Imported environment</value></data>
+  <data name="Import_UnsupportedSchema" xml:space="preserve"><value>The Postman collection format "{0}" is not supported. Export it as Collection v2.1.</value></data>
+</root>

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Imports Postman collections and environments (later OpenAPI and cURL) into the JetApi model.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Import.Tests" />
+  </ItemGroup>
+</Project>

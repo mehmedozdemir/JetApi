@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Import_AuthNotSupported" xml:space="preserve"><value>"{0}" auth türü henüz desteklenmiyor; "Auth yok" olarak ayarlandı.</value></data>
+  <data name="Import_CollectionLocation" xml:space="preserve"><value>Koleksiyon</value></data>
+  <data name="Import_DynamicVariables" xml:space="preserve"><value>Şu dinamik değişkenler desteklenmiyor ve çözümlenmeden kalır: {0}.</value></data>
+  <data name="Import_ExamplesSkipped" xml:space="preserve"><value>{0} kayıtlı örnek yanıt aktarılmadı.</value></data>
+  <data name="Import_FilePath" xml:space="preserve"><value>"{0}" dosyasını kullanıyor; dosyanın bu makinede bulunduğundan emin olun. Göreli yollar workspace klasörüne göre çözülür.</value></data>
+  <data name="Import_GraphQl" xml:space="preserve"><value>GraphQL body, Postman’in gönderdiği gibi query ve variables içeren bir JSON body’ye çevrildi.</value></data>
+  <data name="Import_InvalidJson" xml:space="preserve"><value>Dosya geçerli bir JSON değil: {0}</value></data>
+  <data name="Import_NotCollection" xml:space="preserve"><value>Bu dosya bir Postman koleksiyonu değil. Postman’de Export seçip Collection v2.1 biçimini kullanın.</value></data>
+  <data name="Import_NotEnvironment" xml:space="preserve"><value>Bu dosya bir Postman environment dışa aktarımı değil.</value></data>
+  <data name="Import_PathVariable" xml:space="preserve"><value>:{0} yol değişkeninin değeri yok; {{{{{0}}}}} olarak aktarıldı. {0} değişkenini bir environment’ta tanımlayın.</value></data>
+  <data name="Import_PreRequestScript" xml:space="preserve"><value>Pre-request script’i</value></data>
+  <data name="Import_ScriptSkipped" xml:space="preserve"><value>{0} aktarılmadı; script desteği ileriki bir sürümde gelecek.</value></data>
+  <data name="Import_TestScript" xml:space="preserve"><value>Test script’i</value></data>
+  <data name="Import_Unnamed" xml:space="preserve"><value>Adsız</value></data>
+  <data name="Import_UnnamedCollection" xml:space="preserve"><value>İçe aktarılan koleksiyon</value></data>
+  <data name="Import_UnnamedEnvironment" xml:space="preserve"><value>İçe aktarılan environment</value></data>
+  <data name="Import_UnsupportedSchema" xml:space="preserve"><value>"{0}" Postman koleksiyon biçimi desteklenmiyor. Collection v2.1 olarak dışa aktarın.</value></data>
+</root>
