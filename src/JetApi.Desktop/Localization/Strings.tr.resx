@@ -281,4 +281,40 @@
   <data name="Import_ReportTitle" xml:space="preserve"><value>İçe aktarma tamamlandı</value></data>
   <data name="Import_ReportClean" xml:space="preserve"><value>Her şey aktarıldı.</value></data>
   <data name="Import_ReportNotes" xml:space="preserve"><value>Aşağıda {0} not var: farklı çevrilen ya da aktarılamayan şeyler.</value></data>
+  <data name="Cmd_Settings" xml:space="preserve"><value>Ayarlar</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Ayarlar</value></data>
+  <data name="Settings_TitleShortcut" xml:space="preserve"><value>Ayarlar (Ctrl+,)</value></data>
+  <data name="Settings_Appearance" xml:space="preserve"><value>Görünüm</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Dil</value></data>
+  <data name="Settings_Requests" xml:space="preserve"><value>İstekler</value></data>
+  <data name="Settings_History" xml:space="preserve"><value>Geçmiş</value></data>
+  <data name="Settings_Advanced" xml:space="preserve"><value>Gelişmiş</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Tema</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>Sistemle aynı</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>Açık</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>Koyu</value></data>
+  <data name="Settings_UiFont" xml:space="preserve"><value>Arayüz yazı tipi</value></data>
+  <data name="Settings_FontBuiltIn" xml:space="preserve"><value>Inter (yerleşik)</value></data>
+  <data name="Settings_UiScale" xml:space="preserve"><value>Arayüz boyutu</value></data>
+  <data name="Settings_UiScaleHint" xml:space="preserve"><value>Yazıyı, boşlukları ve ikonları birlikte büyütür.</value></data>
+  <data name="Settings_Editor" xml:space="preserve"><value>Kod editörü</value></data>
+  <data name="Settings_EditorFont" xml:space="preserve"><value>Editör yazı tipi</value></data>
+  <data name="Settings_FontDefaultMono" xml:space="preserve"><value>Varsayılan eş aralıklı</value></data>
+  <data name="Settings_EditorFontSize" xml:space="preserve"><value>Editör puntosu</value></data>
+  <data name="Settings_WrapResponses" xml:space="preserve"><value>Yanıtlarda uzun satırları kaydır</value></data>
+  <data name="Settings_Preview" xml:space="preserve"><value>Önizleme</value></data>
+  <data name="Settings_InterfaceLanguage" xml:space="preserve"><value>Arayüz dili</value></data>
+  <data name="Settings_LanguageSystem" xml:space="preserve"><value>Sistemle aynı</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>Menüler, mesajlar ve hatalar yeniden başlatmadan hemen değişir.</value></data>
+  <data name="Settings_Timeout" xml:space="preserve"><value>Varsayılan zaman aşımı (saniye)</value></data>
+  <data name="Settings_TimeoutHint" xml:space="preserve"><value>Kendi zaman aşımını belirtmeyen istekler için.</value></data>
+  <data name="Settings_ConfirmUndefined" xml:space="preserve"><value>Tanımsız değişken içeren isteği göndermeden önce sor</value></data>
+  <data name="Settings_SaveHistory" xml:space="preserve"><value>Gönderilen isteklerin geçmişini tut</value></data>
+  <data name="Settings_HistoryHint" xml:space="preserve"><value>Geçmiş bu makinede workspace’in .jetapi/ klasöründe kalır, Git’e girmez. Geçmiş panelinden temizlenebilir.</value></data>
+  <data name="Settings_Rendering" xml:space="preserve"><value>Çizim</value></data>
+  <data name="Settings_RenderingSoftware" xml:space="preserve"><value>Yazılım (daha az bellek)</value></data>
+  <data name="Settings_RenderingGpu" xml:space="preserve"><value>Ekran kartı (büyük ekranlarda daha akıcı)</value></data>
+  <data name="Settings_RenderingHint" xml:space="preserve"><value>Yazılımla çizim yaklaşık 110 MB daha az bellek kullanır; ekran kartı 4K ekranlarda daha akıcı kaydırabilir. Yalnızca Windows.</value></data>
+  <data name="Settings_RestartNeeded" xml:space="preserve"><value>Yeni çizim modu için JetApi’yi yeniden başlatın.</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Varsayılanlara dön</value></data>
 </root>

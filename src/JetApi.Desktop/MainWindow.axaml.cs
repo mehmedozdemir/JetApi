@@ -20,12 +20,19 @@ public sealed partial class MainWindow : Window
 
     private void OnShortcut(object? sender, KeyEventArgs e)
     {
+        var command = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+        if (e.Key == Key.OemComma && e.KeyModifiers.HasFlag(command) && ViewModel is { } main)
+        {
+            main.OpenSettings();
+            e.Handled = true;
+            return;
+        }
+
         if (ViewModel?.Workspace is not { } workspace)
         {
             return;
         }
 
-        var command = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
         if (e.Key == Key.Escape && workspace.Palette is not null)
         {
             workspace.Palette = null;

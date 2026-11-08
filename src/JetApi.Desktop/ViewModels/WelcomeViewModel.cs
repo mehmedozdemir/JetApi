@@ -83,6 +83,10 @@ public sealed partial class WelcomeViewModel : ViewModelBase
     [RelayCommand]
     private Task OpenRecentAsync(RecentItemViewModel item) => _host.OpenWorkspaceAsync(item.Path, offerCreate: false);
 
+    /// <summary>Opens the settings window.</summary>
+    [RelayCommand]
+    private void OpenSettings() => _host.OpenSettings();
+
     /// <summary>Moves from Postman: choose the exports, then the folder of the (new or existing) workspace.</summary>
     [RelayCommand]
     private async Task ImportFromPostmanAsync()

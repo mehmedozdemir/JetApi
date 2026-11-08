@@ -281,4 +281,40 @@
   <data name="Import_ReportTitle" xml:space="preserve"><value>Import finished</value></data>
   <data name="Import_ReportClean" xml:space="preserve"><value>Everything was carried over.</value></data>
   <data name="Import_ReportNotes" xml:space="preserve"><value>{0} note(s) below: what was converted differently or could not be carried over.</value></data>
+  <data name="Cmd_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_TitleShortcut" xml:space="preserve"><value>Settings (Ctrl+,)</value></data>
+  <data name="Settings_Appearance" xml:space="preserve"><value>Appearance</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Settings_Requests" xml:space="preserve"><value>Requests</value></data>
+  <data name="Settings_History" xml:space="preserve"><value>History</value></data>
+  <data name="Settings_Advanced" xml:space="preserve"><value>Advanced</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>Follow the system</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>Light</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>Dark</value></data>
+  <data name="Settings_UiFont" xml:space="preserve"><value>Interface font</value></data>
+  <data name="Settings_FontBuiltIn" xml:space="preserve"><value>Inter (built in)</value></data>
+  <data name="Settings_UiScale" xml:space="preserve"><value>Interface size</value></data>
+  <data name="Settings_UiScaleHint" xml:space="preserve"><value>Scales text, spacing and icons together.</value></data>
+  <data name="Settings_Editor" xml:space="preserve"><value>Code editor</value></data>
+  <data name="Settings_EditorFont" xml:space="preserve"><value>Editor font</value></data>
+  <data name="Settings_FontDefaultMono" xml:space="preserve"><value>Default monospace</value></data>
+  <data name="Settings_EditorFontSize" xml:space="preserve"><value>Editor font size</value></data>
+  <data name="Settings_WrapResponses" xml:space="preserve"><value>Wrap long lines in responses</value></data>
+  <data name="Settings_Preview" xml:space="preserve"><value>Preview</value></data>
+  <data name="Settings_InterfaceLanguage" xml:space="preserve"><value>Interface language</value></data>
+  <data name="Settings_LanguageSystem" xml:space="preserve"><value>Follow the system</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>Menus, messages and errors switch at once, without a restart.</value></data>
+  <data name="Settings_Timeout" xml:space="preserve"><value>Default timeout (seconds)</value></data>
+  <data name="Settings_TimeoutHint" xml:space="preserve"><value>For requests that do not set their own.</value></data>
+  <data name="Settings_ConfirmUndefined" xml:space="preserve"><value>Ask before sending a request with undefined variables</value></data>
+  <data name="Settings_SaveHistory" xml:space="preserve"><value>Keep a history of sent requests</value></data>
+  <data name="Settings_HistoryHint" xml:space="preserve"><value>History stays in the workspace’s .jetapi/ folder on this machine and is never committed. Clear it from the History panel.</value></data>
+  <data name="Settings_Rendering" xml:space="preserve"><value>Rendering</value></data>
+  <data name="Settings_RenderingSoftware" xml:space="preserve"><value>Software (less memory)</value></data>
+  <data name="Settings_RenderingGpu" xml:space="preserve"><value>Graphics card (smoother on large screens)</value></data>
+  <data name="Settings_RenderingHint" xml:space="preserve"><value>Software rendering uses about 110 MB less memory; the graphics card can scroll more smoothly on 4K screens. Windows only.</value></data>
+  <data name="Settings_RestartNeeded" xml:space="preserve"><value>Restart JetApi to apply the new rendering mode.</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Reset to defaults</value></data>
 </root>

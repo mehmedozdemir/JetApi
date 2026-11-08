@@ -33,6 +33,9 @@ public enum SidebarMode
 /// <summary>What the main window needs from its host (theme, language, closing).</summary>
 public interface IWorkspaceHost
 {
+    /// <summary>Opens the settings window.</summary>
+    void OpenSettings();
+
     /// <summary>Per-user settings.</summary>
     AppSettings Settings { get; }
 
@@ -488,6 +491,10 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
     }
 
+    /// <summary>Opens the settings window.</summary>
+    [RelayCommand]
+    private void OpenSettings() => _host.OpenSettings();
+
     /// <summary>Asks for Postman exports and imports them (collections and environments).</summary>
     [RelayCommand]
     private async Task ImportFromPostmanAsync()
@@ -654,6 +661,11 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <inheritdoc />
     public void AddHistory(HistoryEntry entry)
     {
+        if (!_host.Settings.SaveHistory)
+        {
+            return;
+        }
+
         History.Add(entry);
         RebuildHistory();
     }
@@ -956,6 +968,11 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewGrpc"), string.Empty, string.Empty, () => NewGrpcRequestAsync(null)));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewCollection"), string.Empty, string.Empty, NewCollectionAsync));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ImportPostman"), string.Empty, string.Empty, ImportFromPostmanAsync));
+        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_Settings"), string.Empty, "Ctrl ,", () =>
+        {
+            OpenSettings();
+            return Task.CompletedTask;
+        }));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_Environments"), string.Empty, "Ctrl E", () =>
         {
             ShowEnvironments();

@@ -10,6 +10,11 @@
         MinWidth="960" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource App.Background}">
+  <!-- Interface size from the settings: everything scales and re-lays out (text stays sharp). -->
+  <LayoutTransformControl>
+    <LayoutTransformControl.LayoutTransform>
+      <ScaleTransform ScaleX="{Binding UiScale}" ScaleY="{Binding UiScale}" />
+    </LayoutTransformControl.LayoutTransform>
   <ContentControl x:Name="Host" Content="{Binding Content}">
     <ContentControl.DataTemplates>
       <DataTemplate x:DataType="vm:WelcomeViewModel">
@@ -20,4 +25,5 @@
       </DataTemplate>
     </ContentControl.DataTemplates>
   </ContentControl>
+  </LayoutTransformControl>
 </Window>

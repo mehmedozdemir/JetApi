@@ -3,6 +3,10 @@
         xmlns:c="using:JetApi.Desktop.Controls">
   <!-- Shared control looks. Colors always come from Tokens.axaml via DynamicResource so themes switch live. -->
 
+  <!-- The interface font from the settings, for the main window and every dialog. -->
+  <Style Selector=":is(Window)">
+    <Setter Property="FontFamily" Value="{DynamicResource App.UiFont}" />
+  </Style>
   <Style Selector="TextBlock">
     <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
   </Style>
@@ -332,6 +336,33 @@
   </Style>
   <Style Selector="MenuItem.danger">
     <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
+  </Style>
+
+  <!-- Section list of the settings window. -->
+  <Style Selector="RadioButton.navitem">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="root" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="6" Padding="10,7">
+          <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton.navitem:pointerover /template/ Border#root">
+    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  </Style>
+  <Style Selector="RadioButton.navitem:checked">
+    <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="RadioButton.navitem:checked /template/ Border#root">
+    <Setter Property="Background" Value="{DynamicResource App.Selection}" />
+  </Style>
+  <Style Selector="RadioButton.navitem:focus-visible /template/ Border#root">
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
   </Style>
 
   <!-- Inputs -->

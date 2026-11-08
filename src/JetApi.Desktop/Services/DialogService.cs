@@ -63,6 +63,9 @@ public sealed class DialogService : IDialogService
     public Task ShowImportReportAsync(ImportReport report) => ShowAsync(new ImportReportDialog(report), false);
 
     /// <inheritdoc />
+    public Task ShowSettingsAsync(ViewModels.SettingsViewModel settings) => ShowAsync(new Views.SettingsWindow { DataContext = settings }, false);
+
+    /// <inheritdoc />
     public async Task<string?> PickSaveFileAsync(string title, string suggestedName)
     {
         if (_owner() is not { } owner)

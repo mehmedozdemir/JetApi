@@ -28,10 +28,13 @@ public interface IMainHost
 
     /// <summary>Imports Postman exports into the open workspace; does nothing when none is open.</summary>
     Task ImportIntoWorkspaceAsync(IReadOnlyList<string> files);
+
+    /// <summary>Opens the settings window.</summary>
+    void OpenSettings();
 }
 
 /// <summary>The main window: either the welcome screen or an open workspace.</summary>
-public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWorkspaceHost, IDisposable
+public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWorkspaceHost, ISettingsHost, IDisposable
 {
     private readonly AppSettingsStore _settingsStore;
     private readonly RequestRunner _runner;
@@ -41,22 +44,55 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
     [ObservableProperty]
     private ViewModelBase _content;
 
+    [ObservableProperty]
+    private double _uiScale = 1;
+
+    private readonly Action<AppSettings>? _applyAppearance;
+
     /// <summary>Creates the main view model.</summary>
     /// <param name="settingsStore">Where settings live.</param>
     /// <param name="dialogs">Dialogs.</param>
     /// <param name="applyTheme">Applies a theme to the application.</param>
     /// <param name="post">Runs an action on the UI thread.</param>
-    public MainWindowViewModel(AppSettingsStore settingsStore, IDialogService dialogs, Action<AppTheme> applyTheme, Action<Action> post)
+    /// <param name="applyAppearance">Applies fonts and sizes (the app passes <c>App.ApplyAppearance</c>).</param>
+    public MainWindowViewModel(AppSettingsStore settingsStore, IDialogService dialogs, Action<AppTheme> applyTheme, Action<Action> post, Action<AppSettings>? applyAppearance = null)
     {
         _settingsStore = settingsStore;
         Dialogs = dialogs;
         _applyTheme = applyTheme;
         _post = post;
+        _applyAppearance = applyAppearance;
         _runner = new RequestRunner(new ProtoSchemaCache());
         Settings = settingsStore.Load();
         Loc.Instance.SetLanguage(Settings.Language);
-        _applyTheme(Settings.Theme);
         _content = new WelcomeViewModel(this);
+        Apply(Settings);
+    }
+
+    /// <inheritdoc />
+    public void ApplySettings(AppSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        var languageChanged = settings.Language != Settings.Language;
+        UpdateSettings(settings);
+        if (languageChanged)
+        {
+            Loc.Instance.SetLanguage(settings.Language);
+        }
+
+        Apply(settings);
+    }
+
+    /// <inheritdoc cref="IMainHost.OpenSettings" />
+    public void OpenSettings() => _ = Dialogs.ShowSettingsAsync(new SettingsViewModel(this, Appearance.InstalledFonts()));
+
+    // Theme, fonts, interface size and request defaults; all apply to the running app at once.
+    private void Apply(AppSettings settings)
+    {
+        _applyTheme(settings.Theme);
+        _applyAppearance?.Invoke(settings);
+        UiScale = Math.Clamp(settings.UiScale, 0.75, 2);
+        _runner.DefaultHttpTimeout = TimeSpan.FromSeconds(Math.Clamp(settings.RequestTimeoutSeconds, 1, 3600));
     }
 
     /// <inheritdoc cref="IMainHost.Settings" />

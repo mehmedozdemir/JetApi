@@ -32,6 +32,14 @@ internal sealed class FakeDialogs : IDialogService
 
     public Task<IReadOnlyList<string>> PickJsonFilesAsync(string title) => Task.FromResult<IReadOnlyList<string>>([.. FilesToPick]);
 
+    public List<SettingsViewModel> SettingsShown { get; } = [];
+
+    public Task ShowSettingsAsync(SettingsViewModel settings)
+    {
+        SettingsShown.Add(settings);
+        return Task.CompletedTask;
+    }
+
     public Task ShowImportReportAsync(ImportReport report)
     {
         ImportReports.Add(report);
@@ -69,6 +77,10 @@ internal sealed class FakeWorkspaceHost : IWorkspaceHost
     public int CloseCount { get; private set; }
 
     public void CloseWorkspace() => CloseCount++;
+
+    public int SettingsOpened { get; private set; }
+
+    public void OpenSettings() => SettingsOpened++;
 
     public void ToggleTheme()
     {

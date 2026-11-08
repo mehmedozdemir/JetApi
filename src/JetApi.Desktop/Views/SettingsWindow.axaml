@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:JetApi.Desktop.ViewModels"
+        xmlns:c="using:JetApi.Desktop.Controls"
+        xmlns:l="using:JetApi.Desktop.Localization"
+        x:Class="JetApi.Desktop.Views.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Title="{l:Tr Settings_Title}"
+        Width="860" Height="600" MinWidth="720" MinHeight="480"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Background="{DynamicResource App.Surface}">
+  <!-- Every change applies and saves at once; there is no Save button. -->
+  <Grid ColumnDefinitions="220,*" RowDefinitions="*,Auto">
+    <Border Grid.RowSpan="2" Background="{DynamicResource App.Sidebar}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,1,0" Padding="10,18">
+      <StackPanel Spacing="2">
+        <TextBlock Classes="panel-title" Margin="10,0,0,12" Text="{l:Tr Settings_Title}" />
+        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Appearance}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Appearance}" />
+        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Language}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Language}" />
+        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Requests}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Requests}" />
+        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_History}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=History}" />
+        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Advanced}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Advanced}" />
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer Grid.Column="1">
+      <Panel Margin="32,26,32,20">
+        <!-- Appearance -->
+        <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Appearance}">
+          <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Appearance}" />
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="14">
+            <TextBlock Text="{l:Tr Settings_Theme}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" MinWidth="240" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding Theme}" AutomationProperties.Name="{l:Tr Settings_Theme}" />
+            <TextBlock Grid.Row="1" Text="{l:Tr Settings_UiFont}" VerticalAlignment="Center" />
+            <ComboBox Grid.Row="1" Grid.Column="1" MinWidth="240" MaxDropDownHeight="360" ItemsSource="{Binding UiFontOptions}" SelectedItem="{Binding UiFont}" AutomationProperties.Name="{l:Tr Settings_UiFont}" />
+            <StackPanel Grid.Row="2" VerticalAlignment="Center">
+              <TextBlock Text="{l:Tr Settings_UiScale}" />
+              <TextBlock Classes="faint small" Text="{l:Tr Settings_UiScaleHint}" TextWrapping="Wrap" />
+            </StackPanel>
+            <ComboBox Grid.Row="2" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding UiScaleOptions}" SelectedItem="{Binding UiScale}" AutomationProperties.Name="{l:Tr Settings_UiScale}" />
+          </Grid>
+
+          <Border Classes="divider" Height="1" />
+          <TextBlock Classes="h3" Text="{l:Tr Settings_Editor}" />
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="14">
+            <TextBlock Text="{l:Tr Settings_EditorFont}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" MinWidth="240" MaxDropDownHeight="360" ItemsSource="{Binding EditorFontOptions}" SelectedItem="{Binding EditorFont}" AutomationProperties.Name="{l:Tr Settings_EditorFont}" />
+            <TextBlock Grid.Row="1" Text="{l:Tr Settings_EditorFontSize}" VerticalAlignment="Center" />
+            <NumericUpDown Grid.Row="1" Grid.Column="1" Width="140" HorizontalAlignment="Left" Minimum="8" Maximum="32" Increment="0.5" FormatString="0.#"
+                           Value="{Binding EditorFontSize}" AutomationProperties.Name="{l:Tr Settings_EditorFontSize}" />
+            <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding WrapResponseLines}" Content="{l:Tr Settings_WrapResponses}" />
+          </Grid>
+          <StackPanel Spacing="6">
+            <TextBlock Classes="faint small" Text="{l:Tr Settings_Preview}" />
+            <Border Classes="code" Height="128">
+              <c:CodeEditor Text="{Binding EditorSample, Mode=OneWay}" Language="json" IsReadOnly="True" />
+            </Border>
+          </StackPanel>
+        </StackPanel>
+
+        <!-- Language -->
+        <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Language}">
+          <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Language}" />
+          <Grid ColumnDefinitions="200,*">
+            <TextBlock Text="{l:Tr Settings_InterfaceLanguage}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" MinWidth="240" ItemsSource="{Binding LanguageOptions}" SelectedItem="{Binding Language}" AutomationProperties.Name="{l:Tr Settings_InterfaceLanguage}" />
+          </Grid>
+          <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr Settings_LanguageHint}" />
+        </StackPanel>
+
+        <!-- Requests -->
+        <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Requests}">
+          <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Requests}" />
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto" RowSpacing="16">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="{l:Tr Settings_Timeout}" />
+              <TextBlock Classes="faint small" Text="{l:Tr Settings_TimeoutHint}" TextWrapping="Wrap" />
+            </StackPanel>
+            <NumericUpDown Grid.Column="1" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="1" Maximum="3600" Increment="5" FormatString="0"
+                           Value="{Binding RequestTimeoutSeconds}" AutomationProperties.Name="{l:Tr Settings_Timeout}" />
+            <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding ConfirmUndefinedVariables}" Content="{l:Tr Settings_ConfirmUndefined}" />
+          </Grid>
+        </StackPanel>
+
+        <!-- History -->
+        <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=History}">
+          <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_History}" />
+          <CheckBox IsChecked="{Binding SaveHistory}" Content="{l:Tr Settings_SaveHistory}" />
+          <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr Settings_HistoryHint}" />
+        </StackPanel>
+
+        <!-- Advanced -->
+        <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Advanced}">
+          <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Advanced}" />
+          <Grid ColumnDefinitions="200,*">
+            <TextBlock Text="{l:Tr Settings_Rendering}" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" MinWidth="240" ItemsSource="{Binding RenderingOptions}" SelectedItem="{Binding Rendering}" AutomationProperties.Name="{l:Tr Settings_Rendering}" />
+          </Grid>
+          <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr Settings_RenderingHint}" />
+          <Border Classes="note" IsVisible="{Binding RenderingNeedsRestart}">
+            <TextBlock TextWrapping="Wrap" Text="{l:Tr Settings_RestartNeeded}" />
+          </Border>
+        </StackPanel>
+      </Panel>
+    </ScrollViewer>
+
+    <Border Grid.Column="1" Grid.Row="1" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="32,12">
+      <Grid ColumnDefinitions="*,Auto">
+        <Button Classes="link" Content="{l:Tr Settings_Reset}" Command="{Binding ResetCommand}" VerticalAlignment="Center" />
+        <Button Grid.Column="1" Classes="primary" Content="{l:Tr Btn_Close}" IsDefault="True" IsCancel="True" Click="OnClose" />
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

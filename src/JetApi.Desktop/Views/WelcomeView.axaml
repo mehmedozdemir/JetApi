@@ -13,6 +13,10 @@
           <c:Icon Data="{StaticResource Icon.Logo}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" VerticalAlignment="Center" />
           <TextBlock Text="JetApi" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" />
         </StackPanel>
+        <Button Grid.Column="1" Classes="icon" Width="32" Height="32" HorizontalAlignment="Right" Margin="0,0,8,0" Command="{Binding OpenSettingsCommand}"
+                ToolTip.Tip="{l:Tr Settings_TitleShortcut}" AutomationProperties.Name="{l:Tr Settings_Title}">
+          <c:Icon Data="{StaticResource Icon.Sliders}" />
+        </Button>
         <Border Grid.Column="2" Classes="segment" VerticalAlignment="Center">
           <StackPanel Orientation="Horizontal">
             <RadioButton Classes="pill" GroupName="lang" Content="TR" IsChecked="{Binding IsTurkish, Mode=OneWay}" Command="{Binding SetLanguageCommand}" CommandParameter="tr" />

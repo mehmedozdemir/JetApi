@@ -60,7 +60,6 @@ public sealed class CodeEditor : UserControl
         {
             ShowLineNumbers = true,
             WordWrap = false,
-            FontSize = 12.5,
             Padding = new Thickness(4, 6),
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
             VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
@@ -70,6 +69,7 @@ public sealed class CodeEditor : UserControl
         _editor.Options.ConvertTabsToSpaces = true;
         _editor.Options.IndentationSize = 2;
         _editor[!TextEditor.FontFamilyProperty] = this.GetResourceObservable("App.MonoFont").ToBinding();
+        _editor[!TextEditor.FontSizeProperty] = this.GetResourceObservable("App.EditorFontSize").ToBinding();
         _editor[!TextEditor.ForegroundProperty] = this.GetResourceObservable("App.Text").ToBinding();
         _editor[!TextEditor.LineNumbersForegroundProperty] = this.GetResourceObservable("App.TextFaint").ToBinding();
         _editor.Background = Brushes.Transparent;
@@ -108,10 +108,10 @@ public sealed class CodeEditor : UserControl
             IsHitTestVisible = false,
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             Margin = new Thickness(10, 0, 0, 0),
-            FontSize = 12.5,
             IsVisible = false,
         };
         _placeholder[!TextBlock.FontFamilyProperty] = this.GetResourceObservable("App.MonoFont").ToBinding();
+        _placeholder[!TextBlock.FontSizeProperty] = this.GetResourceObservable("App.EditorFontSize").ToBinding();
         _placeholder[!TextBlock.ForegroundProperty] = this.GetResourceObservable("App.TextFaint").ToBinding();
 
         Content = new Panel { Children = { _editor, _placeholder } };
@@ -211,6 +211,12 @@ public sealed class CodeEditor : UserControl
         else if (change.Property == IsReadOnlyProperty)
         {
             _editor.IsReadOnly = IsReadOnly;
+
+            // Responses and other read-only text wrap when the setting asks for it.
+            if (IsReadOnly && !IsSingleLine)
+            {
+                _editor[!TextEditor.WordWrapProperty] = this.GetResourceObservable("App.WrapResponses").ToBinding();
+            }
         }
         else if (change.Property == ShowLineNumbersProperty)
         {

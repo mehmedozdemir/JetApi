@@ -29,7 +29,8 @@ public sealed partial class App : Application
                 new AppSettingsStore(settingsFile),
                 new DialogService(() => window),
                 ApplyTheme,
-                action => Dispatcher.UIThread.Post(action));
+                action => Dispatcher.UIThread.Post(action),
+                ApplyAppearance);
             window.DataContext = viewModel;
             desktop.MainWindow = window;
             desktop.ShutdownRequested += (_, _) => viewModel.Dispose();
@@ -56,6 +57,9 @@ public sealed partial class App : Application
         await measurement.WriteAsync(StartupMeasurement.CreateReport(windowShown, workspaceReady, requests)).ConfigureAwait(true);
         desktop.Shutdown();
     }
+
+    /// <summary>Applies fonts, editor size and wrapping.</summary>
+    public void ApplyAppearance(AppSettings settings) => Appearance.Apply(this, settings);
 
     /// <summary>Applies a theme preference.</summary>
     public void ApplyTheme(AppTheme theme) => RequestedThemeVariant = theme switch

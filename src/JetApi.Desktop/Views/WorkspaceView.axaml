@@ -56,6 +56,9 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
         <StackPanel Grid.Column="4" Orientation="Horizontal" Margin="8,0,0,0" Spacing="4">
+          <Button Classes="icon" Width="32" Height="32" Command="{Binding OpenSettingsCommand}" ToolTip.Tip="{l:Tr Settings_TitleShortcut}" AutomationProperties.Name="{l:Tr Settings_Title}">
+            <c:Icon Data="{StaticResource Icon.Sliders}" />
+          </Button>
           <Button Classes="icon" Width="32" Height="32" Command="{Binding ToggleThemeCommand}" ToolTip.Tip="{l:Tr Cmd_ToggleTheme}" AutomationProperties.Name="{l:Tr Cmd_ToggleTheme}">
             <c:Icon Data="{StaticResource Icon.Moon}" />
           </Button>

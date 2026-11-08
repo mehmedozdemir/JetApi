@@ -33,6 +33,9 @@ public interface IDialogService
     /// <summary>Shows what an import brought in and what it could not carry over.</summary>
     Task ShowImportReportAsync(ImportReport report);
 
+    /// <summary>Shows the settings window.</summary>
+    Task ShowSettingsAsync(ViewModels.SettingsViewModel settings);
+
     /// <summary>Asks for a single line of text; <c>null</c> when cancelled.</summary>
     Task<string?> PromptTextAsync(string title, string label, string initialValue);
 

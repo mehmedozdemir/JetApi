@@ -61,6 +61,7 @@
       <!-- Request -->
       <Grid RowDefinitions="Auto,*">
         <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="10,0,12,0">
+          <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
           <StackPanel Orientation="Horizontal" Spacing="4">
             <RadioButton Classes="tab" GroupName="req" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Params}">
               <StackPanel Orientation="Horizontal" Spacing="6">
@@ -95,6 +96,7 @@
             <RadioButton Classes="tab" GroupName="req" Content="{l:Tr Req_Settings}"
                          IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Settings}" />
           </StackPanel>
+          </ScrollViewer>
         </Border>
 
         <Panel Grid.Row="1">
@@ -203,6 +205,7 @@
         </Border>
 
         <Border Grid.Row="1" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="10,0,12,0" IsVisible="{Binding Response.HasResult}">
+          <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
           <StackPanel Orientation="Horizontal" Spacing="2">
             <RadioButton Classes="tab" GroupName="res" Content="{l:Tr Res_Body}"
                          IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}" />
@@ -220,6 +223,7 @@
             <RadioButton Classes="tab" GroupName="res" Content="{l:Tr Res_Sent}"
                          IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Sent}" />
           </StackPanel>
+          </ScrollViewer>
         </Border>
 
         <Panel Grid.Row="2">

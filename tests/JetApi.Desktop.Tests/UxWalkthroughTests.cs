@@ -26,7 +26,8 @@ public sealed class UxWalkthroughTests
         var settingsFile = Path.Combine(Path.GetTempPath(), "jetapi-ux-" + Guid.NewGuid().ToString("N"), "settings.json");
         using var workspace = await ScreenTests.CreateSampleWorkspaceAsync();
         var dialogs = new FakeDialogs();
-        using var vm = new MainWindowViewModel(new AppSettingsStore(settingsFile), dialogs, theme => ((App)Application.Current!).ApplyTheme(theme), action => Dispatcher.UIThread.Post(action));
+        using var vm = new MainWindowViewModel(new AppSettingsStore(settingsFile), dialogs, theme => ((App)Application.Current!).ApplyTheme(theme), action => Dispatcher.UIThread.Post(action),
+            settings => ((App)Application.Current!).ApplyAppearance(settings));
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 800 };
         window.Show();
         await vm.OpenWorkspaceAsync(workspace.Root, offerCreate: false);
@@ -159,6 +160,33 @@ public sealed class UxWalkthroughTests
         ScreenTests.Capture(window, "ux-13-dark-environments-tr");
         Loc.Instance.SetLanguage("en");
         ((App)Application.Current!).ApplyTheme(AppTheme.Light);
+
+        // 10. Settings: Ctrl+, opens them; every section renders; fonts, size and scale apply to the open window at once.
+        window.KeyPressQwerty(PhysicalKey.Comma, RawInputModifiers.Control);
+        var settings = dialogs.SettingsShown.ShouldHaveSingleItem();
+        var settingsWindow = new JetApi.Desktop.Views.SettingsWindow { DataContext = settings, Width = 860, Height = 600 };
+        settingsWindow.Show();
+        foreach (var section in Enum.GetValues<SettingsSection>())
+        {
+            settings.Section = section;
+            Settle();
+            ScreenTests.Capture(settingsWindow, $"ux-14-settings-{section.ToString().ToLowerInvariant()}");
+        }
+
+        settings.Section = SettingsSection.Appearance;
+        settings.EditorFontSize = 16;
+        settings.UiScale = settings.UiScaleOptions.Single(o => o.Value == 1.1);
+        settings.WrapResponseLines = true;
+        Settle();
+        ScreenTests.Capture(settingsWindow, "ux-15-settings-changed");
+        settingsWindow.Close();
+        Click(window, Rail(window, 0));
+        Click(window, TreeRow(window, "Create user"));
+        ScreenTests.Capture(window, "ux-16-after-settings");
+        vm.UiScale.ShouldBe(1.1);
+        ((double)Application.Current!.Resources["App.EditorFontSize"]!).ShouldBe(16);
+        settings.ResetCommand.Execute(null);
+        Settle();
 
         window.Close();
         HeadlessApp.Log.Messages.ShouldBeEmpty();

@@ -16,6 +16,16 @@ public enum AppTheme
     Dark,
 }
 
+/// <summary>How the window is drawn (Windows); see docs/performance.md.</summary>
+public enum RenderingPreference
+{
+    /// <summary>CPU rendering: about 110 MB less idle memory.</summary>
+    Software,
+
+    /// <summary>GPU rendering (ANGLE/Direct3D): smoother on very large screens.</summary>
+    Gpu,
+}
+
 /// <summary>A workspace opened before.</summary>
 /// <param name="Path">Absolute path of the workspace directory.</param>
 /// <param name="Name">Workspace name at the time it was last opened.</param>
@@ -39,6 +49,39 @@ public sealed record AppSettings
 
     /// <summary>Ask before sending a request that has undefined variables.</summary>
     public bool ConfirmUndefinedVariables { get; init; } = true;
+
+    /// <summary>Interface font family; <c>null</c> for the built-in Inter.</summary>
+    public string? UiFontFamily { get; init; }
+
+    /// <summary>Interface size: 1 is 100%; everything scales (text, spacing, icons).</summary>
+    public double UiScale { get; init; } = 1;
+
+    /// <summary>Code editor font family; <c>null</c> for the first installed of Cascadia Mono, JetBrains Mono, SF Mono, Menlo, Consolas.</summary>
+    public string? EditorFontFamily { get; init; }
+
+    /// <summary>Code editor font size in points.</summary>
+    public double EditorFontSize { get; init; } = DefaultEditorFontSize;
+
+    /// <summary>Wrap long lines in response bodies instead of scrolling sideways.</summary>
+    public bool WrapResponseLines { get; init; }
+
+    /// <summary>Timeout of requests that do not set their own, in seconds.</summary>
+    public int RequestTimeoutSeconds { get; init; } = DefaultRequestTimeoutSeconds;
+
+    /// <summary>Record sent requests in the workspace's local history.</summary>
+    public bool SaveHistory { get; init; } = true;
+
+    /// <summary>How the window is drawn; takes effect after a restart.</summary>
+    public RenderingPreference Rendering { get; init; } = RenderingPreference.Software;
+
+    /// <summary>Default editor font size.</summary>
+    public const double DefaultEditorFontSize = 12.5;
+
+    /// <summary>Default request timeout.</summary>
+    public const int DefaultRequestTimeoutSeconds = 30;
+
+    /// <summary>Every preference back to its default; the recent list and language stay.</summary>
+    public AppSettings WithDefaultPreferences() => new() { RecentWorkspaces = RecentWorkspaces, Language = Language };
 
     /// <summary>Returns settings with <paramref name="path"/> moved to the top of the recent list.</summary>
     public AppSettings WithRecent(string path, string name, DateTimeOffset now)

@@ -80,9 +80,16 @@ public sealed class RequestRunner : IDisposable
         return HttpRequestPreparer.Prepare(request, auth, CreateResolver(session, collectionKey), session.Root);
     }
 
+    /// <summary>Timeout for requests that do not set their own (from the settings).</summary>
+    public TimeSpan DefaultHttpTimeout { get; set; } = TimeSpan.FromSeconds(AppSettings.DefaultRequestTimeoutSeconds);
+
     /// <summary>Sends a prepared HTTP request.</summary>
-    public Task<HttpExecutionResult> ExecuteHttpAsync(PreparedHttpRequest request, CancellationToken cancellationToken) =>
-        _http.ExecuteAsync(request, cancellationToken);
+    public Task<HttpExecutionResult> ExecuteHttpAsync(PreparedHttpRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var withTimeout = request.Settings.Timeout is null ? request with { Settings = request.Settings with { Timeout = DefaultHttpTimeout } } : request;
+        return _http.ExecuteAsync(withTimeout, cancellationToken);
+    }
 
     /// <summary>Loads the collection's schema, resolves variables and auth and encodes the message.</summary>
     public GrpcPrepareOutcome PrepareGrpc(WorkspaceSession session, string collectionKey, IReadOnlyList<string> path, GrpcRequestDefinition request)
