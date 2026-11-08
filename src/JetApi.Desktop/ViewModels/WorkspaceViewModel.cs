@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using JetApi.Core.Model;
 using JetApi.Desktop.Localization;
 using JetApi.Desktop.Services;
+using JetApi.Import;
 using JetApi.Storage;
 
 namespace JetApi.Desktop.ViewModels;
@@ -801,6 +802,49 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         OnPropertyChanged(nameof(UnsavedText));
     }
 
+    /// <inheritdoc />
+    public void ReplaceTabRequest(RequestTabViewModel tab, RequestNode request)
+    {
+        ArgumentNullException.ThrowIfNull(tab);
+        if (!Tabs.Contains(tab))
+        {
+            return;
+        }
+
+        var replacement = CreateTab(tab.CollectionKey, tab.Path, request);
+        replacement.ContinueFrom(tab);
+        ReplaceTab(tab, replacement);
+        OnPropertyChanged(nameof(UnsavedText));
+    }
+
+    /// <summary>Creates a request from a cURL command on the clipboard.</summary>
+    [RelayCommand]
+    private async Task NewRequestFromCurlAsync()
+    {
+        var text = await Dialogs.GetClipboardTextAsync().ConfigureAwait(true);
+        if (!CurlImporter.LooksLikeCurl(text))
+        {
+            await Dialogs.ShowErrorAsync(Loc.Get("Curl_ClipboardNoCommand")).ConfigureAwait(true);
+            return;
+        }
+
+        var result = CurlImporter.Import(text!);
+        if (result.Value is not { } imported)
+        {
+            await Dialogs.ShowErrorAsync(Loc.Format("Curl_ImportFailed", result.Error)).ConfigureAwait(true);
+            return;
+        }
+
+        await CreateRequestAsync(null, name => imported with { Key = "new", Name = name }).ConfigureAwait(true);
+        await ShowCurlIssuesAsync(Dialogs, result.Issues).ConfigureAwait(true);
+    }
+
+    /// <summary>Shows what a cURL import could not carry over; nothing when everything was.</summary>
+    internal static Task ShowCurlIssuesAsync(IDialogService dialogs, IReadOnlyList<ImportIssue> issues) =>
+        issues.Any(i => i.IsWarning)
+            ? dialogs.ShowImportReportAsync(new ImportReport([new ImportFileReport("cURL", true, Loc.Get("Curl_Imported"), issues)], []))
+            : Task.CompletedTask;
+
     private void ReplaceTab(RequestTabViewModel old, RequestTabViewModel replacement)
     {
         var index = Tabs.IndexOf(old);
@@ -969,6 +1013,13 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewGrpc"), string.Empty, string.Empty, () => NewGrpcRequestAsync(null)));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewCollection"), string.Empty, string.Empty, NewCollectionAsync));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ImportPostman"), string.Empty, string.Empty, ImportFromPostmanAsync));
+        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewFromCurl"), string.Empty, string.Empty, NewRequestFromCurlAsync));
+        if (SelectedTab is HttpRequestTabViewModel http)
+        {
+            items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_CodeSnippet"), http.Name, string.Empty, http.ShowCodeSnippetAsync));
+            items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_CopyAsCurl"), http.Name, string.Empty, http.CopyAsCurlAsync));
+        }
+
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_Settings"), string.Empty, "Ctrl ,", () =>
         {
             OpenSettings();

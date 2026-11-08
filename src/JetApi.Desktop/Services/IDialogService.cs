@@ -51,6 +51,12 @@ public interface IDialogService
     /// <summary>Shows an error message.</summary>
     Task ShowErrorAsync(string message);
 
+    /// <summary>Text on the clipboard, or <c>null</c>.</summary>
+    Task<string?> GetClipboardTextAsync();
+
+    /// <summary>Shows a request as code.</summary>
+    Task ShowCodeSnippetAsync(ViewModels.CodeSnippetViewModel snippet);
+
     /// <summary>Copies text to the clipboard.</summary>
     Task CopyToClipboardAsync(string text);
 }

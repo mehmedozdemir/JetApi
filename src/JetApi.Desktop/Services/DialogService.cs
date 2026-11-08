@@ -103,6 +103,13 @@ public sealed class DialogService : IDialogService
         ShowAsync(new ConfirmDialog(Loc.Get("Error_Title"), message, Loc.Get("Btn_Ok"), isDestructive: false, showCancel: false), false);
 
     /// <inheritdoc />
+    public async Task<string?> GetClipboardTextAsync() =>
+        _owner()?.Clipboard is { } clipboard ? await clipboard.TryGetTextAsync().ConfigureAwait(true) : null;
+
+    /// <inheritdoc />
+    public Task ShowCodeSnippetAsync(ViewModels.CodeSnippetViewModel snippet) => ShowAsync(new CodeSnippetDialog { DataContext = snippet }, false);
+
+    /// <inheritdoc />
     public async Task CopyToClipboardAsync(string text)
     {
         if (_owner()?.Clipboard is { } clipboard)

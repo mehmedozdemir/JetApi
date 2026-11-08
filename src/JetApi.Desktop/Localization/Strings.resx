@@ -47,9 +47,12 @@
   <data name="Btn_Send" xml:space="preserve"><value>Send</value></data>
   <data name="Btn_SendAnyway" xml:space="preserve"><value>Send anyway</value></data>
   <data name="Cmd_CloseWorkspace" xml:space="preserve"><value>Close workspace</value></data>
+  <data name="Cmd_CodeSnippet" xml:space="preserve"><value>Code snippet…</value></data>
+  <data name="Cmd_CopyAsCurl" xml:space="preserve"><value>Copy as cURL</value></data>
   <data name="Cmd_Environments" xml:space="preserve"><value>Edit environments</value></data>
   <data name="Cmd_History" xml:space="preserve"><value>Show history</value></data>
   <data name="Cmd_NewCollection" xml:space="preserve"><value>New collection</value></data>
+  <data name="Cmd_NewFromCurl" xml:space="preserve"><value>New request from cURL on the clipboard</value></data>
   <data name="Cmd_NewGrpc" xml:space="preserve"><value>New gRPC request</value></data>
   <data name="Cmd_NewHttp" xml:space="preserve"><value>New HTTP request</value></data>
   <data name="Cmd_Reload" xml:space="preserve"><value>Reload workspace from disk</value></data>
@@ -63,6 +66,9 @@
   <data name="Confirm_Delete" xml:space="preserve"><value>Delete “{0}”? Its files are removed from the workspace folder.</value></data>
   <data name="Confirm_DeleteCollection" xml:space="preserve"><value>Delete the collection “{0}” and all its requests? Its folder is removed from the workspace.</value></data>
   <data name="Copy_Suffix" xml:space="preserve"><value>{0} (copy)</value></data>
+  <data name="Curl_ClipboardNoCommand" xml:space="preserve"><value>The clipboard does not hold a cURL command. Copy one (for example with “Copy as cURL” in the browser’s developer tools) and try again.</value></data>
+  <data name="Curl_ImportFailed" xml:space="preserve"><value>The cURL command could not be imported: {0}</value></data>
+  <data name="Curl_Imported" xml:space="preserve"><value>cURL command imported</value></data>
   <data name="Diag_Skipped" xml:space="preserve"><value>{0} files were skipped; the rest of the workspace loaded</value></data>
   <data name="Env_Active" xml:space="preserve"><value>Active</value></data>
   <data name="Env_AddVariable" xml:space="preserve"><value>Add variable</value></data>
@@ -210,7 +216,7 @@
   <data name="Req_TimeoutHint" xml:space="preserve"><value>Empty uses the default (30 000 ms).</value></data>
   <data name="Req_Unsaved" xml:space="preserve"><value>Unsaved changes</value></data>
   <data name="Req_Url" xml:space="preserve"><value>URL</value></data>
-  <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/path or https://…</value></data>
+  <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/path, https://… or paste a cURL command</value></data>
   <data name="Req_ValidateCertificates" xml:space="preserve"><value>Validate TLS certificates</value></data>
   <data name="Req_Value" xml:space="preserve"><value>Value</value></data>
   <data name="Req_VariableUndefined" xml:space="preserve"><value>not defined</value></data>
@@ -256,6 +262,17 @@
   <data name="Side_Filter" xml:space="preserve"><value>Filter</value></data>
   <data name="Side_History" xml:space="preserve"><value>History</value></data>
   <data name="Side_NewCollection" xml:space="preserve"><value>New collection</value></data>
+  <data name="Snippet_CSharp" xml:space="preserve"><value>C# (HttpClient)</value></data>
+  <data name="Snippet_Copied" xml:space="preserve"><value>Copied</value></data>
+  <data name="Snippet_Curl" xml:space="preserve"><value>cURL (bash, macOS, Linux)</value></data>
+  <data name="Snippet_CurlWindows" xml:space="preserve"><value>cURL (Windows cmd)</value></data>
+  <data name="Snippet_JavaScript" xml:space="preserve"><value>JavaScript (fetch)</value></data>
+  <data name="Snippet_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Snippet_Note" xml:space="preserve"><value>Variables are resolved with the active environment, secrets included. Check before you share it.</value></data>
+  <data name="Snippet_PowerShell" xml:space="preserve"><value>PowerShell (Invoke-RestMethod)</value></data>
+  <data name="Snippet_Python" xml:space="preserve"><value>Python (requests)</value></data>
+  <data name="Snippet_Tip" xml:space="preserve"><value>Code snippet (cURL, PowerShell, C#, JavaScript, Python)</value></data>
+  <data name="Snippet_Title" xml:space="preserve"><value>Code snippet</value></data>
   <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
   <data name="Status_Saved" xml:space="preserve"><value>All changes saved</value></data>
   <data name="Status_Unsaved" xml:space="preserve"><value>Unsaved: {0}</value></data>

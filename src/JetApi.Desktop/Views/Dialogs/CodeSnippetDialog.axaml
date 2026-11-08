@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:JetApi.Desktop.Localization"
+        xmlns:c="using:JetApi.Desktop.Controls"
+        xmlns:vm="using:JetApi.Desktop.ViewModels"
+        x:Class="JetApi.Desktop.Views.Dialogs.CodeSnippetDialog"
+        x:DataType="vm:CodeSnippetViewModel"
+        Width="760" Height="560" MinWidth="520" MinHeight="360"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Title="{l:Tr Snippet_Title}"
+        Background="{DynamicResource App.Surface}">
+  <!-- The request as code in the chosen language, ready to copy. -->
+  <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="24">
+    <StackPanel Spacing="6" Margin="0,0,0,14">
+      <TextBlock Classes="h3" Text="{l:Tr Snippet_Title}" />
+      <TextBlock Classes="muted" TextWrapping="Wrap" Text="{l:Tr Snippet_Note}" />
+    </StackPanel>
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+      <ComboBox ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}" MinWidth="240"
+                AutomationProperties.Name="{l:Tr Snippet_Language}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:ILabeled">
+            <TextBlock Text="{Binding Label}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+      <Button Grid.Column="1" Classes="secondary" Command="{Binding CopyCommand}" AutomationProperties.Name="{l:Tr Btn_Copy}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <c:Icon Data="{StaticResource Icon.Copy}" Width="14" Height="14" IsVisible="{Binding !Copied}" />
+          <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" IsVisible="{Binding Copied}"
+                  Foreground="{DynamicResource Tone.Success.Fg}" />
+          <TextBlock Text="{l:Tr Btn_Copy}" IsVisible="{Binding !Copied}" />
+          <TextBlock Text="{l:Tr Snippet_Copied}" IsVisible="{Binding Copied}" />
+        </StackPanel>
+      </Button>
+    </Grid>
+    <Border Grid.Row="2" Classes="code">
+      <c:CodeEditor Margin="12,4,4,4" IsReadOnly="True" ShowLineNumbers="False" Text="{Binding Code}" Language="{Binding EditorLanguage}"
+                    AutomationProperties.Name="{l:Tr Snippet_Title}" />
+    </Border>
+    <Button Grid.Row="3" Classes="primary" HorizontalAlignment="Right" Margin="0,16,0,0" Padding="22,0" MinHeight="36"
+            Content="{l:Tr Btn_Close}" Click="OnClose" IsDefault="True" IsCancel="True" />
+  </Grid>
+</Window>

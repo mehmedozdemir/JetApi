@@ -2,7 +2,21 @@
 
 JetApi bir cURL komutunu isteğe çevirir (IMP-4) ve bir isteği cURL'e ya da başka bir dilde çalıştırılabilir koda dönüştürür.
 İkisi de motor katmanındadır: içe aktarma `JetApi.Import` içindeki `CurlImporter`, kod üretimi `JetApi.Http` içindeki
-`CodeSnippetGenerator`. Masaüstü arayüzü henüz bağlanmadı.
+`CodeSnippetGenerator`.
+
+## Uygulamada kullanım
+
+- **Yapıştırma:** Bir cURL komutu (tek ya da çok satırlı) isteğin URL alanına yapıştırılınca istek o komuttan kurulur:
+  metot, URL, sorgu parametreleri, header'lar, body, auth ve ayarlar değişir; isteğin adı ve yeri aynı kalır. Değişiklik
+  kaydedilmemiş olarak görünür, Kaydet ile yazılır. Komut okunamazsa (ör. kapanmamış tırnak) yanıt panelinde hata
+  gösterilir ve hiçbir şey değişmez. Yalnızca yapıştırma tetikler; elle `curl` yazmak tetiklemez.
+- **Panodan yeni istek:** Komut paletinde (Ctrl+K) *Panodaki cURL'dan yeni istek*: ad sorulur, istek seçili koleksiyona
+  kaydedilir.
+- **Rapor:** Taşınamayan bir şey varsa (desteklenmeyen seçenek, auth türü, okunamayan dosya) içe aktarma raporu açılır.
+- **Kod örneği:** İstek satırındaki `</>` düğmesi (ya da paletteki *Kod örneği…*) isteği seçilen dilde gösterir ve
+  kopyalar. Seçilen dil oturum boyunca hatırlanır; Windows'ta varsayılan cURL (cmd). Değişkenler aktif environment ile
+  çözülür, gizli değerler dahil. OAuth 2.0 kullanan istekte henüz token yoksa yerine `<access-token>` yazılır.
+- **cURL olarak kopyala:** Paletteki komut, isteği bu sistemin kabuğuna uygun cURL olarak panoya kopyalar.
 
 ## cURL içe aktarma
 

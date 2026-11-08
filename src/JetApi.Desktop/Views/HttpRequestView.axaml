@@ -14,7 +14,7 @@
           <TextBlock Classes="faint" Text="{Binding BreadcrumbParent}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" MaxWidth="480" />
           <TextBlock Classes="h3" Text="{Binding Name}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
         </StackPanel>
-        <Grid ColumnDefinitions="*,Auto,Auto">
+        <Grid ColumnDefinitions="*,Auto,Auto,Auto">
           <Border Classes="field">
             <Grid ColumnDefinitions="Auto,Auto,*">
               <ComboBox x:Name="MethodBox" Classes="bare" Width="96" IsEditable="True" Text="{Binding Method}"
@@ -23,7 +23,8 @@
                         AutomationProperties.Name="{l:Tr Req_Method}" />
               <Border Grid.Column="1" Classes="divider" Width="1" Height="20" VerticalAlignment="Center" />
               <c:CodeEditor x:Name="UrlBox" Grid.Column="2" IsSingleLine="True" HighlightVariables="True" Text="{Binding Url}"
-                            PlaceholderText="{l:Tr Req_UrlPlaceholder}" EnterCommand="{Binding SendCommand}" AutomationProperties.Name="{l:Tr Req_Url}" />
+                            PlaceholderText="{l:Tr Req_UrlPlaceholder}" EnterCommand="{Binding SendCommand}" PastedTextCommand="{Binding ImportCurlCommand}"
+                            AutomationProperties.Name="{l:Tr Req_Url}" />
             </Grid>
           </Border>
           <Button Grid.Column="1" Classes="primary" Margin="8,0,0,0" MinHeight="38" Padding="22,0" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}"
@@ -31,6 +32,10 @@
           <Button Grid.Column="1" Classes="secondary" Margin="8,0,0,0" MinHeight="38" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}"
                   Content="{l:Tr Btn_Cancel_Request}" />
           <Button Grid.Column="2" Classes="secondary" Margin="8,0,0,0" MinHeight="38" Command="{Binding SaveCommand}" Content="{l:Tr Btn_Save}" />
+          <Button Grid.Column="3" Classes="secondary" Margin="8,0,0,0" MinHeight="38" MinWidth="38" Padding="10,0" Command="{Binding ShowCodeSnippetCommand}"
+                  ToolTip.Tip="{l:Tr Snippet_Tip}" AutomationProperties.Name="{l:Tr Snippet_Title}">
+            <c:Icon Data="{StaticResource Icon.Code}" Width="16" Height="16" />
+          </Button>
         </Grid>
         <!-- Fixed height so the editor below does not jump when variables appear or disappear. -->
         <ItemsControl ItemsSource="{Binding UrlHints}" MinHeight="20">

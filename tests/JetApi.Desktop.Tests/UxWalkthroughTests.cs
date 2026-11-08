@@ -223,6 +223,34 @@ public sealed class UxWalkthroughTests
         window.Height = 800;
         Settle();
 
+        // 12. Pasting a multi-line cURL command into the URL field imports it; the code button shows it as code.
+        var pasteBox = window.GetVisualDescendants().OfType<JetApi.Desktop.Controls.CodeEditor>().Single(e => e.Name == "UrlBox");
+        var pasteEditor = pasteBox.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single();
+        pasteBox.FocusEditor();
+        pasteEditor.Document.Text = "curl 'https://api.example.com/users?page=2' \\\n  -H 'Content-Type: application/json' \\\n  --data-raw '{\"name\":\"Ayşe\"}'";
+        await Task.Delay(20);
+        Settle();
+        var pasted = ws.SelectedTab.ShouldBeOfType<HttpRequestTabViewModel>();
+        pasted.Name.ShouldBe("Create user");
+        pasted.Method.ShouldBe("POST");
+        pasted.Url.ShouldBe("https://api.example.com/users");
+        pasted.IsDirty.ShouldBeTrue();
+        ScreenTests.Capture(window, "ux-21-pasted-curl");
+        await pasted.ShowCodeSnippetCommand.ExecuteAsync(null);
+        var snippet = dialogs.Snippets.ShouldHaveSingleItem();
+        var snippetWindow = new JetApi.Desktop.Views.Dialogs.CodeSnippetDialog { DataContext = snippet };
+        snippetWindow.Show();
+        Settle();
+        ScreenTests.Capture(snippetWindow, "ux-22-code-snippet");
+        snippet.SelectedLanguage = snippet.Languages.Single(l => l.Value == JetApi.Http.SnippetLanguage.CSharp);
+        ((App)Application.Current!).ApplyTheme(AppTheme.Dark);
+        Loc.Instance.SetLanguage("tr");
+        Settle();
+        ScreenTests.Capture(snippetWindow, "ux-23-code-snippet-csharp-dark-tr");
+        Loc.Instance.SetLanguage("en");
+        ((App)Application.Current!).ApplyTheme(AppTheme.Light);
+        snippetWindow.Close();
+
         window.Close();
         HeadlessApp.Log.Messages.ShouldBeEmpty();
         return true;

@@ -77,13 +77,26 @@ public sealed class RequestRunner : IDisposable
     }
 
     /// <summary>Resolves variables and auth; does not send anything.</summary>
-    public static HttpPreparationResult PrepareHttp(WorkspaceSession session, string collectionKey, IReadOnlyList<string> path, HttpRequestDefinition request)
+    /// <param name="session">The workspace.</param>
+    /// <param name="collectionKey">The request's collection.</param>
+    /// <param name="path">The request's path.</param>
+    /// <param name="request">The request as edited.</param>
+    /// <param name="tokenPlaceholder">
+    /// For code snippets: an OAuth 2.0 request without a usable token gets this text as its token instead of an error.
+    /// </param>
+    public static HttpPreparationResult PrepareHttp(WorkspaceSession session, string collectionKey, IReadOnlyList<string> path, HttpRequestDefinition request, string? tokenPlaceholder = null)
     {
         ArgumentNullException.ThrowIfNull(session);
         ArgumentNullException.ThrowIfNull(request);
 
         var auth = ResolveAuth(session, collectionKey, path, request.Auth).Auth;
-        return HttpRequestPreparer.Prepare(request, auth, CreateResolver(session, collectionKey), session.Root, UsableToken(session));
+        var tokens = UsableToken(session);
+        return HttpRequestPreparer.Prepare(
+            request,
+            auth,
+            CreateResolver(session, collectionKey),
+            session.Root,
+            tokenPlaceholder is null ? tokens : oauth => tokens(oauth) ?? new OAuth2Token(tokenPlaceholder));
     }
 
     /// <summary>Timeout for requests that do not set their own (from the settings).</summary>

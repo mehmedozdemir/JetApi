@@ -5,6 +5,7 @@ using JetApi.Core.Model;
 using JetApi.Desktop.Localization;
 using JetApi.Desktop.Services;
 using JetApi.Http;
+using JetApi.Import;
 using JetApi.Storage;
 
 namespace JetApi.Desktop.ViewModels;
@@ -359,6 +360,56 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
 
     /// <inheritdoc />
     protected override void OnTokenChanged() => Auth.RefreshToken();
+
+    /// <summary>Replaces the request with a pasted cURL command (method, URL, headers, body, auth, settings); the name stays.</summary>
+    [RelayCommand(CanExecute = nameof(IsCurl))]
+    private async Task ImportCurlAsync(string? commandLine)
+    {
+        var result = CurlImporter.Import(commandLine ?? string.Empty);
+        if (result.Value is not { } imported)
+        {
+            Response.SetPreparationErrors([Loc.Format("Curl_ImportFailed", result.Error)]);
+            return;
+        }
+
+        Host.ReplaceTabRequest(this, imported with { Key = Key, Name = Name, Description = Description });
+        await WorkspaceViewModel.ShowCurlIssuesAsync(Host.Dialogs, result.Issues).ConfigureAwait(true);
+    }
+
+    private static bool IsCurl(string? text) => CurlImporter.LooksLikeCurl(text);
+
+    /// <summary>Shows the request as code (variables resolved).</summary>
+    [RelayCommand]
+    public async Task ShowCodeSnippetAsync()
+    {
+        if (await PrepareForCodeAsync().ConfigureAwait(true) is { } request)
+        {
+            await Host.Dialogs.ShowCodeSnippetAsync(new CodeSnippetViewModel(request, Host.Dialogs.CopyToClipboardAsync)).ConfigureAwait(true);
+        }
+    }
+
+    /// <summary>Copies the request as a cURL command for the shell of this system.</summary>
+    [RelayCommand]
+    public async Task CopyAsCurlAsync()
+    {
+        if (await PrepareForCodeAsync().ConfigureAwait(true) is { } request)
+        {
+            var language = OperatingSystem.IsWindows() ? SnippetLanguage.CurlWindows : SnippetLanguage.Curl;
+            await Host.Dialogs.CopyToClipboardAsync(CodeSnippetGenerator.Generate(request, language)).ConfigureAwait(true);
+        }
+    }
+
+    private async Task<PreparedHttpRequest?> PrepareForCodeAsync()
+    {
+        var preparation = RequestRunner.PrepareHttp(Host.Session, CollectionKey, Path ?? [Key], (HttpRequestDefinition)BuildRequest(), tokenPlaceholder: "<access-token>");
+        if (preparation.Request is { } request)
+        {
+            return request;
+        }
+
+        await Host.Dialogs.ShowErrorAsync(string.Join(Environment.NewLine, preparation.Errors)).ConfigureAwait(true);
+        return null;
+    }
 
     /// <inheritdoc />
     protected override async Task SendCoreAsync(CancellationToken cancellationToken)

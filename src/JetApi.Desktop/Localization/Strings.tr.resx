@@ -47,9 +47,12 @@
   <data name="Btn_Send" xml:space="preserve"><value>Gönder</value></data>
   <data name="Btn_SendAnyway" xml:space="preserve"><value>Yine de gönder</value></data>
   <data name="Cmd_CloseWorkspace" xml:space="preserve"><value>Workspace’i kapat</value></data>
+  <data name="Cmd_CodeSnippet" xml:space="preserve"><value>Kod örneği…</value></data>
+  <data name="Cmd_CopyAsCurl" xml:space="preserve"><value>cURL olarak kopyala</value></data>
   <data name="Cmd_Environments" xml:space="preserve"><value>Environment’ları düzenle</value></data>
   <data name="Cmd_History" xml:space="preserve"><value>Geçmişi göster</value></data>
   <data name="Cmd_NewCollection" xml:space="preserve"><value>Yeni koleksiyon</value></data>
+  <data name="Cmd_NewFromCurl" xml:space="preserve"><value>Panodaki cURL’dan yeni istek</value></data>
   <data name="Cmd_NewGrpc" xml:space="preserve"><value>Yeni gRPC isteği</value></data>
   <data name="Cmd_NewHttp" xml:space="preserve"><value>Yeni HTTP isteği</value></data>
   <data name="Cmd_Reload" xml:space="preserve"><value>Workspace’i diskten yeniden yükle</value></data>
@@ -63,6 +66,9 @@
   <data name="Confirm_Delete" xml:space="preserve"><value>“{0}” silinsin mi? Dosyaları workspace klasöründen kaldırılır.</value></data>
   <data name="Confirm_DeleteCollection" xml:space="preserve"><value>“{0}” koleksiyonu ve tüm istekleri silinsin mi? Klasörü workspace’ten kaldırılır.</value></data>
   <data name="Copy_Suffix" xml:space="preserve"><value>{0} (kopya)</value></data>
+  <data name="Curl_ClipboardNoCommand" xml:space="preserve"><value>Panoda bir cURL komutu yok. Bir tane kopyalayın (örneğin tarayıcının geliştirici araçlarındaki “Copy as cURL” ile) ve yeniden deneyin.</value></data>
+  <data name="Curl_ImportFailed" xml:space="preserve"><value>cURL komutu içe aktarılamadı: {0}</value></data>
+  <data name="Curl_Imported" xml:space="preserve"><value>cURL komutu içe aktarıldı</value></data>
   <data name="Diag_Skipped" xml:space="preserve"><value>{0} dosya atlandı, workspace’in geri kalanı yüklendi</value></data>
   <data name="Env_Active" xml:space="preserve"><value>Aktif</value></data>
   <data name="Env_AddVariable" xml:space="preserve"><value>Değişken ekle</value></data>
@@ -210,7 +216,7 @@
   <data name="Req_TimeoutHint" xml:space="preserve"><value>Boş bırakılırsa varsayılan (30 000 ms) kullanılır.</value></data>
   <data name="Req_Unsaved" xml:space="preserve"><value>Kaydedilmemiş değişiklik</value></data>
   <data name="Req_Url" xml:space="preserve"><value>URL</value></data>
-  <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/yol veya https://…</value></data>
+  <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/yol, https://… veya bir cURL komutu yapıştırın</value></data>
   <data name="Req_ValidateCertificates" xml:space="preserve"><value>TLS sertifikasını doğrula</value></data>
   <data name="Req_Value" xml:space="preserve"><value>Değer</value></data>
   <data name="Req_VariableUndefined" xml:space="preserve"><value>tanımlı değil</value></data>
@@ -256,6 +262,17 @@
   <data name="Side_Filter" xml:space="preserve"><value>Filtrele</value></data>
   <data name="Side_History" xml:space="preserve"><value>Geçmiş</value></data>
   <data name="Side_NewCollection" xml:space="preserve"><value>Yeni koleksiyon</value></data>
+  <data name="Snippet_CSharp" xml:space="preserve"><value>C# (HttpClient)</value></data>
+  <data name="Snippet_Copied" xml:space="preserve"><value>Kopyalandı</value></data>
+  <data name="Snippet_Curl" xml:space="preserve"><value>cURL (bash, macOS, Linux)</value></data>
+  <data name="Snippet_CurlWindows" xml:space="preserve"><value>cURL (Windows cmd)</value></data>
+  <data name="Snippet_JavaScript" xml:space="preserve"><value>JavaScript (fetch)</value></data>
+  <data name="Snippet_Language" xml:space="preserve"><value>Dil</value></data>
+  <data name="Snippet_Note" xml:space="preserve"><value>Değişkenler aktif environment ile çözülür, gizli değerler dahil. Paylaşmadan önce kontrol edin.</value></data>
+  <data name="Snippet_PowerShell" xml:space="preserve"><value>PowerShell (Invoke-RestMethod)</value></data>
+  <data name="Snippet_Python" xml:space="preserve"><value>Python (requests)</value></data>
+  <data name="Snippet_Tip" xml:space="preserve"><value>Kod örneği (cURL, PowerShell, C#, JavaScript, Python)</value></data>
+  <data name="Snippet_Title" xml:space="preserve"><value>Kod örneği</value></data>
   <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
   <data name="Status_Saved" xml:space="preserve"><value>Tüm değişiklikler kaydedildi</value></data>
   <data name="Status_Unsaved" xml:space="preserve"><value>Kaydedilmemiş: {0}</value></data>

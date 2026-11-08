@@ -39,6 +39,9 @@ public interface IRequestHost
     /// <summary>Opens the settings of a collection (name, auth, proto files).</summary>
     void OpenCollectionSettings(string collectionKey);
 
+    /// <summary>Replaces what <paramref name="tab"/> edits with <paramref name="request"/> (e.g. a pasted cURL command); not saved yet.</summary>
+    void ReplaceTabRequest(RequestTabViewModel tab, RequestNode request);
+
     /// <summary>Closes a tab (asking first when it has unsaved changes).</summary>
     Task CloseTabAsync(RequestTabViewModel? tab);
 }
@@ -144,6 +147,13 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
 
     /// <summary>The request as currently edited.</summary>
     public abstract RequestNode BuildRequest();
+
+    /// <summary>Takes over the saved state of <paramref name="previous"/>, which this tab replaces, so unsaved changes still show.</summary>
+    internal void ContinueFrom(RequestTabViewModel previous)
+    {
+        _savedYaml = previous._savedYaml;
+        UpdateDirty();
+    }
 
     /// <summary>Sends the request.</summary>
     [RelayCommand]

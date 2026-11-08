@@ -42,10 +42,17 @@ public sealed class CodeEditor : UserControl
     /// <summary>Shown while the editor is empty.</summary>
     public static readonly StyledProperty<string?> PlaceholderTextProperty = AvaloniaProperty.Register<CodeEditor, string?>(nameof(PlaceholderText));
 
+    /// <summary>
+    /// Runs with the whole text after a paste (or drop) when it can execute, e.g. to import a pasted cURL command.
+    /// The command gets the text before line breaks are removed in single-line mode.
+    /// </summary>
+    public static readonly StyledProperty<ICommand?> PastedTextCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(PastedTextCommand));
+
     /// <summary>Runs on Enter in single-line mode (e.g. send the request).</summary>
     public static readonly StyledProperty<ICommand?> EnterCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(EnterCommand));
 
     private readonly TextEditor _editor;
+    private int _lastInsertionLength;
     private readonly TextBlock _placeholder;
     private readonly SearchPanel _search;
     private readonly RegistryOptions _registry;
@@ -76,9 +83,18 @@ public sealed class CodeEditor : UserControl
 
         _registry = new RegistryOptions(ThemeName.LightPlus);
         _textMate = _editor.InstallTextMate(_registry);
+        _editor.Document.Changed += (_, e) => _lastInsertionLength = e.InsertionLength;
         _editor.Document.TextChanged += (_, _) =>
         {
             UpdatePlaceholder();
+            if (_lastInsertionLength > 1 && !_updating && PastedTextCommand is { } pasted && pasted.CanExecute(_editor.Document.Text))
+            {
+                // A paste rather than typing: let the owner take the whole text (applied after the change completes).
+                var text = _editor.Document.Text;
+                _lastInsertionLength = 0;
+                Dispatcher.UIThread.Post(() => pasted.Execute(text));
+            }
+
             if (IsSingleLine && _editor.Document.Text.AsSpan().IndexOfAny('\r', '\n') >= 0)
             {
                 // Pasted or dropped line breaks: keep one line (applied after the change completes).
@@ -156,6 +172,13 @@ public sealed class CodeEditor : UserControl
     }
 
     /// <summary>One line only (URL fields).</summary>
+    public ICommand? PastedTextCommand
+    {
+        get => GetValue(PastedTextCommandProperty);
+        set => SetValue(PastedTextCommandProperty, value);
+    }
+
+    /// <summary>One line only.</summary>
     public bool IsSingleLine
     {
         get => GetValue(IsSingleLineProperty);
@@ -346,8 +369,7 @@ public sealed class CodeEditor : UserControl
     {
         var language = Language switch
         {
-            "json" => "json",
-            "xml" => "xml",
+            "json" or "xml" or "shellscript" or "bat" or "powershell" or "csharp" or "javascript" or "python" => Language,
             _ => null,
         };
         _textMate.SetGrammar(language is null ? null : _registry.GetScopeByLanguageId(language));
