@@ -20,6 +20,8 @@ dotnet test --solution JetApi.slnx                     # all tests (Microsoft Te
 dotnet test --project tests/JetApi.Desktop.Tests       # one project
 dotnet format JetApi.slnx --verify-no-changes          # CI fails on formatting
 dotnet run --project src/JetApi.Desktop                # run the app
+build/package.sh win-x64                               # self-contained package into dist/ (docs/packaging.md)
+build/measure.sh win-x64                               # start-up time and idle memory (docs/performance.md)
 ```
 
 The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. Look at them after UI changes.
@@ -38,9 +40,11 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 
 - Warnings are errors; .NET analyzers are at `latest-recommended`. Suppress a rule only with `SuppressMessage` and a justification.
 - Package versions live only in `Directory.Packages.props`. Lock files are committed, and CI restores in locked mode.
-  Do not commit lock-file changes caused by publishing with `-r <rid>`.
+  Target runtimes are listed in `src/Directory.Build.props`, so publishing with `-r <rid>` does not change lock files.
+  `nuget.config` restores only from nuget.org.
 - Every UI string goes in both `Strings.resx` (EN) and `Strings.tr.resx` (TR). A test checks parity and that every used key exists.
-  Use `{l:Tr Key}` in XAML and `Loc.Get` / `Loc.Format` in code.
+  Use `{l:Tr Key}` in XAML and `Loc.Get` / `Loc.Format` in code. Engine projects (`Http`, `Grpc`, `Storage`) have their own
+  `Messages.resx` / `Messages.tr.resx` and an internal `Messages.Get/Format`; their tests pin en-US.
 - Colors only via `{DynamicResource ...}` tokens, never hard-coded, so the theme switches live.
 - No element-name or `$parent` bindings inside item templates: put commands on the item view model
   (see `KeyValueRowViewModel.RemoveCommand`). The screen tests fail on binding errors.
@@ -51,10 +55,8 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 ## Open work (see docs/roadmap.md)
 
 M1 leftovers:
-- Variable highlighting and hover values inside editors.
-- Localizing the remaining engine messages: request preparation and proto/JSON errors are still English only.
-- Packaging: Windows zip/MSIX, macOS dmg, Linux AppImage.
-- Measuring startup time and memory (NFR-1, NFR-2).
+- Idle memory is ~263 MB against the 200 MB target (NFR-2); see docs/performance.md. Start-up meets NFR-1.
+- The release workflow and the macOS/Linux packages have not run on CI yet; only win-x64 was packaged locally.
 
 M2:
 - Postman Collection v2.1 and environment import, OpenAPI import.

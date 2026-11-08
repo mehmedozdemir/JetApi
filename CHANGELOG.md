@@ -16,6 +16,14 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 - Workspace oturumu: her değişiklik anında diske yazılır; aktif environment makineye özel saklanır; diskteki değişiklikler (`git pull`) otomatik yüklenir.
 - İstek geçmişi (`.jetapi/history.jsonl`, Git dışı).
 - Gönderimden önce tanımsız değişken uyarısı.
+- Motor mesajlarının Türkçe/İngilizce sunulması: istek hazırlama, bağlantı, gRPC, proto/JSON ve workspace dosyası mesajları arayüz dilini izler.
+- Paketleme: Windows zip, macOS dmg, Linux AppImage ve tar.gz (`build/package.sh`); etiketle taslak GitHub Release üreten iş akışı; uygulama ikonu.
+- Performans ölçümü: `JetApi --measure` modu ve `build/measure.sh` ile açılış süresi ve boşta bellek raporu.
 - Editörlerde değişken vurgulama (tanımlı/tanımsız ayrı renk) ve üzerine gelince çözümlenmiş değer ile kaynağı gösterme.
 - HTTP bağlantı hataları için hata türü (`HttpErrorKind`); arayüz bunları seçili dilde açıklar.
 - Windows, macOS ve Linux üzerinde CI.
+
+### Fixed
+
+- Ağ ve TLS hatalarında mesajın iki kez başlıklanması ("Network error: Network error: ...").
+- Makinede birden fazla NuGet kaynağı tanımlıyken derlemenin NU1507 ile kırılması: repodaki `nuget.config` paketleri yalnızca nuget.org'dan alır.
