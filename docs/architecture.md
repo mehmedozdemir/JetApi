@@ -37,9 +37,9 @@ bağımsız kütüphanelerde durur. Böylece aynı motor masaüstü uygulamasın
 
 | Proje | Sorumluluk | Önemli tipler |
 |---|---|---|
-| `JetApi.Core` | Workspace, koleksiyon, klasör, istek ve environment modeli (immutable `record`'lar); auth mirası; değişken çözümleme | `Workspace`, `ApiCollection`, `HttpRequestDefinition`, `GrpcRequestDefinition`, `AuthResolver`, `VariableResolver` |
-| `JetApi.Storage` | Workspace'in Git dostu YAML dosyalarına yazılması ve okunması ([dosya formatı](file-format.md)) | `WorkspaceStore`, `WorkspaceLayout` |
-| `JetApi.Http` | İsteği hazırlama (değişken, auth, URL, body) ve gönderme; zamanlama ölçümü | `HttpRequestPreparer`, `HttpRequestExecutor` |
+| `JetApi.Core` | Workspace, koleksiyon, klasör, istek ve environment modeli (immutable `record`'lar); auth mirası; değişken çözümleme; OAuth 2.0 yapılandırması ve token modeli | `Workspace`, `ApiCollection`, `HttpRequestDefinition`, `GrpcRequestDefinition`, `AuthResolver`, `VariableResolver`, `OAuth2Auth`, `OAuth2Token` |
+| `JetApi.Storage` | Workspace'in Git dostu YAML dosyalarına yazılması ve okunması ([dosya formatı](file-format.md)); makineye özel OAuth token önbelleği | `WorkspaceStore`, `WorkspaceLayout`, `OAuth2TokenStore` |
+| `JetApi.Http` | İsteği hazırlama (değişken, auth, URL, body) ve gönderme; zamanlama ölçümü; OAuth 2.0 token alma, yenileme ve tarayıcıyla oturum açma | `HttpRequestPreparer`, `HttpRequestExecutor`, `OAuth2Client`, `AuthorizationCodeFlow` |
 | `JetApi.Grpc` | `.proto` dosyalarını çalışma anında yükleme; JSON ↔ protobuf codec; unary çağrı | `ProtoSchemaLoader`, `ProtoJsonCodec`, `ProtoJsonTemplate`, `GrpcRequestPreparer`, `GrpcInvoker` |
 | `JetApi.Desktop` | Avalonia arayüzü. `Services`: workspace oturumu, istek çalıştırıcı, proto önbelleği, geçmiş, dosya izleyici, ayarlar, dialoglar. `ViewModels`: MVVM (CommunityToolkit.Mvvm), UI'dan bağımsız ve test edilebilir. `Views`: AXAML. `Localization`: TR/EN `.resx` | `WorkspaceSession`, `RequestRunner`, `WorkspaceViewModel`, `HttpRequestTabViewModel`, `GrpcRequestTabViewModel` |
 
@@ -68,6 +68,20 @@ GrpcRequestDefinition + ProtoSchema ─► GrpcRequestPreparer ─► PreparedGr
 ```
 
 Kod üretimi yoktur. Mesajlar ham bayt olarak taşınır ve `ProtoJsonCodec` ile dönüştürülür (bkz. [ADR-0003](adr/0003-dynamic-grpc-without-codegen.md)).
+
+### OAuth 2.0
+
+```
+OAuth2Auth (YAML) ─► OAuth2Auth.Resolve(değişkenler) ─► OAuth2Client.GetTokenAsync ─► OAuth2Token ─► OAuth2TokenStore.Set
+                                                         │  client_credentials, password: doğrudan token isteği
+                                                         └─ authorization_code: AuthorizationCodeFlow (tarayıcı + loopback + PKCE)
+                                                            ─► ExchangeCodeAsync
+HttpRequestPreparer.Prepare(..., tokens: auth => store.Get(auth)) ─► Authorization: Bearer <token>   (token yoksa hazırlama hatası)
+```
+
+1. Token'lar YAML'da değil, `.jetapi/tokens.json` dosyasında, çözümlenmiş yapılandırmanın özetiyle anahtarlanarak durur ([ADR-0007](adr/0007-oauth2-tokens.md)).
+2. Hazırlayıcılar (`HttpRequestPreparer`, `GrpcRequestPreparer`) saf kalır: token'ı çağıranın verdiği fonksiyondan alır. Süresi dolan token'ı yenilemek (`RefreshAsync`) çağıranın işidir.
+3. Tarayıcıyı açmak çağıranın işidir (`Func<Uri, Task>`); motor yalnızca loopback adresinde dinler, `state` doğrular ve sekmede "kapatabilirsiniz" sayfası gösterir.
 
 ## Çapraz kesen kararlar
 

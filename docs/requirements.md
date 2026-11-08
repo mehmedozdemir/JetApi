@@ -70,7 +70,7 @@
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
 | AUTH-1 | None, Inherit, Bearer, Basic, API Key (header/query) | M1 | ✅ |
-| AUTH-2 | OAuth 2.0: client credentials, authorization code (+PKCE), password; token önbelleği ve yenileme | M2 | 🔜 |
+| AUTH-2 | OAuth 2.0: client credentials, authorization code (+PKCE), password; token önbelleği ve yenileme | M2 | 🟡 Motor, dosya formatı ve token önbelleği hazır ([ADR-0007](adr/0007-oauth2-tokens.md)); arayüz bekliyor |
 | AUTH-3 | Digest, NTLM (kurumsal ihtiyaç doğarsa) | Sonra | 🔜 |
 
 ### Import / export

@@ -12,3 +12,4 @@ durumu "Yerini aldı: ADR-XXXX" yapılır.
 | [0004](0004-secrets-phase-1.md) | Sırlar: 1. fazda environment dosyalarında | Kabul edildi |
 | [0005](0005-assertions-before-scripting.md) | Test: önce kodsuz assertion'lar, sonra JavaScript | Kabul edildi |
 | [0006](0006-localization.md) | Türkçe ve İngilizce arayüz | Kabul edildi |
+| [0007](0007-oauth2-tokens.md) | OAuth 2.0: token'lar makineye özel önbellekte, YAML'da değil | Kabul edildi |

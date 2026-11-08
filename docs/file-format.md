@@ -25,7 +25,7 @@ my-workspace/
 │           ├── folder.yaml
 │           └── create-user.http.yaml
 ├── protos/                              # (öneri) proto dosyaları
-└── .jetapi/                             # makineye özel durum (geçmiş, arayüz) — .gitignore'da
+└── .jetapi/                             # makineye özel durum (geçmiş, arayüz, OAuth token'ları) — .gitignore'da
 ```
 
 **Anahtarlar** (`key`) kardeşler arasında benzersizdir. Büyük/küçük harf farkı gözetilmez, çünkü Windows ve macOS dosya
@@ -173,10 +173,44 @@ settings:
 | `bearer` | `token` | `Authorization: Bearer <token>` | `authorization` metadata |
 | `basic` | `username`, `password` | `Authorization: Basic …` (UTF-8) | `authorization` metadata |
 | `apikey` | `key`, `value`, `in: header\|query` (varsayılan header) | Header veya query parametresi | Yalnızca metadata |
+| `oauth2` | Aşağıya bakın | `Authorization: Bearer <access token>` | `authorization` metadata |
 
 Kullanıcı açıkça bir `Authorization` header'ı yazdıysa, auth sekmesi bu header'ı ezmez.
+
+### `oauth2`
+
+```yaml
+auth:
+  type: oauth2
+  grant: authorization_code      # zorunlu: client_credentials | authorization_code | password
+  tokenUrl: '{{idp}}/oauth/token'
+  authUrl: '{{idp}}/authorize'   # yalnızca authorization_code
+  clientId: '{{clientId}}'
+  clientSecret: '{{clientSecret}}' # public client'ta boş bırakılır
+  scope: openid profile          # boşluklarla ayrılmış
+  audience: https://api.example.com  # opsiyonel ek parametre (Auth0 vb.)
+  username: ayse                 # yalnızca password
+  password: '{{password}}'       # yalnızca password
+  redirectUri: http://127.0.0.1:7777/callback  # varsayılan http://127.0.0.1:0/callback (0 = boş bir port)
+  pkce: false                    # varsayılan true (S256)
+  clientAuth: body               # varsayılan basic: client id/secret Basic header'da; body: form alanlarında
+```
+
+- Varsayılan değerler ve boş alanlar yazılmaz. Seçili grant'te kullanılmayan dolu alanlar (ör. grant değiştirildiğinde
+  kalan `username`) korunur ve yok sayılır.
+- Bütün metin alanları `{{değişken}}` içerebilir. Client secret ve şifreyi environment değişkenine koymak önerilir (ADR-0004).
+- `redirectUri` bir loopback adresi olmalıdır (`127.0.0.1`, `localhost` veya `[::1]`, `http`). Oturum açma yanıtı bu
+  adreste JetApi tarafından karşılanır (RFC 8252). Sunucu sabit bir port istiyorsa port açıkça yazılır.
+- `clientAuth: basic` iken client id ve secret RFC 6749'a göre form kodlamasıyla (`application/x-www-form-urlencoded`)
+  kodlanıp Basic header'a konur. Secret boşsa (public client) yalnızca `client_id` body'de gönderilir.
+- **Token'lar bu dosyalara yazılmaz.** Workspace başına `.jetapi/tokens.json` dosyasında, çözümlenmiş yapılandırmanın
+  özetiyle anahtarlanarak saklanır; farklı environment'ların token'ları karışmaz ([ADR-0007](adr/0007-oauth2-tokens.md)).
 
 ## Sürümleme
 
 - Her dosya `schemaVersion` taşır. Desteklenenden yeni bir sürüm okunduğunda dosya atlanır ve "JetApi'yi güncelleyin" uyarısı verilir. Dosya asla üzerine yazılmaz.
 - Formatı bozan bir değişiklik `schemaVersion`'ı artırır, CHANGELOG'da geçiş notuyla belgelenir ve uygulama eski sürümü otomatik olarak yükseltir.
+- Yeni bir auth veya body türü gibi **eklemeler** `schemaVersion`'ı artırmaz: mevcut dosyalar aynen okunur. Yeni türü
+  kullanan bir dosyayı eski bir JetApi sürümü okuyamaz; dosyayı tanılama mesajıyla atlar (`oauth2` için: bilinmeyen
+  `grant` anahtarı ya da bilinmeyen `auth.type`) ve üzerine yazmaz. `oauth2` bir koleksiyonun `collection.yaml` dosyasındaysa
+  eski sürümde koleksiyonun tamamı atlanır. Ekipteki herkesin `oauth2` kullanmadan önce JetApi'yi güncellemesi gerekir.
