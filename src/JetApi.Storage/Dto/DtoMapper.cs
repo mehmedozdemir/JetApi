@@ -69,6 +69,7 @@ internal static class DtoMapper
                     Value = apiKey.Value,
                     In = apiKey.Location == ApiKeyLocation.Query ? "query" : null,
                 },
+                OAuth2Auth oauth => ToDto(oauth),
                 _ => throw new NotSupportedException($"Unsupported auth type {auth.GetType().Name}."),
             };
 
@@ -94,9 +95,60 @@ internal static class DtoMapper
                     "query" => ApiKeyLocation.Query,
                     var other => throw Invalid(Messages.Format("Storage_InvalidApiKeyLocation", other)),
                 }),
+            "oauth2" => FromOAuth2Dto(auth),
             var other => throw Invalid(Messages.Format("Storage_UnknownAuthType", other)),
         };
     }
+
+    private static AuthDto ToDto(OAuth2Auth oauth) => new()
+    {
+        Type = "oauth2",
+        Grant = oauth.GrantType switch
+        {
+            OAuth2GrantType.ClientCredentials => "client_credentials",
+            OAuth2GrantType.AuthorizationCode => "authorization_code",
+            OAuth2GrantType.Password => "password",
+            _ => throw new NotSupportedException($"Unsupported grant type {oauth.GrantType}."),
+        },
+        TokenUrl = EmptyAsNull(oauth.TokenUrl),
+        AuthUrl = EmptyAsNull(oauth.AuthorizationUrl),
+        ClientId = EmptyAsNull(oauth.ClientId),
+        ClientSecret = EmptyAsNull(oauth.ClientSecret),
+        Scope = EmptyAsNull(oauth.Scope),
+        Audience = EmptyAsNull(oauth.Audience),
+        Username = EmptyAsNull(oauth.Username),
+        Password = EmptyAsNull(oauth.Password),
+        RedirectUri = oauth.RedirectUri == OAuth2Auth.DefaultRedirectUri ? null : EmptyAsNull(oauth.RedirectUri),
+        Pkce = oauth.UsePkce ? null : false,
+        ClientAuth = oauth.ClientAuthentication == OAuth2ClientAuthentication.Body ? "body" : null,
+    };
+
+    private static OAuth2Auth FromOAuth2Dto(AuthDto auth) => new(
+        Required(auth.Grant, "auth.grant") switch
+        {
+            "client_credentials" => OAuth2GrantType.ClientCredentials,
+            "authorization_code" => OAuth2GrantType.AuthorizationCode,
+            "password" => OAuth2GrantType.Password,
+            var other => throw Invalid(Messages.Format("Storage_InvalidOAuth2Grant", other)),
+        },
+        TokenUrl: auth.TokenUrl ?? string.Empty,
+        ClientId: auth.ClientId ?? string.Empty,
+        ClientSecret: auth.ClientSecret ?? string.Empty,
+        Scope: auth.Scope ?? string.Empty,
+        Audience: auth.Audience ?? string.Empty,
+        AuthorizationUrl: auth.AuthUrl ?? string.Empty,
+        Username: auth.Username ?? string.Empty,
+        Password: auth.Password ?? string.Empty,
+        RedirectUri: string.IsNullOrWhiteSpace(auth.RedirectUri) ? OAuth2Auth.DefaultRedirectUri : auth.RedirectUri,
+        UsePkce: auth.Pkce ?? true,
+        ClientAuthentication: auth.ClientAuth switch
+        {
+            null or "basic" => OAuth2ClientAuthentication.BasicHeader,
+            "body" => OAuth2ClientAuthentication.Body,
+            var other => throw Invalid(Messages.Format("Storage_InvalidOAuth2ClientAuth", other)),
+        });
+
+    private static string? EmptyAsNull(string value) => value.Length == 0 ? null : value;
 
     // ---- HTTP request --------------------------------------------------------------------
 

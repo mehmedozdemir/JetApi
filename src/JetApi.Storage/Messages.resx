@@ -9,6 +9,8 @@
   <data name="Storage_EmptyFile" xml:space="preserve"><value>The file is empty.</value></data>
   <data name="Storage_EmptyYaml" xml:space="preserve"><value>The YAML is empty.</value></data>
   <data name="Storage_InvalidApiKeyLocation" xml:space="preserve"><value>auth.in must be 'header' or 'query', not '{0}'.</value></data>
+  <data name="Storage_InvalidOAuth2ClientAuth" xml:space="preserve"><value>auth.clientAuth must be 'basic' or 'body', not '{0}'.</value></data>
+  <data name="Storage_InvalidOAuth2Grant" xml:space="preserve"><value>auth.grant must be 'client_credentials', 'authorization_code' or 'password', not '{0}'.</value></data>
   <data name="Storage_InvalidYaml" xml:space="preserve"><value>Invalid YAML at line {0}, column {1}: {2}</value></data>
   <data name="Storage_KindCollection" xml:space="preserve"><value>collection</value></data>
   <data name="Storage_KindEnvironment" xml:space="preserve"><value>environment</value></data>
@@ -24,7 +26,7 @@
   <data name="Storage_Required" xml:space="preserve"><value>'{0}' is required.</value></data>
   <data name="Storage_SchemaVersionMissing" xml:space="preserve"><value>'schemaVersion' is missing.</value></data>
   <data name="Storage_SchemaVersionTooNew" xml:space="preserve"><value>schemaVersion {0} was written by a newer JetApi; this version supports up to {1}. Please update JetApi.</value></data>
-  <data name="Storage_UnknownAuthType" xml:space="preserve"><value>Unknown auth.type '{0}'. Expected inherit, none, bearer, basic or apikey.</value></data>
+  <data name="Storage_UnknownAuthType" xml:space="preserve"><value>Unknown auth.type '{0}'. Expected inherit, none, bearer, basic, apikey or oauth2.</value></data>
   <data name="Storage_UnknownBodyType" xml:space="preserve"><value>Unknown body.type '{0}'. Expected none, json, xml, text, form, multipart or file.</value></data>
   <data name="Storage_UnsafeKey" xml:space="preserve"><value>The {0} key '{1}' cannot be used as a file name on every operating system.</value></data>
 </root>

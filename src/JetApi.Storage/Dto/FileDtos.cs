@@ -84,15 +84,26 @@ internal sealed class KeyValueDto
     public string? Description { get; set; }
 }
 
+// Property order is the key order in files: shared keys first, then type-specific ones.
 internal sealed class AuthDto
 {
     public string? Type { get; set; }
+    public string? Grant { get; set; }
+    public string? TokenUrl { get; set; }
+    public string? AuthUrl { get; set; }
+    public string? ClientId { get; set; }
+    public string? ClientSecret { get; set; }
+    public string? Scope { get; set; }
+    public string? Audience { get; set; }
     public string? Token { get; set; }
     public string? Username { get; set; }
     public string? Password { get; set; }
     public string? Key { get; set; }
     public string? Value { get; set; }
     public string? In { get; set; }
+    public string? RedirectUri { get; set; }
+    public bool? Pkce { get; set; }
+    public string? ClientAuth { get; set; }
 }
 
 internal sealed class BodyDto

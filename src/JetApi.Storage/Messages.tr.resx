@@ -9,6 +9,8 @@
   <data name="Storage_EmptyFile" xml:space="preserve"><value>Dosya boş.</value></data>
   <data name="Storage_EmptyYaml" xml:space="preserve"><value>YAML boş.</value></data>
   <data name="Storage_InvalidApiKeyLocation" xml:space="preserve"><value>auth.in 'header' veya 'query' olmalı, '{0}' olamaz.</value></data>
+  <data name="Storage_InvalidOAuth2ClientAuth" xml:space="preserve"><value>auth.clientAuth 'basic' veya 'body' olmalı, '{0}' değil.</value></data>
+  <data name="Storage_InvalidOAuth2Grant" xml:space="preserve"><value>auth.grant 'client_credentials', 'authorization_code' veya 'password' olmalı, '{0}' değil.</value></data>
   <data name="Storage_InvalidYaml" xml:space="preserve"><value>Geçersiz YAML (satır {0}, sütun {1}): {2}</value></data>
   <data name="Storage_KindCollection" xml:space="preserve"><value>koleksiyon</value></data>
   <data name="Storage_KindEnvironment" xml:space="preserve"><value>environment</value></data>
@@ -24,7 +26,7 @@
   <data name="Storage_Required" xml:space="preserve"><value>'{0}' alanı zorunlu.</value></data>
   <data name="Storage_SchemaVersionMissing" xml:space="preserve"><value>'schemaVersion' alanı eksik.</value></data>
   <data name="Storage_SchemaVersionTooNew" xml:space="preserve"><value>schemaVersion {0} daha yeni bir JetApi sürümüyle yazılmış; bu sürüm en fazla {1} değerini destekliyor. Lütfen JetApi’yi güncelleyin.</value></data>
-  <data name="Storage_UnknownAuthType" xml:space="preserve"><value>Bilinmeyen auth.type '{0}'. Geçerli değerler: inherit, none, bearer, basic veya apikey.</value></data>
+  <data name="Storage_UnknownAuthType" xml:space="preserve"><value>Bilinmeyen auth.type '{0}'. Geçerli değerler: inherit, none, bearer, basic, apikey veya oauth2.</value></data>
   <data name="Storage_UnknownBodyType" xml:space="preserve"><value>Bilinmeyen body.type '{0}'. Geçerli değerler: none, json, xml, text, form, multipart veya file.</value></data>
   <data name="Storage_UnsafeKey" xml:space="preserve"><value>'{1}' {0} anahtarı her işletim sisteminde geçerli bir dosya adı değil.</value></data>
 </root>
