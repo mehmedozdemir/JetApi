@@ -35,6 +35,20 @@ public sealed class ImportTests
     }
 
     [Fact]
+    public async Task OpenApiDocuments_AreImportedLikePostmanExports()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        var dialogs = new FakeDialogs();
+        using var vm = workspace.CreateViewModel(dialogs);
+
+        var report = await vm.ImportFilesAsync([Sample("petstore.openapi.yaml"), Sample("users.swagger.json")]);
+
+        report.Files.ShouldAllBe(f => f.Succeeded);
+        report.CollectionKeys.Count.ShouldBe(2);
+        vm.Collections.Count(c => report.CollectionKeys.Contains(c.CollectionKey) && c.IsExpanded).ShouldBe(2);
+    }
+
+    [Fact]
     public async Task ImportingTheSameCollectionTwice_KeepsBoth()
     {
         using var workspace = await TempWorkspace.CreateAsync();

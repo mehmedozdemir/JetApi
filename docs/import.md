@@ -1,5 +1,7 @@
 # Postman'den içe aktarma
 
+OpenAPI / Swagger belgeleri de aynı komutla içe aktarılır; eşleştirmesi [openapi-import.md](openapi-import.md) dosyasındadır.
+
 JetApi, Postman'den dışa aktarılan koleksiyon (Collection v2.0 ve v2.1) ve environment dosyalarını içe aktarır.
 Hedef kayıpsız taşımadır. Taşınamayan her şey içe aktarma raporunda listelenir; hiçbir şey sessizce atılmaz.
 

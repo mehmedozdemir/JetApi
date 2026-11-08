@@ -249,7 +249,7 @@
   <data name="Welcome_CreateHint" xml:space="preserve"><value>Creates jetapi.yaml and an example collection in an empty folder.</value></data>
   <data name="Welcome_GitTip" xml:space="preserve"><value>Tip: the .jetapi/ folder keeps this machine’s history and state and is not committed. Everything else is readable YAML you can review like any other code.</value></data>
   <data name="Welcome_Import" xml:space="preserve"><value>Move from Postman</value></data>
-  <data name="Welcome_ImportHint" xml:space="preserve"><value>Import Postman collections and environments into a new or existing workspace.</value></data>
+  <data name="Welcome_ImportHint" xml:space="preserve"><value>Import Postman collections and environments or OpenAPI/Swagger documents into a new or existing workspace.</value></data>
   <data name="Welcome_NoRecent" xml:space="preserve"><value>Workspaces you open will be listed here.</value></data>
   <data name="Welcome_NotWorkspace" xml:space="preserve"><value>This folder is not a JetApi workspace (jetapi.yaml was not found). Create a new workspace here?</value></data>
   <data name="Welcome_Open" xml:space="preserve"><value>Open folder</value></data>
@@ -271,13 +271,13 @@
   <data name="Col_General" xml:space="preserve"><value>General</value></data>
   <data name="Col_VariablesHint" xml:space="preserve"><value>Only requests in this collection see these variables. They are saved in collection.yaml and go to Git. If the active environment defines the same name, its value is used.</value></data>
   <data name="Col_OverriddenByDetail" xml:space="preserve"><value>{0} defines this name too, so requests use its value instead of this one.</value></data>
-  <data name="Cmd_ImportPostman" xml:space="preserve"><value>Import from Postman…</value></data>
-  <data name="Import_PickFiles" xml:space="preserve"><value>Choose Postman collection or environment exports</value></data>
+  <data name="Cmd_ImportPostman" xml:space="preserve"><value>Import (Postman, OpenAPI)…</value></data>
+  <data name="Import_PickFiles" xml:space="preserve"><value>Choose Postman exports or OpenAPI/Swagger documents</value></data>
   <data name="Import_PickWorkspace" xml:space="preserve"><value>Choose the workspace folder (an empty folder creates a new workspace)</value></data>
   <data name="Import_ReadFailed" xml:space="preserve"><value>The file could not be read: {0}</value></data>
   <data name="Import_CollectionSummary" xml:space="preserve"><value>{0}: {1} requests in {2} folders</value></data>
   <data name="Import_EnvironmentSummary" xml:space="preserve"><value>{0} environment: {1} variables</value></data>
-  <data name="Import_UnknownFile" xml:space="preserve"><value>Not a Postman collection or environment export.</value></data>
+  <data name="Import_UnknownFile" xml:space="preserve"><value>Not a Postman export or an OpenAPI/Swagger document.</value></data>
   <data name="Import_ReportTitle" xml:space="preserve"><value>Import finished</value></data>
   <data name="Import_ReportClean" xml:space="preserve"><value>Everything was carried over.</value></data>
   <data name="Import_ReportNotes" xml:space="preserve"><value>{0} note(s) below: what was converted differently or could not be carried over.</value></data>

@@ -19,7 +19,7 @@ public sealed record ImportReport(IReadOnlyList<ImportFileReport> Files, IReadOn
     public bool IsClean => Files.All(f => f.Succeeded && f.Issues.Count == 0);
 }
 
-/// <summary>Imports Postman collections and environments into an open workspace.</summary>
+/// <summary>Imports Postman collections and environments and OpenAPI/Swagger documents into an open workspace.</summary>
 public static class ImportRunner
 {
     /// <summary>Reads, converts and saves each file; a bad file is reported and does not stop the others.</summary>
@@ -46,6 +46,23 @@ public static class ImportRunner
 
             try
             {
+                if (OpenApiImporter.LooksLikeOpenApi(json))
+                {
+                    var api = OpenApiImporter.Import(json, session.Workspace.Collections.Select(c => c.Key));
+                    if (api.Value is { } importedApi)
+                    {
+                        await session.ImportCollectionAsync(importedApi.Collection, cancellationToken).ConfigureAwait(true);
+                        collectionKeys.Add(importedApi.Collection.Key);
+                        files.Add(new ImportFileReport(fileName, true, Loc.Format("Import_CollectionSummary", importedApi.Collection.Name, importedApi.RequestCount, importedApi.FolderCount), api.Issues));
+                    }
+                    else
+                    {
+                        files.Add(new ImportFileReport(fileName, false, api.Error ?? string.Empty, api.Issues));
+                    }
+
+                    continue;
+                }
+
                 switch (PostmanImporter.Detect(json))
                 {
                     case ImportKind.PostmanCollection:

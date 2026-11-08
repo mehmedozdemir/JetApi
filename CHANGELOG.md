@@ -7,6 +7,7 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Added
 
+- OpenAPI 3.0/3.1 ve Swagger 2.0 içe aktarma (JSON ve YAML): tag’lere göre klasörler, `baseUrl` ve parametre değişkenleri, şemadan örnek body, güvenlik şemalarından auth. Postman ile aynı içe aktarma komutu ve raporu.
 - Ayarlar penceresi (Ctrl+,): tema, arayüz yazı tipi ve boyutu, editör yazı tipi ve puntosu, yanıtlarda satır kaydırma, dil, varsayılan zaman aşımı, tanımsız değişken uyarısı, geçmiş kaydı ve çizim modu. Değişiklikler anında uygulanır.
 - Postman’den içe aktarma: Collection v2.0/v2.1 ve environment dosyaları (birden fazla dosya birlikte). Kenar çubuğundaki + menüsünden, komut paletinden veya karşılama ekranından. İçe aktarma raporu, neyin farklı çevrildiğini ve neyin aktarılamadığını (script’ler, OAuth 2.0, örnek yanıtlar, kontrol edilecek dosya yolları) gösterir.
 - Ürün vizyonu, gereksinimler, mimari, dosya formatı, yol haritası ve ADR'ler.

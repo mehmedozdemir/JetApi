@@ -249,7 +249,7 @@
   <data name="Welcome_CreateHint" xml:space="preserve"><value>Boş bir klasörde jetapi.yaml ve örnek bir koleksiyon oluşturur.</value></data>
   <data name="Welcome_GitTip" xml:space="preserve"><value>İpucu: .jetapi/ klasörü bu makineye özel geçmişi ve durumu tutar, Git’e eklenmez. Diğer her şey okunabilir YAML dosyalarıdır ve code review’da normal kod gibi incelenebilir.</value></data>
   <data name="Welcome_Import" xml:space="preserve"><value>Postman’den taşı</value></data>
-  <data name="Welcome_ImportHint" xml:space="preserve"><value>Postman koleksiyonlarını ve environment’larını yeni ya da mevcut bir workspace’e aktarın.</value></data>
+  <data name="Welcome_ImportHint" xml:space="preserve"><value>Postman koleksiyonlarını ve environment’larını ya da OpenAPI/Swagger belgelerini yeni veya mevcut bir workspace’e aktarın.</value></data>
   <data name="Welcome_NoRecent" xml:space="preserve"><value>Açtığınız workspace’ler burada listelenir.</value></data>
   <data name="Welcome_NotWorkspace" xml:space="preserve"><value>Bu klasör bir JetApi workspace’i değil (jetapi.yaml bulunamadı). Burada yeni bir workspace oluşturulsun mu?</value></data>
   <data name="Welcome_Open" xml:space="preserve"><value>Klasör aç</value></data>
@@ -271,13 +271,13 @@
   <data name="Col_General" xml:space="preserve"><value>Genel</value></data>
   <data name="Col_VariablesHint" xml:space="preserve"><value>Bu değişkenleri yalnızca bu koleksiyondaki istekler görür. collection.yaml dosyasına kaydedilir ve Git’e girer. Aynı ad aktif environment’ta da tanımlıysa onun değeri kullanılır.</value></data>
   <data name="Col_OverriddenByDetail" xml:space="preserve"><value>{0} da bu adı tanımlıyor; istekler bu değer yerine onunkini kullanır.</value></data>
-  <data name="Cmd_ImportPostman" xml:space="preserve"><value>Postman’den içe aktar…</value></data>
-  <data name="Import_PickFiles" xml:space="preserve"><value>Postman koleksiyon veya environment dışa aktarımlarını seçin</value></data>
+  <data name="Cmd_ImportPostman" xml:space="preserve"><value>İçe aktar (Postman, OpenAPI)…</value></data>
+  <data name="Import_PickFiles" xml:space="preserve"><value>Postman dışa aktarımlarını veya OpenAPI/Swagger belgelerini seçin</value></data>
   <data name="Import_PickWorkspace" xml:space="preserve"><value>Workspace klasörünü seçin (boş bir klasör yeni workspace oluşturur)</value></data>
   <data name="Import_ReadFailed" xml:space="preserve"><value>Dosya okunamadı: {0}</value></data>
   <data name="Import_CollectionSummary" xml:space="preserve"><value>{0}: {2} klasörde {1} istek</value></data>
   <data name="Import_EnvironmentSummary" xml:space="preserve"><value>{0} environment’ı: {1} değişken</value></data>
-  <data name="Import_UnknownFile" xml:space="preserve"><value>Postman koleksiyon veya environment dışa aktarımı değil.</value></data>
+  <data name="Import_UnknownFile" xml:space="preserve"><value>Postman dışa aktarımı veya OpenAPI/Swagger belgesi değil.</value></data>
   <data name="Import_ReportTitle" xml:space="preserve"><value>İçe aktarma tamamlandı</value></data>
   <data name="Import_ReportClean" xml:space="preserve"><value>Her şey aktarıldı.</value></data>
   <data name="Import_ReportNotes" xml:space="preserve"><value>Aşağıda {0} not var: farklı çevrilen ya da aktarılamayan şeyler.</value></data>

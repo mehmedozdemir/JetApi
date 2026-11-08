@@ -39,7 +39,7 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 ## M2 — Postman'den geçiş → `v0.2.0`
 
 - [x] Postman Collection v2.1 ve Environment import (import raporu: neyin taşındığı, neyin taşınamadığı) ([eşleştirme](import.md))
-- [ ] OpenAPI 3.x / Swagger 2.0 import
+- [x] OpenAPI 3.x / Swagger 2.0 import ([eşleştirme](openapi-import.md))
 - [ ] cURL import (yapıştır) ve export; kod parçası üretimi (C#, curl, JS, Python)
 - [ ] OAuth 2.0 (client credentials, authorization code + PKCE, password), token önbelleği
 - [ ] Cookie jar (isteğe bağlı)

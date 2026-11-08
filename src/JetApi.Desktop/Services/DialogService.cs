@@ -54,7 +54,7 @@ public sealed class DialogService : IDialogService
         {
             Title = title,
             AllowMultiple = true,
-            FileTypeFilter = [new FilePickerFileType("JSON") { Patterns = ["*.json"] }, FilePickerFileTypes.All],
+            FileTypeFilter = [new FilePickerFileType("JSON, YAML") { Patterns = ["*.json", "*.yaml", "*.yml"] }, FilePickerFileTypes.All],
         }).ConfigureAwait(true);
         return [.. files.Select(f => f.TryGetLocalPath()).OfType<string>()];
     }
