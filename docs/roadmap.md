@@ -21,7 +21,7 @@ Amaç: Geri dönüşü zor kararları vermek ve en riskli teknik parçaları kan
 
 Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 
-- [ ] **Arayüz tasarımı** (önce wireframe ve onay): sol panel (koleksiyon ağacı), sekmeli istek editörü, yanıt paneli, environment seçici, durum çubuğu
+- [ ] **Arayüz tasarımı** onayı: [prototip ve kararlar](ui-design.md)
 - [ ] Workspace oluşturma/açma, son açılanlar, diskteki değişiklikleri izleme
 - [ ] Koleksiyon ağacı: oluşturma, yeniden adlandırma, silme, çoğaltma, sürükle-bırak, arama
 - [ ] REST istek editörü: method/URL, params, headers, auth, body (tüm türler), ayarlar

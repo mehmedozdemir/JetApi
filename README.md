@@ -23,6 +23,7 @@ ettiği, hesap gerektirmeyen bir masaüstü uygulamasıdır. Postman'e hafif ve 
 | [Mimari](docs/architecture.md) | Projeler, bağımlılık kuralları, akışlar, test stratejisi |
 | [Dosya formatı](docs/file-format.md) | Workspace'in diskteki YAML formatı |
 | [Yol haritası](docs/roadmap.md) | Kilometre taşları ve sürümler |
+| [Arayüz tasarımı](docs/ui-design.md) | M1 ekranları ve tasarım kararları |
 | [ADR'ler](docs/adr/README.md) | Mimari karar kayıtları |
 
 ## Gereksinimler
