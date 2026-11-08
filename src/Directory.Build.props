@@ -3,5 +3,11 @@
   <PropertyGroup>
     <!-- Public API of library projects must be documented. -->
     <NoWarn>$(NoWarn.Replace('CS1591', ''))</NoWarn>
+    <!--
+      Package targets (build/package.sh). `dotnet publish -r <rid>` restores the app and every project it
+      references for that RID; listing them all keeps each packages.lock.json complete, so publishing works in
+      locked mode and never changes a lock file.
+    -->
+    <RuntimeIdentifiers>win-x64;win-arm64;osx-x64;osx-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 </Project>

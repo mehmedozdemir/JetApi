@@ -1,0 +1,7 @@
+<!-- JetApi application icon. Source of truth for build/make-icons.py; the glyph is Icon.Logo from Themes/Tokens.axaml. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect x="64" y="64" width="896" height="896" rx="200" fill="#3451D1"/>
+  <g transform="translate(167 122) scale(30)">
+    <path d="M4 13l6-2 9-7-3 10-6 2-2 6-2-6z" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

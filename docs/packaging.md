@@ -1,0 +1,44 @@
+# Paketleme ve sürüm
+
+JetApi kurulum gerektirmeyen, kendi .NET çalışma zamanını içeren (self-contained) tek dosyalık bir uygulama olarak dağıtılır.
+Kod ReadyToRun ile önceden derlenir; bu açılış süresini yaklaşık %40 kısaltır (bkz. [performance.md](performance.md)).
+
+## Paketler
+
+| Platform | RID | Paket |
+|---|---|---|
+| Windows x64 / arm64 | `win-x64`, `win-arm64` | `JetApi-<sürüm>-<rid>.zip` |
+| macOS Apple silicon / Intel | `osx-arm64`, `osx-x64` | `JetApi-<sürüm>-<rid>.dmg` (`JetApi.app`) |
+| Linux x64 / arm64 | `linux-x64`, `linux-arm64` | `JetApi-<sürüm>-<rid>.AppImage` ve `.tar.gz` |
+
+Paketler henüz imzalı değildir. Windows SmartScreen ve macOS Gatekeeper ilk açılışta uyarı verir. macOS'ta uygulamaya sağ
+tıklayıp **Aç** demek yeterlidir. MSIX ve imzalı kurulum paketleri sertifika gerektirdiği için v1.0 hedefindedir
+([yol haritası](roadmap.md)).
+
+## Yerelde paket üretme
+
+```bash
+build/package.sh win-x64            # dist/JetApi-<sürüm>-win-x64.zip
+build/package.sh linux-x64 0.1.0    # sürüm verilmezse Directory.Build.props içindeki <Version> kullanılır
+```
+
+- Windows'ta Git Bash ile çalışır. Paketler `dist/`, ara çıktılar `artifacts/` klasörüne yazılır; ikisi de Git dışıdır.
+- `.dmg` yalnızca macOS'ta (`hdiutil`, `codesign`), AppImage yalnızca Linux'ta üretilir. AppImage için `appimagetool` sabit
+  bir sürümden indirilir.
+- Hedef RID'ler `src/Directory.Build.props` içinde listelenir. Bu sayede `dotnet publish -r <rid>` locked mode'da çalışır ve
+  lock dosyalarını değiştirmez. Yeni bir platform eklenirse listeye eklenip `dotnet restore` çalıştırılır ve lock dosyaları
+  commit'lenir.
+
+## Sürüm çıkarma
+
+1. `CHANGELOG.md` içindeki `[Unreleased]` bölümünü sürüm numarasıyla kapatın, `Directory.Build.props` içindeki `<Version>`
+   değerini güncelleyin.
+2. `vX.Y.Z` etiketini atıp gönderin: `git tag v0.1.0 && git push origin v0.1.0`.
+3. [Release iş akışı](../.github/workflows/release.yml) altı paketi kendi işletim sisteminde üretir, `SHA256SUMS.txt`
+   ekler ve **taslak** bir GitHub Release oluşturur. `-` içeren etiketler (`v0.1.0-beta.1`) ön sürüm olarak işaretlenir.
+4. Taslağı kontrol edip yayınlayın.
+
+## Uygulama ikonu
+
+Kaynak `build/icon.svg` dosyasıdır; glif arayüzdeki `Icon.Logo` ile aynıdır. `python build/make-icons.py` (Pillow gerekir)
+`src/JetApi.Desktop/Assets/` altındaki `.ico`, `.icns` ve `.png` dosyalarını yeniden üretir.

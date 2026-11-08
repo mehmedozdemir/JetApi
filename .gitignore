@@ -486,3 +486,7 @@ $RECYCLE.BIN/
 .jetapi/
 *.local.yaml
 .env
+
+# Packaging output (build/package.sh)
+artifacts/
+dist/

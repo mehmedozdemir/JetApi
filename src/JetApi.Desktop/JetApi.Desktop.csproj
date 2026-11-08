@@ -5,11 +5,27 @@
     <AssemblyName>JetApi</AssemblyName>
     <RootNamespace>JetApi.Desktop</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets/jetapi.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
     <!-- View model members are bound from XAML, which needs instance members even when they read only static state. -->
     <NoWarn>$(NoWarn);CA1822</NoWarn>
   </PropertyGroup>
+  <!-- Packaging (build/package.sh); the target runtimes are listed in src/Directory.Build.props. -->
+  <PropertyGroup>
+    <!-- Always on, so the analyzer package is in the lock file and single-file problems show up in normal builds. -->
+    <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <!-- Precompiled code shortens cold start (NFR-1). Trimming stays off: YAML and proto loading use reflection. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+  </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets/jetapi.ico" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
     <ProjectReference Include="..\JetApi.Storage\JetApi.Storage.csproj" />
