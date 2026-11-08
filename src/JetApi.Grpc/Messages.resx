@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Grpc_ApiKeyInQuery" xml:space="preserve"><value>gRPC has no query string; send the API key as metadata (header) instead.</value></data>
+  <data name="Grpc_Cancelled" xml:space="preserve"><value>The call was cancelled.</value></data>
+  <data name="Grpc_DeadlineExceeded" xml:space="preserve"><value>The deadline was exceeded.</value></data>
+  <data name="Grpc_EmptyServerUrl" xml:space="preserve"><value>The server URL is empty. Use https://host:port for TLS or http://host:port for plaintext.</value></data>
+  <data name="Grpc_InvalidServerUrl" xml:space="preserve"><value>'{0}' is not a valid server URL. Use https://host:port for TLS or http://host:port for plaintext.</value></data>
+  <data name="Grpc_RequestMessage" xml:space="preserve"><value>Request message: {0}</value></data>
+  <data name="Grpc_SelectMethod" xml:space="preserve"><value>Select a service and a method.</value></data>
+  <data name="Grpc_StreamingNotSupported" xml:space="preserve"><value>'{0}/{1}' is a streaming method; streaming calls are not supported yet.</value></data>
+  <data name="Grpc_UndecodableResponse" xml:space="preserve"><value>The response could not be decoded: {0}</value></data>
+  <data name="Grpc_UnknownMethod" xml:space="preserve"><value>Method '{0}' is not defined in service '{1}'.</value></data>
+  <data name="Grpc_UnknownService" xml:space="preserve"><value>Service '{0}' is not defined in the loaded proto files.</value></data>
+  <data name="Json_AnyNeedsType" xml:space="preserve"><value>A google.protobuf.Any value needs an "@type" property.</value></data>
+  <data name="Json_AnyNeedsValue" xml:space="preserve"><value>An Any holding {0} must put the value in a "value" property.</value></data>
+  <data name="Json_DescribeArray" xml:space="preserve"><value>an array</value></data>
+  <data name="Json_DescribeNumber" xml:space="preserve"><value>the number {0}</value></data>
+  <data name="Json_DescribeObject" xml:space="preserve"><value>an object</value></data>
+  <data name="Json_DescribeString" xml:space="preserve"><value>the string "{0}"</value></data>
+  <data name="Json_ExpectBase64" xml:space="preserve"><value>a base64 string</value></data>
+  <data name="Json_ExpectDuration" xml:space="preserve"><value>a duration such as "1.5s"</value></data>
+  <data name="Json_Expected" xml:space="preserve"><value>Expected {0}, got {1}.</value></data>
+  <data name="Json_ExpectedArrayFor" xml:space="preserve"><value>Expected an array for {0}, got {1}.</value></data>
+  <data name="Json_ExpectedArrayForRepeated" xml:space="preserve"><value>Expected an array for repeated field '{0}', got {1}.</value></data>
+  <data name="Json_ExpectedBase64Bytes" xml:space="preserve"><value>Expected base64-encoded bytes.</value></data>
+  <data name="Json_ExpectedBool" xml:space="preserve"><value>Expected true or false, got {0}.</value></data>
+  <data name="Json_ExpectedEnum" xml:space="preserve"><value>Expected an enum name of {0}, got {1}.</value></data>
+  <data name="Json_ExpectedNumber" xml:space="preserve"><value>Expected a number, got {0}.</value></data>
+  <data name="Json_ExpectedNumberFor" xml:space="preserve"><value>Expected a number for {0}, got {1}.</value></data>
+  <data name="Json_ExpectedObjectFor" xml:space="preserve"><value>Expected an object for {0}, got {1}.</value></data>
+  <data name="Json_ExpectedObjectForMap" xml:space="preserve"><value>Expected an object for map field '{0}', got {1}.</value></data>
+  <data name="Json_ExpectedObjectForMessage" xml:space="preserve"><value>Expected an object for message {0}, got {1}.</value></data>
+  <data name="Json_ExpectFieldMask" xml:space="preserve"><value>a comma-separated field mask such as "name,address.city"</value></data>
+  <data name="Json_ExpectString" xml:space="preserve"><value>a string</value></data>
+  <data name="Json_ExpectTimestamp" xml:space="preserve"><value>an RFC 3339 timestamp such as "2026-01-31T10:00:00Z"</value></data>
+  <data name="Json_ExpectTypeUrl" xml:space="preserve"><value>a type URL such as "type.googleapis.com/users.v1.User"</value></data>
+  <data name="Json_FieldSetTwice" xml:space="preserve"><value>Field '{0}' is set more than once.</value></data>
+  <data name="Json_GroupNotSupported" xml:space="preserve"><value>Field '{0}' is a proto2 group, which is not supported.</value></data>
+  <data name="Json_InvalidDuration" xml:space="preserve"><value>'{0}' is not a duration such as "30s", "1.5s" or "-0.001s" (at most {1} seconds).</value></data>
+  <data name="Json_InvalidDurationValue" xml:space="preserve"><value>Invalid duration: {0}s and {1}ns.</value></data>
+  <data name="Json_InvalidEnumName" xml:space="preserve"><value>'{0}' is not a value of {1}. Valid values: {2}.</value></data>
+  <data name="Json_InvalidIntegerText" xml:space="preserve"><value>"{0}" is not a valid {1}.</value></data>
+  <data name="Json_InvalidJson" xml:space="preserve"><value>Invalid JSON (line {0}, position {1}): {2}</value></data>
+  <data name="Json_InvalidMessageData" xml:space="preserve"><value>The data is not a valid {0} message: {1}</value></data>
+  <data name="Json_InvalidNumberText" xml:space="preserve"><value>"{0}" is not a valid number.</value></data>
+  <data name="Json_InvalidTimestamp" xml:space="preserve"><value>'{0}' is not an RFC 3339 timestamp such as "2026-01-31T10:00:00Z" or "2026-01-31T13:00:00.5+03:00".</value></data>
+  <data name="Json_MapKeyBool" xml:space="preserve"><value>Map key '{0}' must be "true" or "false".</value></data>
+  <data name="Json_MapKeyType" xml:space="preserve"><value>Map keys of type {0} are not supported.</value></data>
+  <data name="Json_MoreNames" xml:space="preserve"><value>{0}, … ({1} more)</value></data>
+  <data name="Json_NotScalar" xml:space="preserve"><value>Field '{0}' of type {1} is not a scalar.</value></data>
+  <data name="Json_NotWholeNumber" xml:space="preserve"><value>{0} is not a whole number ({1}).</value></data>
+  <data name="Json_NullInRepeated" xml:space="preserve"><value>null is not allowed in a repeated field.</value></data>
+  <data name="Json_NullMapValue" xml:space="preserve"><value>null is not allowed as a map value.</value></data>
+  <data name="Json_NumberOutOfRange" xml:space="preserve"><value>The number is out of range.</value></data>
+  <data name="Json_OneofConflict" xml:space="preserve"><value>'{0}' and '{1}' belong to oneof '{2}'; set only one of them.</value></data>
+  <data name="Json_OutOfRange" xml:space="preserve"><value>{0} is out of range for {1}.</value></data>
+  <data name="Json_OutOfRangeBetween" xml:space="preserve"><value>{0} is out of range for {1} ({2} to {3}).</value></data>
+  <data name="Json_TimestampOutOfRange" xml:space="preserve"><value>Timestamp {0}s is outside the supported range (years 1 to 9999).</value></data>
+  <data name="Json_TooDeep" xml:space="preserve"><value>The message is nested too deeply.</value></data>
+  <data name="Json_UnknownAnyType" xml:space="preserve"><value>Type '{0}' of the Any value is not defined in the loaded proto files.</value></data>
+  <data name="Json_UnknownField" xml:space="preserve"><value>Unknown field '{0}' in {1}. Known fields: {2}.</value></data>
+  <data name="Json_UnsupportedValue" xml:space="preserve"><value>Unsupported JSON value {0}.</value></data>
+  <data name="Json_WireTypeMismatch" xml:space="preserve"><value>Field '{0}' (#{1}) arrived with wire type {2}, but the proto file declares {3}. The server may use a different version of the proto file.</value></data>
+  <data name="Proto_FileNotFound" xml:space="preserve"><value>'{0}' was not found in any import path.</value></data>
+  <data name="Proto_ImportPathMissing" xml:space="preserve"><value>Import path '{0}' does not exist.</value></data>
+  <data name="Proto_NoFiles" xml:space="preserve"><value>No proto files are configured.</value></data>
+</root>

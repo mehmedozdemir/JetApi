@@ -53,7 +53,7 @@ public static class ProtoSchemaLoader
         var diagnostics = new List<ProtoDiagnostic>();
         if (files.Count == 0)
         {
-            diagnostics.Add(new ProtoDiagnostic(string.Empty, 0, 0, "No proto files are configured.", true));
+            diagnostics.Add(new ProtoDiagnostic(string.Empty, 0, 0, Messages.Get("Proto_NoFiles"), true));
             return new ProtoLoadResult(null, diagnostics);
         }
 
@@ -62,7 +62,7 @@ public static class ProtoSchemaLoader
         {
             if (!Directory.Exists(importPath))
             {
-                diagnostics.Add(new ProtoDiagnostic(string.Empty, 0, 0, $"Import path '{importPath}' does not exist.", true));
+                diagnostics.Add(new ProtoDiagnostic(string.Empty, 0, 0, Messages.Format("Proto_ImportPathMissing", importPath), true));
                 continue;
             }
 
@@ -74,7 +74,7 @@ public static class ProtoSchemaLoader
             var normalized = file.Replace('\\', '/');
             if (!set.Add(normalized, includeInOutput: true))
             {
-                diagnostics.Add(new ProtoDiagnostic(normalized, 0, 0, $"'{normalized}' was not found in any import path.", true));
+                diagnostics.Add(new ProtoDiagnostic(normalized, 0, 0, Messages.Format("Proto_FileNotFound", normalized), true));
             }
         }
 

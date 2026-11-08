@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Grpc_ApiKeyInQuery" xml:space="preserve"><value>gRPC'de query string yoktur; API anahtarını metadata (header) olarak gönderin.</value></data>
+  <data name="Grpc_Cancelled" xml:space="preserve"><value>Çağrı iptal edildi.</value></data>
+  <data name="Grpc_DeadlineExceeded" xml:space="preserve"><value>Süre sınırı (deadline) aşıldı.</value></data>
+  <data name="Grpc_EmptyServerUrl" xml:space="preserve"><value>Sunucu URL'si boş. TLS için https://host:port, şifresiz bağlantı için http://host:port kullanın.</value></data>
+  <data name="Grpc_InvalidServerUrl" xml:space="preserve"><value>'{0}' geçerli bir sunucu URL'si değil. TLS için https://host:port, şifresiz bağlantı için http://host:port kullanın.</value></data>
+  <data name="Grpc_RequestMessage" xml:space="preserve"><value>İstek mesajı: {0}</value></data>
+  <data name="Grpc_SelectMethod" xml:space="preserve"><value>Bir servis ve bir metot seçin.</value></data>
+  <data name="Grpc_StreamingNotSupported" xml:space="preserve"><value>'{0}/{1}' bir streaming metodu; streaming çağrılar henüz desteklenmiyor.</value></data>
+  <data name="Grpc_UndecodableResponse" xml:space="preserve"><value>Yanıt çözümlenemedi: {0}</value></data>
+  <data name="Grpc_UnknownMethod" xml:space="preserve"><value>'{0}' metodu '{1}' servisinde tanımlı değil.</value></data>
+  <data name="Grpc_UnknownService" xml:space="preserve"><value>'{0}' servisi yüklenen proto dosyalarında tanımlı değil.</value></data>
+  <data name="Json_AnyNeedsType" xml:space="preserve"><value>google.protobuf.Any değerinin bir "@type" özelliği olmalı.</value></data>
+  <data name="Json_AnyNeedsValue" xml:space="preserve"><value>{0} taşıyan bir Any, değeri "value" özelliğinde vermeli.</value></data>
+  <data name="Json_DescribeArray" xml:space="preserve"><value>bir dizi</value></data>
+  <data name="Json_DescribeNumber" xml:space="preserve"><value>{0} sayısı</value></data>
+  <data name="Json_DescribeObject" xml:space="preserve"><value>bir nesne</value></data>
+  <data name="Json_DescribeString" xml:space="preserve"><value>"{0}" metni</value></data>
+  <data name="Json_ExpectBase64" xml:space="preserve"><value>base64 kodlu bir metin</value></data>
+  <data name="Json_ExpectDuration" xml:space="preserve"><value>"1.5s" gibi bir süre</value></data>
+  <data name="Json_Expected" xml:space="preserve"><value>{0} bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectedArrayFor" xml:space="preserve"><value>{0} için bir dizi bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectedArrayForRepeated" xml:space="preserve"><value>Repeated '{0}' alanı için bir dizi bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectedBase64Bytes" xml:space="preserve"><value>Base64 kodlu bayt verisi bekleniyordu.</value></data>
+  <data name="Json_ExpectedBool" xml:space="preserve"><value>true ya da false bekleniyordu, {0} geldi.</value></data>
+  <data name="Json_ExpectedEnum" xml:space="preserve"><value>{0} enum'una ait bir değer adı bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectedNumber" xml:space="preserve"><value>Bir sayı bekleniyordu, {0} geldi.</value></data>
+  <data name="Json_ExpectedNumberFor" xml:space="preserve"><value>{0} için bir sayı bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectedObjectFor" xml:space="preserve"><value>{0} için bir nesne bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectedObjectForMap" xml:space="preserve"><value>Map türündeki '{0}' alanı için bir nesne bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectedObjectForMessage" xml:space="preserve"><value>{0} mesajı için bir nesne bekleniyordu, {1} geldi.</value></data>
+  <data name="Json_ExpectFieldMask" xml:space="preserve"><value>"name,address.city" gibi virgülle ayrılmış bir field mask</value></data>
+  <data name="Json_ExpectString" xml:space="preserve"><value>bir metin</value></data>
+  <data name="Json_ExpectTimestamp" xml:space="preserve"><value>"2026-01-31T10:00:00Z" gibi bir RFC 3339 zaman damgası</value></data>
+  <data name="Json_ExpectTypeUrl" xml:space="preserve"><value>"type.googleapis.com/users.v1.User" gibi bir type URL</value></data>
+  <data name="Json_FieldSetTwice" xml:space="preserve"><value>'{0}' alanı birden fazla kez verilmiş.</value></data>
+  <data name="Json_GroupNotSupported" xml:space="preserve"><value>'{0}' alanı bir proto2 group alanı; bu tür desteklenmiyor.</value></data>
+  <data name="Json_InvalidDuration" xml:space="preserve"><value>'{0}', "30s", "1.5s" ya da "-0.001s" gibi bir süre değil (en fazla {1} saniye).</value></data>
+  <data name="Json_InvalidDurationValue" xml:space="preserve"><value>Geçersiz süre: {0}s ve {1}ns.</value></data>
+  <data name="Json_InvalidEnumName" xml:space="preserve"><value>'{0}', {1} enum'unun bir değeri değil. Geçerli değerler: {2}.</value></data>
+  <data name="Json_InvalidIntegerText" xml:space="preserve"><value>"{0}" geçerli bir {1} değil.</value></data>
+  <data name="Json_InvalidJson" xml:space="preserve"><value>Geçersiz JSON (satır {0}, konum {1}): {2}</value></data>
+  <data name="Json_InvalidMessageData" xml:space="preserve"><value>Veri geçerli bir {0} mesajı değil: {1}</value></data>
+  <data name="Json_InvalidNumberText" xml:space="preserve"><value>"{0}" geçerli bir sayı değil.</value></data>
+  <data name="Json_InvalidTimestamp" xml:space="preserve"><value>'{0}', "2026-01-31T10:00:00Z" ya da "2026-01-31T13:00:00.5+03:00" gibi bir RFC 3339 zaman damgası değil.</value></data>
+  <data name="Json_MapKeyBool" xml:space="preserve"><value>'{0}' map anahtarı "true" ya da "false" olmalı.</value></data>
+  <data name="Json_MapKeyType" xml:space="preserve"><value>{0} türünde map anahtarları desteklenmiyor.</value></data>
+  <data name="Json_MoreNames" xml:space="preserve"><value>{0}, … ({1} tane daha)</value></data>
+  <data name="Json_NotScalar" xml:space="preserve"><value>{1} türündeki '{0}' alanı skaler değil.</value></data>
+  <data name="Json_NotWholeNumber" xml:space="preserve"><value>{0} bir tam sayı değil ({1}).</value></data>
+  <data name="Json_NullInRepeated" xml:space="preserve"><value>Repeated bir alanda null kullanılamaz.</value></data>
+  <data name="Json_NullMapValue" xml:space="preserve"><value>Map değeri olarak null kullanılamaz.</value></data>
+  <data name="Json_NumberOutOfRange" xml:space="preserve"><value>Sayı geçerli aralığın dışında.</value></data>
+  <data name="Json_OneofConflict" xml:space="preserve"><value>'{0}' ve '{1}' aynı oneof'a ('{2}') ait; yalnızca birini verin.</value></data>
+  <data name="Json_OutOfRange" xml:space="preserve"><value>{0}, {1} için geçerli aralığın dışında.</value></data>
+  <data name="Json_OutOfRangeBetween" xml:space="preserve"><value>{0}, {1} için geçerli aralığın dışında ({2} ile {3} arası).</value></data>
+  <data name="Json_TimestampOutOfRange" xml:space="preserve"><value>{0}s zaman damgası desteklenen aralığın dışında (1 ile 9999 yılları arası).</value></data>
+  <data name="Json_TooDeep" xml:space="preserve"><value>Mesaj çok fazla iç içe geçmiş.</value></data>
+  <data name="Json_UnknownAnyType" xml:space="preserve"><value>Any değerinin türü '{0}' yüklenen proto dosyalarında tanımlı değil.</value></data>
+  <data name="Json_UnknownField" xml:space="preserve"><value>{1} içinde '{0}' adında bir alan yok. Bilinen alanlar: {2}.</value></data>
+  <data name="Json_UnsupportedValue" xml:space="preserve"><value>Desteklenmeyen JSON değeri: {0}.</value></data>
+  <data name="Json_WireTypeMismatch" xml:space="preserve"><value>'{0}' alanı (#{1}) {2} wire type ile geldi, ancak proto dosyasında {3} olarak tanımlı. Sunucu, proto dosyasının farklı bir sürümünü kullanıyor olabilir.</value></data>
+  <data name="Proto_FileNotFound" xml:space="preserve"><value>'{0}' hiçbir import yolunda bulunamadı.</value></data>
+  <data name="Proto_ImportPathMissing" xml:space="preserve"><value>'{0}' import yolu mevcut değil.</value></data>
+  <data name="Proto_NoFiles" xml:space="preserve"><value>Hiç proto dosyası yapılandırılmamış.</value></data>
+</root>

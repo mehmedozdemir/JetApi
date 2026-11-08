@@ -58,6 +58,6 @@ public sealed partial class ProtoJsonCodec
         var slash = typeUrl.LastIndexOf('/');
         var typeName = slash >= 0 ? typeUrl[(slash + 1)..] : typeUrl;
         return _schema.Messages.GetValueOrDefault(typeName)
-            ?? throw new ProtoJsonException(path, $"Type '{typeName}' of the Any value is not defined in the loaded proto files.");
+            ?? throw new ProtoJsonException(path, Messages.Format("Json_UnknownAnyType", typeName));
     }
 }

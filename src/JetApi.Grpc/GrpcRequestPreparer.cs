@@ -59,7 +59,7 @@ public static class GrpcRequestPreparer
             }
             catch (ProtoJsonException exception)
             {
-                errors.Add($"Request message: {exception.Message}");
+                errors.Add(Messages.Format("Grpc_RequestMessage", exception.Message));
             }
         }
 
@@ -73,13 +73,13 @@ public static class GrpcRequestPreparer
         var text = value.Trim();
         if (text.Length == 0)
         {
-            errors.Add("The server URL is empty. Use https://host:port for TLS or http://host:port for plaintext.");
+            errors.Add(Messages.Get("Grpc_EmptyServerUrl"));
             return null;
         }
 
         if (!Uri.TryCreate(text, UriKind.Absolute, out var url) || (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps) || url.AbsolutePath != "/")
         {
-            errors.Add($"'{text}' is not a valid server URL. Use https://host:port for TLS or http://host:port for plaintext.");
+            errors.Add(Messages.Format("Grpc_InvalidServerUrl", text));
             return null;
         }
 
@@ -90,27 +90,27 @@ public static class GrpcRequestPreparer
     {
         if (string.IsNullOrWhiteSpace(serviceName) || string.IsNullOrWhiteSpace(methodName))
         {
-            errors.Add("Select a service and a method.");
+            errors.Add(Messages.Get("Grpc_SelectMethod"));
             return null;
         }
 
         var service = schema.Services.FirstOrDefault(s => s.FullName == serviceName);
         if (service is null)
         {
-            errors.Add($"Service '{serviceName}' is not defined in the loaded proto files.");
+            errors.Add(Messages.Format("Grpc_UnknownService", serviceName));
             return null;
         }
 
         var method = service.Methods.FirstOrDefault(m => m.Name == methodName);
         if (method is null)
         {
-            errors.Add($"Method '{methodName}' is not defined in service '{serviceName}'.");
+            errors.Add(Messages.Format("Grpc_UnknownMethod", methodName, serviceName));
             return null;
         }
 
         if (!method.IsUnary)
         {
-            errors.Add($"'{serviceName}/{methodName}' is a streaming method; streaming calls are not supported yet.");
+            errors.Add(Messages.Format("Grpc_StreamingNotSupported", serviceName, methodName));
             return null;
         }
 
@@ -130,7 +130,7 @@ public static class GrpcRequestPreparer
                 metadata.Add(new("authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials))));
                 break;
             case ApiKeyAuth { Location: ApiKeyLocation.Query }:
-                errors.Add("gRPC has no query string; send the API key as metadata (header) instead.");
+                errors.Add(Messages.Get("Grpc_ApiKeyInQuery"));
                 break;
             case ApiKeyAuth apiKey:
                 metadata.Add(new(resolve(apiKey.Key).ToLowerInvariant(), resolve(apiKey.Value)));

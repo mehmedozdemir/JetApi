@@ -36,7 +36,7 @@ public sealed partial class ProtoJsonCodec
         }
         catch (JsonException exception)
         {
-            throw new ProtoJsonException("$", $"Invalid JSON (line {exception.LineNumber + 1}, position {exception.BytePositionInLine + 1}): {exception.Message.Split(" LineNumber", 2)[0]}");
+            throw new ProtoJsonException("$", Messages.Format("Json_InvalidJson", exception.LineNumber + 1, exception.BytePositionInLine + 1, exception.Message.Split(" LineNumber", 2)[0]));
         }
 
         using (document)
@@ -49,7 +49,7 @@ public sealed partial class ProtoJsonCodec
     {
         if (depth > MaxDepth)
         {
-            throw new ProtoJsonException(path, "The message is nested too deeply.");
+            throw new ProtoJsonException(path, Messages.Get("Json_TooDeep"));
         }
 
         if (ignoredProperty is null && HasSpecialJsonForm(type))
@@ -59,7 +59,7 @@ public sealed partial class ProtoJsonCodec
 
         if (element.ValueKind != JsonValueKind.Object)
         {
-            throw new ProtoJsonException(path, $"Expected an object for message {type.FullName}, got {Describe(element)}.");
+            throw new ProtoJsonException(path, Messages.Format("Json_ExpectedObjectForMessage", type.FullName, Describe(element)));
         }
 
         var entries = new List<(ProtoField Field, JsonElement Value, string Path)>();
@@ -75,11 +75,11 @@ public sealed partial class ProtoJsonCodec
             var propertyPath = path + "." + property.Name;
             var field = type.FindField(property.Name) ?? throw new ProtoJsonException(
                 propertyPath,
-                $"Unknown field '{property.Name}' in {type.FullName}. Known fields: {ListNames(type.Fields.Select(f => f.JsonName))}.");
+                Messages.Format("Json_UnknownField", property.Name, type.FullName, ListNames(type.Fields.Select(f => f.JsonName))));
 
             if (!setFields.Add(field.Number))
             {
-                throw new ProtoJsonException(propertyPath, $"Field '{field.Name}' is set more than once.");
+                throw new ProtoJsonException(propertyPath, Messages.Format("Json_FieldSetTwice", field.Name));
             }
 
             if (property.Value.ValueKind == JsonValueKind.Null && !AcceptsNull(field))
@@ -91,7 +91,7 @@ public sealed partial class ProtoJsonCodec
             {
                 if (setOneofs.TryGetValue(oneof, out var other))
                 {
-                    throw new ProtoJsonException(propertyPath, $"'{other}' and '{field.JsonName}' belong to oneof '{oneof}'; set only one of them.");
+                    throw new ProtoJsonException(propertyPath, Messages.Format("Json_OneofConflict", other, field.JsonName, oneof));
                 }
 
                 setOneofs[oneof] = field.JsonName;
@@ -129,7 +129,7 @@ public sealed partial class ProtoJsonCodec
     {
         if (field.Type == ProtoFieldType.Group)
         {
-            throw new ProtoJsonException(path, $"Field '{field.Name}' is a proto2 group, which is not supported.");
+            throw new ProtoJsonException(path, Messages.Format("Json_GroupNotSupported", field.Name));
         }
 
         if (field.Type == ProtoFieldType.Message)
@@ -154,7 +154,7 @@ public sealed partial class ProtoJsonCodec
     {
         if (value.ValueKind != JsonValueKind.Array)
         {
-            throw new ProtoJsonException(path, $"Expected an array for repeated field '{field.Name}', got {Describe(value)}.");
+            throw new ProtoJsonException(path, Messages.Format("Json_ExpectedArrayForRepeated", field.Name, Describe(value)));
         }
 
         if (field.IsPacked)
@@ -183,7 +183,7 @@ public sealed partial class ProtoJsonCodec
             var itemPath = $"{path}[{index++}]";
             if (item.ValueKind == JsonValueKind.Null && !AcceptsNull(field))
             {
-                throw new ProtoJsonException(itemPath, "null is not allowed in a repeated field.");
+                throw new ProtoJsonException(itemPath, Messages.Get("Json_NullInRepeated"));
             }
 
             WriteSingle(output, field, item, itemPath, depth, force: true);
@@ -194,7 +194,7 @@ public sealed partial class ProtoJsonCodec
     {
         if (value.ValueKind != JsonValueKind.Object)
         {
-            throw new ProtoJsonException(path, $"Expected an object for map field '{field.Name}', got {Describe(value)}.");
+            throw new ProtoJsonException(path, Messages.Format("Json_ExpectedObjectForMap", field.Name, Describe(value)));
         }
 
         var entryType = field.MessageType!;
@@ -206,7 +206,7 @@ public sealed partial class ProtoJsonCodec
             var key = ParseMapKey(keyField, property.Name, entryPath);
             if (property.Value.ValueKind == JsonValueKind.Null && !AcceptsNull(valueField))
             {
-                throw new ProtoJsonException(entryPath, "null is not allowed as a map value.");
+                throw new ProtoJsonException(entryPath, Messages.Get("Json_NullMapValue"));
             }
 
             var entry = WriteMessage(inner =>
@@ -232,13 +232,13 @@ public sealed partial class ProtoJsonCodec
         switch (type.FullName)
         {
             case TimestampType:
-                var (seconds, nanos) = ParseTimestamp(ExpectString(element, path, "an RFC 3339 timestamp such as \"2026-01-31T10:00:00Z\""), path);
+                var (seconds, nanos) = ParseTimestamp(ExpectString(element, path, Messages.Get("Json_ExpectTimestamp")), path);
                 return EncodeSecondsAndNanos(seconds, nanos);
             case DurationType:
-                var duration = ParseDuration(ExpectString(element, path, "a duration such as \"1.5s\""), path);
+                var duration = ParseDuration(ExpectString(element, path, Messages.Get("Json_ExpectDuration")), path);
                 return EncodeSecondsAndNanos(duration.Seconds, duration.Nanos);
             case FieldMaskType:
-                var mask = ExpectString(element, path, "a comma-separated field mask such as \"name,address.city\"");
+                var mask = ExpectString(element, path, Messages.Get("Json_ExpectFieldMask"));
                 var paths = mask.Length == 0 ? [] : mask.Split(',').Select(p => CamelToSnake(p.Trim())).ToList();
                 return WriteMessage(output =>
                 {
@@ -251,14 +251,14 @@ public sealed partial class ProtoJsonCodec
             case StructType:
                 if (element.ValueKind != JsonValueKind.Object)
                 {
-                    throw new ProtoJsonException(path, $"Expected an object for google.protobuf.Struct, got {Describe(element)}.");
+                    throw new ProtoJsonException(path, Messages.Format("Json_ExpectedObjectFor", StructType, Describe(element)));
                 }
 
                 return EncodeSingleField(type.FindField(1)!, element, path, depth, force: true);
             case ListValueType:
                 if (element.ValueKind != JsonValueKind.Array)
                 {
-                    throw new ProtoJsonException(path, $"Expected an array for google.protobuf.ListValue, got {Describe(element)}.");
+                    throw new ProtoJsonException(path, Messages.Format("Json_ExpectedArrayFor", ListValueType, Describe(element)));
                 }
 
                 return EncodeSingleField(type.FindField(1)!, element, path, depth, force: true);
@@ -271,7 +271,7 @@ public sealed partial class ProtoJsonCodec
                     JsonValueKind.True or JsonValueKind.False => 4,
                     JsonValueKind.Object => 5,
                     JsonValueKind.Array => 6,
-                    _ => throw new ProtoJsonException(path, $"Unsupported JSON value {Describe(element)}."),
+                    _ => throw new ProtoJsonException(path, Messages.Format("Json_UnsupportedValue", Describe(element))),
                 };
                 return EncodeSingleField(type.FindField(kind)!, element, path, depth, force: true);
             case AnyType:
@@ -285,24 +285,24 @@ public sealed partial class ProtoJsonCodec
     {
         if (element.ValueKind != JsonValueKind.Object)
         {
-            throw new ProtoJsonException(path, $"Expected an object for google.protobuf.Any, got {Describe(element)}.");
+            throw new ProtoJsonException(path, Messages.Format("Json_ExpectedObjectFor", AnyType, Describe(element)));
         }
 
         if (!element.TryGetProperty("@type", out var typeUrlElement))
         {
             return element.EnumerateObject().Any()
-                ? throw new ProtoJsonException(path, "A google.protobuf.Any value needs an \"@type\" property.")
+                ? throw new ProtoJsonException(path, Messages.Get("Json_AnyNeedsType"))
                 : [];
         }
 
-        var typeUrl = ExpectString(typeUrlElement, path + ".@type", "a type URL such as \"type.googleapis.com/users.v1.User\"");
+        var typeUrl = ExpectString(typeUrlElement, path + ".@type", Messages.Get("Json_ExpectTypeUrl"));
         var payloadType = ResolveAnyType(typeUrl, path + ".@type");
         byte[] payload;
         if (HasSpecialJsonForm(payloadType))
         {
             if (!element.TryGetProperty("value", out var wrapped))
             {
-                throw new ProtoJsonException(path, $"An Any holding {payloadType.FullName} must put the value in a \"value\" property.");
+                throw new ProtoJsonException(path, Messages.Format("Json_AnyNeedsValue", payloadType.FullName));
             }
 
             payload = EncodeMessage(payloadType, wrapped, path + ".value", depth + 1);
@@ -356,7 +356,7 @@ public sealed partial class ProtoJsonCodec
         if (!match.Success
             || !DateTime.TryParseExact(match.Groups["dt"].Value.ToUpperInvariant(), "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var dateTime))
         {
-            throw new ProtoJsonException(path, $"'{text}' is not an RFC 3339 timestamp such as \"2026-01-31T10:00:00Z\" or \"2026-01-31T13:00:00.5+03:00\".");
+            throw new ProtoJsonException(path, Messages.Format("Json_InvalidTimestamp", text));
         }
 
         var offset = TimeSpan.Zero;
@@ -376,7 +376,7 @@ public sealed partial class ProtoJsonCodec
         var match = DurationPattern().Match(text);
         if (!match.Success || !long.TryParse(match.Groups["sec"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var seconds) || seconds > MaxDurationSeconds)
         {
-            throw new ProtoJsonException(path, $"'{text}' is not a duration such as \"30s\", \"1.5s\" or \"-0.001s\" (at most {MaxDurationSeconds} seconds).");
+            throw new ProtoJsonException(path, Messages.Format("Json_InvalidDuration", text, MaxDurationSeconds.ToString(CultureInfo.InvariantCulture)));
         }
 
         var nanos = ParseNanos(match.Groups["frac"].Value);
@@ -434,12 +434,12 @@ public sealed partial class ProtoJsonCodec
             {
                 JsonValueKind.True => true,
                 JsonValueKind.False => false,
-                _ => throw new ProtoJsonException(path, $"Expected true or false, got {Describe(value)}."),
+                _ => throw new ProtoJsonException(path, Messages.Format("Json_ExpectedBool", Describe(value))),
             },
-            ProtoFieldType.String => ExpectString(value, path, "a string"),
-            ProtoFieldType.Bytes => ParseBytes(ExpectString(value, path, "a base64 string"), path),
+            ProtoFieldType.String => ExpectString(value, path, Messages.Get("Json_ExpectString")),
+            ProtoFieldType.Bytes => ParseBytes(ExpectString(value, path, Messages.Get("Json_ExpectBase64")), path),
             ProtoFieldType.Enum => ParseEnum(field.EnumType!, value, path),
-            _ => throw new ProtoJsonException(path, $"Field '{field.Name}' of type {field.Type} is not a scalar."),
+            _ => throw new ProtoJsonException(path, Messages.Format("Json_NotScalar", field.Name, field.Type)),
         };
     }
 
@@ -450,13 +450,13 @@ public sealed partial class ProtoJsonCodec
         {
             "true" => true,
             "false" => false,
-            _ => throw new ProtoJsonException(path, $"Map key '{key}' must be \"true\" or \"false\"."),
+            _ => throw new ProtoJsonException(path, Messages.Format("Json_MapKeyBool", key)),
         },
         ProtoFieldType.Int64 or ProtoFieldType.SInt64 or ProtoFieldType.SFixed64 => (long)ParseIntegralText(key, path, long.MinValue, long.MaxValue, "int64"),
         ProtoFieldType.UInt64 or ProtoFieldType.Fixed64 => (ulong)ParseIntegralText(key, path, ulong.MinValue, ulong.MaxValue, "uint64"),
         ProtoFieldType.Int32 or ProtoFieldType.SInt32 or ProtoFieldType.SFixed32 => (int)ParseIntegralText(key, path, int.MinValue, int.MaxValue, "int32"),
         ProtoFieldType.UInt32 or ProtoFieldType.Fixed32 => (uint)ParseIntegralText(key, path, uint.MinValue, uint.MaxValue, "uint32"),
-        _ => throw new ProtoJsonException(path, $"Map keys of type {keyField.Type} are not supported."),
+        _ => throw new ProtoJsonException(path, Messages.Format("Json_MapKeyType", keyField.Type)),
     };
 
     private static decimal ParseIntegral(JsonElement value, string path, decimal min, decimal max, string typeName)
@@ -466,7 +466,7 @@ public sealed partial class ProtoJsonCodec
         {
             if (!value.TryGetDecimal(out number))
             {
-                throw new ProtoJsonException(path, $"{value.GetRawText()} is out of range for {typeName}.");
+                throw new ProtoJsonException(path, Messages.Format("Json_OutOfRange", value.GetRawText(), typeName));
             }
         }
         else if (value.ValueKind == JsonValueKind.String)
@@ -475,7 +475,7 @@ public sealed partial class ProtoJsonCodec
         }
         else
         {
-            throw new ProtoJsonException(path, $"Expected a number for {typeName}, got {Describe(value)}.");
+            throw new ProtoJsonException(path, Messages.Format("Json_ExpectedNumberFor", typeName, Describe(value)));
         }
 
         return CheckIntegral(number, path, min, max, typeName);
@@ -485,7 +485,7 @@ public sealed partial class ProtoJsonCodec
     {
         if (!decimal.TryParse(text, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out var number))
         {
-            throw new ProtoJsonException(path, $"\"{text}\" is not a valid {typeName}.");
+            throw new ProtoJsonException(path, Messages.Format("Json_InvalidIntegerText", text, typeName));
         }
 
         return CheckIntegral(number, path, min, max, typeName);
@@ -495,12 +495,12 @@ public sealed partial class ProtoJsonCodec
     {
         if (number != decimal.Truncate(number))
         {
-            throw new ProtoJsonException(path, $"{number.ToString(CultureInfo.InvariantCulture)} is not a whole number ({typeName}).");
+            throw new ProtoJsonException(path, Messages.Format("Json_NotWholeNumber", number.ToString(CultureInfo.InvariantCulture), typeName));
         }
 
         if (number < min || number > max)
         {
-            throw new ProtoJsonException(path, $"{number.ToString(CultureInfo.InvariantCulture)} is out of range for {typeName} ({min.ToString(CultureInfo.InvariantCulture)} to {max.ToString(CultureInfo.InvariantCulture)}).");
+            throw new ProtoJsonException(path, Messages.Format("Json_OutOfRangeBetween", number.ToString(CultureInfo.InvariantCulture), typeName, min.ToString(CultureInfo.InvariantCulture), max.ToString(CultureInfo.InvariantCulture)));
         }
 
         return number;
@@ -521,22 +521,22 @@ public sealed partial class ProtoJsonCodec
                 "Infinity" => double.PositiveInfinity,
                 "-Infinity" => double.NegativeInfinity,
                 var text when double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed) && double.IsFinite(parsed) => parsed,
-                var text => throw new ProtoJsonException(path, $"\"{text}\" is not a valid number."),
+                var text => throw new ProtoJsonException(path, Messages.Format("Json_InvalidNumberText", text)),
             };
         }
         else
         {
-            throw new ProtoJsonException(path, $"Expected a number, got {Describe(value)}.");
+            throw new ProtoJsonException(path, Messages.Format("Json_ExpectedNumber", Describe(value)));
         }
 
         if (!double.IsFinite(number) && value.ValueKind == JsonValueKind.Number)
         {
-            throw new ProtoJsonException(path, "The number is out of range.");
+            throw new ProtoJsonException(path, Messages.Get("Json_NumberOutOfRange"));
         }
 
         if (isFloat && double.IsFinite(number) && Math.Abs(number) > float.MaxValue)
         {
-            throw new ProtoJsonException(path, $"{value.GetRawText()} is out of range for float.");
+            throw new ProtoJsonException(path, Messages.Format("Json_OutOfRange", value.GetRawText(), "float"));
         }
 
         return number;
@@ -552,7 +552,7 @@ public sealed partial class ProtoJsonCodec
         }
         catch (FormatException)
         {
-            throw new ProtoJsonException(path, "Expected base64-encoded bytes.");
+            throw new ProtoJsonException(path, Messages.Get("Json_ExpectedBase64Bytes"));
         }
     }
 
@@ -563,7 +563,7 @@ public sealed partial class ProtoJsonCodec
             var name = value.GetString()!;
             return enumType.TryGetNumber(name, out var number)
                 ? number
-                : throw new ProtoJsonException(path, $"'{name}' is not a value of {enumType.FullName}. Valid values: {ListNames(enumType.Values.Select(v => v.Key))}.");
+                : throw new ProtoJsonException(path, Messages.Format("Json_InvalidEnumName", name, enumType.FullName, ListNames(enumType.Values.Select(v => v.Key))));
         }
 
         if (value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var numeric))
@@ -571,13 +571,13 @@ public sealed partial class ProtoJsonCodec
             return numeric;
         }
 
-        throw new ProtoJsonException(path, $"Expected an enum name of {enumType.FullName}, got {Describe(value)}.");
+        throw new ProtoJsonException(path, Messages.Format("Json_ExpectedEnum", enumType.FullName, Describe(value)));
     }
 
     private static string ExpectString(JsonElement value, string path, string expected) =>
         value.ValueKind == JsonValueKind.String
             ? value.GetString()!
-            : throw new ProtoJsonException(path, $"Expected {expected}, got {Describe(value)}.");
+            : throw new ProtoJsonException(path, Messages.Format("Json_Expected", expected, Describe(value)));
 
     private static bool IsDefault(object value) => value switch
     {
@@ -639,10 +639,10 @@ public sealed partial class ProtoJsonCodec
 
     private static string Describe(JsonElement value) => value.ValueKind switch
     {
-        JsonValueKind.Object => "an object",
-        JsonValueKind.Array => "an array",
-        JsonValueKind.String => $"the string \"{Truncate(value.GetString()!)}\"",
-        JsonValueKind.Number => $"the number {value.GetRawText()}",
+        JsonValueKind.Object => Messages.Get("Json_DescribeObject"),
+        JsonValueKind.Array => Messages.Get("Json_DescribeArray"),
+        JsonValueKind.String => Messages.Format("Json_DescribeString", Truncate(value.GetString()!)),
+        JsonValueKind.Number => Messages.Format("Json_DescribeNumber", value.GetRawText()),
         JsonValueKind.True or JsonValueKind.False => value.GetRawText(),
         JsonValueKind.Null => "null",
         _ => value.ValueKind.ToString(),
@@ -655,6 +655,6 @@ public sealed partial class ProtoJsonCodec
         var list = names.ToList();
         return list.Count <= MaxListedNames
             ? string.Join(", ", list)
-            : string.Join(", ", list.Take(MaxListedNames)) + $", … ({list.Count - MaxListedNames} more)";
+            : Messages.Format("Json_MoreNames", string.Join(", ", list.Take(MaxListedNames)), list.Count - MaxListedNames);
     }
 }

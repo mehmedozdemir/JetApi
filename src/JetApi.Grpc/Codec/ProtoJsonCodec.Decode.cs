@@ -34,7 +34,7 @@ public sealed partial class ProtoJsonCodec
     {
         if (depth > MaxDepth)
         {
-            throw new ProtoJsonException(path, "The message is nested too deeply.");
+            throw new ProtoJsonException(path, Messages.Get("Json_TooDeep"));
         }
 
         var values = ReadFields(type, data, path);
@@ -348,7 +348,7 @@ public sealed partial class ProtoJsonCodec
         }
         catch (ArgumentOutOfRangeException)
         {
-            throw new ProtoJsonException(path, $"Timestamp {seconds}s is outside the supported range (years 1 to 9999).");
+            throw new ProtoJsonException(path, Messages.Format("Json_TimestampOutOfRange", seconds.ToString(CultureInfo.InvariantCulture)));
         }
 
         return value.UtcDateTime.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture) + FormatNanos(Math.Abs(nanos)) + "Z";
@@ -358,7 +358,7 @@ public sealed partial class ProtoJsonCodec
     {
         if ((seconds < 0 && nanos > 0) || (seconds > 0 && nanos < 0) || Math.Abs(nanos) >= NanosPerSecond)
         {
-            throw new ProtoJsonException(path, $"Invalid duration: {seconds}s and {nanos}ns.");
+            throw new ProtoJsonException(path, Messages.Format("Json_InvalidDurationValue", seconds.ToString(CultureInfo.InvariantCulture), nanos.ToString(CultureInfo.InvariantCulture)));
         }
 
         var sign = seconds < 0 || nanos < 0 ? "-" : string.Empty;
@@ -432,7 +432,7 @@ public sealed partial class ProtoJsonCodec
         }
         catch (InvalidProtocolBufferException exception)
         {
-            throw new ProtoJsonException(path, $"The data is not a valid {type.FullName} message: {exception.Message}");
+            throw new ProtoJsonException(path, Messages.Format("Json_InvalidMessageData", type.FullName, exception.Message));
         }
 
         return values;
@@ -474,7 +474,7 @@ public sealed partial class ProtoJsonCodec
         }
         else
         {
-            throw new ProtoJsonException(path + "." + field.JsonName, $"Field '{field.Name}' (#{field.Number}) arrived with wire type {wireType}, but the proto file declares {field.Type}. The server may use a different version of the proto file.");
+            throw new ProtoJsonException(path + "." + field.JsonName, Messages.Format("Json_WireTypeMismatch", field.Name, field.Number.ToString(CultureInfo.InvariantCulture), wireType, field.Type));
         }
     }
 

@@ -71,7 +71,7 @@ public sealed class GrpcInvoker : IDisposable
             catch (ProtoJsonException exception)
             {
                 json = string.Empty;
-                detail = $"The response could not be decoded: {exception.Message}";
+                detail = Messages.Format("Grpc_UndecodableResponse", exception.Message);
             }
 
             return new GrpcCallResult
@@ -95,7 +95,7 @@ public sealed class GrpcInvoker : IDisposable
                 Outcome = GrpcCallOutcome.Cancelled,
                 StatusCode = (int)StatusCode.Cancelled,
                 StatusName = nameof(StatusCode.Cancelled),
-                StatusDetail = "The call was cancelled.",
+                StatusDetail = Messages.Get("Grpc_Cancelled"),
                 Duration = stopwatch.Elapsed,
                 SentMetadata = call.Metadata,
             };
@@ -198,7 +198,7 @@ public sealed class GrpcInvoker : IDisposable
         }
 
         return exception.StatusCode == StatusCode.DeadlineExceeded && string.IsNullOrEmpty(exception.Status.Detail)
-            ? "The deadline was exceeded."
+            ? Messages.Get("Grpc_DeadlineExceeded")
             : exception.Status.Detail;
     }
 }
