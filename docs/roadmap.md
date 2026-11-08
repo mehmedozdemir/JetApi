@@ -33,8 +33,8 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 - [x] Editör içinde değişken vurgulama ve üzerine gelince değer gösterme
 - [x] Motor mesajlarının tamamen yerelleştirilmesi (HTTP, gRPC/proto/JSON ve workspace mesajları TR/EN)
 - [x] Paketleme: Windows (zip), macOS (dmg), Linux (AppImage/tar.gz); etiketle taslak GitHub Release ([paketleme](packaging.md)). MSIX, imzalı paketlerle birlikte v1.0'da
-- [x] Performans ölçümü: açılış süresi ve bellek (NFR-1, NFR-2) ([sonuçlar](performance.md)). Açılış hedefte; boşta bellek ~263 MB ile hedefin (200 MB) üstünde
-- [ ] Boşta belleği NFR-2 hedefinin altına indirmek
+- [x] Performans ölçümü: açılış süresi ve bellek (NFR-1, NFR-2) ([sonuçlar](performance.md))
+- [x] Boşta belleği NFR-2 hedefinin altına indirmek: Windows'ta yazılımla çizim, 263 → 145 MB (macOS/Linux ölçülmedi)
 
 ## M2 — Postman'den geçiş → `v0.2.0`
 

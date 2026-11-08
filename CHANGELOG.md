@@ -23,6 +23,10 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 - HTTP bağlantı hataları için hata türü (`HttpErrorKind`); arayüz bunları seçili dilde açıklar.
 - Windows, macOS ve Linux üzerinde CI.
 
+### Changed
+
+- Windows'ta arayüz varsayılan olarak yazılımla çizilir; boşta bellek 263 MB'tan 145 MB'a iner. `JETAPI_RENDERING=gpu` ile GPU kullanılır.
+
 ### Fixed
 
 - Ağ ve TLS hatalarında mesajın iki kez başlıklanması ("Network error: Network error: ...").

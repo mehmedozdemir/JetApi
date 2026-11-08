@@ -55,7 +55,8 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 ## Open work (see docs/roadmap.md)
 
 M1 leftovers:
-- Idle memory is ~263 MB against the 200 MB target (NFR-2); see docs/performance.md. Start-up meets NFR-1.
+- Start-up and idle memory meet NFR-1/NFR-2 on Windows (software rendering by default, `JETAPI_RENDERING=gpu` to override);
+  macOS and Linux are not measured yet. See docs/performance.md.
 - The release workflow and the macOS/Linux packages have not run on CI yet; only win-x64 was packaged locally.
 
 M2:

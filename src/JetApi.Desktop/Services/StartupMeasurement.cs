@@ -11,6 +11,7 @@ namespace JetApi.Desktop.Services;
 /// <param name="IdleWorkingSetMb">Working set after <see cref="StartupMeasurement.IdleDelay"/> of idling (NFR-2).</param>
 /// <param name="IdlePrivateMb">Private bytes after idling.</param>
 /// <param name="ManagedHeapMb">Managed heap after idling, without forcing a collection.</param>
+/// <param name="GcCommittedMb">Memory the garbage collector has committed, including free space it keeps.</param>
 /// <param name="Runtime">Runtime and OS, for the record.</param>
 public sealed record StartupReport(
     double WindowShownMs,
@@ -19,6 +20,7 @@ public sealed record StartupReport(
     double IdleWorkingSetMb,
     double IdlePrivateMb,
     double ManagedHeapMb,
+    double GcCommittedMb,
     string Runtime);
 
 /// <summary>
@@ -74,6 +76,7 @@ public sealed class StartupMeasurement
             Megabytes(process.WorkingSet64),
             Megabytes(process.PrivateMemorySize64),
             Megabytes(GC.GetTotalMemory(forceFullCollection: false)),
+            Megabytes(GC.GetGCMemoryInfo().TotalCommittedBytes),
             $"{System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}; {System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier}; {System.Runtime.InteropServices.RuntimeInformation.OSDescription}");
     }
 
