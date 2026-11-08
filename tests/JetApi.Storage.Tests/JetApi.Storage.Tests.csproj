@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JetApi.Storage\JetApi.Storage.csproj" />
+  </ItemGroup>
+</Project>

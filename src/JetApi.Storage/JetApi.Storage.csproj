@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Git-friendly, file-based persistence of JetApi workspaces (YAML).</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Storage.Tests" />
+  </ItemGroup>
+</Project>
