@@ -1,7 +1,8 @@
 name: Release
 
-# Pushing a tag such as v0.1.0 builds every package and attaches them to a draft GitHub release.
-# Review the draft, then publish it by hand.
+# Pushing a tag such as v0.1.0 builds the packages and attaches them to a draft GitHub release.
+# Review the draft, then publish it by hand. Windows packages are required; macOS and Linux packages are
+# optional: when one fails, the release is still drafted without it.
 on:
   push:
     tags: ['v*']
@@ -21,13 +22,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: windows-latest, rid: win-x64 }
-          - { os: windows-latest, rid: win-arm64 }
-          - { os: macos-latest, rid: osx-arm64 }
-          - { os: macos-latest, rid: osx-x64 }
-          - { os: ubuntu-latest, rid: linux-x64 }
-          - { os: ubuntu-latest, rid: linux-arm64 }
+          - { os: windows-latest, rid: win-x64, optional: false }
+          - { os: windows-latest, rid: win-arm64, optional: false }
+          - { os: macos-latest, rid: osx-arm64, optional: true }
+          - { os: macos-latest, rid: osx-x64, optional: true }
+          - { os: ubuntu-latest, rid: linux-x64, optional: true }
+          - { os: ubuntu-latest, rid: linux-arm64, optional: true }
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.optional }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4

@@ -35,7 +35,8 @@ build/package.sh linux-x64 0.1.0    # sürüm verilmezse Directory.Build.props i
    değerini güncelleyin.
 2. `vX.Y.Z` etiketini atıp gönderin: `git tag v0.1.0 && git push origin v0.1.0`.
 3. [Release iş akışı](../.github/workflows/release.yml) altı paketi kendi işletim sisteminde üretir, `SHA256SUMS.txt`
-   ekler ve **taslak** bir GitHub Release oluşturur. `-` içeren etiketler (`v0.1.0-beta.1`) ön sürüm olarak işaretlenir.
+   ekler ve **taslak** bir GitHub Release oluşturur. Windows paketleri zorunludur; macOS ve Linux paketleri isteğe
+   bağlıdır, biri başarısız olursa release onsuz oluşturulur. `-` içeren etiketler (`v0.1.0-beta.1`) ön sürüm olarak işaretlenir.
 4. Taslağı kontrol edip yayınlayın.
 
 ## Uygulama ikonu
