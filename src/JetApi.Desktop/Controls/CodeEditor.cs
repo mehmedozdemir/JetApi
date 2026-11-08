@@ -80,6 +80,7 @@ public sealed class CodeEditor : UserControl
         _editor.TextArea.TextView.PointerExited += (_, _) => VariableHints.ShowTip(_editor, null);
 
         Content = _editor;
+        StyleGutter();
         ApplyLanguage();
         ActualThemeVariantChanged += (_, _) => ApplyTheme();
     }
@@ -155,10 +156,27 @@ public sealed class CodeEditor : UserControl
         else if (change.Property == ShowLineNumbersProperty)
         {
             _editor.ShowLineNumbers = ShowLineNumbers;
+            StyleGutter();
         }
         else if (change.Property == HighlightVariablesProperty || change.Property == VariableHints.ContextProperty)
         {
             ApplyVariables();
+        }
+    }
+
+    // Line numbers sit on the tinted editor ground without AvaloniaEdit's separator line, with room before the text.
+    private void StyleGutter()
+    {
+        foreach (var margin in _editor.TextArea.LeftMargins)
+        {
+            if (margin is Avalonia.Controls.Shapes.Line line)
+            {
+                line.IsVisible = false;
+            }
+            else if (margin is AvaloniaEdit.Editing.LineNumberMargin numbers)
+            {
+                numbers.Margin = new Thickness(10, 0, 14, 0);
+            }
         }
     }
 

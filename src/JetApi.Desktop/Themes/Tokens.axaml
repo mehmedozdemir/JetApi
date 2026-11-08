@@ -3,25 +3,25 @@
   <!-- Design tokens from docs/ui-design.md. Every color used by the views comes from here. -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
-      <SolidColorBrush x:Key="App.Background" Color="#F4F5F7" />
+      <SolidColorBrush x:Key="App.Background" Color="#F6F7F9" />
       <SolidColorBrush x:Key="App.Surface" Color="#FFFFFF" />
-      <SolidColorBrush x:Key="App.Sidebar" Color="#FAFAFB" />
-      <SolidColorBrush x:Key="App.Border" Color="#E2E4E9" />
-      <SolidColorBrush x:Key="App.BorderStrong" Color="#C9CDD5" />
+      <SolidColorBrush x:Key="App.Sidebar" Color="#F6F7F9" />
+      <SolidColorBrush x:Key="App.Border" Color="#E6E8EC" />
+      <SolidColorBrush x:Key="App.BorderStrong" Color="#D5D8DE" />
       <SolidColorBrush x:Key="App.Text" Color="#1A1D23" />
       <SolidColorBrush x:Key="App.TextMuted" Color="#5B6170" />
-      <SolidColorBrush x:Key="App.TextFaint" Color="#8A8F9A" />
+      <SolidColorBrush x:Key="App.TextFaint" Color="#6B7180" />
       <SolidColorBrush x:Key="App.Accent" Color="#3451D1" />
       <SolidColorBrush x:Key="App.AccentHover" Color="#22389E" />
       <SolidColorBrush x:Key="App.AccentForeground" Color="#FFFFFF" />
       <SolidColorBrush x:Key="App.AccentSoft" Color="#EEF1FD" />
-      <SolidColorBrush x:Key="App.Selection" Color="#E8ECFC" />
-      <SolidColorBrush x:Key="App.Hover" Color="#EFF1F4" />
-      <SolidColorBrush x:Key="App.Code" Color="#FBFBFC" />
-      <SolidColorBrush x:Key="App.Subtle" Color="#F4F5F7" />
+      <SolidColorBrush x:Key="App.Selection" Color="#E9EBF8" />
+      <SolidColorBrush x:Key="App.Hover" Color="#EEF0F3" />
+      <SolidColorBrush x:Key="App.Code" Color="#F6F7F9" />
+      <SolidColorBrush x:Key="App.Subtle" Color="#EDEEF2" />
       <SolidColorBrush x:Key="App.Overlay" Color="#801A1D23" />
 
-      <SolidColorBrush x:Key="Tone.Neutral.Bg" Color="#F0F1F4" />
+      <SolidColorBrush x:Key="Tone.Neutral.Bg" Color="#F2F3F5" />
       <SolidColorBrush x:Key="Tone.Neutral.Fg" Color="#5B6170" />
       <SolidColorBrush x:Key="Tone.Success.Bg" Color="#E8F5EC" />
       <SolidColorBrush x:Key="Tone.Success.Fg" Color="#1B5E2B" />
@@ -40,30 +40,45 @@
       <SolidColorBrush x:Key="Method.gRPC" Color="#0F766E" />
       <SolidColorBrush x:Key="Method.Other" Color="#5B6170" />
 
-      <SolidColorBrush x:Key="Timing.Dns" Color="#8A8F9A" />
+      <SolidColorBrush x:Key="Timing.Dns" Color="#A3A8B3" />
       <SolidColorBrush x:Key="Timing.Connect" Color="#0F766E" />
       <SolidColorBrush x:Key="Timing.FirstByte" Color="#3451D1" />
       <SolidColorBrush x:Key="Timing.Download" Color="#A64B00" />
-      <SolidColorBrush x:Key="Timing.Total" Color="#1A1D23" />
+      <SolidColorBrush x:Key="Timing.Total" Color="#5B6170" />
       <SolidColorBrush x:Key="Timing.Track" Color="#F0F1F4" />
+      <!-- Rail, segmented controls and checked boxes (makeover, 2026-11). -->
+      <SolidColorBrush x:Key="App.Rail" Color="#EFF0F3" />
+      <SolidColorBrush x:Key="App.SegmentSelected" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="App.Check" Color="#1A1D23" />
+      <SolidColorBrush x:Key="App.CheckForeground" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="App.Danger" Color="#B42318" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="#1A1D23" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="#2E323B" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="#3A3F4A" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="#1A1D23" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="#2E323B" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" Color="#3A3F4A" />
+      <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#FFFFFF" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="App.Background" Color="#111318" />
+      <SolidColorBrush x:Key="App.Background" Color="#13151A" />
       <SolidColorBrush x:Key="App.Surface" Color="#181B21" />
-      <SolidColorBrush x:Key="App.Sidebar" Color="#15171C" />
+      <SolidColorBrush x:Key="App.Sidebar" Color="#13151A" />
       <SolidColorBrush x:Key="App.Border" Color="#2A2E37" />
       <SolidColorBrush x:Key="App.BorderStrong" Color="#3A3F4A" />
       <SolidColorBrush x:Key="App.Text" Color="#E6E8EC" />
       <SolidColorBrush x:Key="App.TextMuted" Color="#A0A6B2" />
-      <SolidColorBrush x:Key="App.TextFaint" Color="#7A8190" />
+      <SolidColorBrush x:Key="App.TextFaint" Color="#8B92A0" />
       <SolidColorBrush x:Key="App.Accent" Color="#7C93F5" />
       <SolidColorBrush x:Key="App.AccentHover" Color="#9AACF8" />
       <SolidColorBrush x:Key="App.AccentForeground" Color="#0B1020" />
       <SolidColorBrush x:Key="App.AccentSoft" Color="#1F2640" />
       <SolidColorBrush x:Key="App.Selection" Color="#232B47" />
       <SolidColorBrush x:Key="App.Hover" Color="#20232A" />
-      <SolidColorBrush x:Key="App.Code" Color="#14161B" />
-      <SolidColorBrush x:Key="App.Subtle" Color="#20232A" />
+      <SolidColorBrush x:Key="App.Code" Color="#13151A" />
+      <SolidColorBrush x:Key="App.Subtle" Color="#23262D" />
       <SolidColorBrush x:Key="App.Overlay" Color="#B0000000" />
 
       <SolidColorBrush x:Key="Tone.Neutral.Bg" Color="#23262D" />
@@ -89,8 +104,22 @@
       <SolidColorBrush x:Key="Timing.Connect" Color="#3CC7B5" />
       <SolidColorBrush x:Key="Timing.FirstByte" Color="#7C93F5" />
       <SolidColorBrush x:Key="Timing.Download" Color="#F0A04B" />
-      <SolidColorBrush x:Key="Timing.Total" Color="#E6E8EC" />
+      <SolidColorBrush x:Key="Timing.Total" Color="#A0A6B2" />
       <SolidColorBrush x:Key="Timing.Track" Color="#23262D" />
+      <SolidColorBrush x:Key="App.Rail" Color="#0F1115" />
+      <SolidColorBrush x:Key="App.SegmentSelected" Color="#2E323B" />
+      <SolidColorBrush x:Key="App.Check" Color="#E6E8EC" />
+      <SolidColorBrush x:Key="App.CheckForeground" Color="#0B0D12" />
+      <SolidColorBrush x:Key="App.Danger" Color="#F19A9A" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="#E6E8EC" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="#C9CDD5" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="#E6E8EC" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" Color="#C9CDD5" />
+      <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="#0B0D12" />
+      <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPointerOver" Color="#0B0D12" />
+      <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#0B0D12" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -118,6 +147,10 @@
   <StreamGeometry x:Key="Icon.Edit">M4 20h4l11-11-4-4L4 16z</StreamGeometry>
   <StreamGeometry x:Key="Icon.Stop">M7 7h10v10H7z</StreamGeometry>
   <StreamGeometry x:Key="Icon.Send">M4 12l16-8-6 16-3-6z M11 14l9-10</StreamGeometry>
+  <StreamGeometry x:Key="Icon.Layers">M12 3l9 5-9 5-9-5z M3 13l9 5 9-5</StreamGeometry>
+  <StreamGeometry x:Key="Icon.Download">M12 4v11 M7 10l5 5 5-5 M5 20h14</StreamGeometry>
+  <StreamGeometry x:Key="Icon.More">M5 12h.01 M12 12h.01 M19 12h.01</StreamGeometry>
+  <StreamGeometry x:Key="Icon.Branch">M6 4v12 M6 20a2 2 0 1 0 0.01 0z M18 4a2 2 0 1 0 0.01 0z M18 8c0 5-6 4-12 8</StreamGeometry>
   <StreamGeometry x:Key="Icon.Server">M4 4h16v6H4z M4 14h16v6H4z M8 7h.01 M8 17h.01</StreamGeometry>
 
   <FontFamily x:Key="App.MonoFont">Cascadia Mono, JetBrains Mono, SF Mono, Menlo, Consolas, DejaVu Sans Mono, monospace</FontFamily>

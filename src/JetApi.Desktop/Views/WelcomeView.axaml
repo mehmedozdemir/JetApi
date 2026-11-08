@@ -13,47 +13,47 @@
           <c:Icon Data="{StaticResource Icon.Logo}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" VerticalAlignment="Center" />
           <TextBlock Text="JetApi" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" />
         </StackPanel>
-        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
-          <RadioButton Classes="pill" GroupName="lang" Content="TR" IsChecked="{Binding IsTurkish, Mode=OneWay}" Command="{Binding SetLanguageCommand}" CommandParameter="tr" />
-          <RadioButton Classes="pill" GroupName="lang" Content="EN" Margin="6,0,0,0" IsChecked="{Binding !IsTurkish, Mode=OneWay}" Command="{Binding SetLanguageCommand}" CommandParameter="en" />
-        </StackPanel>
+        <Border Grid.Column="2" Classes="segment" VerticalAlignment="Center">
+          <StackPanel Orientation="Horizontal">
+            <RadioButton Classes="pill" GroupName="lang" Content="TR" IsChecked="{Binding IsTurkish, Mode=OneWay}" Command="{Binding SetLanguageCommand}" CommandParameter="tr" />
+            <RadioButton Classes="pill" GroupName="lang" Content="EN" IsChecked="{Binding !IsTurkish, Mode=OneWay}" Command="{Binding SetLanguageCommand}" CommandParameter="en" />
+          </StackPanel>
+        </Border>
       </Grid>
     </Border>
 
     <ScrollViewer Grid.Row="1">
-      <StackPanel MaxWidth="880" Margin="24,64,24,40" Spacing="32">
-        <StackPanel Spacing="8">
+      <!-- One column, vertically centred; the main action is the only filled button. -->
+      <StackPanel MaxWidth="760" Margin="24,40,24,64" Spacing="32" VerticalAlignment="Center">
+        <StackPanel Spacing="10">
           <TextBlock Classes="h1" Text="{l:Tr Welcome_Title}" />
-          <TextBlock Classes="muted" FontSize="15" LineHeight="22" TextWrapping="Wrap" MaxWidth="640" HorizontalAlignment="Left" Text="{l:Tr Welcome_Subtitle}" />
+          <TextBlock Classes="muted" FontSize="14" LineHeight="22" TextWrapping="Wrap" Text="{l:Tr Welcome_Subtitle}" />
         </StackPanel>
 
-        <UniformGrid Columns="3" ColumnSpacing="16">
-          <Button Classes="primary" Padding="20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" CornerRadius="10" Command="{Binding OpenFolderCommand}">
-            <StackPanel Spacing="10">
-              <c:Icon Data="{StaticResource Icon.Folder}" Width="22" Height="22" Foreground="{DynamicResource App.AccentForeground}" />
-              <TextBlock FontSize="15" FontWeight="SemiBold" Text="{l:Tr Welcome_Open}" />
-              <TextBlock FontSize="12.5" FontWeight="Normal" TextWrapping="Wrap" LineHeight="18" Opacity="0.9" Text="{l:Tr Welcome_OpenHint}" />
+        <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+          <Button Classes="primary" MinHeight="40" Padding="18,0" Command="{Binding OpenFolderCommand}" ToolTip.Tip="{l:Tr Welcome_OpenHint}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <c:Icon Data="{StaticResource Icon.Folder}" Width="15" Height="15" Foreground="{DynamicResource App.AccentForeground}" />
+              <TextBlock Text="{l:Tr Welcome_Open}" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
-          <Button Classes="secondary" Padding="20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" CornerRadius="10" Command="{Binding CreateWorkspaceCommand}">
-            <StackPanel Spacing="10">
-              <c:Icon Data="{StaticResource Icon.Plus}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" />
-              <TextBlock FontSize="15" FontWeight="SemiBold" Text="{l:Tr Welcome_Create}" />
-              <TextBlock Classes="muted" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Text="{l:Tr Welcome_CreateHint}" />
+          <Button Grid.Column="1" Classes="secondary" MinHeight="40" Padding="16,0" Margin="12,0,0,0" Command="{Binding CreateWorkspaceCommand}" ToolTip.Tip="{l:Tr Welcome_CreateHint}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <c:Icon Data="{StaticResource Icon.Plus}" Width="15" Height="15" />
+              <TextBlock Text="{l:Tr Welcome_Create}" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
-          <Button Classes="secondary" Padding="20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" CornerRadius="10" IsEnabled="False">
-            <StackPanel Spacing="10">
-              <c:Icon Data="{StaticResource Icon.Import}" Width="22" Height="22" Foreground="{DynamicResource App.TextFaint}" />
-              <TextBlock FontSize="15" FontWeight="SemiBold" Text="{l:Tr Welcome_Import}" />
-              <TextBlock Classes="muted" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Text="{l:Tr Welcome_ImportHint}" />
-            </StackPanel>
-          </Button>
-        </UniformGrid>
+          <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" ToolTip.Tip="{l:Tr Welcome_ImportHint}">
+            <TextBlock Classes="faint small" Text="{l:Tr Welcome_Import}" VerticalAlignment="Center" />
+            <Border Classes="badge">
+              <TextBlock Text="v0.2" />
+            </Border>
+          </StackPanel>
+        </Grid>
 
         <StackPanel Spacing="8">
           <TextBlock Classes="label" Text="{l:Tr Welcome_Recent}" />
-          <Border Classes="card" ClipToBounds="True">
+          <Border Background="{DynamicResource App.Surface}" CornerRadius="10" ClipToBounds="True">
             <StackPanel>
               <ItemsControl ItemsSource="{Binding Recent}">
                 <ItemsControl.ItemTemplate>
@@ -63,14 +63,12 @@
                         <Button Classes="flat" HorizontalAlignment="Stretch" Padding="16,10" CornerRadius="0"
                                 Command="{Binding OpenCommand}">
                           <Grid ColumnDefinitions="Auto,*,Auto">
-                            <Border Width="32" Height="32" CornerRadius="8" Background="{DynamicResource App.AccentSoft}" Margin="0,0,14,0">
-                              <TextBlock Text="{Binding Initial}" FontWeight="Bold" Foreground="{DynamicResource App.Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
+                            <c:Icon Data="{StaticResource Icon.Folder}" Width="16" Height="16" Foreground="{DynamicResource App.TextFaint}" Margin="0,0,12,0" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                              <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
-                              <TextBlock Classes="mono muted" FontSize="11.5" Text="{Binding Path}" TextTrimming="CharacterEllipsis" />
+                              <TextBlock FontWeight="Medium" Text="{Binding Name}" />
+                              <TextBlock Classes="mono faint" FontSize="12" Text="{Binding Path}" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            <TextBlock Grid.Column="2" Classes="muted small" VerticalAlignment="Center" Text="{Binding LastOpened}" />
+                            <TextBlock Grid.Column="2" Classes="faint small" VerticalAlignment="Center" Text="{Binding LastOpened}" />
                           </Grid>
                         </Button>
                         <Button Grid.Column="1" Classes="icon" Margin="8,0" ToolTip.Tip="{l:Tr Welcome_RemoveRecent}" AutomationProperties.Name="{l:Tr Welcome_RemoveRecent}"
@@ -87,12 +85,10 @@
           </Border>
         </StackPanel>
 
-        <Border Classes="card" Padding="16,14">
-          <Grid ColumnDefinitions="Auto,*">
-            <c:Icon Data="{StaticResource Icon.Info}" Width="18" Height="18" Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Top" Margin="0,1,12,0" />
-            <TextBlock Grid.Column="1" Classes="muted small" TextWrapping="Wrap" LineHeight="19" Text="{l:Tr Welcome_GitTip}" />
-          </Grid>
-        </Border>
+        <Grid ColumnDefinitions="Auto,*">
+          <c:Icon Data="{StaticResource Icon.Info}" Width="14" Height="14" Foreground="{DynamicResource App.TextFaint}" VerticalAlignment="Top" Margin="0,2,8,0" />
+          <TextBlock Grid.Column="1" Classes="faint small" TextWrapping="Wrap" LineHeight="19" Text="{l:Tr Welcome_GitTip}" />
+        </Grid>
       </StackPanel>
     </ScrollViewer>
   </Grid>

@@ -225,6 +225,7 @@
   <data name="Shortcut_New" xml:space="preserve"><value>New request</value></data>
   <data name="Shortcut_Palette" xml:space="preserve"><value>Command palette</value></data>
   <data name="Shortcut_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Shortcut_SendTip" xml:space="preserve"><value>Send or invoke (Ctrl+Enter)</value></data>
   <data name="Shortcut_Send" xml:space="preserve"><value>Send / invoke</value></data>
   <data name="Shortcut_Url" xml:space="preserve"><value>Focus URL</value></data>
   <data name="Side_BackToCollections" xml:space="preserve"><value>Collections</value></data>

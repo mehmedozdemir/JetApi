@@ -22,7 +22,7 @@ public sealed class StatusPill : Border
     /// <summary>Creates the pill.</summary>
     public StatusPill()
     {
-        CornerRadius = new CornerRadius(4);
+        CornerRadius = new CornerRadius(6);
         Padding = new Thickness(8, 3);
         VerticalAlignment = VerticalAlignment.Center;
         Child = _text;

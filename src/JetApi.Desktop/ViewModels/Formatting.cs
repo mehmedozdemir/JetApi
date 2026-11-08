@@ -25,6 +25,19 @@ public static class Formatting
             : string.Create(culture, $"{duration.TotalSeconds:0.00} s");
     }
 
+    /// <summary>"127.0.0.1:5000" for "[::ffff:127.0.0.1]:5000"; other addresses and unparsable text are returned as given.</summary>
+    public static string EndPoint(string? endPoint)
+    {
+        if (string.IsNullOrEmpty(endPoint))
+        {
+            return string.Empty;
+        }
+
+        return System.Net.IPEndPoint.TryParse(endPoint, out var parsed) && parsed.Address.IsIPv4MappedToIPv6
+            ? new System.Net.IPEndPoint(parsed.Address.MapToIPv4(), parsed.Port).ToString()
+            : endPoint;
+    }
+
     /// <summary>312 B, 4.2 KB, 1.3 MB.</summary>
     public static string Size(long bytes)
     {

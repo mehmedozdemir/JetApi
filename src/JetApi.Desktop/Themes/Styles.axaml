@@ -50,11 +50,45 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="10" />
   </Style>
+  <!-- Code and editor areas: no frame, set apart by a tinted ground. -->
   <Style Selector="Border.code">
     <Setter Property="Background" Value="{DynamicResource App.Code}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
-    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="0,6" />
+  </Style>
+  <!-- Count or type next to a tab label ("Headers 1", "Body JSON"). -->
+  <Style Selector="Border.badge">
+    <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
+    <Setter Property="CornerRadius" Value="9" />
+    <Setter Property="Padding" Value="6,1" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.badge TextBlock">
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
+  </Style>
+  <!-- A metric next to the status ("94 ms", "68 B"). -->
+  <Style Selector="Border.chip">
+    <Setter Property="Background" Value="{DynamicResource Tone.Neutral.Bg}" />
     <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Padding" Value="8,3" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.chip TextBlock">
+    <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
+    <Setter Property="FontSize" Value="12" />
+  </Style>
+  <!-- Track of a segmented control; holds RadioButton.pill items. -->
+  <Style Selector="Border.segment">
+    <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
+    <Setter Property="CornerRadius" Value="7" />
+    <Setter Property="Padding" Value="2" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+  </Style>
+  <!-- A 1px divider line. -->
+  <Style Selector="Border.divider">
+    <Setter Property="Background" Value="{DynamicResource App.Border}" />
   </Style>
   <Style Selector="Border.note">
     <Setter Property="Background" Value="{DynamicResource Tone.Info.Bg}" />
@@ -111,6 +145,10 @@
     <Setter Property="Background" Value="{DynamicResource App.AccentHover}" />
     <Setter Property="Foreground" Value="{DynamicResource App.AccentForeground}" />
   </Style>
+  <!-- Plain-text labels on the accent use the accent foreground in both themes (dark text on the light dark-theme accent). -->
+  <Style Selector="Button.primary /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource App.AccentForeground}" />
+  </Style>
   <Style Selector="Button.primary TextBlock">
     <Setter Property="Foreground" Value="{DynamicResource App.AccentForeground}" />
   </Style>
@@ -126,6 +164,17 @@
     <Setter Property="Background" Value="{DynamicResource App.Hover}" />
     <Setter Property="BorderBrush" Value="{DynamicResource App.BorderStrong}" />
     <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+  </Style>
+  <!-- Destructive action that is not the main one: red text, no fill. -->
+  <Style Selector="Button.danger-link">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
+    <Setter Property="Padding" Value="8,0" />
+    <Setter Property="MinHeight" Value="32" />
+  </Style>
+  <Style Selector="Button.danger-link:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource Tone.Danger.Bg}" />
+    <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
   </Style>
   <Style Selector="Button.danger">
     <Setter Property="Background" Value="{DynamicResource Tone.Danger.Fg}" />
@@ -203,29 +252,33 @@
     <Setter Property="Foreground" Value="{Binding $parent[RadioButton].Foreground}" />
   </Style>
 
-  <!-- Pills (body type, pretty/raw/hex) -->
+  <!-- Segments of a segmented control (body type, pretty/raw/hex); place them in a Border.segment. -->
   <Style Selector="RadioButton.pill">
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Name="root" Background="Transparent" BorderBrush="{DynamicResource App.Border}" BorderThickness="1" CornerRadius="999" Padding="10,3">
+        <Border Name="root" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" Padding="9,3">
           <ContentPresenter Content="{TemplateBinding Content}" FontSize="12" VerticalAlignment="Center" />
         </Border>
       </ControlTemplate>
     </Setter>
   </Style>
-  <Style Selector="RadioButton.pill:pointerover /template/ Border#root">
-    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  <Style Selector="RadioButton.pill:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
   </Style>
   <Style Selector="RadioButton.pill:checked">
-    <Setter Property="Foreground" Value="{DynamicResource App.AccentForeground}" />
+    <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
   </Style>
   <Style Selector="RadioButton.pill TextBlock">
     <Setter Property="Foreground" Value="{Binding $parent[RadioButton].Foreground}" />
   </Style>
   <Style Selector="RadioButton.pill:checked /template/ Border#root">
-    <Setter Property="Background" Value="{DynamicResource App.Accent}" />
+    <Setter Property="Background" Value="{DynamicResource App.SegmentSelected}" />
+    <Setter Property="BoxShadow" Value="0 1 2 0 #1F1A1D23" />
+  </Style>
+  <Style Selector="RadioButton.pill:focus-visible /template/ Border#root">
     <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
   </Style>
 
@@ -287,22 +340,25 @@
     <Setter Property="Background" Value="{DynamicResource App.Selection}" />
   </Style>
 
-  <!-- A 1px line with a 5px grab area. -->
+  <!-- An invisible 6px grab area over a 1px Border.divider in the same column; tinted while hovered. -->
   <Style Selector="GridSplitter">
-    <Setter Property="Background" Value="{DynamicResource App.Border}" />
-    <Setter Property="BorderBrush" Value="Transparent" />
-    <Setter Property="BorderThickness" Value="2,0" />
-    <Setter Property="MinWidth" Value="5" />
-    <Setter Property="Width" Value="5" />
-    <Setter Property="Margin" Value="-2,0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="MinWidth" Value="6" />
+    <Setter Property="Width" Value="6" />
+    <Setter Property="Margin" Value="-3,0" />
     <Setter Property="ZIndex" Value="10" />
+  </Style>
+  <Style Selector="GridSplitter:pointerover">
+    <Setter Property="Background" Value="{DynamicResource App.AccentSoft}" />
   </Style>
   <Style Selector="Button.icon:disabled /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Opacity" Value="0.45" />
   </Style>
+  <!-- Disabled secondary buttons keep their shape and only fade the label, so they do not look broken. -->
   <Style Selector="Button.secondary:disabled /template/ ContentPresenter#PART_ContentPresenter">
-    <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
-    <Setter Property="Opacity" Value="0.7" />
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextFaint}" />
   </Style>
 </Styles>

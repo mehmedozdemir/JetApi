@@ -16,7 +16,7 @@
           <c:Icon Data="{StaticResource Icon.Logo}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" VerticalAlignment="Center" />
           <TextBlock Text="JetApi" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" />
         </StackPanel>
-        <Button Grid.Column="1" Classes="secondary" MinHeight="32" ToolTip.Tip="{l:Tr Top_Workspace}">
+        <Button Grid.Column="1" Classes="flat" MinHeight="32" ToolTip.Tip="{l:Tr Top_Workspace}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <c:Icon Data="{StaticResource Icon.Folder}" Width="14" Height="14" />
             <TextBlock Text="{Binding WorkspaceName}" MaxWidth="220" TextTrimming="CharacterEllipsis" />
@@ -35,7 +35,7 @@
           </Button.Flyout>
         </Button>
         <Button Grid.Column="2" Classes="secondary" MinHeight="32" MaxWidth="520" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="16,0"
-                Background="{DynamicResource App.Subtle}" Command="{Binding OpenPaletteCommand}" AutomationProperties.Name="{l:Tr Shortcut_Palette}">
+                Background="{DynamicResource App.Subtle}" BorderThickness="0" CornerRadius="8" Command="{Binding OpenPaletteCommand}" AutomationProperties.Name="{l:Tr Shortcut_Palette}">
           <Grid ColumnDefinitions="Auto,*,Auto">
             <c:Icon Data="{StaticResource Icon.Search}" Width="14" Height="14" Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Classes="muted" Margin="8,0" Text="{l:Tr Top_Search}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
@@ -198,6 +198,7 @@
         </Grid>
       </Border>
 
+      <Border Grid.Column="1" Classes="divider" />
       <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
 
       <!-- Editor area -->
@@ -213,32 +214,46 @@
                 </ItemsPanelTemplate>
               </ListBox.ItemsPanel>
               <ListBox.Styles>
+                <!-- Tabs are text on the surface; the active one is marked only by an accent underline. -->
                 <Style Selector="ListBoxItem">
-                  <Setter Property="Padding" Value="12,0,4,0" />
+                  <Setter Property="Padding" Value="12,0,6,0" />
                   <Setter Property="Height" Value="37" />
                   <Setter Property="CornerRadius" Value="0" />
-                  <Setter Property="BorderThickness" Value="0,0,1,0" />
-                  <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
-                  <Setter Property="Background" Value="{DynamicResource App.Sidebar}" />
+                  <Setter Property="BorderThickness" Value="0,0,0,2" />
+                  <Setter Property="BorderBrush" Value="Transparent" />
+                  <Setter Property="Background" Value="Transparent" />
+                  <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
                 </Style>
                 <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-                  <Setter Property="Background" Value="{DynamicResource App.Surface}" />
-                </Style>
-                <Style Selector="ListBoxItem:selected">
-                  <Setter Property="BorderThickness" Value="0,0,1,2" />
-                </Style>
-                <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+                  <Setter Property="Background" Value="Transparent" />
                   <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+                </Style>
+                <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                  <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+                </Style>
+                <Style Selector="ListBoxItem TextBlock.tab-title">
+                  <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
+                </Style>
+                <Style Selector="ListBoxItem:selected TextBlock.tab-title">
+                  <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+                  <Setter Property="FontWeight" Value="Medium" />
+                </Style>
+                <!-- Close shows on the active or hovered tab; Ctrl+W closes from the keyboard. -->
+                <Style Selector="ListBoxItem Button.tab-close">
+                  <Setter Property="Opacity" Value="0" />
+                </Style>
+                <Style Selector="ListBoxItem:selected Button.tab-close, ListBoxItem:pointerover Button.tab-close, ListBoxItem Button.tab-close:focus-visible">
+                  <Setter Property="Opacity" Value="1" />
                 </Style>
               </ListBox.Styles>
               <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="vm:RequestTabViewModel">
                   <StackPanel Orientation="Horizontal" Spacing="8" PointerReleased="OnTabPointerReleased">
                     <c:MethodBadge Text="{Binding Badge}" />
-                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis" />
-                    <Ellipse Width="7" Height="7" Fill="{DynamicResource App.Accent}" IsVisible="{Binding IsDirty}" VerticalAlignment="Center"
+                    <TextBlock Classes="tab-title" Text="{Binding Name}" VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis" />
+                    <Ellipse Width="6" Height="6" Fill="{DynamicResource App.Accent}" IsVisible="{Binding IsDirty}" VerticalAlignment="Center"
                              ToolTip.Tip="{l:Tr Req_Unsaved}" />
-                    <Button Classes="icon" Width="22" Height="22" Command="{Binding CloseCommand}"
+                    <Button Classes="icon tab-close" Width="22" Height="22" Command="{Binding CloseCommand}"
                             AutomationProperties.Name="{l:Tr Btn_Close}" ToolTip.Tip="{l:Tr Shortcut_Close}">
                       <c:Icon Data="{StaticResource Icon.Close}" Width="10" Height="10" />
                     </Button>
@@ -299,11 +314,17 @@
     </Grid>
 
     <!-- Status bar -->
-    <Border Grid.Row="3" Background="{DynamicResource App.Surface}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="12,0">
+    <Border Grid.Row="3" Background="{DynamicResource App.Sidebar}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="14,0">
       <Grid ColumnDefinitions="Auto,Auto,*,Auto">
-        <TextBlock Classes="muted" FontSize="11.5" VerticalAlignment="Center" Text="{Binding RootPath}" />
-        <TextBlock Grid.Column="1" Classes="muted" FontSize="11.5" Margin="16,0" VerticalAlignment="Center" Text="{Binding GitText}" />
-        <TextBlock Grid.Column="3" Classes="muted" FontSize="11.5" VerticalAlignment="Center" Text="{Binding UnsavedText}" />
+        <StackPanel Orientation="Horizontal" Spacing="6" ToolTip.Tip="{Binding RootPath}">
+          <c:Icon Data="{StaticResource Icon.Folder}" Width="12" Height="12" Foreground="{DynamicResource App.TextFaint}" VerticalAlignment="Center" />
+          <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{Binding RootDisplay}" TextTrimming="CharacterEllipsis" MaxWidth="520" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" Margin="16,0" IsVisible="{Binding GitBranch, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+          <c:Icon Data="{StaticResource Icon.Branch}" Width="12" Height="12" Foreground="{DynamicResource App.TextFaint}" VerticalAlignment="Center" />
+          <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{Binding GitBranch}" />
+        </StackPanel>
+        <TextBlock Grid.Column="3" Classes="muted small" VerticalAlignment="Center" Text="{Binding UnsavedText}" />
       </Grid>
     </Border>
 

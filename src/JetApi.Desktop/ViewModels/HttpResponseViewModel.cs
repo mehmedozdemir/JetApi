@@ -136,8 +136,11 @@ public sealed partial class HttpResponseViewModel : ViewModelBase
     /// <summary>HTTP/1.1, HTTP/2.</summary>
     public string ProtocolText => _result?.HttpVersion is { } version ? $"HTTP/{(version.Minor == 0 && version.Major >= 2 ? version.Major.ToString(Loc.Instance.Culture) : version.ToString(2))}" : string.Empty;
 
-    /// <summary>Remote address of a new connection.</summary>
-    public string RemoteText => _result?.RemoteEndPoint ?? string.Empty;
+    /// <summary>Remote address of a new connection; IPv4 addresses mapped into IPv6 are shown as plain IPv4.</summary>
+    public string RemoteText => Formatting.EndPoint(_result?.RemoteEndPoint);
+
+    /// <summary>"HTTP/1.1 · 127.0.0.1:5000", or whichever part is known.</summary>
+    public string ConnectionText => string.Join(" · ", new[] { ProtocolText, RemoteText }.Where(part => part.Length > 0));
 
     /// <summary>Response content type.</summary>
     public string ContentType => _result?.ContentType ?? string.Empty;

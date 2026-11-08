@@ -8,28 +8,28 @@
              x:DataType="vm:HttpRequestTabViewModel">
   <Grid RowDefinitions="Auto,*" c:VariableHints.Context="{Binding Variables}">
     <!-- URL bar -->
-    <Border Background="{DynamicResource App.Surface}" Padding="16,12,16,10" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
-      <StackPanel Spacing="8">
-        <TextBlock Classes="muted small" Text="{Binding Breadcrumb}" TextTrimming="CharacterEllipsis" />
+    <Border Background="{DynamicResource App.Surface}" Padding="20,14,20,2" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
+      <StackPanel Spacing="10">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <TextBlock Classes="faint" Text="{Binding BreadcrumbParent}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" MaxWidth="480" />
+          <TextBlock Classes="h3" Text="{Binding Name}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
         <Grid ColumnDefinitions="Auto,*,Auto,Auto">
           <ComboBox x:Name="MethodBox" Width="112" IsEditable="True" Text="{Binding Method}"
                     ItemsSource="{x:Static vm:HttpRequestTabViewModel.CommonMethods}"
-                    FontFamily="{DynamicResource App.MonoFont}" FontWeight="SemiBold"
+                    FontFamily="{DynamicResource App.MonoFont}" FontWeight="SemiBold" c:MethodColor.Method="{Binding Method}"
                     AutomationProperties.Name="{l:Tr Req_Method}"
                     CornerRadius="6,0,0,6" />
           <TextBox x:Name="UrlBox" Grid.Column="1" Classes="mono" Text="{Binding Url}" CornerRadius="0,6,6,0" Margin="-1,0,0,0"
                    PlaceholderText="{l:Tr Req_UrlPlaceholder}" AutomationProperties.Name="{l:Tr Req_Url}" MinHeight="38" />
-          <Button Grid.Column="2" Classes="primary" Margin="8,0,0,0" MinHeight="38" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="{Binding SendLabel}" />
-              <TextBlock Text="Ctrl ↵" FontFamily="{DynamicResource App.MonoFont}" FontSize="11" Opacity="0.85" />
-            </StackPanel>
-          </Button>
+          <Button Grid.Column="2" Classes="primary" Margin="8,0,0,0" MinHeight="38" Padding="22,0" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}"
+                  Content="{Binding SendLabel}" ToolTip.Tip="{l:Tr Shortcut_SendTip}" />
           <Button Grid.Column="2" Classes="secondary" Margin="8,0,0,0" MinHeight="38" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}"
                   Content="{l:Tr Btn_Cancel_Request}" />
           <Button Grid.Column="3" Classes="secondary" Margin="8,0,0,0" MinHeight="38" Command="{Binding SaveCommand}" Content="{l:Tr Btn_Save}" />
         </Grid>
-        <ItemsControl ItemsSource="{Binding UrlHints}">
+        <!-- Fixed height so the editor below does not jump when variables appear or disappear. -->
+        <ItemsControl ItemsSource="{Binding UrlHints}" MinHeight="20">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
               <WrapPanel />
@@ -56,18 +56,22 @@
     <Grid Grid.Row="1" ColumnDefinitions="*,1,*" Background="{DynamicResource App.Surface}">
       <!-- Request -->
       <Grid RowDefinitions="Auto,*">
-        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="8,0">
-          <StackPanel Orientation="Horizontal" Spacing="2">
+        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="10,0,12,0">
+          <StackPanel Orientation="Horizontal" Spacing="4">
             <RadioButton Classes="tab" GroupName="req" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Params}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="{l:Tr Req_Params}" />
-                <TextBlock Classes="faint small" Text="{Binding QueryParameters.Badge}" />
+                <Border Classes="badge" IsVisible="{Binding QueryParameters.Badge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding QueryParameters.Badge}" />
+                </Border>
               </StackPanel>
             </RadioButton>
             <RadioButton Classes="tab" GroupName="req" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Headers}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="{l:Tr Req_Headers}" />
-                <TextBlock Classes="faint small" Text="{Binding Headers.Badge}" />
+                <Border Classes="badge" IsVisible="{Binding Headers.Badge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding Headers.Badge}" />
+                </Border>
               </StackPanel>
             </RadioButton>
             <RadioButton Classes="tab" GroupName="req" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Auth}">
@@ -79,7 +83,9 @@
             <RadioButton Classes="tab" GroupName="req" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="{l:Tr Req_Body}" />
-                <TextBlock Classes="faint small" Text="{Binding BodyBadge}" />
+                <Border Classes="badge" IsVisible="{Binding BodyBadge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding BodyBadge}" />
+                </Border>
               </StackPanel>
             </RadioButton>
             <RadioButton Classes="tab" GroupName="req" Content="{l:Tr Req_Settings}"
@@ -95,7 +101,7 @@
           <ScrollViewer IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Headers}">
             <StackPanel Margin="12" Spacing="14">
               <v:KeyValueTable DataContext="{Binding Headers}" />
-              <Border BorderBrush="{DynamicResource App.BorderStrong}" BorderThickness="1" CornerRadius="6" Padding="12,10">
+              <Border Classes="code" Padding="14,12">
                 <StackPanel Spacing="6">
                   <TextBlock Classes="muted small" FontWeight="SemiBold" Text="{l:Tr Req_AutoHeaders}" />
                   <ItemsControl ItemsSource="{Binding AutoHeaders}">
@@ -120,19 +126,21 @@
 
           <Grid RowDefinitions="Auto,Auto,*" Margin="12" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}">
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
-              <ItemsControl ItemsSource="{Binding BodyModeChoices}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <WrapPanel />
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate x:DataType="vm:BodyModeChoice">
-                    <RadioButton Classes="pill" Margin="0,0,6,6" Content="{Binding Label}" IsChecked="{Binding IsSelected}" />
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-              <Button Grid.Column="1" Classes="link" VerticalAlignment="Top" Content="{l:Tr Btn_Format}" Command="{Binding FormatBodyCommand}" IsVisible="{Binding IsRawBody}" />
+              <Border Classes="segment">
+                <ItemsControl ItemsSource="{Binding BodyModeChoices}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:BodyModeChoice">
+                      <RadioButton Classes="pill" Content="{Binding Label}" IsChecked="{Binding IsSelected}" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Border>
+              <Button Grid.Column="1" Classes="link" VerticalAlignment="Center" Content="{l:Tr Btn_Format}" Command="{Binding FormatBodyCommand}" IsVisible="{Binding IsRawBody}" />
             </Grid>
             <Border Grid.Row="1" Classes="danger" Margin="0,0,0,8" IsVisible="{Binding BodyError, Converter={x:Static ObjectConverters.IsNotNull}}">
               <TextBlock Text="{Binding BodyError}" />
@@ -171,22 +179,26 @@
         </Panel>
       </Grid>
 
+      <Border Grid.Column="1" Classes="divider" />
       <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
 
       <!-- Response -->
       <Grid Grid.Column="2" RowDefinitions="Auto,Auto,*">
-        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="12,0" Height="41" IsVisible="{Binding !Response.IsEmpty}">
-          <StackPanel Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="12,0" Height="41" IsVisible="{Binding !Response.IsEmpty}">
+          <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
             <c:StatusPill Tone="{Binding Response.Tone}" Text="{Binding Response.StatusText}" />
-            <TextBlock Classes="small" FontWeight="SemiBold" Text="{Binding Response.DurationText}" VerticalAlignment="Center" />
-            <TextBlock Classes="small" FontWeight="SemiBold" Text="{Binding Response.SizeText}" VerticalAlignment="Center" />
-            <TextBlock Classes="small muted" Text="{Binding Response.ProtocolText}" VerticalAlignment="Center" />
-            <TextBlock Classes="small muted" Text="{Binding Response.RemoteText}" VerticalAlignment="Center" />
+            <Border Classes="chip" IsVisible="{Binding Response.DurationText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <TextBlock Text="{Binding Response.DurationText}" />
+            </Border>
+            <Border Classes="chip" IsVisible="{Binding Response.SizeText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <TextBlock Text="{Binding Response.SizeText}" />
+            </Border>
+            <TextBlock Classes="small muted" Margin="4,0,0,0" Text="{Binding Response.ConnectionText}" VerticalAlignment="Center" />
             <TextBlock Classes="small muted" Text="{l:Tr Res_Sending}" IsVisible="{Binding Response.IsSending}" VerticalAlignment="Center" />
           </StackPanel>
         </Border>
 
-        <Border Grid.Row="1" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="8,0" IsVisible="{Binding Response.HasResult}">
+        <Border Grid.Row="1" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="10,0,12,0" IsVisible="{Binding Response.HasResult}">
           <StackPanel Orientation="Horizontal" Spacing="2">
             <RadioButton Classes="tab" GroupName="res" Content="{l:Tr Res_Body}"
                          IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}" />
@@ -194,7 +206,9 @@
                          IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Headers}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="{l:Tr Res_Headers}" />
-                <TextBlock Classes="faint small" Text="{Binding Response.HeadersBadge}" />
+                <Border Classes="badge" IsVisible="{Binding Response.HeadersBadge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding Response.HeadersBadge}" />
+                </Border>
               </StackPanel>
             </RadioButton>
             <RadioButton Classes="tab" GroupName="res" Content="{l:Tr Res_Timing}"
@@ -231,15 +245,21 @@
             <!-- Body -->
             <Grid RowDefinitions="Auto,Auto,*" Margin="12,8,12,12"
                   IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}">
-              <Grid ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,8" IsVisible="{Binding Response.HasResponse}">
-                <StackPanel Orientation="Horizontal" Spacing="6">
-                  <RadioButton Classes="pill" GroupName="view" Content="{l:Tr Res_Pretty}" IsChecked="{Binding Response.IsPretty}" />
-                  <RadioButton Classes="pill" GroupName="view" Content="{l:Tr Res_Raw}" IsChecked="{Binding Response.IsRaw}" />
-                  <RadioButton Classes="pill" GroupName="view" Content="{l:Tr Res_Hex}" IsChecked="{Binding Response.IsHex}" />
-                </StackPanel>
-                <TextBlock Grid.Column="1" Classes="muted small" Margin="12,0" VerticalAlignment="Center" Text="{Binding Response.ContentType}" TextTrimming="CharacterEllipsis" />
-                <Button Grid.Column="2" Classes="link" Content="{l:Tr Btn_Copy}" Command="{Binding CopyResponseCommand}" />
-                <Button Grid.Column="3" Classes="link" Content="{l:Tr Btn_SaveToFile}" Command="{Binding SaveResponseCommand}" />
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,10" IsVisible="{Binding Response.HasResponse}">
+                <Border Classes="segment">
+                  <StackPanel Orientation="Horizontal">
+                    <RadioButton Classes="pill" GroupName="view" Content="{l:Tr Res_Pretty}" IsChecked="{Binding Response.IsPretty}" />
+                    <RadioButton Classes="pill" GroupName="view" Content="{l:Tr Res_Raw}" IsChecked="{Binding Response.IsRaw}" />
+                    <RadioButton Classes="pill" GroupName="view" Content="{l:Tr Res_Hex}" IsChecked="{Binding Response.IsHex}" />
+                  </StackPanel>
+                </Border>
+                <TextBlock Grid.Column="1" Classes="faint small" Margin="12,0" VerticalAlignment="Center" Text="{Binding Response.ContentType}" TextTrimming="CharacterEllipsis" />
+                <Button Grid.Column="2" Classes="icon" Command="{Binding CopyResponseCommand}" ToolTip.Tip="{l:Tr Btn_Copy}" AutomationProperties.Name="{l:Tr Btn_Copy}">
+                  <c:Icon Data="{StaticResource Icon.Copy}" />
+                </Button>
+                <Button Grid.Column="3" Classes="icon" Command="{Binding SaveResponseCommand}" ToolTip.Tip="{l:Tr Btn_SaveToFile}" AutomationProperties.Name="{l:Tr Btn_SaveToFile}">
+                  <c:Icon Data="{StaticResource Icon.Download}" />
+                </Button>
               </Grid>
               <Border Grid.Row="1" Classes="warning" Margin="0,0,0,8" IsVisible="{Binding Response.IsTruncated}">
                 <TextBlock Text="{Binding Response.TruncatedText}" />

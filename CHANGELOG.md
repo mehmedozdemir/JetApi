@@ -25,6 +25,7 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Changed
 
+- Arayüz makyajı: daha az çerçeve, vurgu rengi yalnızca ana eylemde; body türü ve görünüm seçimi segmented control; sekme rozetleri; yanıt süresi ve boyutu chip olarak; istek adı başlık olarak; kopyala ve kaydet ikon butonlar; sade karşılama ekranı; durum çubuğunda kısa yol ve Git dalı. Soluk metnin kontrastı AA seviyesine çıkarıldı. Yanıttaki IPv4 adresleri `[::ffff:…]` biçimi yerine sade gösterilir.
 - Windows'ta arayüz varsayılan olarak yazılımla çizilir; boşta bellek 263 MB'tan 145 MB'a iner. `JETAPI_RENDERING=gpu` ile GPU kullanılır.
 
 ### Fixed

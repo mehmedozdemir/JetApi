@@ -118,6 +118,30 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <summary>Workspace directory.</summary>
     public string RootPath => Session.Root;
 
+    /// <summary>The workspace directory for the status bar, with the home directory shortened to "~".</summary>
+    public string RootDisplay => ShortenHome(Session.Root, Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+
+    /// <summary>Replaces a leading <paramref name="home"/> in <paramref name="path"/> with "~".</summary>
+    public static string ShortenHome(string path, string home)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        if (string.IsNullOrEmpty(home))
+        {
+            return path;
+        }
+
+        var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        home = home.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        if (path.Equals(home, comparison))
+        {
+            return "~";
+        }
+
+        return path.StartsWith(home, comparison) && path.Length > home.Length && path[home.Length] is '/' or '\\'
+            ? "~" + path[home.Length..]
+            : path;
+    }
+
     /// <summary>Current Git branch, if the workspace is in a repository.</summary>
     public string? GitBranch { get; private set; }
 
@@ -678,6 +702,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         GitBranch = GitInfo.TryGetBranch(Session.Root);
         OnPropertyChanged(nameof(WorkspaceName));
         OnPropertyChanged(nameof(GitText));
+        OnPropertyChanged(nameof(GitBranch));
         OnPropertyChanged(nameof(HasNoCollections));
     }
 

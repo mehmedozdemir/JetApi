@@ -110,31 +110,33 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     public string SendLabel => Loc.Get(IsGrpc ? "Btn_Invoke" : "Btn_Send");
 
     /// <summary>"User Service / Admin / Create user".</summary>
-    public string Breadcrumb
-    {
-        get
-        {
-            var collection = Host.Session.Workspace.FindCollection(CollectionKey);
-            if (collection is null)
-            {
-                return Name;
-            }
+    public string Breadcrumb => string.Join("  /  ", [.. ParentNames(), Name]);
 
-            var parts = new List<string> { collection.Name };
-            if (Path is not null)
+    /// <summary>"User Service / Admin /", shown before the request name; empty when the request has no collection.</summary>
+    public string BreadcrumbParent => ParentNames() is { Count: > 0 } parents ? string.Join(" / ", parents) + " /" : string.Empty;
+
+    private List<string> ParentNames()
+    {
+        var parts = new List<string>();
+        var collection = Host.Session.Workspace.FindCollection(CollectionKey);
+        if (collection is null)
+        {
+            return parts;
+        }
+
+        parts.Add(collection.Name);
+        if (Path is not null)
+        {
+            for (var length = 1; length < Path.Count; length++)
             {
-                for (var length = 1; length < Path.Count; length++)
+                if (CollectionTree.Find(collection, [.. Path.Take(length)]) is { } node)
                 {
-                    if (CollectionTree.Find(collection, [.. Path.Take(length)]) is { } node)
-                    {
-                        parts.Add(node.Name);
-                    }
+                    parts.Add(node.Name);
                 }
             }
-
-            parts.Add(Name);
-            return string.Join("  /  ", parts);
         }
+
+        return parts;
     }
 
     /// <summary>Identifies the tab for "open or focus".</summary>
@@ -185,6 +187,7 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
             _savedYaml = RequestFiles.Serialize(BuildRequest());
             UpdateDirty();
             OnPropertyChanged(nameof(Breadcrumb));
+            OnPropertyChanged(nameof(BreadcrumbParent));
             OnPropertyChanged(nameof(Identity));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or WorkspaceStorageException or ArgumentException)
@@ -216,6 +219,7 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     {
         Variables = CreateVariableContext();
         OnPropertyChanged(nameof(Breadcrumb));
+        OnPropertyChanged(nameof(BreadcrumbParent));
     }
 
     /// <summary>Sends using the current editor state.</summary>

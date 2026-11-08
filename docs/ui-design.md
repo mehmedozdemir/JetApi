@@ -17,6 +17,7 @@ stilleri `Themes/Styles.axaml` dosyasındadır. `tests/JetApi.Desktop.Tests/Scre
 
 ## Tasarım kararları
 
+- **Makyaj turu (2026-11):** [Taslak tuvali](https://claude.ai/artifact/MVZeQN3L3JLKGfK3pskq7a). Vurgu rengi yalnızca ana eylemde, odakta ve aktif sekmede kullanılır; seçimler nötrdür (segmented control, koyu checkbox). Kutu çerçeveleri yerine zemin farkı, 1 px ayırıcılar, 5 basamaklı yazı ölçeği. Sekme rozetleri hap, yanıt metrikleri chip olarak gösterilir. Soluk metin #6B7180'dir (AA).
 - **Görsel dil:** Nötr gri zemin, tek vurgu rengi (#3451D1). UI fontu Inter, kod ve değer fontu JetBrains Mono. Metot renkleri GET yeşil, POST turuncu, PUT mavi, DELETE kırmızı, gRPC camgöbeği; hepsi beyaz zeminde WCAG AA kontrastını sağlar.
 - **Şeffaflık:** Otomatik eklenen header'lar Headers sekmesinde ayrı listelenir. Auth sekmesi isteğin auth'unun nereden miras alındığını gösterir. Gönderilen istek ağa çıkan haliyle görüntülenir.
 - **Değişkenler:** URL altında, kullanılan değişkenin değeri ve kaynağı gösterilir. Body ve gRPC mesaj editörlerinde `{{değişken}}` tanımlıysa yeşil, tanımsızsa kırmızı vurgulanır. URL, tablo hücreleri, auth alanları ve editörlerde değişkenin üzerine gelince değeri (gizliyse maskeli) ve kaynağı gösterilir. Tanımsız değişken varsa istek gönderilmeden önce sorulur.

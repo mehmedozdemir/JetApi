@@ -29,6 +29,20 @@ public sealed partial class KeyValueRowViewModel : ViewModelBase
     /// <summary>True for the always-present empty row at the end that adds a new entry when typed into.</summary>
     public bool IsPlaceholder => Key.Length == 0 && Value.Length == 0 && Description.Length == 0;
 
+    /// <summary>Hint text for the description cell: shown only on the empty row, so filled rows stay quiet.</summary>
+    public string DescriptionHint => IsPlaceholder ? Loc.Get("Req_Description") : string.Empty;
+
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName is nameof(Key) or nameof(Value) or nameof(Description))
+        {
+            base.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(IsPlaceholder)));
+            base.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(DescriptionHint)));
+        }
+    }
+
     /// <summary>Removes this row from its table.</summary>
     public CommunityToolkit.Mvvm.Input.IRelayCommand? RemoveCommand { get; internal set; }
 }

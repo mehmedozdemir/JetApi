@@ -23,7 +23,7 @@
                         IsVisible="{Binding !IsPlaceholder}" ToolTip.Tip="{l:Tr Req_Enabled}" />
               <TextBox Grid.Column="1" Classes="cell mono" Text="{Binding Key}" PlaceholderText="{l:Tr Req_Key}" />
               <TextBox Grid.Column="2" Classes="cell mono" Text="{Binding Value}" PlaceholderText="{l:Tr Req_Value}" />
-              <TextBox Grid.Column="3" Classes="cell" Text="{Binding Description}" PlaceholderText="{l:Tr Req_Description}"
+              <TextBox Grid.Column="3" Classes="cell" Text="{Binding Description}" PlaceholderText="{Binding DescriptionHint}"
                        IsVisible="{Binding #Root.ShowDescription}" />
               <CheckBox Grid.Column="4" IsChecked="{Binding IsFile}" Margin="8,0" IsVisible="{Binding #Root.ShowFileToggle}"
                         ToolTip.Tip="{l:Tr Req_Part_IsFile}" />
