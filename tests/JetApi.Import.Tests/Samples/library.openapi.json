@@ -1,0 +1,136 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Library",
+    "version": "2024-05"
+  },
+  "servers": [
+    { "url": "/api" }
+  ],
+  "security": [
+    { "oauth": ["books:read"] },
+    { "basicAuth": [] }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "operationId": "searchBooks",
+        "tags": ["books"],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "examples": {
+              "byTitle": { "value": "Dune" },
+              "byAuthor": { "value": "Herbert" }
+            },
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "explode": false,
+            "schema": { "type": "array", "items": { "type": "string" }, "default": ["title", "isbn"] }
+          },
+          { "$ref": "#/components/parameters/key~1query" }
+        ],
+        "security": [{ "queryKey": [] }]
+      },
+      "post": {
+        "operationId": "createBook",
+        "tags": ["books"],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "examples": {
+                "dune": { "$ref": "#/components/examples/Dune" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/{isbn}/cover": {
+      "put": {
+        "summary": "Replace the cover",
+        "tags": ["covers"],
+        "parameters": [
+          { "name": "isbn", "in": "path", "required": true, "schema": { "type": "string", "examples": ["978-0441013593"] } }
+        ],
+        "requestBody": {
+          "content": {
+            "image/png": { "schema": { "type": "string", "contentMediaType": "image/png" } }
+          }
+        }
+      }
+    },
+    "/books/{isbn}/notes": {
+      "post": {
+        "summary": "Add a note",
+        "tags": ["books"],
+        "parameters": [
+          { "name": "isbn", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "text/plain": { "schema": { "type": "string", "const": "Great book" } }
+          }
+        }
+      }
+    },
+    "/authors": {
+      "post": {
+        "summary": "Add an author",
+        "tags": ["authors"],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Author"
+        },
+        "callbacks": {
+          "created": {
+            "{$request.body#/callbackUrl}": { "post": { "responses": { "200": { "description": "ok" } } } }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "newBook": { "post": { "responses": { "200": { "description": "ok" } } } }
+  },
+  "components": {
+    "parameters": {
+      "key/query": { "name": "lang", "in": "query", "schema": { "type": "string", "enum": ["en", "tr"] } }
+    },
+    "examples": {
+      "Dune": { "value": { "data": { "type": "books", "attributes": { "title": "Dune", "year": 1965 } } } }
+    },
+    "requestBodies": {
+      "Author": {
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Author" } }
+        }
+      }
+    },
+    "schemas": {
+      "Author": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "examples": ["Frank Herbert"] },
+          "nickname": { "type": ["string", "null"] },
+          "born": { "type": "string", "format": "date-time" },
+          "favorite": { "$ref": "#/components/schemas/Author" },
+          "books": { "type": "array", "items": { "$ref": "#/components/schemas/Author" } },
+          "kind": { "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 3 }] }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oauth": {
+        "type": "oauth2",
+        "flows": { "implicit": { "authorizationUrl": "https://example.com/auth", "scopes": { "books:read": "Read" } } }
+      },
+      "basicAuth": { "type": "http", "scheme": "basic" },
+      "queryKey": { "type": "apiKey", "in": "query", "name": "api_key" }
+    }
+  }
+}

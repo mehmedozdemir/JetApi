@@ -21,4 +21,29 @@
   <data name="Import_UnnamedCollection" xml:space="preserve"><value>Imported collection</value></data>
   <data name="Import_UnnamedEnvironment" xml:space="preserve"><value>Imported environment</value></data>
   <data name="Import_UnsupportedSchema" xml:space="preserve"><value>The Postman collection format "{0}" is not supported. Export it as Collection v2.1.</value></data>
+  <data name="OpenApi_AlsoAccepts" xml:space="preserve"><value>The body uses {0}; the operation also accepts {1}.</value></data>
+  <data name="OpenApi_BinaryBody" xml:space="preserve"><value>The body is a file ({0}); its path was set to "{1}". Choose the real file before sending.</value></data>
+  <data name="OpenApi_Callbacks" xml:space="preserve"><value>Callbacks were not imported; they describe calls the API makes, not requests to send.</value></data>
+  <data name="OpenApi_CombinedSecurity" xml:space="preserve"><value>The security requirement combines {0}; only {1} was applied.</value></data>
+  <data name="OpenApi_CookieApiKey" xml:space="preserve"><value>The API key "{0}" is sent as a cookie, which the auth settings cannot do, so it was set to No auth. Add the header Cookie: {0}={{{{{1}}}}} yourself.</value></data>
+  <data name="OpenApi_Deprecated" xml:space="preserve"><value>Deprecated.</value></data>
+  <data name="OpenApi_ExternalRef" xml:space="preserve"><value>"{0}" points to another file, which is not read, so that part was left out.</value></data>
+  <data name="OpenApi_ExternalValue" xml:space="preserve"><value>Example "{0}" is in another file ({1}), so it was not used.</value></data>
+  <data name="OpenApi_FileField" xml:space="preserve"><value>Field "{0}" is a file; choose the file before sending.</value></data>
+  <data name="OpenApi_InvalidDocument" xml:space="preserve"><value>The file is not valid JSON or YAML: {0}</value></data>
+  <data name="OpenApi_MissingRef" xml:space="preserve"><value>"{0}" points to nothing in this document, so that part was left out.</value></data>
+  <data name="OpenApi_MissingServer" xml:space="preserve"><value>The document names no server, so baseUrl is empty. Set it in the collection variables or in an environment.</value></data>
+  <data name="OpenApi_NotOpenApi" xml:space="preserve"><value>This file is not an OpenAPI or Swagger document; it needs an "openapi" (3.x) or "swagger" (2.0) field.</value></data>
+  <data name="OpenApi_OperationServers" xml:space="preserve"><value>This operation names its own server ({0}); the request uses {{{{baseUrl}}}}.</value></data>
+  <data name="OpenApi_OtherServers" xml:space="preserve"><value>baseUrl uses the first server. The document also lists: {0}.</value></data>
+  <data name="OpenApi_RecursiveSchema" xml:space="preserve"><value>Schema "{0}" contains itself; the generated example stops where it repeats.</value></data>
+  <data name="OpenApi_RefCycle" xml:space="preserve"><value>"{0}" refers back to itself in a loop, so that part was left out.</value></data>
+  <data name="OpenApi_RelativeServer" xml:space="preserve"><value>The server address "{0}" is relative; set baseUrl to the full address before sending.</value></data>
+  <data name="OpenApi_SecurityNotSupported" xml:space="preserve"><value>Security scheme "{0}" ({1}) is not supported yet, so it was set to No auth. You can get a token yourself and use Bearer auth.</value></data>
+  <data name="OpenApi_TooComplex" xml:space="preserve"><value>The document is too deeply nested or too large to import.</value></data>
+  <data name="OpenApi_UnknownSecurity" xml:space="preserve"><value>Security scheme "{0}" is not defined in the document, so it was set to No auth.</value></data>
+  <data name="OpenApi_UnsupportedVersion" xml:space="preserve"><value>Version "{0}" is not supported. JetApi imports Swagger 2.0 and OpenAPI 3.0 and 3.1 documents.</value></data>
+  <data name="OpenApi_Version" xml:space="preserve"><value>Version: {0}</value></data>
+  <data name="OpenApi_Webhooks" xml:space="preserve"><value>{0} webhook(s) were not imported; they describe calls the API makes, not requests to send.</value></data>
+  <data name="OpenApi_XmlBody" xml:space="preserve"><value>The XML body was generated from the schema; check the element names before sending.</value></data>
 </root>

@@ -33,6 +33,9 @@ public enum ImportKind
 
     /// <summary>A Postman environment.</summary>
     PostmanEnvironment,
+
+    /// <summary>An OpenAPI 3.x or Swagger 2.0 document (JSON or YAML).</summary>
+    OpenApi,
 }
 
 /// <summary>

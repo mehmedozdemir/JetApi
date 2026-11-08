@@ -5,6 +5,6 @@
     <ProjectReference Include="..\..\src\JetApi.Storage\JetApi.Storage.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Samples\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Samples\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

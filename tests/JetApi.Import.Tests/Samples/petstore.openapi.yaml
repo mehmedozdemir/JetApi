@@ -1,0 +1,243 @@
+openapi: 3.0.3
+info:
+  title: Pet Store
+  description: Pets, orders and the people who buy them.
+  version: 1.0.0
+servers:
+  - url: https://{region}.petstore.example.com/{basePath}/
+    variables:
+      region:
+        default: eu
+        enum: [eu, us]
+      basePath:
+        default: v2
+  - url: https://staging.petstore.example.com/v2
+tags:
+  - name: store
+    description: Orders
+  - name: pet
+    description: Everything about pets
+security:
+  - bearerAuth: []
+paths:
+  /pets:
+    get:
+      tags: [pet]
+      summary: List pets
+      operationId: listPets
+      parameters:
+        - name: status
+          in: query
+          required: true
+          description: Filter by status
+          schema:
+            type: string
+            enum: [available, pending, sold]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: tags
+          in: query
+          example: [dog, cat]
+          schema:
+            type: array
+            items:
+              type: string
+        - $ref: '#/components/parameters/TraceId'
+      responses:
+        '200':
+          description: A list of pets.
+    post:
+      tags: [pet]
+      summary: Add a pet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        '201':
+          description: Created.
+  /pets/{petId}:
+    parameters:
+      - name: petId
+        in: path
+        required: true
+        example: 42
+        schema:
+          type: integer
+    get:
+      tags: [pet]
+      operationId: getPetById
+      description: Returns a single pet.
+      parameters:
+        - name: X-Request-Id
+          in: header
+          schema:
+            type: string
+            format: uuid
+            example: 0b6f3c1e-5a43-4f4e-9d0a-1c3f2e9b7a10
+        - name: Accept
+          in: header
+          schema:
+            type: string
+        - name: session
+          in: cookie
+          required: true
+          schema:
+            type: string
+            example: abc123
+      security: []
+      responses:
+        '200':
+          description: The pet.
+    delete:
+      tags: [pet]
+      summary: Delete a pet
+      description: Use status "sold" instead.
+      deprecated: true
+      security:
+        - apiKey: []
+      responses:
+        '204':
+          description: Deleted.
+  /pets/{petId}/photo:
+    post:
+      tags: [pet]
+      summary: Upload a photo
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                caption:
+                  type: string
+                  example: On the beach
+                file:
+                  type: string
+                  format: binary
+                meta:
+                  type: object
+                  properties:
+                    width:
+                      type: integer
+                      example: 640
+            encoding:
+              file:
+                contentType: image/png
+      responses:
+        '200':
+          description: Uploaded.
+  /store/orders:
+    post:
+      tags: [store]
+      summary: Place an order
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [petId]
+              properties:
+                id:
+                  type: integer
+                  readOnly: true
+                petId:
+                  type: integer
+                  example: 7
+                quantity:
+                  type: integer
+                  minimum: 1
+      security:
+        - petstore_auth: [write:orders]
+      responses:
+        '200':
+          description: Placed.
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Healthy.
+  /legacy:
+    get:
+      responses:
+        '200':
+          description: Old endpoint.
+components:
+  parameters:
+    TraceId:
+      name: X-Trace-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        example: trace-1
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          example: Dogs
+    Pet:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Rex
+        status:
+          type: string
+          enum: [available, pending, sold]
+        born:
+          type: string
+          format: date
+        category:
+          $ref: '#/components/schemas/Category'
+        photoUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+    NewPet:
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            ownerEmail:
+              type: string
+              format: email
+            chipId:
+              type: string
+              format: uuid
+            vaccinated:
+              type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    petstore_auth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://petstore.example.com/oauth/token
+          scopes:
+            write:orders: Place orders

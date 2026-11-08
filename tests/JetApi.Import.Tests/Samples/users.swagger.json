@@ -1,0 +1,81 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Users API",
+    "description": "Manage users.",
+    "version": "1.4"
+  },
+  "host": "api.users.example.com",
+  "basePath": "/v1/",
+  "schemes": ["https", "http"],
+  "consumes": ["application/json"],
+  "securityDefinitions": {
+    "basic": { "type": "basic" },
+    "key": { "type": "apiKey", "in": "header", "name": "X-Key" },
+    "session": { "type": "apiKey", "in": "cookie", "name": "sid" }
+  },
+  "security": [{ "key": [] }],
+  "tags": [{ "name": "users", "description": "User accounts" }],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["users"],
+        "summary": "List users",
+        "parameters": [
+          { "name": "role", "in": "query", "type": "array", "items": { "type": "string" }, "collectionFormat": "multi", "default": ["admin", "editor"] },
+          { "name": "page", "in": "query", "type": "integer", "required": true, "x-example": 2 }
+        ],
+        "responses": { "200": { "description": "ok" } }
+      },
+      "post": {
+        "tags": ["users"],
+        "summary": "Create user",
+        "security": [{ "basic": [] }],
+        "parameters": [
+          { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/User" } }
+        ],
+        "responses": { "201": { "description": "created" } }
+      }
+    },
+    "/users/{userId}/avatar": {
+      "parameters": [
+        { "name": "userId", "in": "path", "required": true, "type": "string", "default": "u-1" }
+      ],
+      "post": {
+        "tags": ["users"],
+        "summary": "Upload avatar",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          { "name": "file", "in": "formData", "type": "file", "required": true },
+          { "name": "note", "in": "formData", "type": "string", "default": "profile" }
+        ],
+        "responses": { "200": { "description": "ok" } }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Log in",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "security": [{ "session": [] }],
+        "parameters": [
+          { "name": "username", "in": "formData", "type": "string", "required": true, "x-example": "ayse" },
+          { "name": "password", "in": "formData", "type": "string", "required": true, "format": "password" }
+        ],
+        "responses": { "200": { "description": "ok" } }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": ["email"],
+      "properties": {
+        "id": { "type": "string", "readOnly": true },
+        "email": { "type": "string", "format": "email" },
+        "roles": { "type": "array", "items": { "$ref": "#/definitions/Role" } },
+        "active": { "type": "boolean", "default": false }
+      }
+    },
+    "Role": { "type": "string", "enum": ["admin", "editor", "viewer"] }
+  }
+}

@@ -21,4 +21,29 @@
   <data name="Import_UnnamedCollection" xml:space="preserve"><value>İçe aktarılan koleksiyon</value></data>
   <data name="Import_UnnamedEnvironment" xml:space="preserve"><value>İçe aktarılan environment</value></data>
   <data name="Import_UnsupportedSchema" xml:space="preserve"><value>"{0}" Postman koleksiyon biçimi desteklenmiyor. Collection v2.1 olarak dışa aktarın.</value></data>
+  <data name="OpenApi_AlsoAccepts" xml:space="preserve"><value>Body {0} biçiminde oluşturuldu; işlemin kabul ettiği diğer biçimler: {1}.</value></data>
+  <data name="OpenApi_BinaryBody" xml:space="preserve"><value>Body bir dosya ({0}); yolu "{1}" olarak ayarlandı. Göndermeden önce asıl dosyayı seçin.</value></data>
+  <data name="OpenApi_Callbacks" xml:space="preserve"><value>Callback’ler aktarılmadı; bunlar gönderilecek istekleri değil, API’nin yaptığı çağrıları tanımlar.</value></data>
+  <data name="OpenApi_CombinedSecurity" xml:space="preserve"><value>Güvenlik gereksinimi şunları birlikte istiyor: {0}. Yalnızca {1} uygulandı.</value></data>
+  <data name="OpenApi_CookieApiKey" xml:space="preserve"><value>"{0}" API anahtarı cookie olarak gönderiliyor; auth ayarları bunu yapamadığı için "Auth yok" olarak ayarlandı. Şu header’ı kendiniz ekleyin: Cookie: {0}={{{{{1}}}}}</value></data>
+  <data name="OpenApi_Deprecated" xml:space="preserve"><value>Kullanımdan kaldırıldı.</value></data>
+  <data name="OpenApi_ExternalRef" xml:space="preserve"><value>"{0}" başka bir dosyayı gösteriyor; o dosya okunmadığı için bu kısım aktarılmadı.</value></data>
+  <data name="OpenApi_ExternalValue" xml:space="preserve"><value>"{0}" örneği başka bir dosyada ({1}), bu yüzden kullanılmadı.</value></data>
+  <data name="OpenApi_FileField" xml:space="preserve"><value>"{0}" alanı bir dosya; göndermeden önce dosyayı seçin.</value></data>
+  <data name="OpenApi_InvalidDocument" xml:space="preserve"><value>Dosya geçerli bir JSON ya da YAML değil: {0}</value></data>
+  <data name="OpenApi_MissingRef" xml:space="preserve"><value>"{0}" bu belgede hiçbir yeri göstermiyor; bu kısım aktarılmadı.</value></data>
+  <data name="OpenApi_MissingServer" xml:space="preserve"><value>Belgede sunucu adresi yok, bu yüzden baseUrl boş. Koleksiyon değişkenlerinde ya da bir environment’ta tanımlayın.</value></data>
+  <data name="OpenApi_NotOpenApi" xml:space="preserve"><value>Bu dosya bir OpenAPI ya da Swagger belgesi değil; "openapi" (3.x) ya da "swagger" (2.0) alanı bulunmalı.</value></data>
+  <data name="OpenApi_OperationServers" xml:space="preserve"><value>Bu işlem kendi sunucusunu belirtiyor ({0}); istek {{{{baseUrl}}}} kullanır.</value></data>
+  <data name="OpenApi_OtherServers" xml:space="preserve"><value>baseUrl ilk sunucuyu kullanır. Belgedeki diğer sunucular: {0}.</value></data>
+  <data name="OpenApi_RecursiveSchema" xml:space="preserve"><value>"{0}" şeması kendini içeriyor; üretilen örnek, tekrarın başladığı yerde durur.</value></data>
+  <data name="OpenApi_RefCycle" xml:space="preserve"><value>"{0}" bir döngüyle kendine geri dönüyor; bu kısım aktarılmadı.</value></data>
+  <data name="OpenApi_RelativeServer" xml:space="preserve"><value>"{0}" sunucu adresi göreli; göndermeden önce baseUrl’i tam adresle değiştirin.</value></data>
+  <data name="OpenApi_SecurityNotSupported" xml:space="preserve"><value>"{0}" güvenlik şeması ({1}) henüz desteklenmiyor; "Auth yok" olarak ayarlandı. Token’ı kendiniz alıp Bearer auth ile kullanabilirsiniz.</value></data>
+  <data name="OpenApi_TooComplex" xml:space="preserve"><value>Belge içe aktarılamayacak kadar derin ya da büyük.</value></data>
+  <data name="OpenApi_UnknownSecurity" xml:space="preserve"><value>"{0}" güvenlik şeması belgede tanımlı değil; "Auth yok" olarak ayarlandı.</value></data>
+  <data name="OpenApi_UnsupportedVersion" xml:space="preserve"><value>"{0}" sürümü desteklenmiyor. JetApi; Swagger 2.0, OpenAPI 3.0 ve 3.1 belgelerini içe aktarır.</value></data>
+  <data name="OpenApi_Version" xml:space="preserve"><value>Sürüm: {0}</value></data>
+  <data name="OpenApi_Webhooks" xml:space="preserve"><value>{0} webhook aktarılmadı; bunlar gönderilecek istekleri değil, API’nin yaptığı çağrıları tanımlar.</value></data>
+  <data name="OpenApi_XmlBody" xml:space="preserve"><value>XML body şemadan üretildi; göndermeden önce öğe adlarını kontrol edin.</value></data>
 </root>
