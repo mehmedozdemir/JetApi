@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package jetapi.test.v1;
+
+option csharp_namespace = "JetApi.Grpc.Tests.Generated";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "test/v1/common.proto";
+
+// Exercises every field kind of the proto3 JSON mapping.
+message Everything {
+  double d = 1;
+  float f = 2;
+  int32 i32 = 3;
+  int64 i64 = 4;
+  uint32 u32 = 5;
+  uint64 u64 = 6;
+  sint32 s32 = 7;
+  sint64 s64 = 8;
+  fixed32 fx32 = 9;
+  fixed64 fx64 = 10;
+  sfixed32 sfx32 = 11;
+  sfixed64 sfx64 = 12;
+  bool flag = 13;
+  string text = 14;
+  bytes data = 15;
+  Color color = 16;
+  Address address = 17;
+  repeated int32 numbers = 18;
+  repeated string tags = 19;
+  repeated Address addresses = 20;
+  map<string, int32> counts = 21;
+  map<int64, Address> address_by_id = 22;
+  map<bool, string> flags = 23;
+  oneof contact {
+    string email = 24;
+    string phone = 25;
+  }
+  optional int32 maybe = 26;
+  google.protobuf.Timestamp created_at = 27;
+  google.protobuf.Duration timeout = 28;
+  google.protobuf.Int64Value big_wrapper = 29;
+  google.protobuf.StringValue name_wrapper = 30;
+  google.protobuf.Struct attributes = 31;
+  google.protobuf.Value dynamic = 32;
+  google.protobuf.ListValue list = 33;
+  google.protobuf.FieldMask mask = 34;
+  google.protobuf.Any details = 35;
+  repeated Color colors = 36;
+  Node tree = 37;
+  repeated int32 unpacked = 38 [packed = false];
+}
+
+enum Color {
+  COLOR_UNSPECIFIED = 0;
+  COLOR_RED = 1;
+  COLOR_GREEN = 2;
+}
+
+message Node {
+  string name = 1;
+  repeated Node children = 2;
+}
+
+service EverythingService {
+  rpc Echo(Everything) returns (Everything);
+  rpc Fail(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc Slow(google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc EchoMetadata(google.protobuf.Empty) returns (google.protobuf.Struct);
+  rpc Watch(Everything) returns (stream Everything);
+}

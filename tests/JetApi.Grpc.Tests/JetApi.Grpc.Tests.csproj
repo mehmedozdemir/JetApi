@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JetApi.Grpc\JetApi.Grpc.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Same alias as the library, so generated code only sees Google.Protobuf's reflection types. -->
+    <PackageReference Include="protobuf-net.Reflection" Aliases="pbnet" />
+    <PackageReference Include="Google.Protobuf" />
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Grpc.Tools" PrivateAssets="all" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Compiled with protoc as a reference implementation to cross-check the dynamic codec. -->
+    <Protobuf Include="Protos\**\*.proto" ProtoRoot="Protos" GrpcServices="Server" />
+    <None Include="Protos\**\*.proto" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

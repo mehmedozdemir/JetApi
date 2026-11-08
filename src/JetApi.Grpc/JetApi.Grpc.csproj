@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Dynamic gRPC client: loads .proto files at runtime, converts JSON to/from protobuf and invokes methods without code generation.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" />
+    <PackageReference Include="Grpc.Net.Client" />
+    <!-- Aliased: it declares types in the Google.Protobuf.Reflection namespace, like Google.Protobuf does. -->
+    <PackageReference Include="protobuf-net.Reflection" Aliases="pbnet" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Grpc.Tests" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package jetapi.test.v1;
+
+option csharp_namespace = "JetApi.Grpc.Tests.Generated";
+
+message Address {
+  string street = 1;
+  string city = 2;
+}
