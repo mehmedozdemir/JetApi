@@ -46,7 +46,7 @@ public static class WorkspaceStore
         var manifestPath = Path.Combine(context.Root, WorkspaceLayout.WorkspaceFileName);
         if (!File.Exists(manifestPath))
         {
-            throw new WorkspaceStorageException($"'{context.Root}' is not a JetApi workspace: {WorkspaceLayout.WorkspaceFileName} was not found.");
+            throw new WorkspaceStorageException(Messages.Format("Storage_NotAWorkspace", context.Root, WorkspaceLayout.WorkspaceFileName));
         }
 
         var manifest = await context.ReadAsync<WorkspaceFile>(manifestPath).ConfigureAwait(false);
@@ -104,7 +104,7 @@ public static class WorkspaceStore
     public static async Task SaveEnvironmentAsync(string rootDirectory, ApiEnvironment environment, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(environment);
-        EnsureSafeSegment(environment.Key, "environment");
+        EnsureSafeSegment(environment.Key, Messages.Get("Storage_KindEnvironment"));
 
         var file = new EnvironmentFile
         {
@@ -120,8 +120,8 @@ public static class WorkspaceStore
     public static async Task SaveCollectionAsync(string rootDirectory, ApiCollection collection, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(collection);
-        EnsureSafeSegment(collection.Key, "collection");
-        EnsureUniqueSiblings(collection.Children, $"collection '{collection.Key}'");
+        EnsureSafeSegment(collection.Key, Messages.Get("Storage_KindCollection"));
+        EnsureUniqueSiblings(collection.Children, Messages.Format("Storage_LocationCollection", collection.Key));
 
         var directory = Path.Combine(rootDirectory, WorkspaceLayout.CollectionsDirectory, collection.Key);
         var file = new CollectionFile
@@ -141,7 +141,7 @@ public static class WorkspaceStore
     /// <summary>Deletes an environment file.</summary>
     public static Task DeleteEnvironmentAsync(string rootDirectory, string environmentKey)
     {
-        EnsureSafeSegment(environmentKey, "environment");
+        EnsureSafeSegment(environmentKey, Messages.Get("Storage_KindEnvironment"));
         File.Delete(Path.Combine(rootDirectory, WorkspaceLayout.EnvironmentsDirectory, environmentKey + WorkspaceLayout.EnvironmentSuffix));
         return Task.CompletedTask;
     }
@@ -149,7 +149,7 @@ public static class WorkspaceStore
     /// <summary>Deletes a collection directory and everything in it.</summary>
     public static Task DeleteCollectionAsync(string rootDirectory, string collectionKey)
     {
-        EnsureSafeSegment(collectionKey, "collection");
+        EnsureSafeSegment(collectionKey, Messages.Get("Storage_KindCollection"));
         var directory = Path.Combine(rootDirectory, WorkspaceLayout.CollectionsDirectory, collectionKey);
         if (Directory.Exists(directory))
         {
@@ -171,10 +171,10 @@ public static class WorkspaceStore
             throw new ArgumentException("The node path must not be empty.", nameof(nodePath));
         }
 
-        EnsureSafeSegment(collectionKey, "collection");
+        EnsureSafeSegment(collectionKey, Messages.Get("Storage_KindCollection"));
         foreach (var segment in nodePath)
         {
-            EnsureSafeSegment(segment, "node");
+            EnsureSafeSegment(segment, Messages.Get("Storage_KindNode"));
         }
 
         var parent = Path.Combine([rootDirectory, WorkspaceLayout.CollectionsDirectory, collectionKey, .. nodePath.SkipLast(1)]);
@@ -397,8 +397,8 @@ public static class WorkspaceStore
 
     private static void ValidateKeys(Workspace workspace)
     {
-        EnsureUnique(workspace.Collections.Select(c => c.Key), "collections");
-        EnsureUnique(workspace.Environments.Select(e => e.Key), "environments");
+        EnsureUnique(workspace.Collections.Select(c => c.Key), Messages.Get("Storage_LocationCollections"));
+        EnsureUnique(workspace.Environments.Select(e => e.Key), Messages.Get("Storage_LocationEnvironments"));
     }
 
     private static void EnsureUniqueSiblings(IReadOnlyList<CollectionNode> children, string location)
@@ -406,12 +406,12 @@ public static class WorkspaceStore
         EnsureUnique(children.Select(c => c.Key), location);
         foreach (var folder in children.OfType<Folder>())
         {
-            EnsureUniqueSiblings(folder.Children, $"folder '{folder.Key}'");
+            EnsureUniqueSiblings(folder.Children, Messages.Format("Storage_LocationFolder", folder.Key));
         }
 
         foreach (var child in children)
         {
-            EnsureSafeSegment(child.Key, "node");
+            EnsureSafeSegment(child.Key, Messages.Get("Storage_KindNode"));
         }
     }
 
@@ -423,7 +423,7 @@ public static class WorkspaceStore
         {
             if (!seen.Add(key))
             {
-                throw new WorkspaceStorageException($"Duplicate key '{key}' in {location}. Keys must be unique (ignoring case).");
+                throw new WorkspaceStorageException(Messages.Format("Storage_DuplicateKey", key, location));
             }
         }
     }
@@ -439,7 +439,7 @@ public static class WorkspaceStore
             && !WindowsReservedNames.Contains(key);
         if (!isSafe)
         {
-            throw new WorkspaceStorageException($"The {kind} key '{key}' cannot be used as a file name on every operating system.");
+            throw new WorkspaceStorageException(Messages.Format("Storage_UnsafeKey", kind, key));
         }
     }
 
@@ -460,7 +460,7 @@ public static class WorkspaceStore
                 var file = YamlConverter.Deserialize<T>(text);
                 if (file is null)
                 {
-                    Report(path, "The file is empty.");
+                    Report(path, Messages.Get("Storage_EmptyFile"));
                     return null;
                 }
 
@@ -472,7 +472,7 @@ public static class WorkspaceStore
             }
             catch (YamlException exception)
             {
-                Report(path, $"Invalid YAML at line {exception.Start.Line}, column {exception.Start.Column}: {(exception.InnerException ?? exception).Message}");
+                Report(path, Messages.Format("Storage_InvalidYaml", exception.Start.Line, exception.Start.Column, (exception.InnerException ?? exception).Message));
             }
             catch (InvalidDataException exception)
             {
@@ -480,11 +480,11 @@ public static class WorkspaceStore
             }
             catch (IOException exception)
             {
-                Report(path, $"The file could not be read: {exception.Message}");
+                Report(path, Messages.Format("Storage_ReadFailed", exception.Message));
             }
             catch (UnauthorizedAccessException exception)
             {
-                Report(path, $"The file could not be read: {exception.Message}");
+                Report(path, Messages.Format("Storage_ReadFailed", exception.Message));
             }
 
             return null;
@@ -512,7 +512,7 @@ public static class WorkspaceStore
                 return true;
             }
 
-            Report(path, $"Another item in this folder already uses the key '{key}'; this file was skipped.");
+            Report(path, Messages.Format("Storage_DuplicateKeySkipped", key));
             return false;
         }
 

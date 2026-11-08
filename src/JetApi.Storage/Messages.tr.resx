@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Storage_DuplicateKey" xml:space="preserve"><value>'{0}' anahtarı {1} içinde birden fazla kez kullanılıyor. Anahtarlar büyük/küçük harf farkı gözetilmeden benzersiz olmalı.</value></data>
+  <data name="Storage_DuplicateKeySkipped" xml:space="preserve"><value>Bu klasördeki başka bir öğe '{0}' anahtarını zaten kullanıyor; bu dosya atlandı.</value></data>
+  <data name="Storage_EmptyFile" xml:space="preserve"><value>Dosya boş.</value></data>
+  <data name="Storage_EmptyYaml" xml:space="preserve"><value>YAML boş.</value></data>
+  <data name="Storage_InvalidApiKeyLocation" xml:space="preserve"><value>auth.in 'header' veya 'query' olmalı, '{0}' olamaz.</value></data>
+  <data name="Storage_InvalidYaml" xml:space="preserve"><value>Geçersiz YAML (satır {0}, sütun {1}): {2}</value></data>
+  <data name="Storage_KindCollection" xml:space="preserve"><value>koleksiyon</value></data>
+  <data name="Storage_KindEnvironment" xml:space="preserve"><value>environment</value></data>
+  <data name="Storage_KindNode" xml:space="preserve"><value>öğe</value></data>
+  <data name="Storage_LocationCollection" xml:space="preserve"><value>'{0}' koleksiyonu</value></data>
+  <data name="Storage_LocationCollections" xml:space="preserve"><value>koleksiyonlar</value></data>
+  <data name="Storage_LocationEnvironments" xml:space="preserve"><value>environment’lar</value></data>
+  <data name="Storage_LocationFolder" xml:space="preserve"><value>'{0}' klasörü</value></data>
+  <data name="Storage_MultipartValueAndFile" xml:space="preserve"><value>body.parts[{0}] içinde 'value' ya da 'file' alanlarından yalnızca biri olmalı, ikisi birden olamaz.</value></data>
+  <data name="Storage_NotAWorkspace" xml:space="preserve"><value>'{0}' bir JetApi workspace’i değil: {1} bulunamadı.</value></data>
+  <data name="Storage_PositiveMilliseconds" xml:space="preserve"><value>'{0}' pozitif bir milisaniye değeri olmalı.</value></data>
+  <data name="Storage_ReadFailed" xml:space="preserve"><value>Dosya okunamadı: {0}</value></data>
+  <data name="Storage_Required" xml:space="preserve"><value>'{0}' alanı zorunlu.</value></data>
+  <data name="Storage_SchemaVersionMissing" xml:space="preserve"><value>'schemaVersion' alanı eksik.</value></data>
+  <data name="Storage_SchemaVersionTooNew" xml:space="preserve"><value>schemaVersion {0} daha yeni bir JetApi sürümüyle yazılmış; bu sürüm en fazla {1} değerini destekliyor. Lütfen JetApi’yi güncelleyin.</value></data>
+  <data name="Storage_UnknownAuthType" xml:space="preserve"><value>Bilinmeyen auth.type '{0}'. Geçerli değerler: inherit, none, bearer, basic veya apikey.</value></data>
+  <data name="Storage_UnknownBodyType" xml:space="preserve"><value>Bilinmeyen body.type '{0}'. Geçerli değerler: none, json, xml, text, form, multipart veya file.</value></data>
+  <data name="Storage_UnsafeKey" xml:space="preserve"><value>'{1}' {0} anahtarı her işletim sisteminde geçerli bir dosya adı değil.</value></data>
+</root>

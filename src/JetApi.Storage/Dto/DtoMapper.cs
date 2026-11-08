@@ -92,9 +92,9 @@ internal static class DtoMapper
                 {
                     null or "header" => ApiKeyLocation.Header,
                     "query" => ApiKeyLocation.Query,
-                    var other => throw Invalid($"auth.in must be 'header' or 'query', not '{other}'."),
+                    var other => throw Invalid(Messages.Format("Storage_InvalidApiKeyLocation", other)),
                 }),
-            var other => throw Invalid($"Unknown auth.type '{other}'. Expected inherit, none, bearer, basic or apikey."),
+            var other => throw Invalid(Messages.Format("Storage_UnknownAuthType", other)),
         };
     }
 
@@ -171,7 +171,7 @@ internal static class DtoMapper
                 MultipartFields = [.. (body.Parts ?? []).Select(FromDto)],
             },
             "file" => new HttpBody { Mode = HttpBodyMode.File, FilePath = Required(body.File, "body.file") },
-            var other => throw Invalid($"Unknown body.type '{other}'. Expected none, json, xml, text, form, multipart or file."),
+            var other => throw Invalid(Messages.Format("Storage_UnknownBodyType", other)),
         };
     }
 
@@ -180,7 +180,7 @@ internal static class DtoMapper
         var name = Required(part.Name, $"body.parts[{index}].name");
         if (part.File is not null && part.Value is not null)
         {
-            throw Invalid($"body.parts[{index}] must have either 'value' or 'file', not both.");
+            throw Invalid(Messages.Format("Storage_MultipartValueAndFile", index));
         }
 
         return part.File is not null
@@ -266,19 +266,21 @@ internal static class DtoMapper
     {
         if (schemaVersion < 1)
         {
-            throw Invalid("'schemaVersion' is missing.");
+            throw Invalid(Messages.Get("Storage_SchemaVersionMissing"));
         }
 
         if (schemaVersion > WorkspaceLayout.SchemaVersion)
         {
-            throw Invalid(string.Create(
-                CultureInfo.InvariantCulture,
-                $"schemaVersion {schemaVersion} was written by a newer JetApi; this version supports up to {WorkspaceLayout.SchemaVersion}. Please update JetApi."));
+            // Invariant: schemaVersion values are shown exactly as written in the YAML, never with digit grouping.
+            throw Invalid(Messages.Format(
+                "Storage_SchemaVersionTooNew",
+                schemaVersion.ToString(CultureInfo.InvariantCulture),
+                WorkspaceLayout.SchemaVersion.ToString(CultureInfo.InvariantCulture)));
         }
     }
 
     public static string Required(string? value, string field) =>
-        string.IsNullOrWhiteSpace(value) ? throw Invalid($"'{field}' is required.") : value;
+        string.IsNullOrWhiteSpace(value) ? throw Invalid(Messages.Format("Storage_Required", field)) : value;
 
     public static string NormalizeNewLines(string text) =>
         text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
@@ -290,7 +292,7 @@ internal static class DtoMapper
         value switch
         {
             null => null,
-            <= 0 => throw Invalid($"'{field}' must be a positive number of milliseconds."),
+            <= 0 => throw Invalid(Messages.Format("Storage_PositiveMilliseconds", field)),
             _ => TimeSpan.FromMilliseconds(value.Value),
         };
 

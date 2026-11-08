@@ -32,13 +32,13 @@ public static class RequestFiles
         {
             if (isGrpc)
             {
-                var file = YamlConverter.Deserialize<GrpcRequestFile>(yaml) ?? throw new InvalidDataException("The YAML is empty.");
+                var file = YamlConverter.Deserialize<GrpcRequestFile>(yaml) ?? throw new InvalidDataException(Messages.Get("Storage_EmptyYaml"));
                 DtoMapper.EnsureSchemaVersion(file.SchemaVersion);
                 return DtoMapper.FromDto(file, key);
             }
             else
             {
-                var file = YamlConverter.Deserialize<HttpRequestFile>(yaml) ?? throw new InvalidDataException("The YAML is empty.");
+                var file = YamlConverter.Deserialize<HttpRequestFile>(yaml) ?? throw new InvalidDataException(Messages.Get("Storage_EmptyYaml"));
                 DtoMapper.EnsureSchemaVersion(file.SchemaVersion);
                 return DtoMapper.FromDto(file, key);
             }
