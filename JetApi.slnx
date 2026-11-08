@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/JetApi.Core/JetApi.Core.csproj" />
+    <Project Path="src/JetApi.Desktop/JetApi.Desktop.csproj" />
     <Project Path="src/JetApi.Grpc/JetApi.Grpc.csproj" />
     <Project Path="src/JetApi.Http/JetApi.Http.csproj" />
     <Project Path="src/JetApi.Storage/JetApi.Storage.csproj" />

@@ -1,0 +1,10 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JetApi.Desktop.MainWindow"
+        Title="JetApi"
+        Width="1280" Height="800"
+        MinWidth="900" MinHeight="560"
+        WindowStartupLocation="CenterScreen">
+  <!-- Application shell. The workspace UI is built in milestone M1, see docs/roadmap.md. -->
+  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="JetApi" FontSize="28" />
+</Window>
