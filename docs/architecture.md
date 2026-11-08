@@ -41,7 +41,7 @@ bağımsız kütüphanelerde durur. Böylece aynı motor masaüstü uygulamasın
 | `JetApi.Storage` | Workspace'in Git dostu YAML dosyalarına yazılması ve okunması ([dosya formatı](file-format.md)) | `WorkspaceStore`, `WorkspaceLayout` |
 | `JetApi.Http` | İsteği hazırlama (değişken, auth, URL, body) ve gönderme; zamanlama ölçümü | `HttpRequestPreparer`, `HttpRequestExecutor` |
 | `JetApi.Grpc` | `.proto` dosyalarını çalışma anında yükleme; JSON ↔ protobuf codec; unary çağrı | `ProtoSchemaLoader`, `ProtoJsonCodec`, `ProtoJsonTemplate`, `GrpcRequestPreparer`, `GrpcInvoker` |
-| `JetApi.Desktop` | Avalonia arayüzü (M1'de geliştirilecek) | `App`, `MainWindow` |
+| `JetApi.Desktop` | Avalonia arayüzü. `Services`: workspace oturumu, istek çalıştırıcı, proto önbelleği, geçmiş, dosya izleyici, ayarlar, dialoglar. `ViewModels`: MVVM (CommunityToolkit.Mvvm), UI'dan bağımsız ve test edilebilir. `Views`: AXAML. `Localization`: TR/EN `.resx` | `WorkspaceSession`, `RequestRunner`, `WorkspaceViewModel`, `HttpRequestTabViewModel`, `GrpcRequestTabViewModel` |
 
 ## Temel akışlar
 
@@ -85,6 +85,6 @@ Kod üretimi yoktur. Mesajlar ham bayt olarak taşınır ve `ProtoJsonCodec` ile
 | Storage | Gerçek geçici dizinlerde gidiş-dönüş, dosya içeriğinin birebir kontrolü, hatalı dosya senaryoları |
 | Http | Süreç içi gerçek Kestrel sunucusuna karşı uçtan uca testler (yönlendirme, gzip, zaman aşımı, iptal, multipart) |
 | Grpc | Codec, Google'ın resmi kod üretimi ve resmi JSON parser/formatter'ı ile çapraz doğrulanır. Çağrılar süreç içi gerçek bir gRPC sunucusuna karşı test edilir |
-| Desktop (M1) | ViewModel birim testleri ve Avalonia headless UI testleri |
+| Desktop | ViewModel testleri (gerçek geçici workspace'ler, yerel HTTP sunucusu) ve Avalonia headless testleri: her ekran Skia ile çizilir, binding hatası testi başarısız yapar, kısayollar klavye olaylarıyla denenir |
 
 CI her PR'da Windows, macOS ve Linux üzerinde derler ve testleri çalıştırır; format ve güvenlik açığı kontrolü yapar.

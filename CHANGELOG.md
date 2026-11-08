@@ -12,5 +12,9 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 - `JetApi.Storage`: Git dostu YAML workspace formatı (schemaVersion 1); atomik yazma, değişmeyen dosyaya dokunmama, hatalı dosyalar için tanılama.
 - `JetApi.Http`: REST isteği hazırlama ve gönderme; tüm body türleri, auth, yönlendirme/TLS/zaman aşımı ayarları, DNS/bağlantı/TTFB/indirme ölçümü, gönderilen isteğin birebir raporu.
 - `JetApi.Grpc`: `.proto` dosyalarını çalışma anında yükleme, proto3 JSON eşlemesine uygun JSON↔protobuf codec (well-known type'lar dahil), örnek mesaj şablonu ve unary çağrı.
-- Avalonia masaüstü uygulama kabuğu.
+- Masaüstü uygulaması (onaylı tasarım): karşılama ekranı, koleksiyon ağacı (sağ tık menüsü, sürükle-bırak, filtre), sekmeler, REST ve gRPC editörleri, sözdizimi vurgulama ve arama, yanıt görüntüleyici (pretty/raw/hex, header'lar, zamanlama, gönderilen istek), environment editörü, koleksiyon/klasör ayarları, komut paleti (Ctrl+K), klavye kısayolları, açık/koyu tema, Türkçe/İngilizce arayüz.
+- Workspace oturumu: her değişiklik anında diske yazılır; aktif environment makineye özel saklanır; diskteki değişiklikler (`git pull`) otomatik yüklenir.
+- İstek geçmişi (`.jetapi/history.jsonl`, Git dışı).
+- Gönderimden önce tanımsız değişken uyarısı.
+- HTTP bağlantı hataları için hata türü (`HttpErrorKind`); arayüz bunları seçili dilde açıklar.
 - Windows, macOS ve Linux üzerinde CI.

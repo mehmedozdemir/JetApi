@@ -11,8 +11,15 @@ ettiği, hesap gerektirmeyen bir masaüstü uygulamasıdır. Postman'e hafif ve 
 - **REST ve gRPC eşit:** `.proto` dosyalarından kod üretimi olmadan gRPC çağrısı
 - **Doğru:** Gönderilen istek birebir gösterilir; DNS/bağlantı/ilk bayt/indirme süreleri ayrı ayrı ölçülür
 
-> **Durum:** M0 tamamlandı. Çekirdek motorlar (workspace, değişkenler, REST, gRPC) hazır ve test edildi. Masaüstü arayüzü
-> M1'de geliştirilecek. Ayrıntılar için [yol haritasına](docs/roadmap.md) bakın.
+> **Durum:** M1 (masaüstü MVP) büyük ölçüde tamamlandı: REST ve unary gRPC istekleri, environment'lar, geçmiş ve komut
+> paleti kullanılabilir. Kurulum paketleri henüz yok; uygulama kaynak koddan çalıştırılır. Ayrıntılar için
+> [yol haritasına](docs/roadmap.md) bakın.
+
+![REST istek editörü](docs/images/rest.png)
+
+| gRPC | Environment'lar | Koyu tema |
+|---|---|---|
+| ![gRPC](docs/images/grpc.png) | ![Environment'lar](docs/images/environments.png) | ![Koyu tema](docs/images/dark.png) |
 
 ## Dokümantasyon
 
@@ -42,6 +49,25 @@ dotnet test --solution JetApi.slnx
 dotnet run --project src/JetApi.Desktop
 ```
 
+İlk açılışta **Yeni workspace** ile boş bir klasörde örnek bir workspace oluşturabilir ya da **Klasör aç** ile Git'ten
+klonladığınız bir workspace'i açabilirsiniz.
+
+### Klavye kısayolları
+
+macOS'ta Ctrl yerine Cmd kullanılır.
+
+| Kısayol | İşlem |
+|---|---|
+| Ctrl+Enter | İsteği gönder / gRPC çağır |
+| Ctrl+S | Kaydet |
+| Ctrl+K | Komut paleti (istek, environment, komut ara; `>` ile yalnızca komutlar) |
+| Ctrl+N | Yeni HTTP isteği |
+| Ctrl+E | Environment'lar |
+| Ctrl+W | Sekmeyi kapat |
+| Ctrl+L | URL'ye odaklan |
+| Ctrl+F | Editörde ara |
+| F2 / Delete | Ağaçta seçili öğeyi yeniden adlandır / sil |
+
 ## Yapılandırma
 
 Uygulama ortam değişkeni veya sır gerektirmez. Workspace'e özel tüm ayarlar workspace klasöründeki YAML dosyalarındadır
@@ -55,7 +81,7 @@ src/
   JetApi.Storage/    YAML workspace okuma/yazma
   JetApi.Http/       REST motoru
   JetApi.Grpc/       Proto yükleme, JSON↔protobuf codec, gRPC çağrısı
-  JetApi.Desktop/    Avalonia masaüstü uygulaması
+  JetApi.Desktop/    Avalonia masaüstü uygulaması (Services, ViewModels, Views, Themes, Localization)
 tests/               Her proje için test projesi (xUnit v3, Microsoft Testing Platform)
 docs/                Vizyon, gereksinimler, mimari, ADR'ler, yol haritası
 ```

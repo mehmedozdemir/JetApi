@@ -17,19 +17,21 @@ Amaç: Geri dönüşü zor kararları vermek ve en riskli teknik parçaları kan
 - [x] Avalonia masaüstü kabuğu
 - [x] CI: Windows/macOS/Linux üzerinde derleme ve test, format ve güvenlik açığı kontrolü
 
-## M1 — Masaüstü MVP → `v0.1.0`
+## M1 — Masaüstü MVP → `v0.1.0` (büyük kısmı tamamlandı)
 
 Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 
-- [ ] **Arayüz tasarımı** onayı: [prototip ve kararlar](ui-design.md)
-- [ ] Workspace oluşturma/açma, son açılanlar, diskteki değişiklikleri izleme
-- [ ] Koleksiyon ağacı: oluşturma, yeniden adlandırma, silme, çoğaltma, sürükle-bırak, arama
-- [ ] REST istek editörü: method/URL, params, headers, auth, body (tüm türler), ayarlar
-- [ ] Yanıt görüntüleyici: pretty/raw, header'lar, zamanlama grafiği, gönderilen istek, dosyaya kaydetme, büyük yanıt sanallaştırma
-- [ ] gRPC editörü: proto ayarları ve hata listesi, servis/metot seçimi, şablon, metadata, yanıt/status/trailer görünümü
-- [ ] Environment editörü, değişken vurgulama ve üzerine gelince değer gösterme, tanımsız değişken uyarısı
-- [ ] Geçmiş (`.jetapi/`, Git dışı)
-- [ ] Klavye kısayolları ve komut paleti; açık/koyu tema; Türkçe/İngilizce
+- [x] **Arayüz tasarımı** onaylandı ve uygulandı: [prototip ve kararlar](ui-design.md)
+- [x] Workspace oluşturma/açma, son açılanlar, diskteki değişiklikleri izleme (`git pull` sonrası otomatik yenileme)
+- [x] Koleksiyon ağacı: oluşturma, yeniden adlandırma, silme, çoğaltma, sürükle-bırak, filtre, sağ tık menüsü
+- [x] REST istek editörü: method/URL, params, headers, auth, body (tüm türler), ayarlar
+- [x] Yanıt görüntüleyici: pretty/raw/hex, header'lar, zamanlama, gönderilen istek, kopyala/dosyaya kaydet, büyük yanıtlarda sanallaştırılmış editör
+- [x] gRPC editörü: proto ayarları ve hata listesi, servis/metot seçimi, şablon, canlı JSON doğrulama, metadata, yanıt/status/trailer görünümü
+- [x] Environment editörü (environment, global ve koleksiyon kapsamları), çözümlenmiş değer, gizli değer maskeleme, tanımsız değişken uyarısı
+- [x] Geçmiş (`.jetapi/`, Git dışı); geçmişten yeniden açma
+- [x] Klavye kısayolları ve komut paleti; açık/koyu tema; Türkçe/İngilizce (yeniden başlatmadan)
+- [ ] Editör içinde değişken vurgulama ve üzerine gelince değer gösterme
+- [ ] Motor mesajlarının tamamen yerelleştirilmesi (HTTP bağlantı hataları yerelleştirildi; istek hazırlama ve proto/JSON hataları henüz İngilizce)
 - [ ] Paketleme: Windows (zip/MSIX), macOS (dmg), Linux (AppImage/tar.gz); GitHub Releases
 - [ ] Performans ölçümü: açılış süresi ve bellek (NFR-1, NFR-2)
 

@@ -1,6 +1,10 @@
 # Arayüz Tasarımı (M1)
 
-Tıklanabilir prototip: https://claude.ai/artifact/N4vd7UoR9GwYreS2QypZfd (onay bekliyor)
+Tıklanabilir prototip: https://claude.ai/artifact/N4vd7UoR9GwYreS2QypZfd (onaylandı, M1'de uygulandı)
+
+Uygulamadaki karşılıkları `src/JetApi.Desktop/Views/` altındadır. Renkler ve ikonlar `Themes/Tokens.axaml`, ortak kontrol
+stilleri `Themes/Styles.axaml` dosyasındadır. `tests/JetApi.Desktop.Tests/ScreenTests.cs` her ekranı gerçek Skia render'ı ile
+çizer ve binding hatası olursa başarısız olur. `JETAPI_SCREENSHOTS` ortam değişkeni verilirse ekran görüntülerini o klasöre kaydeder.
 
 ## Ekranlar
 

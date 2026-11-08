@@ -1,7 +1,7 @@
 # Gereksinimler
 
 Öncelikler [yol haritasındaki](roadmap.md) kilometre taşlarına karşılık gelir.
-**Durum** sütunu: ✅ çekirdekte hazır (arayüz bekliyor olabilir) · 🔜 planlandı.
+**Durum** sütunu: ✅ hazır · 🟡 kısmen hazır · 🔜 planlandı.
 
 ## Fonksiyonel gereksinimler
 
@@ -9,27 +9,27 @@
 
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
-| WS-1 | Bir klasörü workspace olarak açma ve yeni workspace oluşturma (`jetapi.yaml`) | M1 | ✅ çekirdek |
-| WS-2 | Son açılan workspace'ler listesi, workspace'ler arası hızlı geçiş | M1 | 🔜 |
-| WS-3 | Diskteki değişiklikleri izleme (ör. `git pull` sonrası) ve arayüzü yenileme | M1 | 🔜 |
-| COL-1 | Koleksiyon, iç içe klasör ve istek oluşturma, yeniden adlandırma, silme | M1 | ✅ çekirdek |
-| COL-2 | Sürükle-bırak ile sıralama ve taşıma | M1 | ✅ sıralama çekirdekte |
-| COL-3 | İsteği çoğaltma (duplicate) | M1 | 🔜 |
-| COL-4 | Koleksiyon ve klasör düzeyinde auth tanımlama, alt öğelerin miras alması | M1 | ✅ çekirdek |
-| COL-5 | Koleksiyon/klasör/istek açıklaması (Markdown) | M1 | ✅ model |
-| COL-6 | Koleksiyon ağacında arama | M1 | 🔜 |
+| WS-1 | Bir klasörü workspace olarak açma ve yeni workspace oluşturma (`jetapi.yaml`) | M1 | ✅ |
+| WS-2 | Son açılan workspace'ler listesi, workspace'ler arası hızlı geçiş | M1 | ✅ |
+| WS-3 | Diskteki değişiklikleri izleme (ör. `git pull` sonrası) ve arayüzü yenileme | M1 | ✅ |
+| COL-1 | Koleksiyon, iç içe klasör ve istek oluşturma, yeniden adlandırma, silme | M1 | ✅ |
+| COL-2 | Sürükle-bırak ile sıralama ve taşıma | M1 | ✅ |
+| COL-3 | İsteği çoğaltma (duplicate) | M1 | ✅ |
+| COL-4 | Koleksiyon ve klasör düzeyinde auth tanımlama, alt öğelerin miras alması | M1 | ✅ |
+| COL-5 | Koleksiyon/klasör/istek açıklaması (Markdown) | M1 | ✅ |
+| COL-6 | Koleksiyon ağacında arama | M1 | ✅ |
 
 ### Environment ve değişkenler
 
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
-| ENV-1 | Environment oluşturma, düzenleme, çoğaltma, silme; aktif environment seçimi | M1 | ✅ çekirdek |
+| ENV-1 | Environment oluşturma, düzenleme, çoğaltma, silme; aktif environment seçimi | M1 | ✅ |
 | VAR-1 | `{{değişken}}` sözdizimi; öncelik: global < koleksiyon < environment < çalışma anı | M1 | ✅ |
 | VAR-2 | İç içe değişkenler (`baseUrl = {{scheme}}://{{host}}`) ve döngü tespiti | M1 | ✅ |
 | VAR-3 | Dinamik değişkenler: `$guid`, `$timestamp`, `$timestampMs`, `$isoTimestamp`, `$randomInt` | M1 | ✅ |
-| VAR-4 | Editörde değişken vurgulama; üzerine gelince çözümlenmiş değer ve kaynağı | M1 | ✅ çekirdek (`Lookup`) |
-| VAR-5 | Tanımsız değişken uyarısı (gönderimden önce) | M1 | ✅ çekirdek |
-| VAR-6 | Gizli (secret) işaretli değişkenlerin arayüzde maskelenmesi | M1 | ✅ model |
+| VAR-4 | Editörde değişken vurgulama; üzerine gelince çözümlenmiş değer ve kaynağı | M1 | 🟡 URL altındaki değişken satırı hazır; editör içinde vurgulama ve üzerine gelince değer gösterme sonraki adım |
+| VAR-5 | Tanımsız değişken uyarısı (gönderimden önce) | M1 | ✅ |
+| VAR-6 | Gizli (secret) işaretli değişkenlerin arayüzde maskelenmesi | M1 | ✅ |
 
 ### REST
 
@@ -38,15 +38,15 @@
 | REST-1 | Tüm HTTP method'ları ve özel method'lar | M1 | ✅ |
 | REST-2 | Query parametreleri ve header'lar (aç/kapa, açıklama) | M1 | ✅ |
 | REST-3 | Body: JSON, XML, text, form-urlencoded, multipart (dosya dahil), binary dosya | M1 | ✅ |
-| REST-4 | Yanıt: durum, header'lar (tekrarlananlar dahil), body (pretty/raw/hex), boyut | M1 | ✅ çekirdek |
+| REST-4 | Yanıt: durum, header'lar (tekrarlananlar dahil), body (pretty/raw/hex), boyut | M1 | ✅ |
 | REST-5 | Zamanlama: DNS, TCP bağlantı, ilk bayt, indirme, toplam; bağlantı yeniden kullanımı | M1 | ✅ |
 | REST-6 | Gönderilen isteğin birebir görünümü (uygulamanın eklediği header'lar dahil) | M1 | ✅ |
 | REST-7 | İstek bazında: yönlendirme takibi, TLS doğrulama, zaman aşımı | M1 | ✅ |
 | REST-8 | İsteği iptal etme | M1 | ✅ |
 | REST-9 | Büyük yanıtlarda bellek koruması (kesme + uyarı) | M1 | ✅ |
-| REST-10 | Yanıtı dosyaya kaydetme | M1 | 🔜 |
+| REST-10 | Yanıtı dosyaya kaydetme | M1 | ✅ |
 | REST-11 | Cookie jar (workspace bazında, isteğe bağlı) | M2 | 🔜 |
-| REST-12 | Proxy ayarları (sistem proxy'si varsayılan) | M2 | ✅ sistem proxy'si |
+| REST-12 | Proxy ayarları (sistem proxy'si varsayılan) | M2 | ✅ |
 | REST-13 | İstemci sertifikası (mTLS) | M4 | 🔜 |
 
 ### gRPC
@@ -100,12 +100,12 @@
 
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
-| HIS-1 | İstek geçmişi (yerel, Git'e girmez), geçmişten tekrar gönderme/kaydetme | M1 | 🔜 |
-| UI-1 | Sekmeli istek editörü, kaydedilmemiş değişiklik göstergesi | M1 | 🔜 |
-| UI-2 | Komut paleti (Ctrl/Cmd+K), klavye kısayolları (Ctrl/Cmd+Enter: gönder, Ctrl/Cmd+S: kaydet) | M1 | 🔜 |
-| UI-3 | Açık/koyu tema, sistem temasını izleme | M1 | 🔜 |
-| UI-4 | JSON/XML sözdizimi vurgulama, katlama, arama | M1 | 🔜 |
-| I18N-1 | Türkçe ve İngilizce arayüz; varsayılan işletim sistemi dili, ayarlardan değiştirilebilir | M1 | 🔜 |
+| HIS-1 | İstek geçmişi (yerel, Git'e girmez), geçmişten tekrar gönderme/kaydetme | M1 | ✅ |
+| UI-1 | Sekmeli istek editörü, kaydedilmemiş değişiklik göstergesi | M1 | ✅ |
+| UI-2 | Komut paleti (Ctrl/Cmd+K), klavye kısayolları (Ctrl/Cmd+Enter: gönder, Ctrl/Cmd+S: kaydet) | M1 | ✅ |
+| UI-3 | Açık/koyu tema, sistem temasını izleme | M1 | ✅ |
+| UI-4 | JSON/XML sözdizimi vurgulama, katlama, arama | M1 | 🟡 vurgulama ve arama (Ctrl+F) hazır; katlama sonraki adım |
+| I18N-1 | Türkçe ve İngilizce arayüz; varsayılan işletim sistemi dili, ayarlardan değiştirilebilir | M1 | ✅ |
 
 ### Sırlar (secrets)
 
