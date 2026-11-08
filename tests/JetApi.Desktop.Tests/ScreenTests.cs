@@ -149,14 +149,16 @@ public sealed class ScreenTests
     // Moves the mouse over variables in the URL box and the body editor and checks the hover hints.
     private static void HoverVariables(Window window)
     {
-        var urlBox = window.GetVisualDescendants().OfType<TextBox>().Single(t => t.Name == "UrlBox");
-        var presenter = urlBox.GetVisualDescendants().OfType<Avalonia.Controls.Presenters.TextPresenter>().Single();
-        window.MouseMove(presenter.TranslatePoint(new Avalonia.Point(12, presenter.Bounds.Height / 2), window)!.Value);
-        var urlHint = ToolTip.GetTip(urlBox).ShouldBeAssignableTo<Control>()!.Tag.ShouldBeOfType<VariableHint>();
+        // The URL is a single-line editor that highlights variables in place.
+        var urlBox = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.Name == "UrlBox");
+        urlBox.IsSingleLine.ShouldBeTrue();
+        var urlEditor = urlBox.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single();
+        HoverText(window, urlEditor, "{{baseUrl}}");
+        var urlHint = ToolTip.GetTip(urlEditor).ShouldBeAssignableTo<Control>()!.Tag.ShouldBeOfType<VariableHint>();
         urlHint.Placeholder.ShouldBe("{{baseUrl}}");
         urlHint.Value.ShouldBe("http://localhost:5000");
 
-        var body = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.HighlightVariables);
+        var body = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.HighlightVariables && !e.IsSingleLine);
         var textView = body.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>().Single();
         var document = textView.Document;
         var undefinedAt = document.GetLocation(document.Text.IndexOf("{{teamId}}", StringComparison.Ordinal) + 3);
@@ -167,7 +169,16 @@ public sealed class ScreenTests
         Capture(window, "03b-variable-hover");
 
         window.MouseMove(new Avalonia.Point(1, 1));
-        ToolTip.GetTip(urlBox).ShouldBeNull();
+        ToolTip.GetTip(urlEditor).ShouldBeNull();
+    }
+
+    // Moves the mouse onto the first occurrence of <paramref name="text"/> in an AvaloniaEdit editor.
+    private static void HoverText(Window window, AvaloniaEdit.TextEditor editor, string text)
+    {
+        var textView = editor.TextArea.TextView;
+        var location = editor.Document.GetLocation(editor.Document.Text.IndexOf(text, StringComparison.Ordinal) + 3);
+        var point = textView.GetVisualPosition(new AvaloniaEdit.TextViewPosition(location), AvaloniaEdit.Rendering.VisualYPosition.LineMiddle) - textView.ScrollOffset;
+        window.MouseMove(textView.TranslatePoint(point, window)!.Value);
     }
 
     internal static void Capture(Window window, string name)

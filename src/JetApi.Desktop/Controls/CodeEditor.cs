@@ -1,7 +1,11 @@
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using AvaloniaEdit;
 using AvaloniaEdit.Search;
 using AvaloniaEdit.TextMate;
@@ -32,7 +36,18 @@ public sealed class CodeEditor : UserControl
     /// <summary>Highlight <c>{{variables}}</c> and show their values on hover (request editors only).</summary>
     public static readonly StyledProperty<bool> HighlightVariablesProperty = AvaloniaProperty.Register<CodeEditor, bool>(nameof(HighlightVariables));
 
+    /// <summary>One line only, like a text box (URL fields): no line breaks, Tab moves focus, Enter runs <see cref="EnterCommand"/>.</summary>
+    public static readonly StyledProperty<bool> IsSingleLineProperty = AvaloniaProperty.Register<CodeEditor, bool>(nameof(IsSingleLine));
+
+    /// <summary>Shown while the editor is empty.</summary>
+    public static readonly StyledProperty<string?> PlaceholderTextProperty = AvaloniaProperty.Register<CodeEditor, string?>(nameof(PlaceholderText));
+
+    /// <summary>Runs on Enter in single-line mode (e.g. send the request).</summary>
+    public static readonly StyledProperty<ICommand?> EnterCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(EnterCommand));
+
     private readonly TextEditor _editor;
+    private readonly TextBlock _placeholder;
+    private readonly SearchPanel _search;
     private readonly RegistryOptions _registry;
     private readonly TextMate.Installation _textMate;
     private readonly VariableColorizer _variables = new();
@@ -63,6 +78,14 @@ public sealed class CodeEditor : UserControl
         _textMate = _editor.InstallTextMate(_registry);
         _editor.Document.TextChanged += (_, _) =>
         {
+            UpdatePlaceholder();
+            if (IsSingleLine && _editor.Document.Text.AsSpan().IndexOfAny('\r', '\n') >= 0)
+            {
+                // Pasted or dropped line breaks: keep one line (applied after the change completes).
+                Dispatcher.UIThread.Post(RemoveLineBreaks);
+                return;
+            }
+
             if (!_updating)
             {
                 _updating = true;
@@ -70,16 +93,28 @@ public sealed class CodeEditor : UserControl
                 _updating = false;
             }
         };
+        _editor.TextArea.AddHandler(KeyDownEvent, OnEditorKeyDown, RoutingStrategies.Tunnel);
 
         // Ctrl+F opens find (and replace in editable editors).
-        SearchPanel.Install(_editor);
+        _search = SearchPanel.Install(_editor);
 
         // Added after TextMate so variable colors win over syntax colors.
         _editor.TextArea.TextView.LineTransformers.Add(_variables);
         _editor.TextArea.TextView.PointerMoved += (_, e) => VariableHints.ShowTip(_editor, HintUnderPointer(e));
         _editor.TextArea.TextView.PointerExited += (_, _) => VariableHints.ShowTip(_editor, null);
 
-        Content = _editor;
+        _placeholder = new TextBlock
+        {
+            IsHitTestVisible = false,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 0, 0),
+            FontSize = 12.5,
+            IsVisible = false,
+        };
+        _placeholder[!TextBlock.FontFamilyProperty] = this.GetResourceObservable("App.MonoFont").ToBinding();
+        _placeholder[!TextBlock.ForegroundProperty] = this.GetResourceObservable("App.TextFaint").ToBinding();
+
+        Content = new Panel { Children = { _editor, _placeholder } };
         StyleGutter();
         ApplyLanguage();
         ActualThemeVariantChanged += (_, _) => ApplyTheme();
@@ -120,8 +155,32 @@ public sealed class CodeEditor : UserControl
         set => SetValue(ShowLineNumbersProperty, value);
     }
 
+    /// <summary>One line only (URL fields).</summary>
+    public bool IsSingleLine
+    {
+        get => GetValue(IsSingleLineProperty);
+        set => SetValue(IsSingleLineProperty, value);
+    }
+
+    /// <summary>Shown while empty.</summary>
+    public string? PlaceholderText
+    {
+        get => GetValue(PlaceholderTextProperty);
+        set => SetValue(PlaceholderTextProperty, value);
+    }
+
+    /// <summary>Runs on Enter in single-line mode.</summary>
+    public ICommand? EnterCommand
+    {
+        get => GetValue(EnterCommandProperty);
+        set => SetValue(EnterCommandProperty, value);
+    }
+
     /// <summary>Moves keyboard focus into the editor.</summary>
-    public void FocusEditor() => _editor.TextArea.Focus();
+    public void FocusEditor() => _editor.TextArea.Focus(NavigationMethod.Tab);
+
+    /// <summary>Selects all text.</summary>
+    public void SelectAll() => _editor.SelectAll();
 
     /// <inheritdoc />
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -162,7 +221,79 @@ public sealed class CodeEditor : UserControl
         {
             ApplyVariables();
         }
+        else if (change.Property == IsSingleLineProperty)
+        {
+            ApplySingleLine();
+        }
+        else if (change.Property == PlaceholderTextProperty)
+        {
+            _placeholder.Text = PlaceholderText;
+            UpdatePlaceholder();
+        }
+        else if (change.Property == Avalonia.Automation.AutomationProperties.NameProperty)
+        {
+            // Screen readers focus the inner text area, so it carries the name.
+            Avalonia.Automation.AutomationProperties.SetName(_editor.TextArea, Avalonia.Automation.AutomationProperties.GetName(this));
+        }
     }
+
+    // A text-box-like editor: no gutter, scroll bars or find panel, vertically centred in its frame.
+    private void ApplySingleLine()
+    {
+        if (!IsSingleLine)
+        {
+            return;
+        }
+
+        _editor.ShowLineNumbers = false;
+        _editor.WordWrap = false;
+        _editor.HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Hidden;
+        _editor.VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled;
+        _editor.Padding = new Thickness(10, 0);
+        _editor.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+        _search.Uninstall();
+
+        RemoveLineBreaks();
+    }
+
+    private void RemoveLineBreaks()
+    {
+        var text = _editor.Document.Text;
+        if (text.AsSpan().IndexOfAny('\r', '\n') < 0)
+        {
+            return;
+        }
+
+        var caret = _editor.CaretOffset;
+        _editor.Document.Text = text.Replace("\r\n", " ", StringComparison.Ordinal).Replace('\r', ' ').Replace('\n', ' ').Trim();
+        _editor.CaretOffset = Math.Min(caret, _editor.Document.TextLength);
+    }
+
+    private void OnEditorKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (!IsSingleLine)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Enter)
+        {
+            e.Handled = true;
+            if (!e.KeyModifiers.HasFlag(KeyModifiers.Control) && EnterCommand is { } command && command.CanExecute(null))
+            {
+                command.Execute(null);
+            }
+        }
+        else if (e.Key == Key.Tab)
+        {
+            // Tab leaves the field like in a text box instead of inserting spaces.
+            e.Handled = true;
+            var direction = e.KeyModifiers.HasFlag(KeyModifiers.Shift) ? NavigationDirection.Previous : NavigationDirection.Next;
+            TopLevel.GetTopLevel(this)?.FocusManager?.TryMoveFocus(direction, new FindNextElementOptions());
+        }
+    }
+
+    private void UpdatePlaceholder() => _placeholder.IsVisible = !string.IsNullOrEmpty(PlaceholderText) && _editor.Document.TextLength == 0;
 
     // Line numbers sit on the tinted editor ground without AvaloniaEdit's separator line, with room before the text.
     private void StyleGutter()

@@ -14,7 +14,7 @@ public sealed partial class GrpcRequestView : UserControl
     /// <summary>Moves focus to the server URL (Ctrl+L).</summary>
     public void FocusUrl()
     {
-        UrlBox.Focus();
+        UrlBox.FocusEditor();
         UrlBox.SelectAll();
     }
 }

@@ -54,6 +54,30 @@ public sealed class UxWalkthroughTests
         ws.SelectedTab!.Name.ShouldBe("Create user");
         ScreenTests.Capture(window, "ux-03-click-request");
 
+        // 3b. The URL is a one-line editor: typing highlights variables, a pasted line break is dropped,
+        //     Enter sends and Tab moves on to the next control.
+        var url = window.GetVisualDescendants().OfType<JetApi.Desktop.Controls.CodeEditor>().Single(e => e.Name == "UrlBox");
+        var urlEditor = url.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single();
+        url.FocusEditor();
+        urlEditor.Document.Text = "{{baseUrl}}/users\r\n?page=2";
+        await Task.Delay(20);
+        Settle();
+        urlEditor.Document.Text.ShouldNotContain("\n");
+        ws.SelectedTab.ShouldBeOfType<HttpRequestTabViewModel>().Url.ShouldBe("{{baseUrl}}/users ?page=2");
+        urlEditor.Document.Text = "http://127.0.0.1:1/users";
+        Settle();
+        window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        await Task.Delay(50);
+        Settle();
+        ((HttpRequestTabViewModel)ws.SelectedTab!).Response.IsEmpty.ShouldBeFalse();
+        url.FocusEditor();
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+        Settle();
+        (TopLevel.GetTopLevel(window)!.FocusManager!.GetFocusedElement() as Control).ShouldBeOfType<Button>();
+        urlEditor.Document.Text = "{{baseUrl}}/users/{{userId}}";
+        Settle();
+        ScreenTests.Capture(window, "ux-03b-url-editor");
+
         // 4. Environments on the rail, then the other environment in the list.
         Click(window, Rail(window, 1));
         ws.IsEnvironmentsMode.ShouldBeTrue();

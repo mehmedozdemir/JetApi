@@ -22,8 +22,8 @@
                         FontFamily="{DynamicResource App.MonoFont}" FontWeight="SemiBold" c:MethodColor.Method="{Binding Method}"
                         AutomationProperties.Name="{l:Tr Req_Method}" />
               <Border Grid.Column="1" Classes="divider" Width="1" Height="20" VerticalAlignment="Center" />
-              <TextBox x:Name="UrlBox" Grid.Column="2" Classes="mono bare" Text="{Binding Url}"
-                       PlaceholderText="{l:Tr Req_UrlPlaceholder}" AutomationProperties.Name="{l:Tr Req_Url}" />
+              <c:CodeEditor x:Name="UrlBox" Grid.Column="2" IsSingleLine="True" HighlightVariables="True" Text="{Binding Url}"
+                            PlaceholderText="{l:Tr Req_UrlPlaceholder}" EnterCommand="{Binding SendCommand}" AutomationProperties.Name="{l:Tr Req_Url}" />
             </Grid>
           </Border>
           <Button Grid.Column="1" Classes="primary" Margin="8,0,0,0" MinHeight="38" Padding="22,0" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}"

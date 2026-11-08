@@ -16,17 +16,18 @@
         <Grid ColumnDefinitions="2*,12,1.4*,12,1.2*,Auto,Auto">
           <StackPanel>
             <TextBlock Classes="field-label" Text="{l:Tr Grpc_Server}" />
-            <Grid ColumnDefinitions="*,Auto">
-              <TextBox x:Name="UrlBox" Classes="mono" Text="{Binding ServerUrl}" CornerRadius="6,0,0,6" PlaceholderText="http://localhost:5000" />
-              <Border Grid.Column="1" CornerRadius="0,6,6,0" Padding="10,0" Margin="-1,0,0,0" BorderThickness="1" BorderBrush="{DynamicResource App.BorderStrong}"
-                      Background="{DynamicResource Tone.Neutral.Bg}" IsVisible="{Binding IsPlaintext}">
-                <TextBlock Classes="small" FontWeight="Medium" Text="{l:Tr Grpc_Plaintext}" VerticalAlignment="Center" Foreground="{DynamicResource Tone.Neutral.Fg}" />
-              </Border>
-              <Border Grid.Column="1" CornerRadius="0,6,6,0" Padding="10,0" Margin="-1,0,0,0" BorderThickness="1" BorderBrush="{DynamicResource App.BorderStrong}"
-                      Background="{DynamicResource Tone.Success.Bg}" IsVisible="{Binding !IsPlaintext}">
-                <TextBlock Classes="small" FontWeight="Medium" Text="{l:Tr Grpc_Tls}" VerticalAlignment="Center" Foreground="{DynamicResource Tone.Success.Fg}" />
-              </Border>
-            </Grid>
+            <Border Classes="field" MinHeight="32">
+              <Grid ColumnDefinitions="*,Auto">
+                <c:CodeEditor x:Name="UrlBox" IsSingleLine="True" HighlightVariables="True" Text="{Binding ServerUrl}"
+                              PlaceholderText="http://localhost:5000" EnterCommand="{Binding SendCommand}" AutomationProperties.Name="{l:Tr Grpc_Server}" />
+                <Border Grid.Column="1" CornerRadius="0,5,5,0" Padding="10,0" Background="{DynamicResource Tone.Neutral.Bg}" IsVisible="{Binding IsPlaintext}">
+                  <TextBlock Classes="small" FontWeight="Medium" Text="{l:Tr Grpc_Plaintext}" VerticalAlignment="Center" Foreground="{DynamicResource Tone.Neutral.Fg}" />
+                </Border>
+                <Border Grid.Column="1" CornerRadius="0,5,5,0" Padding="10,0" Background="{DynamicResource Tone.Success.Bg}" IsVisible="{Binding !IsPlaintext}">
+                  <TextBlock Classes="small" FontWeight="Medium" Text="{l:Tr Grpc_Tls}" VerticalAlignment="Center" Foreground="{DynamicResource Tone.Success.Fg}" />
+                </Border>
+              </Grid>
+            </Border>
           </StackPanel>
           <StackPanel Grid.Column="2">
             <TextBlock Classes="field-label" Text="{l:Tr Grpc_Service}" />

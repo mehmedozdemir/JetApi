@@ -14,7 +14,7 @@ public sealed partial class HttpRequestView : UserControl
     /// <summary>Moves focus to the URL box (Ctrl+L).</summary>
     public void FocusUrl()
     {
-        UrlBox.Focus();
+        UrlBox.FocusEditor();
         UrlBox.SelectAll();
     }
 }
