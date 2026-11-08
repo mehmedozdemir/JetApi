@@ -33,6 +33,9 @@ public interface IDialogService
     /// <summary>Shows what an import brought in and what it could not carry over.</summary>
     Task ShowImportReportAsync(ImportReport report);
 
+    /// <summary>Opens <paramref name="uri"/> in the default browser.</summary>
+    Task OpenBrowserAsync(Uri uri);
+
     /// <summary>Shows the settings window.</summary>
     Task ShowSettingsAsync(ViewModels.SettingsViewModel settings);
 

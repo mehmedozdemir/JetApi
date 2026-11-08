@@ -472,7 +472,8 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             {
                 NodeSettings = null;
             }
-        });
+        },
+        new OAuthTokenService(Session, Runner, () => collectionKey, Dialogs.OpenBrowserAsync));
         NodeSettings = screen;
     }
 

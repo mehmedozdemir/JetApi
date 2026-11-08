@@ -149,7 +149,11 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
         Headers = new KeyValueListViewModel(request.Headers);
         FormFields = new KeyValueListViewModel(request.Body.FormFields);
         MultipartFields = KeyValueListViewModel.FromMultipart(request.Body.MultipartFields);
-        Auth = new AuthEditorViewModel(request.Auth, allowInherit: true, () => RequestRunner.ResolveAuth(Host.Session, CollectionKey, Path ?? [Key], AuthConfig.Inherit));
+        Auth = new AuthEditorViewModel(
+            request.Auth,
+            allowInherit: true,
+            () => RequestRunner.ResolveAuth(Host.Session, CollectionKey, Path ?? [Key], AuthConfig.Inherit),
+            new OAuthTokenService(Host.Session, Host.Runner, () => CollectionKey, Host.Dialogs.OpenBrowserAsync));
 
         QueryParameters.Changed += (_, _) => OnEdited(nameof(QueryParameters));
         Headers.Changed += (_, _) => OnEdited(nameof(Headers));
@@ -354,9 +358,18 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
     }
 
     /// <inheritdoc />
+    protected override void OnTokenChanged() => Auth.RefreshToken();
+
+    /// <inheritdoc />
     protected override async Task SendCoreAsync(CancellationToken cancellationToken)
     {
         var request = (HttpRequestDefinition)BuildRequest();
+        if (!RequestRunner.SetsAuthorization(request.Headers) && await EnsureOAuthTokenAsync(request.Auth, cancellationToken).ConfigureAwait(true) is { } tokenError)
+        {
+            Response.SetPreparationErrors([tokenError]);
+            return;
+        }
+
         var preparation = RequestRunner.PrepareHttp(Host.Session, CollectionKey, Path ?? [Key], request);
         if (!preparation.IsSuccess)
         {

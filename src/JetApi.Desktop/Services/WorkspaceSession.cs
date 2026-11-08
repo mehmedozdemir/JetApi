@@ -21,6 +21,7 @@ public sealed class WorkspaceSession
         Root = root;
         Workspace = workspace;
         Diagnostics = diagnostics;
+        Tokens = new OAuth2TokenStore(root);
     }
 
     /// <summary>Raised after the model changed (edit, reload, environment switch).</summary>
@@ -28,6 +29,9 @@ public sealed class WorkspaceSession
 
     /// <summary>Absolute path of the workspace directory.</summary>
     public string Root { get; }
+
+    /// <summary>OAuth 2.0 tokens of this workspace on this machine (<c>.jetapi/tokens.json</c>, not in Git).</summary>
+    public OAuth2TokenStore Tokens { get; }
 
     /// <summary>The current model.</summary>
     public Workspace Workspace { get; private set; }

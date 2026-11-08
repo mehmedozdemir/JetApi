@@ -225,6 +225,27 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     /// <summary>Sends using the current editor state.</summary>
     protected abstract Task SendCoreAsync(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Gets or renews the OAuth 2.0 token before sending when the request uses OAuth 2.0 (set or inherited).
+    /// </summary>
+    /// <returns>An error for the response pane, or <c>null</c>.</returns>
+    protected async Task<string?> EnsureOAuthTokenAsync(AuthConfig requestAuth, CancellationToken cancellationToken)
+    {
+        if (RequestRunner.ResolveOAuth(Host.Session, CollectionKey, Path ?? [Key], requestAuth) is not { } oauth)
+        {
+            return null;
+        }
+
+        var error = await Host.Runner.EnsureOAuthTokenAsync(Host.Session, oauth, cancellationToken).ConfigureAwait(true);
+        OnTokenChanged();
+        return error;
+    }
+
+    /// <summary>Called after sending got or renewed an OAuth 2.0 token, so the auth editor can show it.</summary>
+    protected virtual void OnTokenChanged()
+    {
+    }
+
     /// <summary>Recomputes <see cref="IsDirty"/>; call after any edit.</summary>
     protected void UpdateDirty() => IsDirty = Path is null || RequestFiles.Serialize(BuildRequest()) != _savedYaml;
 

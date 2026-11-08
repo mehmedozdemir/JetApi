@@ -32,6 +32,14 @@ internal sealed class FakeDialogs : IDialogService
 
     public Task<IReadOnlyList<string>> PickJsonFilesAsync(string title) => Task.FromResult<IReadOnlyList<string>>([.. FilesToPick]);
 
+    public List<Uri> OpenedInBrowser { get; } = [];
+
+    public Task OpenBrowserAsync(Uri uri)
+    {
+        OpenedInBrowser.Add(uri);
+        return Task.CompletedTask;
+    }
+
     public List<SettingsViewModel> SettingsShown { get; } = [];
 
     public Task ShowSettingsAsync(SettingsViewModel settings)

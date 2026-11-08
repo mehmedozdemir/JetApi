@@ -46,7 +46,7 @@ public sealed partial class NodeSettingsViewModel : ViewModelBase
     private NodeSettingsSection _section;
 
     /// <summary>Creates the editor for the collection (empty path) or folder at <paramref name="path"/>.</summary>
-    public NodeSettingsViewModel(WorkspaceSession session, IDialogService dialogs, string collectionKey, IReadOnlyList<string> path, Action<bool> close)
+    public NodeSettingsViewModel(WorkspaceSession session, IDialogService dialogs, string collectionKey, IReadOnlyList<string> path, Action<bool> close, IOAuthTokenService? tokens = null)
     {
         _session = session;
         _dialogs = dialogs;
@@ -58,7 +58,7 @@ public sealed partial class NodeSettingsViewModel : ViewModelBase
         if (path.Count == 0)
         {
             _name = collection.Name;
-            Auth = new AuthEditorViewModel(collection.Auth, allowInherit: false);
+            Auth = new AuthEditorViewModel(collection.Auth, allowInherit: false, tokens: tokens);
             _importPathsText = string.Join('\n', collection.Proto.ImportPaths);
             _protoFilesText = string.Join('\n', collection.Proto.Files);
             Variables = new EnvironmentsViewModel(session, dialogs, () => { }, collectionKey);
@@ -77,7 +77,7 @@ public sealed partial class NodeSettingsViewModel : ViewModelBase
         {
             var folder = (Folder)(CollectionTree.Find(collection, path) ?? throw new ArgumentException("Unknown folder.", nameof(path)));
             _name = folder.Name;
-            Auth = new AuthEditorViewModel(folder.Auth, allowInherit: true, () => RequestRunner.ResolveAuth(session, collectionKey, path, AuthConfig.Inherit));
+            Auth = new AuthEditorViewModel(folder.Auth, allowInherit: true, () => RequestRunner.ResolveAuth(session, collectionKey, path, AuthConfig.Inherit), tokens);
             _section = NodeSettingsSection.Auth;
         }
 

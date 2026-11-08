@@ -73,7 +73,11 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
         _validateCertificates = request.Settings.ValidateCertificates;
         _deadlineText = request.Settings.Deadline is { } deadline ? ((int)deadline.TotalMilliseconds).ToString(CultureInfo.InvariantCulture) : string.Empty;
         Metadata = new KeyValueListViewModel(request.Metadata);
-        Auth = new AuthEditorViewModel(request.Auth, allowInherit: true, () => RequestRunner.ResolveAuth(Host.Session, CollectionKey, Path ?? [Key], AuthConfig.Inherit));
+        Auth = new AuthEditorViewModel(
+            request.Auth,
+            allowInherit: true,
+            () => RequestRunner.ResolveAuth(Host.Session, CollectionKey, Path ?? [Key], AuthConfig.Inherit),
+            new OAuthTokenService(Host.Session, Host.Runner, () => CollectionKey, Host.Dialogs.OpenBrowserAsync));
         Metadata.Changed += (_, _) => OnEdited(nameof(Metadata));
         Auth.Changed += (_, _) => OnEdited(nameof(Auth));
 
@@ -237,9 +241,18 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
     }
 
     /// <inheritdoc />
+    protected override void OnTokenChanged() => Auth.RefreshToken();
+
+    /// <inheritdoc />
     protected override async Task SendCoreAsync(CancellationToken cancellationToken)
     {
         var request = (GrpcRequestDefinition)BuildRequest();
+        if (!RequestRunner.SetsAuthorization(request.Metadata) && await EnsureOAuthTokenAsync(request.Auth, cancellationToken).ConfigureAwait(true) is { } tokenError)
+        {
+            Response.SetPreparationErrors([tokenError]);
+            return;
+        }
+
         var outcome = Host.Runner.PrepareGrpc(Host.Session, CollectionKey, Path ?? [Key], request);
         if (!outcome.Preparation.IsSuccess)
         {

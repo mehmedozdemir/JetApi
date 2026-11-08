@@ -70,14 +70,14 @@
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
 | AUTH-1 | None, Inherit, Bearer, Basic, API Key (header/query) | M1 | ✅ |
-| AUTH-2 | OAuth 2.0: client credentials, authorization code (+PKCE), password; token önbelleği ve yenileme | M2 | 🟡 Motor, dosya formatı ve token önbelleği hazır ([ADR-0007](adr/0007-oauth2-tokens.md)); arayüz bekliyor |
+| AUTH-2 | OAuth 2.0: client credentials, authorization code (+PKCE), password; token önbelleği ve yenileme | M2 | ✅ Auth sekmesinde (istek, klasör, koleksiyon); client credentials ve password'da token gönderirken otomatik alınır/yenilenir, authorization code tarayıcıda oturum açarak; refresh token ile yenileme; token'lar `.jetapi/tokens.json` ([ADR-0007](adr/0007-oauth2-tokens.md)) |
 | AUTH-3 | Digest, NTLM (kurumsal ihtiyaç doğarsa) | Sonra | 🔜 |
 
 ### Import / export
 
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
-| IMP-1 | Postman Collection v2.1 import (klasörler, auth, değişkenler, body türleri) | M2 | ✅ v2.0/v2.1; aktarılamayanlar (script, OAuth 2.0, örnek yanıtlar) raporda ([import.md](import.md)) |
+| IMP-1 | Postman Collection v2.1 import (klasörler, auth, değişkenler, body türleri) | M2 | ✅ v2.0/v2.1; aktarılamayanlar (script, örnek yanıtlar, OAuth token'ları) raporda ([import.md](import.md)) |
 | IMP-2 | Postman Environment import | M2 | ✅ |
 | IMP-3 | OpenAPI 3.x / Swagger 2.0 import | M2 | ✅ JSON ve YAML; eşleştirme [openapi-import.md](openapi-import.md) |
 | IMP-4 | cURL import (yapıştır) ve cURL export | M2 | 🔜 |

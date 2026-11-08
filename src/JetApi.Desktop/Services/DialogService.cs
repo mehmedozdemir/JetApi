@@ -19,6 +19,15 @@ public sealed class DialogService : IDialogService
     }
 
     /// <inheritdoc />
+    public async Task OpenBrowserAsync(Uri uri)
+    {
+        if (_owner() is { } owner)
+        {
+            await owner.Launcher.LaunchUriAsync(uri).ConfigureAwait(true);
+        }
+    }
+
+    /// <inheritdoc />
     public async Task<string?> PickFolderAsync(string title)
     {
         if (_owner() is not { } owner)

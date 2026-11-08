@@ -188,6 +188,41 @@ public sealed class UxWalkthroughTests
         settings.ResetCommand.Execute(null);
         Settle();
 
+        // 11. OAuth 2.0 on the collection: the fields follow the grant; requests that inherit it show the token panel.
+        Click(window, TreeRow(window, "User Service"));
+        var screen = ws.NodeSettings.ShouldNotBeNull();
+        screen.Section = NodeSettingsSection.Auth;
+        var auth = screen.Auth;
+        auth.SelectedKind = auth.Kinds.Single(k => k.Value == AuthKind.OAuth2);
+        auth.TokenUrl = "{{baseUrl}}/oauth/token";
+        auth.ClientId = "jetapi";
+        auth.ClientSecret = "s3cret";
+        auth.Scope = "users:read users:write";
+        Settle();
+        auth.ShowToken.ShouldBeTrue();
+        ScreenTests.Capture(window, "ux-17-oauth-client-credentials");
+        auth.SelectedGrant = auth.Grants.Single(g => g.Value == JetApi.Core.Model.OAuth2GrantType.AuthorizationCode);
+        auth.AuthorizationUrl = "https://login.example.com/authorize";
+        Settle();
+        ScreenTests.Capture(window, "ux-18-oauth-authorization-code");
+        ((App)Application.Current!).ApplyTheme(AppTheme.Dark);
+        Loc.Instance.SetLanguage("tr");
+        Settle();
+        ScreenTests.Capture(window, "ux-19-oauth-dark-tr");
+        Loc.Instance.SetLanguage("en");
+        ((App)Application.Current!).ApplyTheme(AppTheme.Light);
+        Click(window, TreeRow(window, "Create user"));
+        var request = ws.SelectedTab.ShouldBeOfType<HttpRequestTabViewModel>();
+        request.Section = RequestSection.Auth;
+        window.Width = window.MinWidth;
+        window.Height = window.MinHeight;
+        Settle();
+        request.Auth.ShowToken.ShouldBeTrue();
+        ScreenTests.Capture(window, "ux-20-oauth-inherited-min-size");
+        window.Width = 1280;
+        window.Height = 800;
+        Settle();
+
         window.Close();
         HeadlessApp.Log.Messages.ShouldBeEmpty();
         return true;

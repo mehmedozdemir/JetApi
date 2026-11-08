@@ -19,6 +19,7 @@
   <data name="Auth_KeyName" xml:space="preserve"><value>Key name</value></data>
   <data name="Auth_KeyValue" xml:space="preserve"><value>Value</value></data>
   <data name="Auth_None" xml:space="preserve"><value>No auth</value></data>
+  <data name="Auth_OAuth2" xml:space="preserve"><value>OAuth 2.0</value></data>
   <data name="Auth_Password" xml:space="preserve"><value>Password</value></data>
   <data name="Auth_SendIn" xml:space="preserve"><value>Send in</value></data>
   <data name="Auth_Token" xml:space="preserve"><value>Token</value></data>
@@ -129,6 +130,35 @@
   <data name="Menu_NewGrpc" xml:space="preserve"><value>New gRPC request</value></data>
   <data name="Menu_NewHttp" xml:space="preserve"><value>New HTTP request</value></data>
   <data name="Menu_Rename" xml:space="preserve"><value>Rename</value></data>
+  <data name="OAuth_AccessToken" xml:space="preserve"><value>Access token</value></data>
+  <data name="OAuth_Audience" xml:space="preserve"><value>Audience (optional)</value></data>
+  <data name="OAuth_AuthorizationUrl" xml:space="preserve"><value>Authorization URL</value></data>
+  <data name="OAuth_ClientAuth" xml:space="preserve"><value>Send client ID and secret</value></data>
+  <data name="OAuth_ClientAuthBody" xml:space="preserve"><value>In the request body</value></data>
+  <data name="OAuth_ClientAuthHeader" xml:space="preserve"><value>In the Basic auth header</value></data>
+  <data name="OAuth_ClientId" xml:space="preserve"><value>Client ID</value></data>
+  <data name="OAuth_ClientSecret" xml:space="preserve"><value>Client secret</value></data>
+  <data name="OAuth_Fetching" xml:space="preserve"><value>Getting the token…</value></data>
+  <data name="OAuth_ForgetToken" xml:space="preserve"><value>Forget token</value></data>
+  <data name="OAuth_GetToken" xml:space="preserve"><value>Get new access token</value></data>
+  <data name="OAuth_Grant" xml:space="preserve"><value>Grant type</value></data>
+  <data name="OAuth_GrantAuthorizationCode" xml:space="preserve"><value>Authorization code</value></data>
+  <data name="OAuth_GrantClientCredentials" xml:space="preserve"><value>Client credentials</value></data>
+  <data name="OAuth_GrantPassword" xml:space="preserve"><value>Password</value></data>
+  <data name="OAuth_HintAutomatic" xml:space="preserve"><value>JetApi gets the token when you send and renews it when it expires.</value></data>
+  <data name="OAuth_HintBrowser" xml:space="preserve"><value>Get a token once by signing in in the browser; JetApi renews it with the refresh token when the server issues one.</value></data>
+  <data name="OAuth_NoTokenYet" xml:space="preserve"><value>No access token yet.</value></data>
+  <data name="OAuth_RedirectHint" xml:space="preserve"><value>Port 0 picks a free port. Register http://127.0.0.1 as a redirect URI with the authorization server.</value></data>
+  <data name="OAuth_RedirectUri" xml:space="preserve"><value>Redirect URI</value></data>
+  <data name="OAuth_Scope" xml:space="preserve"><value>Scope</value></data>
+  <data name="OAuth_TokenExpired" xml:space="preserve"><value>Expired. Get a new access token.</value></data>
+  <data name="OAuth_TokenExpiredRenews" xml:space="preserve"><value>Expired; a new one is fetched when you send.</value></data>
+  <data name="OAuth_TokenNoExpiry" xml:space="preserve"><value>Received; the server did not say when it expires.</value></data>
+  <data name="OAuth_TokenUrl" xml:space="preserve"><value>Token URL</value></data>
+  <data name="OAuth_TokenValidUntil" xml:space="preserve"><value>Valid until {0}.</value></data>
+  <data name="OAuth_TokensLocal" xml:space="preserve"><value>Tokens stay on this computer (.jetapi/tokens.json), not in Git.</value></data>
+  <data name="OAuth_UsePkce" xml:space="preserve"><value>Use PKCE (S256)</value></data>
+  <data name="OAuth_WaitingForBrowser" xml:space="preserve"><value>Finish signing in in your browser…</value></data>
   <data name="Palette_ActiveEnv" xml:space="preserve"><value>active</value></data>
   <data name="Palette_Close" xml:space="preserve"><value>close</value></data>
   <data name="Palette_Commands" xml:space="preserve"><value>Commands</value></data>

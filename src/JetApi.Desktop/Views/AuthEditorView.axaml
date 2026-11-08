@@ -5,7 +5,13 @@
              xmlns:l="using:JetApi.Desktop.Localization"
              x:Class="JetApi.Desktop.Views.AuthEditorView"
              x:DataType="vm:AuthEditorViewModel">
-  <StackPanel Spacing="12" MaxWidth="560" HorizontalAlignment="Left">
+  <!-- Fills the width up to 560 and stays left-aligned, so the form does not change width with its content. -->
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" MaxWidth="560" />
+      <ColumnDefinition Width="0.001*" />
+    </Grid.ColumnDefinitions>
+  <StackPanel Spacing="12">
     <StackPanel>
       <TextBlock Classes="field-label" Text="{l:Tr Auth_Type}" />
       <ComboBox ItemsSource="{Binding Kinds}" SelectedItem="{Binding SelectedKind}" MinWidth="260">
@@ -56,9 +62,103 @@
       </StackPanel>
     </StackPanel>
 
+    <StackPanel Spacing="12" IsVisible="{Binding IsOAuth2}">
+      <StackPanel>
+        <TextBlock Classes="field-label" Text="{l:Tr OAuth_Grant}" />
+        <ComboBox ItemsSource="{Binding Grants}" SelectedItem="{Binding SelectedGrant}" MinWidth="260"
+                  AutomationProperties.Name="{l:Tr OAuth_Grant}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ILabeled">
+              <TextBlock Text="{Binding Label}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock Classes="muted small" Margin="0,6,0,0" TextWrapping="Wrap" Text="{Binding OAuthHint}" />
+      </StackPanel>
+      <StackPanel IsVisible="{Binding IsAuthorizationCode}">
+        <TextBlock Classes="field-label" Text="{l:Tr OAuth_AuthorizationUrl}" />
+        <TextBox Classes="mono" Text="{Binding AuthorizationUrl}" PlaceholderText="https://login.example.com/authorize"
+                 AutomationProperties.Name="{l:Tr OAuth_AuthorizationUrl}" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Classes="field-label" Text="{l:Tr OAuth_TokenUrl}" />
+        <TextBox Classes="mono" Text="{Binding TokenUrl}" PlaceholderText="https://login.example.com/token"
+                 AutomationProperties.Name="{l:Tr OAuth_TokenUrl}" />
+      </StackPanel>
+      <Grid ColumnDefinitions="*,12,*">
+        <StackPanel>
+          <TextBlock Classes="field-label" Text="{l:Tr OAuth_ClientId}" />
+          <TextBox Classes="mono" Text="{Binding ClientId}" AutomationProperties.Name="{l:Tr OAuth_ClientId}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <TextBlock Classes="field-label" Text="{l:Tr OAuth_ClientSecret}" />
+          <TextBox Classes="mono" Text="{Binding ClientSecret}" PasswordChar="•" AutomationProperties.Name="{l:Tr OAuth_ClientSecret}" />
+        </StackPanel>
+      </Grid>
+      <Grid ColumnDefinitions="*,12,*" IsVisible="{Binding IsPasswordGrant}">
+        <StackPanel>
+          <TextBlock Classes="field-label" Text="{l:Tr Auth_Username}" />
+          <TextBox Classes="mono" Text="{Binding OAuthUsername}" AutomationProperties.Name="{l:Tr Auth_Username}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <TextBlock Classes="field-label" Text="{l:Tr Auth_Password}" />
+          <TextBox Classes="mono" Text="{Binding OAuthPassword}" PasswordChar="•" AutomationProperties.Name="{l:Tr Auth_Password}" />
+        </StackPanel>
+      </Grid>
+      <Grid ColumnDefinitions="*,12,*">
+        <StackPanel>
+          <TextBlock Classes="field-label" Text="{l:Tr OAuth_Scope}" />
+          <TextBox Classes="mono" Text="{Binding Scope}" PlaceholderText="read write" AutomationProperties.Name="{l:Tr OAuth_Scope}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <TextBlock Classes="field-label" Text="{l:Tr OAuth_Audience}" />
+          <TextBox Classes="mono" Text="{Binding Audience}" AutomationProperties.Name="{l:Tr OAuth_Audience}" />
+        </StackPanel>
+      </Grid>
+      <StackPanel IsVisible="{Binding IsAuthorizationCode}">
+        <TextBlock Classes="field-label" Text="{l:Tr OAuth_RedirectUri}" />
+        <TextBox Classes="mono" Text="{Binding RedirectUri}" AutomationProperties.Name="{l:Tr OAuth_RedirectUri}" />
+        <TextBlock Classes="muted small" Margin="0,6,0,0" TextWrapping="Wrap" Text="{l:Tr OAuth_RedirectHint}" />
+        <CheckBox Margin="0,8,0,0" IsChecked="{Binding UsePkce}" Content="{l:Tr OAuth_UsePkce}" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Classes="field-label" Text="{l:Tr OAuth_ClientAuth}" />
+        <ComboBox ItemsSource="{Binding ClientAuthentications}" SelectedItem="{Binding SelectedClientAuthentication}" MinWidth="260"
+                  AutomationProperties.Name="{l:Tr OAuth_ClientAuth}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ILabeled">
+              <TextBlock Text="{Binding Label}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </StackPanel>
+    </StackPanel>
+
     <Border Classes="note" IsVisible="{Binding IsInherit}">
       <TextBlock TextWrapping="Wrap" Text="{Binding InheritedDescription}" LineHeight="18" />
     </Border>
+
+    <Border Classes="card" Padding="14,12" IsVisible="{Binding ShowToken}">
+      <StackPanel Spacing="10">
+        <StackPanel Spacing="2">
+          <TextBlock FontWeight="SemiBold" Text="{l:Tr OAuth_AccessToken}" />
+          <TextBlock TextWrapping="Wrap" Text="{Binding TokenStatus}" />
+        </StackPanel>
+        <Border Classes="danger" IsVisible="{Binding TokenError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+          <SelectableTextBlock TextWrapping="Wrap" Text="{Binding TokenError}" />
+        </Border>
+        <WrapPanel>
+          <Button Classes="primary" Margin="0,0,8,0" Command="{Binding GetTokenCommand}" Content="{l:Tr OAuth_GetToken}"
+                  IsVisible="{Binding !IsFetchingToken}" />
+          <Button Classes="secondary" Margin="0,0,8,0" Command="{Binding GetTokenCancelCommand}" Content="{l:Tr Btn_Cancel}"
+                  IsVisible="{Binding IsFetchingToken}" />
+          <Button Classes="link" VerticalAlignment="Center" Command="{Binding ForgetTokenCommand}" Content="{l:Tr OAuth_ForgetToken}"
+                  IsVisible="{Binding HasToken}" />
+        </WrapPanel>
+        <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr OAuth_TokensLocal}" />
+      </StackPanel>
+    </Border>
     <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Auth_ExplicitHeaderWins}" />
   </StackPanel>
+  </Grid>
 </UserControl>
