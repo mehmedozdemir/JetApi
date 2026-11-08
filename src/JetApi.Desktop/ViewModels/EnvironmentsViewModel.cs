@@ -22,8 +22,12 @@ public enum ScopeKind
 }
 
 /// <summary>An entry of the scope list.</summary>
-public sealed class ScopeItemViewModel : ViewModelBase
+public sealed partial class ScopeItemViewModel : ViewModelBase
 {
+    /// <summary>Shown in the editor right now.</summary>
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
+
     /// <summary>Creates the entry.</summary>
     public ScopeItemViewModel(ScopeKind kind, string key, string name, bool isActive, int count)
     {
@@ -54,6 +58,21 @@ public sealed class ScopeItemViewModel : ViewModelBase
 
     /// <summary>Selects this scope in the editor.</summary>
     public CommunityToolkit.Mvvm.Input.IAsyncRelayCommand? SelectCommand { get; internal set; }
+
+    /// <summary>Makes this environment the active one (context menu).</summary>
+    public CommunityToolkit.Mvvm.Input.IRelayCommand? MakeActiveCommand { get; internal set; }
+
+    /// <summary>Renames this environment (context menu, F2).</summary>
+    public CommunityToolkit.Mvvm.Input.IAsyncRelayCommand? RenameCommand { get; internal set; }
+
+    /// <summary>Copies this environment (context menu, Ctrl+D).</summary>
+    public CommunityToolkit.Mvvm.Input.IAsyncRelayCommand? DuplicateCommand { get; internal set; }
+
+    /// <summary>Deletes this environment after confirmation (context menu, Delete).</summary>
+    public CommunityToolkit.Mvvm.Input.IAsyncRelayCommand? DeleteCommand { get; internal set; }
+
+    /// <summary>An environment that is not active yet.</summary>
+    public bool CanMakeActive => IsEnvironment && !IsActive;
 
     /// <summary>Looks like a production environment (gets the Git warning).</summary>
     public bool IsProduction => IsEnvironment && (Key.Contains("prod", StringComparison.OrdinalIgnoreCase) || Name.Contains("prod", StringComparison.OrdinalIgnoreCase));
@@ -224,15 +243,40 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         }
     }
 
-    /// <summary>Makes the selected environment active.</summary>
+    /// <summary>Makes the given (or selected) environment active.</summary>
     [RelayCommand]
-    private void MakeActive()
+    private void MakeActive(ScopeItemViewModel? target)
     {
-        if (SelectedScope is { IsEnvironment: true } scope)
+        if ((target ?? SelectedScope) is { IsEnvironment: true } scope)
         {
             _session.SetActiveEnvironment(scope.Key);
-            Refresh((scope.Kind, scope.Key));
+            Refresh((SelectedScope?.Kind ?? scope.Kind, SelectedScope?.Key ?? scope.Key));
         }
+    }
+
+    /// <summary>Renames the given (or selected) environment; its key and file name stay the same.</summary>
+    [RelayCommand]
+    private async Task RenameAsync(ScopeItemViewModel? target)
+    {
+        if ((target ?? SelectedScope) is not { IsEnvironment: true } scope || _session.Workspace.FindEnvironment(scope.Key) is not { } environment)
+        {
+            return;
+        }
+
+        var name = await _dialogs.PromptTextAsync(Loc.Get("Menu_Rename"), Loc.Get("Env_Name"), environment.Name).ConfigureAwait(true);
+        if (string.IsNullOrWhiteSpace(name) || name.Trim() == environment.Name)
+        {
+            return;
+        }
+
+        if (IsDirty)
+        {
+            await SaveAsync().ConfigureAwait(true);
+            environment = _session.Workspace.FindEnvironment(scope.Key) ?? environment;
+        }
+
+        await _session.SaveEnvironmentAsync(environment with { Name = name.Trim() }).ConfigureAwait(true);
+        Refresh((SelectedScope?.Kind ?? scope.Kind, SelectedScope?.Key ?? scope.Key));
     }
 
     /// <summary>Creates an environment.</summary>
@@ -247,33 +291,44 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         }
     }
 
-    /// <summary>Copies the selected environment with all its variables.</summary>
+    /// <summary>Copies the given (or selected) environment with all its variables.</summary>
     [RelayCommand]
-    private async Task DuplicateAsync()
+    private async Task DuplicateAsync(ScopeItemViewModel? target)
     {
-        if (SelectedScope is not { IsEnvironment: true } scope || _session.Workspace.FindEnvironment(scope.Key) is not { } source)
+        if ((target ?? SelectedScope) is not { IsEnvironment: true } scope || _session.Workspace.FindEnvironment(scope.Key) is not { } source)
         {
             return;
+        }
+
+        if (IsDirty)
+        {
+            await SaveAsync().ConfigureAwait(true);
+            source = _session.Workspace.FindEnvironment(scope.Key) ?? source;
         }
 
         var key = await _session.AddEnvironmentAsync(Loc.Format("Copy_Suffix", source.Name), source.Variables).ConfigureAwait(true);
         Refresh((ScopeKind.Environment, key));
     }
 
-    /// <summary>Deletes the selected environment.</summary>
+    /// <summary>Deletes the given (or selected) environment after confirmation.</summary>
     [RelayCommand]
-    private async Task DeleteEnvironmentAsync()
+    private async Task DeleteEnvironmentAsync(ScopeItemViewModel? target)
     {
-        if (SelectedScope is not { IsEnvironment: true } scope)
+        if ((target ?? SelectedScope) is not { IsEnvironment: true } scope)
         {
             return;
         }
 
         if (await _dialogs.ConfirmAsync(Loc.Get("Env_Delete"), Loc.Format("Confirm_Delete", scope.Name), Loc.Get("Btn_Delete"), isDestructive: true).ConfigureAwait(true))
         {
+            var deletingSelected = SelectedScope is { } selected && selected.Kind == scope.Kind && selected.Key == scope.Key;
             await _session.DeleteEnvironmentAsync(scope.Key).ConfigureAwait(true);
-            IsDirty = false;
-            Refresh(null);
+            if (deletingSelected)
+            {
+                IsDirty = false;
+            }
+
+            Refresh(deletingSelected ? null : (SelectedScope!.Kind, SelectedScope.Key));
         }
     }
 
@@ -295,6 +350,11 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         base.OnPropertyChanged(e);
         if (e.PropertyName == nameof(SelectedScope))
         {
+            foreach (var scope in Environments.Concat(OtherScopes))
+            {
+                scope.IsSelected = ReferenceEquals(scope, SelectedScope);
+            }
+
             LoadRows();
         }
         else if (e.PropertyName == nameof(RevealSecrets))
@@ -333,6 +393,14 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
     private ScopeItemViewModel WithSelect(ScopeItemViewModel scope)
     {
         scope.SelectCommand = new AsyncRelayCommand(() => SelectAsync(scope));
+        if (scope.IsEnvironment)
+        {
+            scope.MakeActiveCommand = new RelayCommand(() => MakeActive(scope));
+            scope.RenameCommand = new AsyncRelayCommand(() => RenameAsync(scope));
+            scope.DuplicateCommand = new AsyncRelayCommand(() => DuplicateAsync(scope));
+            scope.DeleteCommand = new AsyncRelayCommand(() => DeleteEnvironmentAsync(scope));
+        }
+
         return scope;
     }
 

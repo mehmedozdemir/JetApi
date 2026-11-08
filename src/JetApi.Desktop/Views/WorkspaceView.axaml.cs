@@ -126,6 +126,10 @@ public sealed partial class WorkspaceView : UserControl
                 vm.RenameCommand.Execute(node);
                 e.Handled = true;
                 break;
+            case Key.D when e.KeyModifiers.HasFlag(OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control) && !node.IsCollection:
+                vm.DuplicateCommand.Execute(node);
+                e.Handled = true;
+                break;
             case Key.Delete:
                 vm.DeleteCommand.Execute(node);
                 e.Handled = true;
@@ -141,6 +145,14 @@ public sealed partial class WorkspaceView : UserControl
         }
 
         var items = new List<Control>();
+        if (node.IsRequest)
+        {
+            var open = new MenuItem { Header = Loc.Get("Menu_Open") };
+            open.Click += (_, _) => vm.OpenNode(node);
+            items.Add(open);
+            items.Add(new Separator());
+        }
+
         if (node.IsContainer)
         {
             items.Add(Item("Menu_NewHttp", vm.NewHttpRequestCommand, node));
@@ -153,7 +165,7 @@ public sealed partial class WorkspaceView : UserControl
         items.Add(Item("Menu_Rename", vm.RenameCommand, node, "F2"));
         if (!node.IsCollection)
         {
-            items.Add(Item("Menu_Duplicate", vm.DuplicateCommand, node));
+            items.Add(Item("Menu_Duplicate", vm.DuplicateCommand, node, OperatingSystem.IsMacOS() ? "Meta+D" : "Ctrl+D"));
             if (node.Path.Count > 1)
             {
                 items.Add(Item("Menu_MoveToRoot", vm.MoveToRootCommand, node));
@@ -161,7 +173,9 @@ public sealed partial class WorkspaceView : UserControl
         }
 
         items.Add(new Separator());
-        items.Add(Item("Menu_Delete", vm.DeleteCommand, node, "Delete"));
+        var delete = Item("Menu_Delete", vm.DeleteCommand, node, "Delete");
+        delete.Classes.Add("danger");
+        items.Add(delete);
 
         var menu = new ContextMenu { ItemsSource = items };
         menu.Open(e.Source as Control ?? Tree);

@@ -17,6 +17,19 @@ public sealed record EnvironmentOption(string? Key, string Name)
     public override string ToString() => Name;
 }
 
+/// <summary>What the sidebar lists; chosen with the icon rail.</summary>
+public enum SidebarMode
+{
+    /// <summary>The collection tree.</summary>
+    Collections,
+
+    /// <summary>Environments and global variables; the selected one opens in the main area.</summary>
+    Environments,
+
+    /// <summary>Request history of this machine.</summary>
+    History,
+}
+
 /// <summary>What the main window needs from its host (theme, language, closing).</summary>
 public interface IWorkspaceHost
 {
@@ -55,7 +68,8 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     private string _filterText = string.Empty;
 
     [ObservableProperty]
-    private bool _isHistoryVisible;
+    [NotifyPropertyChangedFor(nameof(IsHistoryVisible), nameof(IsCollectionsMode), nameof(IsEnvironmentsMode))]
+    private SidebarMode _sidebarMode;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasOverlay))]
@@ -397,7 +411,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     {
         if (node.IsContainer)
         {
-            Environments = null;
+            SidebarMode = SidebarMode.Collections;
             NodeSettings = new NodeSettingsViewModel(Session, Dialogs, node.CollectionKey, node.Path, _ => NodeSettings = null);
         }
     }
@@ -429,17 +443,59 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     [RelayCommand]
     private Task SendSelectedAsync() => SelectedTab?.SendAsync() ?? Task.CompletedTask;
 
-    /// <summary>Opens the environment editor.</summary>
+    /// <summary>The sidebar shows the history list.</summary>
+    public bool IsHistoryVisible
+    {
+        get => SidebarMode == SidebarMode.History;
+        set => SidebarMode = value ? SidebarMode.History : SidebarMode.Collections;
+    }
+
+    /// <summary>The sidebar shows the collection tree.</summary>
+    public bool IsCollectionsMode => SidebarMode == SidebarMode.Collections;
+
+    /// <summary>The sidebar lists environments and the main area edits the selected one.</summary>
+    public bool IsEnvironmentsMode => SidebarMode == SidebarMode.Environments;
+
+    /// <summary>Opens the environment editor: the sidebar lists environments, the main area shows the selected one.</summary>
     [RelayCommand]
     public void ShowEnvironments()
     {
         NodeSettings = null;
-        Environments = new EnvironmentsViewModel(Session, Dialogs, () => Environments = null);
+        Environments ??= new EnvironmentsViewModel(Session, Dialogs, () =>
+        {
+            Environments = null;
+            if (SidebarMode == SidebarMode.Environments)
+            {
+                SidebarMode = SidebarMode.Collections;
+            }
+        });
+        SidebarMode = SidebarMode.Environments;
     }
 
     /// <summary>Shows or hides the history list in the sidebar.</summary>
     [RelayCommand]
     private void ToggleHistory() => IsHistoryVisible = !IsHistoryVisible;
+
+    // Leaving the environments list closes the editor (saving pending edits); entering it opens the editor.
+    partial void OnSidebarModeChanged(SidebarMode value)
+    {
+        if (value == SidebarMode.Environments)
+        {
+            if (Environments is null)
+            {
+                ShowEnvironments();
+            }
+        }
+        else if (Environments is { } environments)
+        {
+            // Close at once so the main area switches immediately; pending edits are still written.
+            Environments = null;
+            if (environments.IsDirty)
+            {
+                environments.SaveCommand.Execute(null);
+            }
+        }
+    }
 
     /// <summary>Opens a history entry in a new (unsaved) tab.</summary>
     [RelayCommand]
@@ -533,7 +589,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     {
         if (Session.Workspace.FindCollection(collectionKey) is not null)
         {
-            Environments = null;
+            SidebarMode = SidebarMode.Collections;
             NodeSettings = new NodeSettingsViewModel(Session, Dialogs, collectionKey, [], _ => NodeSettings = null);
         }
     }

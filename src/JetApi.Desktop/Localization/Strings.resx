@@ -69,7 +69,6 @@
   <data name="Env_CollectionScope" xml:space="preserve"><value>{0} collection</value></data>
   <data name="Env_Delete" xml:space="preserve"><value>Delete environment</value></data>
   <data name="Env_Disabled" xml:space="preserve"><value>(disabled)</value></data>
-  <data name="Env_Duplicate" xml:space="preserve"><value>Duplicate</value></data>
   <data name="Env_DynamicHint" xml:space="preserve"><value>Dynamic variables: $guid, $timestamp, $timestampMs, $isoTimestamp, $randomInt. Variables may refer to each other; cycles are detected.</value></data>
   <data name="Env_Environments" xml:space="preserve"><value>Environments</value></data>
   <data name="Env_Global" xml:space="preserve"><value>Global (workspace)</value></data>
@@ -78,19 +77,11 @@
   <data name="Env_Name" xml:space="preserve"><value>Name</value></data>
   <data name="Env_New" xml:space="preserve"><value>New environment</value></data>
   <data name="Env_None" xml:space="preserve"><value>No environments yet.</value></data>
-  <data name="Env_OtherScopes" xml:space="preserve"><value>Other scopes</value></data>
-  <data name="Env_Precedence" xml:space="preserve"><value>Precedence</value></data>
-  <data name="Env_Precedence1" xml:space="preserve"><value>1 · Global</value></data>
-  <data name="Env_Precedence2" xml:space="preserve"><value>2 · Collection</value></data>
-  <data name="Env_Precedence3" xml:space="preserve"><value>3 · Active environment</value></data>
-  <data name="Env_Precedence4" xml:space="preserve"><value>4 · Runtime (data file)</value></data>
-  <data name="Env_PrecedenceHint" xml:space="preserve"><value>When a name is defined in several places, the one higher up wins.</value></data>
   <data name="Env_ProdWarning" xml:space="preserve"><value>This file is committed to Git. Do not put production secrets (tokens, passwords) here. Secret values are only masked on screen for now; keychain storage arrives in v0.5.</value></data>
   <data name="Env_Resolved" xml:space="preserve"><value>Resolved</value></data>
   <data name="Env_Reveal" xml:space="preserve"><value>Show secret values</value></data>
   <data name="Env_Saved" xml:space="preserve"><value>Saved</value></data>
   <data name="Env_Secret" xml:space="preserve"><value>Secret</value></data>
-  <data name="Env_Title" xml:space="preserve"><value>Environments and variables</value></data>
   <data name="Env_Unsaved" xml:space="preserve"><value>Unsaved changes</value></data>
   <data name="Err_Cancelled" xml:space="preserve"><value>The request was cancelled.</value></data>
   <data name="Err_Dns" xml:space="preserve"><value>The host name could not be resolved (DNS). Check the URL and your network or VPN.</value></data>
@@ -236,8 +227,6 @@
   <data name="Side_Environments" xml:space="preserve"><value>Environments</value></data>
   <data name="Side_Filter" xml:space="preserve"><value>Filter</value></data>
   <data name="Side_History" xml:space="preserve"><value>History</value></data>
-  <data name="Side_HistoryHint" xml:space="preserve"><value>on this machine</value></data>
-  <data name="Side_Import" xml:space="preserve"><value>Import (v0.2)</value></data>
   <data name="Side_NewCollection" xml:space="preserve"><value>New collection</value></data>
   <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
   <data name="Status_Saved" xml:space="preserve"><value>All changes saved</value></data>
@@ -274,4 +263,8 @@
   <data name="Welcome_Subtitle" xml:space="preserve"><value>A workspace is a folder holding your collections and environments. Share it with your team through Git; no account or cloud required.</value></data>
   <data name="Welcome_Title" xml:space="preserve"><value>Welcome to JetApi</value></data>
   <data name="Welcome_WorkspaceName" xml:space="preserve"><value>Workspace name</value></data>
+  <data name="Env_Breadcrumb" xml:space="preserve"><value>Environments /</value></data>
+  <data name="Env_PrecedenceLine" xml:space="preserve"><value>When a name is defined in several places, the most specific wins: runtime › active environment › collection › global.</value></data>
+  <data name="Side_EnvironmentsTip" xml:space="preserve"><value>Environments (Ctrl+E)</value></data>
+  <data name="Menu_Open" xml:space="preserve"><value>Open</value></data>
 </root>

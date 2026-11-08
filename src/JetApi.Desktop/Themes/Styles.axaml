@@ -149,6 +149,11 @@
   <Style Selector="Button.primary /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Foreground" Value="{DynamicResource App.AccentForeground}" />
   </Style>
+  <!-- A disabled main action (nothing to save) stays calm instead of turning into a grey slab. -->
+  <Style Selector="Button.primary:disabled /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextFaint}" />
+  </Style>
   <Style Selector="Button.primary TextBlock">
     <Setter Property="Foreground" Value="{DynamicResource App.AccentForeground}" />
   </Style>
@@ -280,6 +285,53 @@
   </Style>
   <Style Selector="RadioButton.pill:focus-visible /template/ Border#root">
     <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+  </Style>
+
+  <!-- Icon rail of the sidebar (collections, environments, history). -->
+  <Style Selector="RadioButton.rail">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="root" Width="36" Height="36" CornerRadius="8" Background="Transparent" BorderBrush="Transparent" BorderThickness="1">
+          <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="RadioButton.rail:pointerover /template/ Border#root">
+    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  </Style>
+  <Style Selector="RadioButton.rail:checked">
+    <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
+  </Style>
+  <Style Selector="RadioButton.rail:checked /template/ Border#root">
+    <Setter Property="Background" Value="{DynamicResource App.SegmentSelected}" />
+    <Setter Property="BoxShadow" Value="0 1 2 0 #1A1A1D23" />
+  </Style>
+  <Style Selector="RadioButton.rail:focus-visible /template/ Border#root">
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+  </Style>
+
+  <!-- Sidebar panel: one-line title, quiet filter, selectable rows. -->
+  <Style Selector="TextBlock.panel-title">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBox.filter">
+    <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="FontSize" Value="13" />
+  </Style>
+  <Style Selector="TextBox.filter:pointerover /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
+  </Style>
+  <Style Selector="Button.flat.selected /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource App.Selection}" />
+  </Style>
+  <Style Selector="MenuItem.danger">
+    <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
   </Style>
 
   <!-- Inputs -->

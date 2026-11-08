@@ -56,9 +56,6 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
         <StackPanel Grid.Column="4" Orientation="Horizontal" Margin="8,0,0,0" Spacing="4">
-          <Button Classes="icon" Width="32" Height="32" Command="{Binding ShowEnvironmentsCommand}" ToolTip.Tip="{l:Tr Cmd_Environments}" AutomationProperties.Name="{l:Tr Cmd_Environments}">
-            <c:Icon Data="{StaticResource Icon.Sliders}" />
-          </Button>
           <Button Classes="icon" Width="32" Height="32" Command="{Binding ToggleThemeCommand}" ToolTip.Tip="{l:Tr Cmd_ToggleTheme}" AutomationProperties.Name="{l:Tr Cmd_ToggleTheme}">
             <c:Icon Data="{StaticResource Icon.Moon}" />
           </Button>
@@ -92,111 +89,170 @@
     </Border>
 
     <Grid Grid.Row="2" ColumnDefinitions="280,1,*">
-      <!-- Sidebar -->
-      <Border Background="{DynamicResource App.Sidebar}" MinWidth="200">
-        <Grid RowDefinitions="Auto,Auto,*,Auto">
-          <Grid Margin="12,10,8,6" ColumnDefinitions="*,Auto,Auto" IsVisible="{Binding !IsHistoryVisible}">
-            <TextBlock Classes="label" Text="{l:Tr Side_Collections}" VerticalAlignment="Center" />
-            <Button Grid.Column="1" Classes="icon" IsEnabled="False" ToolTip.Tip="{l:Tr Side_Import}" ToolTip.ShowOnDisabled="True" AutomationProperties.Name="{l:Tr Side_Import}">
-              <c:Icon Data="{StaticResource Icon.Import}" />
-            </Button>
-            <Button Grid.Column="2" Classes="icon" ToolTip.Tip="{l:Tr Side_NewCollection}" AutomationProperties.Name="{l:Tr Side_NewCollection}">
-              <c:Icon Data="{StaticResource Icon.Plus}" />
-              <Button.Flyout>
-                <MenuFlyout>
-                  <MenuItem Header="{l:Tr Cmd_NewHttp}" Command="{Binding NewHttpRequestCommand}" InputGesture="Ctrl+N" />
-                  <MenuItem Header="{l:Tr Cmd_NewGrpc}" Command="{Binding NewGrpcRequestCommand}" />
-                  <MenuItem Header="{l:Tr Menu_NewFolder}" Command="{Binding NewFolderCommand}" />
-                  <Separator />
-                  <MenuItem Header="{l:Tr Cmd_NewCollection}" Command="{Binding NewCollectionCommand}" />
-                </MenuFlyout>
-              </Button.Flyout>
-            </Button>
-          </Grid>
-          <Grid Margin="8,10,8,6" ColumnDefinitions="*,Auto" IsVisible="{Binding IsHistoryVisible}">
-            <Button Classes="flat" Command="{Binding ToggleHistoryCommand}">
-              <StackPanel Orientation="Horizontal" Spacing="6">
-                <c:Icon Data="{StaticResource Icon.Back}" Width="14" Height="14" />
-                <TextBlock Classes="label" Text="{l:Tr Side_History}" />
-              </StackPanel>
-            </Button>
-            <Button Grid.Column="1" Classes="link" Content="{l:Tr Side_ClearHistory}" Command="{Binding ClearHistoryCommand}" />
-          </Grid>
-          <TextBox Grid.Row="1" Margin="12,0,12,8" Text="{Binding FilterText}" PlaceholderText="{l:Tr Side_Filter}"
-                   IsVisible="{Binding !IsHistoryVisible}" AutomationProperties.Name="{l:Tr Side_Filter}" />
+      <!-- Sidebar: icon rail on the left, the list chosen on it on the right. -->
+      <Grid ColumnDefinitions="48,*" MinWidth="220">
+        <Border Background="{DynamicResource App.Rail}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,1,0">
+          <StackPanel Spacing="6" Margin="0,10,0,0" HorizontalAlignment="Center">
+            <RadioButton Classes="rail" GroupName="sidebar"
+                         IsChecked="{Binding SidebarMode, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Collections}"
+                         ToolTip.Tip="{l:Tr Side_Collections}" AutomationProperties.Name="{l:Tr Side_Collections}">
+              <c:Icon Data="{StaticResource Icon.Folder}" Width="17" Height="17" />
+            </RadioButton>
+            <RadioButton Classes="rail" GroupName="sidebar"
+                         IsChecked="{Binding SidebarMode, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Environments}"
+                         ToolTip.Tip="{l:Tr Side_EnvironmentsTip}" AutomationProperties.Name="{l:Tr Side_Environments}">
+              <c:Icon Data="{StaticResource Icon.Layers}" Width="17" Height="17" />
+            </RadioButton>
+            <RadioButton Classes="rail" GroupName="sidebar"
+                         IsChecked="{Binding SidebarMode, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=History}"
+                         ToolTip.Tip="{l:Tr Side_History}" AutomationProperties.Name="{l:Tr Side_History}">
+              <c:Icon Data="{StaticResource Icon.Clock}" Width="17" Height="17" />
+            </RadioButton>
+          </StackPanel>
+        </Border>
 
-          <Panel Grid.Row="2">
-            <TreeView x:Name="Tree" ItemsSource="{Binding Collections}" Margin="6,0" Background="Transparent"
-                      IsVisible="{Binding !IsHistoryVisible}" SelectionMode="Single">
-              <TreeView.Styles>
-                <Style Selector="TreeViewItem" x:DataType="vm:TreeNodeViewModel">
-                  <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                  <Setter Property="IsVisible" Value="{Binding IsVisible}" />
-                </Style>
-              </TreeView.Styles>
-              <TreeView.ItemTemplate>
-                <TreeDataTemplate x:DataType="vm:TreeNodeViewModel" ItemsSource="{Binding Children}">
-                  <Grid ColumnDefinitions="Auto,*" Background="Transparent" Height="30" Tag="{Binding}">
-                    <Panel Width="48" IsVisible="{Binding IsRequest}">
-                      <c:MethodBadge Text="{Binding Badge}" />
-                    </Panel>
-                    <c:Icon Data="{StaticResource Icon.Folder}" Width="14" Height="14" Margin="0,0,8,0" Foreground="{DynamicResource App.TextMuted}"
-                            IsVisible="{Binding IsFolder}" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
-                               FontWeight="{Binding IsCollection, Converter={x:Static c:BoolToFontWeightConverter.Instance}}" />
-                  </Grid>
-                </TreeDataTemplate>
-              </TreeView.ItemTemplate>
-            </TreeView>
-            <StackPanel IsVisible="{Binding HasNoCollections}" Margin="16" Spacing="10">
-              <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Side_EmptyCollections}" />
-              <Button Classes="secondary" Content="{l:Tr Cmd_NewCollection}" Command="{Binding NewCollectionCommand}" />
-            </StackPanel>
+        <Border Grid.Column="1" Background="{DynamicResource App.Sidebar}">
+          <Panel>
+            <!-- Collections -->
+            <Grid RowDefinitions="44,Auto,*" IsVisible="{Binding IsCollectionsMode}">
+              <Grid ColumnDefinitions="*,Auto" Margin="16,0,8,0">
+                <TextBlock Classes="panel-title" Text="{l:Tr Side_Collections}" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Classes="icon" ToolTip.Tip="{l:Tr Side_NewCollection}" AutomationProperties.Name="{l:Tr Side_NewCollection}">
+                  <c:Icon Data="{StaticResource Icon.Plus}" />
+                  <Button.Flyout>
+                    <MenuFlyout>
+                      <MenuItem Header="{l:Tr Cmd_NewHttp}" Command="{Binding NewHttpRequestCommand}" InputGesture="Ctrl+N" />
+                      <MenuItem Header="{l:Tr Cmd_NewGrpc}" Command="{Binding NewGrpcRequestCommand}" />
+                      <MenuItem Header="{l:Tr Menu_NewFolder}" Command="{Binding NewFolderCommand}" />
+                      <Separator />
+                      <MenuItem Header="{l:Tr Cmd_NewCollection}" Command="{Binding NewCollectionCommand}" />
+                    </MenuFlyout>
+                  </Button.Flyout>
+                </Button>
+              </Grid>
+              <TextBox Grid.Row="1" Classes="filter" Margin="12,0,10,8" Text="{Binding FilterText}" PlaceholderText="{l:Tr Side_Filter}"
+                       AutomationProperties.Name="{l:Tr Side_Filter}" />
+              <Panel Grid.Row="2">
+                <TreeView x:Name="Tree" ItemsSource="{Binding Collections}" Margin="6,0" Background="Transparent" SelectionMode="Single">
+                  <TreeView.Styles>
+                    <Style Selector="TreeViewItem" x:DataType="vm:TreeNodeViewModel">
+                      <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                      <Setter Property="IsVisible" Value="{Binding IsVisible}" />
+                    </Style>
+                  </TreeView.Styles>
+                  <TreeView.ItemTemplate>
+                    <TreeDataTemplate x:DataType="vm:TreeNodeViewModel" ItemsSource="{Binding Children}">
+                      <Grid ColumnDefinitions="Auto,*" Background="Transparent" Height="30" Tag="{Binding}">
+                        <Panel Width="44" IsVisible="{Binding IsRequest}">
+                          <c:MethodBadge Text="{Binding Badge}" />
+                        </Panel>
+                        <c:Icon Data="{StaticResource Icon.Folder}" Width="14" Height="14" Margin="0,0,8,0" Foreground="{DynamicResource App.TextFaint}"
+                                IsVisible="{Binding IsFolder}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                   FontWeight="{Binding IsCollection, Converter={x:Static c:BoolToFontWeightConverter.Instance}}" />
+                      </Grid>
+                    </TreeDataTemplate>
+                  </TreeView.ItemTemplate>
+                </TreeView>
+                <StackPanel IsVisible="{Binding HasNoCollections}" Margin="16" Spacing="10">
+                  <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Side_EmptyCollections}" />
+                  <Button Classes="secondary" Content="{l:Tr Cmd_NewCollection}" Command="{Binding NewCollectionCommand}" />
+                </StackPanel>
+              </Panel>
+            </Grid>
 
-            <ListBox ItemsSource="{Binding HistoryItems}" Background="Transparent" Margin="6,0" IsVisible="{Binding IsHistoryVisible}"
-                     x:Name="HistoryList" DoubleTapped="OnHistoryDoubleTapped">
-              <ListBox.ItemTemplate>
-                <DataTemplate x:DataType="vm:HistoryItemViewModel">
-                  <Grid ColumnDefinitions="48,*" Margin="6,6">
-                    <c:MethodBadge Text="{Binding Badge}" VerticalAlignment="Top" Margin="0,2,0,0" />
-                    <StackPanel Grid.Column="1" Spacing="1">
-                      <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Classes="mono muted" FontSize="11" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
-                      <TextBlock Classes="faint" FontSize="11" Text="{Binding Meta}" />
-                    </StackPanel>
+            <!-- Environments: the list lives here, the selected one opens in the main area. -->
+            <ContentControl Content="{Binding Environments}" IsVisible="{Binding IsEnvironmentsMode}">
+              <ContentControl.DataTemplates>
+                <DataTemplate x:DataType="vm:EnvironmentsViewModel">
+                  <Grid RowDefinitions="44,*">
+                    <Grid ColumnDefinitions="*,Auto" Margin="16,0,8,0">
+                      <TextBlock Classes="panel-title" Text="{l:Tr Side_Environments}" VerticalAlignment="Center" />
+                      <Button Grid.Column="1" Classes="icon" Command="{Binding AddEnvironmentCommand}" ToolTip.Tip="{l:Tr Env_New}" AutomationProperties.Name="{l:Tr Env_New}">
+                        <c:Icon Data="{StaticResource Icon.Plus}" />
+                      </Button>
+                    </Grid>
+                    <ScrollViewer Grid.Row="1">
+                      <StackPanel Margin="8,0,8,12" Spacing="1">
+                        <ItemsControl ItemsSource="{Binding Environments}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ScopeItemViewModel">
+                              <Button Classes="flat" Classes.selected="{Binding IsSelected}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                      MinHeight="32" Command="{Binding SelectCommand}">
+                                <Button.KeyBindings>
+                                  <KeyBinding Gesture="F2" Command="{Binding RenameCommand}" />
+                                  <KeyBinding Gesture="Ctrl+D" Command="{Binding DuplicateCommand}" />
+                                  <KeyBinding Gesture="Delete" Command="{Binding DeleteCommand}" />
+                                </Button.KeyBindings>
+                                <Button.ContextMenu>
+                                  <ContextMenu>
+                                    <MenuItem Header="{l:Tr Env_MakeActive}" Command="{Binding MakeActiveCommand}" IsVisible="{Binding CanMakeActive}" />
+                                    <MenuItem Header="{l:Tr Menu_Rename}" Command="{Binding RenameCommand}" InputGesture="F2" />
+                                    <MenuItem Header="{l:Tr Menu_Duplicate}" Command="{Binding DuplicateCommand}" InputGesture="Ctrl+D" />
+                                    <Separator />
+                                    <MenuItem Classes="danger" Header="{l:Tr Menu_Delete}" Command="{Binding DeleteCommand}" InputGesture="Delete" />
+                                  </ContextMenu>
+                                </Button.ContextMenu>
+                                <Grid ColumnDefinitions="18,*,Auto">
+                                  <Ellipse Width="7" Height="7" Fill="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding IsActive}" HorizontalAlignment="Left" />
+                                  <Ellipse Width="7" Height="7" Stroke="{DynamicResource App.TextFaint}" StrokeThickness="1.5" IsVisible="{Binding !IsActive}" HorizontalAlignment="Left" />
+                                  <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                  <TextBlock Grid.Column="2" Classes="small" Foreground="{DynamicResource Tone.Success.Fg}" Text="{l:Tr Env_Active}" IsVisible="{Binding IsActive}" VerticalAlignment="Center" />
+                                  <TextBlock Grid.Column="2" Classes="faint small" Text="{Binding Count}" IsVisible="{Binding !IsActive}" VerticalAlignment="Center" />
+                                </Grid>
+                              </Button>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Classes="muted small" Margin="8" TextWrapping="Wrap" Text="{l:Tr Env_None}" IsVisible="{Binding HasNoEnvironments}" />
+                        <Border Classes="divider" Height="1" Margin="8,10" />
+                        <ItemsControl ItemsSource="{Binding OtherScopes}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ScopeItemViewModel">
+                              <Button Classes="flat" Classes.selected="{Binding IsSelected}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                      MinHeight="32" Command="{Binding SelectCommand}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                  <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                  <TextBlock Grid.Column="1" Classes="faint small" Text="{Binding Count}" VerticalAlignment="Center" />
+                                </Grid>
+                              </Button>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </StackPanel>
+                    </ScrollViewer>
                   </Grid>
                 </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
-            <TextBlock Classes="muted small" Margin="16" TextWrapping="Wrap" Text="{l:Tr Side_EmptyHistory}">
-              <TextBlock.IsVisible>
-                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                  <Binding Path="IsHistoryVisible" />
-                  <Binding Path="HasNoHistory" />
-                </MultiBinding>
-              </TextBlock.IsVisible>
-            </TextBlock>
-          </Panel>
+              </ContentControl.DataTemplates>
+            </ContentControl>
 
-          <Border Grid.Row="3" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="6,8">
-            <StackPanel Spacing="1">
-              <Button Classes="flat" HorizontalAlignment="Stretch" MinHeight="30" Command="{Binding ShowEnvironmentsCommand}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                  <c:Icon Data="{StaticResource Icon.List}" Width="15" Height="15" Foreground="{DynamicResource App.TextMuted}" />
-                  <TextBlock Text="{l:Tr Side_Environments}" />
-                </StackPanel>
-              </Button>
-              <Button Classes="flat" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="30" Command="{Binding ToggleHistoryCommand}">
-                <Grid ColumnDefinitions="Auto,*,Auto">
-                  <c:Icon Data="{StaticResource Icon.Clock}" Width="15" Height="15" Foreground="{DynamicResource App.TextMuted}" Margin="0,0,8,0" />
-                  <TextBlock Grid.Column="1" Text="{l:Tr Side_History}" />
-                  <TextBlock Grid.Column="2" Classes="muted" FontSize="11" Text="{l:Tr Side_HistoryHint}" VerticalAlignment="Center" />
-                </Grid>
-              </Button>
-            </StackPanel>
-          </Border>
-        </Grid>
-      </Border>
+            <!-- History -->
+            <Grid RowDefinitions="44,*" IsVisible="{Binding IsHistoryVisible}">
+              <Grid ColumnDefinitions="*,Auto" Margin="16,0,8,0">
+                <TextBlock Classes="panel-title" Text="{l:Tr Side_History}" VerticalAlignment="Center" />
+                <Button Grid.Column="1" Classes="link" Content="{l:Tr Side_ClearHistory}" Command="{Binding ClearHistoryCommand}" IsVisible="{Binding !HasNoHistory}" />
+              </Grid>
+              <Panel Grid.Row="1">
+                <ListBox ItemsSource="{Binding HistoryItems}" Background="Transparent" Margin="6,0" x:Name="HistoryList" DoubleTapped="OnHistoryDoubleTapped">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:HistoryItemViewModel">
+                      <Grid ColumnDefinitions="44,*" Margin="6,6">
+                        <c:MethodBadge Text="{Binding Badge}" VerticalAlignment="Top" Margin="0,2,0,0" />
+                        <StackPanel Grid.Column="1" Spacing="1">
+                          <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Classes="mono muted" FontSize="11" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Classes="faint" FontSize="11" Text="{Binding Meta}" />
+                        </StackPanel>
+                      </Grid>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBlock Classes="muted small" Margin="16" TextWrapping="Wrap" Text="{l:Tr Side_EmptyHistory}" IsVisible="{Binding HasNoHistory}" />
+              </Panel>
+            </Grid>
+          </Panel>
+        </Border>
+      </Grid>
 
       <Border Grid.Column="1" Classes="divider" />
       <GridSplitter Grid.Column="1" ResizeDirection="Columns" />

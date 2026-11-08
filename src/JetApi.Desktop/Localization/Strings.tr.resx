@@ -69,7 +69,6 @@
   <data name="Env_CollectionScope" xml:space="preserve"><value>{0} koleksiyonu</value></data>
   <data name="Env_Delete" xml:space="preserve"><value>Environment’ı sil</value></data>
   <data name="Env_Disabled" xml:space="preserve"><value>(kapalı)</value></data>
-  <data name="Env_Duplicate" xml:space="preserve"><value>Çoğalt</value></data>
   <data name="Env_DynamicHint" xml:space="preserve"><value>Dinamik değişkenler: $guid, $timestamp, $timestampMs, $isoTimestamp, $randomInt. Değişkenler birbirine başvurabilir; döngüler tespit edilir.</value></data>
   <data name="Env_Environments" xml:space="preserve"><value>Environment’lar</value></data>
   <data name="Env_Global" xml:space="preserve"><value>Global (workspace)</value></data>
@@ -78,19 +77,11 @@
   <data name="Env_Name" xml:space="preserve"><value>Ad</value></data>
   <data name="Env_New" xml:space="preserve"><value>Yeni environment</value></data>
   <data name="Env_None" xml:space="preserve"><value>Henüz environment yok.</value></data>
-  <data name="Env_OtherScopes" xml:space="preserve"><value>Diğer kapsamlar</value></data>
-  <data name="Env_Precedence" xml:space="preserve"><value>Öncelik sırası</value></data>
-  <data name="Env_Precedence1" xml:space="preserve"><value>1 · Global</value></data>
-  <data name="Env_Precedence2" xml:space="preserve"><value>2 · Koleksiyon</value></data>
-  <data name="Env_Precedence3" xml:space="preserve"><value>3 · Aktif environment</value></data>
-  <data name="Env_Precedence4" xml:space="preserve"><value>4 · Çalışma anı (veri dosyası)</value></data>
-  <data name="Env_PrecedenceHint" xml:space="preserve"><value>Aynı ad birden fazla yerde tanımlıysa üstteki kazanır.</value></data>
   <data name="Env_ProdWarning" xml:space="preserve"><value>Bu dosya Git’e girer. Production sırlarını (token, şifre) buraya yazmayın. Gizli işaretli değerler şimdilik yalnızca ekranda maskelenir; işletim sistemi anahtarlığında saklama v0.5’te geliyor.</value></data>
   <data name="Env_Resolved" xml:space="preserve"><value>Çözümlenmiş</value></data>
   <data name="Env_Reveal" xml:space="preserve"><value>Gizli değerleri göster</value></data>
   <data name="Env_Saved" xml:space="preserve"><value>Kaydedildi</value></data>
   <data name="Env_Secret" xml:space="preserve"><value>Gizli</value></data>
-  <data name="Env_Title" xml:space="preserve"><value>Environment’lar ve değişkenler</value></data>
   <data name="Env_Unsaved" xml:space="preserve"><value>Kaydedilmemiş değişiklikler</value></data>
   <data name="Err_Cancelled" xml:space="preserve"><value>İstek iptal edildi.</value></data>
   <data name="Err_Dns" xml:space="preserve"><value>Sunucu adı çözümlenemedi (DNS). URL’yi, ağ ve VPN bağlantınızı kontrol edin.</value></data>
@@ -236,8 +227,6 @@
   <data name="Side_Environments" xml:space="preserve"><value>Environment’lar</value></data>
   <data name="Side_Filter" xml:space="preserve"><value>Filtrele</value></data>
   <data name="Side_History" xml:space="preserve"><value>Geçmiş</value></data>
-  <data name="Side_HistoryHint" xml:space="preserve"><value>bu makinede</value></data>
-  <data name="Side_Import" xml:space="preserve"><value>İçe aktar (v0.2)</value></data>
   <data name="Side_NewCollection" xml:space="preserve"><value>Yeni koleksiyon</value></data>
   <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
   <data name="Status_Saved" xml:space="preserve"><value>Tüm değişiklikler kaydedildi</value></data>
@@ -274,4 +263,8 @@
   <data name="Welcome_Subtitle" xml:space="preserve"><value>Workspace, koleksiyonlarınızın ve environment’larınızın durduğu bir klasördür. Ekibinizle Git üzerinden paylaşılır; hesap veya bulut gerekmez.</value></data>
   <data name="Welcome_Title" xml:space="preserve"><value>JetApi’ye hoş geldiniz</value></data>
   <data name="Welcome_WorkspaceName" xml:space="preserve"><value>Workspace adı</value></data>
+  <data name="Env_Breadcrumb" xml:space="preserve"><value>Environment’lar /</value></data>
+  <data name="Env_PrecedenceLine" xml:space="preserve"><value>Aynı ad birden fazla yerde tanımlıysa en özel olan kazanır: çalışma anı › aktif environment › koleksiyon › global.</value></data>
+  <data name="Side_EnvironmentsTip" xml:space="preserve"><value>Environment’lar (Ctrl+E)</value></data>
+  <data name="Menu_Open" xml:space="preserve"><value>Aç</value></data>
 </root>

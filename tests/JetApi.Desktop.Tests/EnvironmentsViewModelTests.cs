@@ -35,6 +35,40 @@ public sealed class EnvironmentsViewModelTests
     }
 
     [Fact]
+    public async Task ItemCommands_ActOnTheirOwnEnvironment()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        var dialogs = new FakeDialogs();
+        var vm = new EnvironmentsViewModel(workspace.Session, dialogs, () => { });
+        dialogs.Prompts.Enqueue("Staging");
+        await vm.AddEnvironmentCommand.ExecuteAsync(null);
+        vm.SelectCommand.Execute(vm.Environments.Single(e => e.Name == "Development"));
+        var staging = vm.Environments.Single(e => e.Name == "Staging");
+
+        vm.Environments.Single(e => e.Name == "Development").IsSelected.ShouldBeTrue();
+        staging.IsSelected.ShouldBeFalse();
+        staging.CanMakeActive.ShouldBeTrue();
+
+        dialogs.Prompts.Enqueue("Pre-prod");
+        await staging.RenameCommand!.ExecuteAsync(null);
+        vm.Environments.Select(e => e.Name).ShouldContain("Pre-prod");
+        vm.SelectedScope!.Name.ShouldBe("Development");
+        workspace.Read("environments/staging.yaml").ShouldContain("name: Pre-prod");
+
+        await vm.Environments.Single(e => e.Name == "Pre-prod").DuplicateCommand!.ExecuteAsync(null);
+        vm.Environments.Select(e => e.Name).ShouldContain("Pre-prod (copy)");
+
+        vm.Environments.Single(e => e.Name == "Pre-prod").MakeActiveCommand!.Execute(null);
+        workspace.Session.ActiveEnvironmentKey.ShouldBe("staging");
+
+        await vm.Environments.Single(e => e.Name == "Pre-prod (copy)").DeleteCommand!.ExecuteAsync(null);
+        vm.Environments.Select(e => e.Name).ShouldNotContain("Pre-prod (copy)");
+        vm.SelectedScope.ShouldNotBeNull();
+        vm.SelectedScope.IsSelected.ShouldBeTrue();
+        vm.OtherScopes.ShouldAllBe(s => s.RenameCommand == null);
+    }
+
+    [Fact]
     public async Task EnvironmentsCanBeAddedDuplicatedActivatedAndDeleted()
     {
         using var workspace = await TempWorkspace.CreateAsync();

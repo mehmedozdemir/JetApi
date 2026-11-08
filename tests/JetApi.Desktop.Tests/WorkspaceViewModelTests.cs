@@ -195,6 +195,35 @@ public sealed class WorkspaceViewModelTests
         vm.Palette.Results.ShouldHaveSingleItem().Label.ShouldBe("Edit environments");
         await vm.Palette.ExecuteSelectedCommand.ExecuteAsync(null);
         vm.Environments.ShouldNotBeNull();
+        vm.SidebarMode.ShouldBe(SidebarMode.Environments);
+    }
+
+    [Fact]
+    public async Task SidebarModes_OpenAndCloseTheEnvironmentEditor()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        using var vm = workspace.CreateViewModel(new FakeDialogs());
+
+        vm.IsCollectionsMode.ShouldBeTrue();
+        vm.SidebarMode = SidebarMode.Environments;
+        var editor = vm.Environments.ShouldNotBeNull();
+        vm.IsEnvironmentsMode.ShouldBeTrue();
+
+        editor.Rows[^1].Name = "host";
+        editor.Rows[^2].Value = "api.test";
+        vm.SidebarMode = SidebarMode.History;
+
+        vm.IsHistoryVisible.ShouldBeTrue();
+        vm.Environments.ShouldBeNull();
+        await (editor.SaveCommand.ExecutionTask ?? Task.CompletedTask);
+        workspace.Read("environments/dev.yaml").ShouldContain("api.test");
+
+        vm.ShowEnvironments();
+        vm.IsEnvironmentsMode.ShouldBeTrue();
+        vm.OpenCollectionSettings(vm.Collections[0].CollectionKey);
+        vm.IsCollectionsMode.ShouldBeTrue();
+        vm.Environments.ShouldBeNull();
+        vm.NodeSettings.ShouldNotBeNull();
     }
 
     [Fact]
