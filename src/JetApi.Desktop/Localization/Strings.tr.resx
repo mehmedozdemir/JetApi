@@ -267,8 +267,9 @@
   <data name="Side_EnvironmentsTip" xml:space="preserve"><value>Environment’lar (Ctrl+E)</value></data>
   <data name="Menu_Open" xml:space="preserve"><value>Aç</value></data>
   <data name="Col_Subtitle" xml:space="preserve"><value>collections/{0}/collection.yaml · {1} istek</value></data>
-  <data name="Col_OverriddenBy" xml:space="preserve"><value>{0} da bu adı tanımlıyor; onun değeri kullanılır</value></data>
+  <data name="Col_OverriddenBy" xml:space="preserve"><value>{0} değeri geçerli</value></data>
   <data name="Col_Proto" xml:space="preserve"><value>gRPC proto</value></data>
   <data name="Col_General" xml:space="preserve"><value>Genel</value></data>
   <data name="Col_VariablesHint" xml:space="preserve"><value>Bu değişkenleri yalnızca bu koleksiyondaki istekler görür. collection.yaml dosyasına kaydedilir ve Git’e girer. Aynı ad aktif environment’ta da tanımlıysa onun değeri kullanılır.</value></data>
+  <data name="Col_OverriddenByDetail" xml:space="preserve"><value>{0} da bu adı tanımlıyor; istekler bu değer yerine onunkini kullanır.</value></data>
 </root>

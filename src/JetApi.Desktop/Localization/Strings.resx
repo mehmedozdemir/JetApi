@@ -267,8 +267,9 @@
   <data name="Side_EnvironmentsTip" xml:space="preserve"><value>Environments (Ctrl+E)</value></data>
   <data name="Menu_Open" xml:space="preserve"><value>Open</value></data>
   <data name="Col_Subtitle" xml:space="preserve"><value>collections/{0}/collection.yaml · {1} requests</value></data>
-  <data name="Col_OverriddenBy" xml:space="preserve"><value>{0} defines this name too; its value wins</value></data>
+  <data name="Col_OverriddenBy" xml:space="preserve"><value>{0} value wins</value></data>
   <data name="Col_Proto" xml:space="preserve"><value>gRPC proto</value></data>
   <data name="Col_General" xml:space="preserve"><value>General</value></data>
   <data name="Col_VariablesHint" xml:space="preserve"><value>Only requests in this collection see these variables. They are saved in collection.yaml and go to Git. If the active environment defines the same name, its value is used.</value></data>
+  <data name="Col_OverriddenByDetail" xml:space="preserve"><value>{0} defines this name too, so requests use its value instead of this one.</value></data>
 </root>

@@ -85,9 +85,11 @@ public sealed partial class VariableRowViewModel : ViewModelBase
     private bool _isEnabled = true;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPlaceholder))]
     private string _name = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPlaceholder))]
     private string _value = string.Empty;
 
     [ObservableProperty]
@@ -99,9 +101,13 @@ public sealed partial class VariableRowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isRevealed;
 
-    /// <summary>"Development overrides this" when the active environment defines the same name; collection scope only.</summary>
+    /// <summary>"Development value wins" when the active environment defines the same name; collection scope only.</summary>
     [ObservableProperty]
     private string _note = string.Empty;
+
+    /// <summary>The full explanation of <see cref="Note"/>, for its tooltip.</summary>
+    [ObservableProperty]
+    private string _noteDetail = string.Empty;
 
     /// <summary>The empty row at the end.</summary>
     public bool IsPlaceholder => Name.Length == 0 && Value.Length == 0;
@@ -466,7 +472,10 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
 
     private void OnRowChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (_loading || e.PropertyName is nameof(VariableRowViewModel.Resolved) or nameof(VariableRowViewModel.IsRevealed) or nameof(VariableRowViewModel.IsMasked))
+        // Only real edits count; language switches ("all properties"), resolved values and notes are display-only.
+        if (_loading || string.IsNullOrEmpty(e.PropertyName)
+            || e.PropertyName is nameof(VariableRowViewModel.Resolved) or nameof(VariableRowViewModel.IsRevealed) or nameof(VariableRowViewModel.IsMasked)
+                or nameof(VariableRowViewModel.IsPlaceholder) or nameof(VariableRowViewModel.Note) or nameof(VariableRowViewModel.NoteDetail))
         {
             return;
         }
@@ -528,10 +537,12 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
                 row.Resolved = row.IsSecret && !RevealSecrets && value.Length > 0 ? "••••••••" : value;
             }
 
-            row.Note = SelectedScope?.Kind == ScopeKind.Collection && !row.IsPlaceholder && _session.ActiveEnvironment is { } environment
+            var overriddenBy = SelectedScope?.Kind == ScopeKind.Collection && !row.IsPlaceholder && _session.ActiveEnvironment is { } environment
                 && environment.Variables.Any(v => v.IsEnabled && v.Name == row.Name.Trim())
-                ? Loc.Format("Col_OverriddenBy", environment.Name)
-                : string.Empty;
+                ? environment.Name
+                : null;
+            row.Note = overriddenBy is null ? string.Empty : Loc.Format("Col_OverriddenBy", overriddenBy);
+            row.NoteDetail = overriddenBy is null ? string.Empty : Loc.Format("Col_OverriddenByDetail", overriddenBy);
         }
     }
 }

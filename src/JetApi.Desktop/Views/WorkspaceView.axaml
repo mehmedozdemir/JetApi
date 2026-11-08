@@ -138,6 +138,7 @@
                     <Style Selector="TreeViewItem" x:DataType="vm:TreeNodeViewModel">
                       <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                       <Setter Property="IsVisible" Value="{Binding IsVisible}" />
+                      <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
                     </Style>
                   </TreeView.Styles>
                   <TreeView.ItemTemplate>
@@ -286,6 +287,9 @@
                 </Style>
                 <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
                   <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+                </Style>
+                <Style Selector="ListBoxItem" x:DataType="vm:RequestTabViewModel">
+                  <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
                 </Style>
                 <Style Selector="ListBoxItem TextBlock.tab-title">
                   <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />

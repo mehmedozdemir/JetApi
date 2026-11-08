@@ -170,7 +170,7 @@ public sealed class ScreenTests
         ToolTip.GetTip(urlBox).ShouldBeNull();
     }
 
-    private static void Capture(Window window, string name)
+    internal static void Capture(Window window, string name)
     {
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
@@ -179,7 +179,7 @@ public sealed class ScreenTests
         frame.ShouldNotBeNull().Save(Path.Combine(ScreenshotDirectory, name + ".png"), Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
     }
 
-    private static async Task<TempWorkspace> CreateSampleWorkspaceAsync()
+    internal static async Task<TempWorkspace> CreateSampleWorkspaceAsync()
     {
         var workspace = await TempWorkspace.CreateAsync();
         var session = workspace.Session;

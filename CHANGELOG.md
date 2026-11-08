@@ -32,5 +32,8 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Fixed
 
+- Dil değiştirmek environment'ı "kaydedilmemiş" gösteriyordu.
+- Environment veya koleksiyon değişkenine ad yazılınca satırın checkbox, gizli ve sil kontrolleri ancak ekran yenilenince çıkıyordu.
+- Klavyeyle gezerken görünmeyen panel ayırıcısı odak alıyordu; ağaç öğeleri ve sekmeler ekran okuyucuya adsız sunuluyordu.
 - Ağ ve TLS hatalarında mesajın iki kez başlıklanması ("Network error: Network error: ...").
 - Makinede birden fazla NuGet kaynağı tanımlıyken derlemenin NU1507 ile kırılması: repodaki `nuget.config` paketleri yalnızca nuget.org'dan alır.

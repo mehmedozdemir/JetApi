@@ -73,7 +73,7 @@
                             </Panel>
                             <StackPanel Grid.Column="3" Margin="6,0" VerticalAlignment="Center">
                               <TextBlock Classes="mono muted" Text="{Binding Resolved}" TextTrimming="CharacterEllipsis" />
-                              <TextBlock Classes="small" Foreground="{DynamicResource Tone.Warning.Fg}" Text="{Binding Note}" TextTrimming="CharacterEllipsis"
+                              <TextBlock Classes="small" Foreground="{DynamicResource Tone.Warning.Fg}" Text="{Binding Note}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding NoteDetail}"
                                          IsVisible="{Binding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                             </StackPanel>
                             <CheckBox Grid.Column="4" IsChecked="{Binding IsSecret}" IsVisible="{Binding !IsPlaceholder}" />
