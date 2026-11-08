@@ -167,7 +167,7 @@ public sealed class WorkspaceViewModelTests
         vm.OpenNode(vm.Collections[0].Children[0]);
         var tab = (HttpRequestTabViewModel)vm.SelectedTab!;
 
-        tab.UrlHints.ShouldHaveSingleItem().ShouldBe(new VariableHint("{{baseUrl}}", "https://httpbin.org", "source: Development environment", true));
+        tab.UrlHints.ShouldHaveSingleItem().ShouldBe(new VariableHint("{{baseUrl}}", "https://httpbin.org", "Development", true));
 
         vm.SelectedEnvironment = vm.EnvironmentOptions[0];
 

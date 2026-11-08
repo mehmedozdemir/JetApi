@@ -367,6 +367,42 @@
     <Setter Property="Background" Value="{DynamicResource App.Surface}" />
     <Setter Property="BorderBrush" Value="{DynamicResource App.BorderStrong}" />
   </Style>
+  <!-- One frame around several inputs (method + URL); the frame shows focus for the part inside. -->
+  <Style Selector="Border.field">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.BorderStrong}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="MinHeight" Value="38" />
+  </Style>
+  <Style Selector="Border.field:focus-within">
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+  </Style>
+  <Style Selector="TextBox.bare, TextBox.bare:pointerover, TextBox.bare:focus">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="TextBox.bare /template/ Border#PART_BorderElement, TextBox.bare:pointerover /template/ Border#PART_BorderElement, TextBox.bare:focus /template/ Border#PART_BorderElement">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ComboBox.bare">
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ComboBox.bare /template/ Border#Background">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="ComboBox.bare:pointerover /template/ Border#Background">
+    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
+  </Style>
+  <Style Selector="ComboBox.bare /template/ PathIcon#DropDownGlyph">
+    <Setter Property="Width" Value="9" />
+    <Setter Property="Height" Value="9" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextFaint}" />
+  </Style>
+
   <Style Selector="CheckBox">
     <Setter Property="MinHeight" Value="28" />
   </Style>

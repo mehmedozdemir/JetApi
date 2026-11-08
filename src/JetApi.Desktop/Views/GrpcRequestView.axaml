@@ -68,7 +68,7 @@
                 <Border CornerRadius="4" Padding="6,1" Background="{DynamicResource Tone.Danger.Bg}" IsVisible="{Binding !IsDefined}">
                   <TextBlock Classes="mono small" Text="{Binding Placeholder}" Foreground="{DynamicResource Tone.Danger.Fg}" />
                 </Border>
-                <TextBlock Classes="muted small mono" Text="{Binding Value, StringFormat='= {0}'}" IsVisible="{Binding IsDefined}" />
+                <TextBlock Classes="muted small mono" Text="{Binding Value, StringFormat='→ {0}'}" IsVisible="{Binding IsDefined}" />
                 <TextBlock Classes="muted small" Text="{Binding Description, StringFormat='· {0}'}" />
               </StackPanel>
             </DataTemplate>
@@ -128,7 +128,7 @@
             <RadioButton Classes="tab" GroupName="greq" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Auth}">
               <StackPanel Orientation="Horizontal" Spacing="6">
                 <TextBlock Text="{l:Tr Req_Auth}" />
-                <TextBlock Classes="faint small" Text="{Binding AuthBadge}" />
+                <TextBlock Classes="faint small" Text="{Binding AuthBadge}" VerticalAlignment="Center" />
               </StackPanel>
             </RadioButton>
             <RadioButton Classes="tab" GroupName="greq" Content="{l:Tr Req_Settings}"

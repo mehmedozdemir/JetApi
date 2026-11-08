@@ -258,7 +258,7 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
             var placeholder = "{{" + name + "}}";
             return lookup is null
                 ? new VariableHint(placeholder, string.Empty, Loc.Get("Req_VariableUndefined"), false)
-                : new VariableHint(placeholder, lookup.IsSecret ? "••••••••" : lookup.Value, Loc.Format("Req_VariableSource", DescribeSource(lookup.Source)), true);
+                : new VariableHint(placeholder, lookup.IsSecret ? "••••••••" : lookup.Value, DescribeSource(lookup.Source), true);
         });
     }
 

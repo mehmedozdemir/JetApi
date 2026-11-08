@@ -173,8 +173,8 @@
   <data name="Req_Settings" xml:space="preserve"><value>Ayarlar</value></data>
   <data name="Req_SourceCollection" xml:space="preserve"><value>{0} koleksiyonu</value></data>
   <data name="Req_SourceDynamic" xml:space="preserve"><value>dinamik değişken</value></data>
-  <data name="Req_SourceEnvironment" xml:space="preserve"><value>{0} environment’ı</value></data>
-  <data name="Req_SourceGlobal" xml:space="preserve"><value>workspace global değişkenleri</value></data>
+  <data name="Req_SourceEnvironment" xml:space="preserve"><value>{0}</value></data>
+  <data name="Req_SourceGlobal" xml:space="preserve"><value>workspace global değişkeni</value></data>
   <data name="Req_SourceRuntime" xml:space="preserve"><value>çalışma anı değeri</value></data>
   <data name="Req_Timeout" xml:space="preserve"><value>Zaman aşımı (ms)</value></data>
   <data name="Req_TimeoutHint" xml:space="preserve"><value>Boş bırakılırsa varsayılan (30 000 ms) kullanılır.</value></data>
@@ -183,7 +183,6 @@
   <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/yol veya https://…</value></data>
   <data name="Req_ValidateCertificates" xml:space="preserve"><value>TLS sertifikasını doğrula</value></data>
   <data name="Req_Value" xml:space="preserve"><value>Değer</value></data>
-  <data name="Req_VariableSource" xml:space="preserve"><value>kaynak: {0}</value></data>
   <data name="Req_VariableUndefined" xml:space="preserve"><value>tanımlı değil</value></data>
   <data name="Res_Automatic" xml:space="preserve"><value>otomatik</value></data>
   <data name="Res_Body" xml:space="preserve"><value>Body</value></data>
