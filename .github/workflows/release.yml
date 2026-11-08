@@ -42,6 +42,9 @@ jobs:
           else
             echo "value=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)" >> "$GITHUB_OUTPUT"
           fi
+      - name: Install AppImage dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y desktop-file-utils
       - name: Restore (locked)
         run: dotnet restore src/JetApi.Desktop/JetApi.Desktop.csproj --locked-mode
       - name: Package

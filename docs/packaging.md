@@ -24,7 +24,7 @@ build/package.sh linux-x64 0.1.0    # sürüm verilmezse Directory.Build.props i
 
 - Windows'ta Git Bash ile çalışır. Paketler `dist/`, ara çıktılar `artifacts/` klasörüne yazılır; ikisi de Git dışıdır.
 - `.dmg` yalnızca macOS'ta (`hdiutil`, `codesign`), AppImage yalnızca Linux'ta üretilir. AppImage için `appimagetool` sabit
-  bir sürümden indirilir.
+  bir sürümden indirilir; `desktop-file-validate` komutu (`desktop-file-utils` paketi) kurulu olmalıdır.
 - Hedef RID'ler `src/Directory.Build.props` içinde listelenir. Bu sayede `dotnet publish -r <rid>` locked mode'da çalışır ve
   lock dosyalarını değiştirmez. Yeni bir platform eklenirse listeye eklenip `dotnet restore` çalıştırılır ve lock dosyaları
   commit'lenir.
