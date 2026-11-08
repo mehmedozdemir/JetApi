@@ -4,6 +4,22 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Curl_AuthNotSupported" xml:space="preserve"><value>{0} authentication is not supported yet, so the credentials were not imported.</value></data>
+  <data name="Curl_DataAndForm" xml:space="preserve"><value>The command has both form fields (-F) and data (-d); only the form fields were imported.</value></data>
+  <data name="Curl_ExtraUrl" xml:space="preserve"><value>Only the first URL was imported; {0} was ignored.</value></data>
+  <data name="Curl_FileNotRead" xml:space="preserve"><value>"{0}" is read from a file or standard input, which an import cannot do, so it was left out.</value></data>
+  <data name="Curl_FormFieldFromFile" xml:space="preserve"><value>Form field "{0}" takes its value from a file; it was imported as a file upload.</value></data>
+  <data name="Curl_IgnoredOption" xml:space="preserve"><value>Option {0} has no equivalent in JetApi yet and was ignored.</value></data>
+  <data name="Curl_InvalidForm" xml:space="preserve"><value>Form field "{0}" is not in name=value form and was ignored.</value></data>
+  <data name="Curl_InvalidTimeout" xml:space="preserve"><value>The timeout "{0}" is not a number of seconds and was ignored.</value></data>
+  <data name="Curl_JsonWithoutContentType" xml:space="preserve"><value>The body is JSON but the command sets no Content-Type, so curl would send it as a form. It was imported as a JSON body.</value></data>
+  <data name="Curl_MissingValue" xml:space="preserve"><value>Option {0} has no value and was ignored.</value></data>
+  <data name="Curl_NoUrl" xml:space="preserve"><value>The cURL command has no URL.</value></data>
+  <data name="Curl_NotCurl" xml:space="preserve"><value>This is not a cURL command. Paste a command that starts with curl.</value></data>
+  <data name="Curl_PasswordMissing" xml:space="preserve"><value>No password was given for user "{0}" (curl would ask for it). Enter it on the Auth tab.</value></data>
+  <data name="Curl_ShellVariables" xml:space="preserve"><value>Shell variables became JetApi variables: {0}. Define them in an environment.</value></data>
+  <data name="Curl_UnknownOption" xml:space="preserve"><value>Option {0} is not known and was ignored.</value></data>
+  <data name="Curl_UnterminatedQuote" xml:space="preserve"><value>The command has a quote that is never closed. Copy the whole command and try again.</value></data>
   <data name="Import_AuthNotSupported" xml:space="preserve"><value>Auth type "{0}" is not supported yet, so it was set to No auth.</value></data>
   <data name="Import_CollectionLocation" xml:space="preserve"><value>Collection</value></data>
   <data name="Import_DynamicVariables" xml:space="preserve"><value>These dynamic variables are not supported and stay unresolved: {0}.</value></data>

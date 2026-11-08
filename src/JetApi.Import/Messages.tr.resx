@@ -4,6 +4,22 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Curl_AuthNotSupported" xml:space="preserve"><value>{0} kimlik doğrulaması henüz desteklenmiyor; kimlik bilgileri aktarılmadı.</value></data>
+  <data name="Curl_DataAndForm" xml:space="preserve"><value>Komutta hem form alanları (-F) hem veri (-d) var; yalnızca form alanları aktarıldı.</value></data>
+  <data name="Curl_ExtraUrl" xml:space="preserve"><value>Yalnızca ilk URL aktarıldı; {0} yok sayıldı.</value></data>
+  <data name="Curl_FileNotRead" xml:space="preserve"><value>"{0}" bir dosyadan ya da standart girdiden okunuyor; içe aktarma bunu yapamadığı için dışarıda bırakıldı.</value></data>
+  <data name="Curl_FormFieldFromFile" xml:space="preserve"><value>"{0}" form alanı değerini bir dosyadan alıyor; dosya yükleme olarak aktarıldı.</value></data>
+  <data name="Curl_IgnoredOption" xml:space="preserve"><value>{0} seçeneğinin JetApi’de henüz karşılığı yok; yok sayıldı.</value></data>
+  <data name="Curl_InvalidForm" xml:space="preserve"><value>"{0}" form alanı ad=değer biçiminde değil; yok sayıldı.</value></data>
+  <data name="Curl_InvalidTimeout" xml:space="preserve"><value>"{0}" zaman aşımı geçerli bir saniye değeri değil; yok sayıldı.</value></data>
+  <data name="Curl_JsonWithoutContentType" xml:space="preserve"><value>Body JSON ama komut Content-Type belirtmiyor; curl bunu form olarak gönderirdi. JSON body olarak aktarıldı.</value></data>
+  <data name="Curl_MissingValue" xml:space="preserve"><value>{0} seçeneğinin değeri yok; yok sayıldı.</value></data>
+  <data name="Curl_NoUrl" xml:space="preserve"><value>cURL komutunda URL yok.</value></data>
+  <data name="Curl_NotCurl" xml:space="preserve"><value>Bu bir cURL komutu değil. curl ile başlayan bir komut yapıştırın.</value></data>
+  <data name="Curl_PasswordMissing" xml:space="preserve"><value>"{0}" kullanıcısı için parola verilmemiş (curl bunu sorardı). Parolayı Auth sekmesinde girin.</value></data>
+  <data name="Curl_ShellVariables" xml:space="preserve"><value>Kabuk değişkenleri JetApi değişkenlerine çevrildi: {0}. Bunları bir environment’ta tanımlayın.</value></data>
+  <data name="Curl_UnknownOption" xml:space="preserve"><value>{0} seçeneği tanınmıyor; yok sayıldı.</value></data>
+  <data name="Curl_UnterminatedQuote" xml:space="preserve"><value>Komutta kapatılmamış bir tırnak var. Komutun tamamını kopyalayıp yeniden deneyin.</value></data>
   <data name="Import_AuthNotSupported" xml:space="preserve"><value>"{0}" auth türü henüz desteklenmiyor; "Auth yok" olarak ayarlandı.</value></data>
   <data name="Import_CollectionLocation" xml:space="preserve"><value>Koleksiyon</value></data>
   <data name="Import_DynamicVariables" xml:space="preserve"><value>Şu dinamik değişkenler desteklenmiyor ve çözümlenmeden kalır: {0}.</value></data>

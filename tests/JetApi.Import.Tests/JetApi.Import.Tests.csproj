@@ -3,6 +3,8 @@
     <ProjectReference Include="..\..\src\JetApi.Import\JetApi.Import.csproj" />
     <!-- Round-trip check: an imported collection must be writable to and readable from a YAML workspace. -->
     <ProjectReference Include="..\..\src\JetApi.Storage\JetApi.Storage.csproj" />
+    <!-- Round-trip check: an exported cURL snippet must import as the same request. -->
+    <ProjectReference Include="..\..\src\JetApi.Http\JetApi.Http.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Samples\*" CopyToOutputDirectory="PreserveNewest" />
