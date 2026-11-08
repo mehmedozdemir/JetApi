@@ -5,6 +5,7 @@ using Avalonia.Styling;
 using AvaloniaEdit;
 using AvaloniaEdit.Search;
 using AvaloniaEdit.TextMate;
+using JetApi.Desktop.ViewModels;
 using TextMateSharp.Grammars;
 
 namespace JetApi.Desktop.Controls;
@@ -28,9 +29,13 @@ public sealed class CodeEditor : UserControl
     /// <summary>Show line numbers.</summary>
     public static readonly StyledProperty<bool> ShowLineNumbersProperty = AvaloniaProperty.Register<CodeEditor, bool>(nameof(ShowLineNumbers), true);
 
+    /// <summary>Highlight <c>{{variables}}</c> and show their values on hover (request editors only).</summary>
+    public static readonly StyledProperty<bool> HighlightVariablesProperty = AvaloniaProperty.Register<CodeEditor, bool>(nameof(HighlightVariables));
+
     private readonly TextEditor _editor;
     private readonly RegistryOptions _registry;
     private readonly TextMate.Installation _textMate;
+    private readonly VariableColorizer _variables = new();
     private bool _updating;
 
     /// <summary>Creates the editor.</summary>
@@ -69,9 +74,21 @@ public sealed class CodeEditor : UserControl
         // Ctrl+F opens find (and replace in editable editors).
         SearchPanel.Install(_editor);
 
+        // Added after TextMate so variable colors win over syntax colors.
+        _editor.TextArea.TextView.LineTransformers.Add(_variables);
+        _editor.TextArea.TextView.PointerMoved += (_, e) => VariableHints.ShowTip(_editor, HintUnderPointer(e));
+        _editor.TextArea.TextView.PointerExited += (_, _) => VariableHints.ShowTip(_editor, null);
+
         Content = _editor;
         ApplyLanguage();
         ActualThemeVariantChanged += (_, _) => ApplyTheme();
+    }
+
+    /// <summary>Highlight <c>{{variables}}</c> and show their values on hover.</summary>
+    public bool HighlightVariables
+    {
+        get => GetValue(HighlightVariablesProperty);
+        set => SetValue(HighlightVariablesProperty, value);
     }
 
     /// <summary>The text.</summary>
@@ -139,6 +156,35 @@ public sealed class CodeEditor : UserControl
         {
             _editor.ShowLineNumbers = ShowLineNumbers;
         }
+        else if (change.Property == HighlightVariablesProperty || change.Property == VariableHints.ContextProperty)
+        {
+            ApplyVariables();
+        }
+    }
+
+    private VariableContext? ActiveVariables => HighlightVariables ? VariableHints.GetContext(this) : null;
+
+    private void ApplyVariables()
+    {
+        _variables.Context = ActiveVariables;
+        _variables.Defined = (FindBrush("Tone.Success.Fg"), FindBrush("Tone.Success.Bg"));
+        _variables.Undefined = (FindBrush("Tone.Danger.Fg"), FindBrush("Tone.Danger.Bg"));
+        _editor.TextArea.TextView.Redraw();
+    }
+
+    private IBrush? FindBrush(string key) =>
+        this.TryFindResource(key, ActualThemeVariant, out var value) ? value as IBrush : null;
+
+    private VariableHint? HintUnderPointer(Avalonia.Input.PointerEventArgs e)
+    {
+        var context = ActiveVariables;
+        if (context is null || _editor.GetPositionFromPoint(e.GetPosition(_editor)) is not { } position)
+        {
+            return null;
+        }
+
+        var line = _editor.Document.GetLineByNumber(position.Line);
+        return context.DescribeAt(_editor.Document.GetText(line), position.Column - 1);
     }
 
     private void ApplyLanguage()
@@ -152,6 +198,9 @@ public sealed class CodeEditor : UserControl
         _textMate.SetGrammar(language is null ? null : _registry.GetScopeByLanguageId(language));
     }
 
-    private void ApplyTheme() =>
+    private void ApplyTheme()
+    {
         _textMate.SetTheme(_registry.LoadTheme(ActualThemeVariant == ThemeVariant.Dark ? ThemeName.DarkPlus : ThemeName.LightPlus));
+        ApplyVariables();
+    }
 }

@@ -27,7 +27,7 @@
 | VAR-1 | `{{değişken}}` sözdizimi; öncelik: global < koleksiyon < environment < çalışma anı | M1 | ✅ |
 | VAR-2 | İç içe değişkenler (`baseUrl = {{scheme}}://{{host}}`) ve döngü tespiti | M1 | ✅ |
 | VAR-3 | Dinamik değişkenler: `$guid`, `$timestamp`, `$timestampMs`, `$isoTimestamp`, `$randomInt` | M1 | ✅ |
-| VAR-4 | Editörde değişken vurgulama; üzerine gelince çözümlenmiş değer ve kaynağı | M1 | 🟡 URL altındaki değişken satırı hazır; editör içinde vurgulama ve üzerine gelince değer gösterme sonraki adım |
+| VAR-4 | Editörde değişken vurgulama; üzerine gelince çözümlenmiş değer ve kaynağı | M1 | ✅ Body ve gRPC mesaj editörlerinde vurgulama (tanımlı/tanımsız ayrı renk); URL, tablo hücreleri, auth alanları ve editörlerde üzerine gelince değer ve kaynak |
 | VAR-5 | Tanımsız değişken uyarısı (gönderimden önce) | M1 | ✅ |
 | VAR-6 | Gizli (secret) işaretli değişkenlerin arayüzde maskelenmesi | M1 | ✅ |
 

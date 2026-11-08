@@ -1,8 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using JetApi.Core.Model;
+using JetApi.Desktop.Controls;
 using JetApi.Desktop.Localization;
 using JetApi.Desktop.Services;
 using JetApi.Desktop.ViewModels;
@@ -63,6 +65,7 @@ public sealed class ScreenTests
         ws.OpenNode(ws.Collections[0].Children.Single(c => c.Name == "Create user"));
         var http = (HttpRequestTabViewModel)ws.SelectedTab!;
         Capture(window, "03-rest-body");
+        HoverVariables(window);
         http.Section = RequestSection.Headers;
         Capture(window, "04-rest-headers");
         http.Section = RequestSection.Auth;
@@ -143,6 +146,30 @@ public sealed class ScreenTests
         return true;
     }
 
+    // Moves the mouse over variables in the URL box and the body editor and checks the hover hints.
+    private static void HoverVariables(Window window)
+    {
+        var urlBox = window.GetVisualDescendants().OfType<TextBox>().Single(t => t.Name == "UrlBox");
+        var presenter = urlBox.GetVisualDescendants().OfType<Avalonia.Controls.Presenters.TextPresenter>().Single();
+        window.MouseMove(presenter.TranslatePoint(new Avalonia.Point(12, presenter.Bounds.Height / 2), window)!.Value);
+        var urlHint = ToolTip.GetTip(urlBox).ShouldBeAssignableTo<Control>()!.Tag.ShouldBeOfType<VariableHint>();
+        urlHint.Placeholder.ShouldBe("{{baseUrl}}");
+        urlHint.Value.ShouldBe("http://localhost:5000");
+
+        var body = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.HighlightVariables);
+        var textView = body.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>().Single();
+        var document = textView.Document;
+        var undefinedAt = document.GetLocation(document.Text.IndexOf("{{teamId}}", StringComparison.Ordinal) + 3);
+        var point = textView.GetVisualPosition(new AvaloniaEdit.TextViewPosition(undefinedAt), AvaloniaEdit.Rendering.VisualYPosition.LineMiddle) - textView.ScrollOffset;
+        window.MouseMove(textView.TranslatePoint(point, window)!.Value);
+        var bodyHint = ToolTip.GetTip(body.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single()).ShouldBeAssignableTo<Control>()!.Tag.ShouldBeOfType<VariableHint>();
+        bodyHint.IsDefined.ShouldBeFalse();
+        Capture(window, "03b-variable-hover");
+
+        window.MouseMove(new Avalonia.Point(1, 1));
+        ToolTip.GetTip(urlBox).ShouldBeNull();
+    }
+
     private static void Capture(Window window, string name)
     {
         Dispatcher.UIThread.RunJobs();
@@ -178,7 +205,7 @@ public sealed class ScreenTests
             Method = "POST",
             Url = "{{baseUrl}}/users",
             Headers = [new("X-Trace-Id", "{{$guid}}")],
-            Body = HttpBody.Json("{\n  \"name\": \"Ayşe Yılmaz\",\n  \"email\": \"ayse@example.com\",\n  \"roles\": [\"admin\"]\n}"),
+            Body = HttpBody.Json("{\n  \"name\": \"Ayşe Yılmaz\",\n  \"email\": \"ayse@example.com\",\n  \"roles\": [\"admin\"],\n  \"requestId\": \"{{$guid}}\",\n  \"teamId\": \"{{teamId}}\"\n}"),
         });
         await session.AddNodeAsync(key, admin, new HttpRequestDefinition { Key = "x", Name = "Delete user", Method = "DELETE", Url = "{{baseUrl}}/users/{{userId}}" });
         await session.AddNodeAsync(key, [], new GrpcRequestDefinition

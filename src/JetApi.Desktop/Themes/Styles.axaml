@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="using:JetApi.Desktop.Controls">
   <!-- Shared control looks. Colors always come from Tokens.axaml via DynamicResource so themes switch live. -->
 
   <Style Selector="TextBlock">
@@ -241,6 +242,8 @@
   <Style Selector="TextBox.mono">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
     <Setter Property="FontSize" Value="12.5" />
+    <!-- Hover a {{variable}} to see its value; no-op outside a request tab. -->
+    <Setter Property="c:VariableHints.IsEnabled" Value="True" />
   </Style>
   <Style Selector="TextBox.cell">
     <Setter Property="BorderThickness" Value="0" />

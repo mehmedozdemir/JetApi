@@ -152,6 +152,36 @@ public sealed class VariableResolverTests
         VariableResolver.FindReferences("{{b}} {{a}} {{b}} {{ bad name }}").ShouldBe(["b", "a"]);
 
     [Fact]
+    public void FindPlaceholders_ReturnsPositionsIncludingRepeats()
+    {
+        var placeholders = VariableResolver.FindPlaceholders("x{{a}}-{{ b }}{{a}}");
+
+        placeholders.ShouldBe(
+        [
+            new VariablePlaceholder(1, 5, "a"),
+            new VariablePlaceholder(7, 7, "b"),
+            new VariablePlaceholder(14, 5, "a"),
+        ]);
+        placeholders[1].End.ShouldBe(14);
+    }
+
+    [Fact]
+    public void FindPlaceholders_SkipsInvalidAndUnclosed()
+    {
+        VariableResolver.FindPlaceholders("{{ bad name }} {{ok}} {{open").ShouldBe([new VariablePlaceholder(15, 6, "ok")]);
+        VariableResolver.FindPlaceholders("{{{x}}").ShouldBe([new VariablePlaceholder(1, 5, "x")]);
+        VariableResolver.FindPlaceholders(null).ShouldBeEmpty();
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    [InlineData(5, true)]
+    [InlineData(6, false)]
+    public void Placeholder_ContainsCoversBraces(int index, bool expected) =>
+        new VariablePlaceholder(1, 5, "a").Contains(index).ShouldBe(expected);
+
+    [Fact]
     public void Factory_BuildsLayersFromWorkspace()
     {
         var workspace = new Workspace { Name = "w", GlobalVariables = [new("a", "global"), new("b", "global")] };

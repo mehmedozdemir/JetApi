@@ -6,7 +6,7 @@
              xmlns:l="using:JetApi.Desktop.Localization"
              x:Class="JetApi.Desktop.Views.GrpcRequestView"
              x:DataType="vm:GrpcRequestTabViewModel">
-  <Grid RowDefinitions="Auto,*">
+  <Grid RowDefinitions="Auto,*" c:VariableHints.Context="{Binding Variables}">
     <Border Background="{DynamicResource App.Surface}" Padding="16,12,16,10" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
       <StackPanel Spacing="10">
         <TextBlock Classes="muted small" Text="{Binding Breadcrumb}" TextTrimming="CharacterEllipsis" />
@@ -143,7 +143,7 @@
                 <Button Grid.Column="2" Classes="link" Content="{l:Tr Btn_FillTemplate}" Command="{Binding FillTemplateCommand}" />
               </Grid>
               <Border Grid.Row="1" Classes="code">
-                <c:CodeEditor Text="{Binding Message}" Language="json" />
+                <c:CodeEditor Text="{Binding Message}" Language="json" HighlightVariables="True" />
               </Border>
               <Border Grid.Row="2" Classes="danger" Margin="0,8,0,0" IsVisible="{Binding MessageError, Converter={x:Static ObjectConverters.IsNotNull}}">
                 <SelectableTextBlock Classes="mono" Text="{Binding MessageError}" TextWrapping="Wrap" />

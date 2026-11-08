@@ -6,7 +6,7 @@
              xmlns:l="using:JetApi.Desktop.Localization"
              x:Class="JetApi.Desktop.Views.HttpRequestView"
              x:DataType="vm:HttpRequestTabViewModel">
-  <Grid RowDefinitions="Auto,*">
+  <Grid RowDefinitions="Auto,*" c:VariableHints.Context="{Binding Variables}">
     <!-- URL bar -->
     <Border Background="{DynamicResource App.Surface}" Padding="16,12,16,10" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
       <StackPanel Spacing="8">
@@ -139,7 +139,7 @@
             </Border>
             <Panel Grid.Row="2">
               <Border Classes="code" IsVisible="{Binding IsRawBody}">
-                <c:CodeEditor Text="{Binding BodyText}" Language="{Binding BodyLanguage}" />
+                <c:CodeEditor Text="{Binding BodyText}" Language="{Binding BodyLanguage}" HighlightVariables="True" />
               </Border>
               <ScrollViewer IsVisible="{Binding IsFormBody}">
                 <v:KeyValueTable DataContext="{Binding FormFields}" />

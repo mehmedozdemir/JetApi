@@ -19,7 +19,7 @@ stilleri `Themes/Styles.axaml` dosyasındadır. `tests/JetApi.Desktop.Tests/Scre
 
 - **Görsel dil:** Nötr gri zemin, tek vurgu rengi (#3451D1). UI fontu Inter, kod ve değer fontu JetBrains Mono. Metot renkleri GET yeşil, POST turuncu, PUT mavi, DELETE kırmızı, gRPC camgöbeği; hepsi beyaz zeminde WCAG AA kontrastını sağlar.
 - **Şeffaflık:** Otomatik eklenen header'lar Headers sekmesinde ayrı listelenir. Auth sekmesi isteğin auth'unun nereden miras alındığını gösterir. Gönderilen istek ağa çıkan haliyle görüntülenir.
-- **Değişkenler:** URL altında, kullanılan değişkenin değeri ve kaynağı gösterilir. Tanımsız değişken varsa istek gönderilmeden önce sorulur.
+- **Değişkenler:** URL altında, kullanılan değişkenin değeri ve kaynağı gösterilir. Body ve gRPC mesaj editörlerinde `{{değişken}}` tanımlıysa yeşil, tanımsızsa kırmızı vurgulanır. URL, tablo hücreleri, auth alanları ve editörlerde değişkenin üzerine gelince değeri (gizliyse maskeli) ve kaynağı gösterilir. Tanımsız değişken varsa istek gönderilmeden önce sorulur.
 - **Hatalar:** Her hata ne olduğunu, nerede olduğunu (dosya:satır, JSON yolu) ve ne yapılacağını söyler.
 - **Klavye:** Her işlem klavyeyle yapılabilir; komut paleti tüm istekleri, environment'ları ve komutları arar.
 - **Dar pencere:** Kenar çubuğu ve paneller sarmalanır; sabit genişlik yoktur.

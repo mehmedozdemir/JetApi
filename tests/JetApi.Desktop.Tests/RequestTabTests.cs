@@ -50,6 +50,35 @@ public sealed class RequestTabTests(EchoServer server) : IClassFixture<EchoServe
     }
 
     [Fact]
+    public async Task Variables_DescribeValuesAndFollowTheActiveEnvironment()
+    {
+        var (workspace, vm, _) = await SetupAsync(server.BaseUrl);
+        using (workspace)
+        using (vm)
+        {
+            vm.OpenNode(vm.Collections[0].Children[0]);
+            var tab = vm.SelectedTab!;
+            var variables = tab.Variables;
+
+            variables.IsDefined("baseUrl").ShouldBeTrue();
+            variables.IsDefined("missing").ShouldBeFalse();
+            variables.Describe("token").Value.ShouldBe("••••••••");
+            variables.Describe("token").Description.ShouldContain("Development");
+            variables.DescribeAt("{{baseUrl}}/x", 3)!.Value.ShouldBe(server.BaseUrl.TrimEnd('/'));
+            variables.DescribeAt("{{baseUrl}}/x", 12).ShouldBeNull();
+            variables.DescribeAt("{{missing}}", 0)!.IsDefined.ShouldBeFalse();
+
+            var changed = new List<string?>();
+            tab.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+            vm.SelectedEnvironment = vm.EnvironmentOptions.First(o => o.Key != "dev");
+
+            changed.ShouldContain(nameof(RequestTabViewModel.Variables));
+            tab.Variables.ShouldNotBeSameAs(variables);
+            tab.Variables.IsDefined("baseUrl").ShouldBeFalse();
+        }
+    }
+
+    [Fact]
     public async Task UndefinedVariables_AreConfirmedBeforeSending()
     {
         var (workspace, vm, dialogs) = await SetupAsync(server.BaseUrl);

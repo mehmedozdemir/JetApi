@@ -78,7 +78,12 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
         Key = request.Key;
         Description = request.Description;
         _savedYaml = path is null ? string.Empty : RequestFiles.Serialize(request);
+        Variables = CreateVariableContext();
     }
+
+    /// <summary>Variables visible to this tab, for highlighting and hover hints in editors.</summary>
+    [ObservableProperty]
+    public partial VariableContext Variables { get; private set; }
 
     /// <summary>The workspace.</summary>
     protected IRequestHost Host { get; }
@@ -207,7 +212,11 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     }
 
     /// <summary>Called after the active environment or workspace changed.</summary>
-    public virtual void OnContextChanged() => OnPropertyChanged(nameof(Breadcrumb));
+    public virtual void OnContextChanged()
+    {
+        Variables = CreateVariableContext();
+        OnPropertyChanged(nameof(Breadcrumb));
+    }
 
     /// <summary>Sends using the current editor state.</summary>
     protected abstract Task SendCoreAsync(CancellationToken cancellationToken);
@@ -233,23 +242,20 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     }
 
     /// <summary>Hints for every variable referenced in <paramref name="templates"/>.</summary>
-    protected IReadOnlyList<VariableHint> BuildHints(params string[] templates)
+    protected IReadOnlyList<VariableHint> BuildHints(params string[] templates) =>
+        [.. templates.SelectMany(VariableResolver.FindReferences).Distinct(StringComparer.Ordinal).Select(Variables.Describe)];
+
+    private VariableContext CreateVariableContext()
     {
         var resolver = RequestRunner.CreateResolver(Host.Session, CollectionKey);
-        return
-        [
-            .. templates
-                .SelectMany(VariableResolver.FindReferences)
-                .Distinct(StringComparer.Ordinal)
-                .Select(name =>
-                {
-                    var lookup = resolver.Lookup(name);
-                    var placeholder = "{{" + name + "}}";
-                    return lookup is null
-                        ? new VariableHint(placeholder, string.Empty, Loc.Get("Req_VariableUndefined"), false)
-                        : new VariableHint(placeholder, lookup.IsSecret ? "••••••••" : lookup.Value, Loc.Format("Req_VariableSource", DescribeSource(lookup.Source)), true);
-                }),
-        ];
+        return new VariableContext(name =>
+        {
+            var lookup = resolver.Lookup(name);
+            var placeholder = "{{" + name + "}}";
+            return lookup is null
+                ? new VariableHint(placeholder, string.Empty, Loc.Get("Req_VariableUndefined"), false)
+                : new VariableHint(placeholder, lookup.IsSecret ? "••••••••" : lookup.Value, Loc.Format("Req_VariableSource", DescribeSource(lookup.Source)), true);
+        });
     }
 
     private string DescribeSource(VariableSource? source) => source switch

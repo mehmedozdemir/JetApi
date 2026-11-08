@@ -32,6 +32,19 @@ public sealed record ResolvedText(string Value, IReadOnlyList<VariableIssue> Iss
 /// <param name="IsSecret">Whether the value should be masked.</param>
 public sealed record VariableLookup(string Value, VariableSource? Source, bool IsSecret);
 
+/// <summary>A <c>{{name}}</c> placeholder found in a text.</summary>
+/// <param name="Start">Index of the first <c>{</c>.</param>
+/// <param name="Length">Length including both braces pairs.</param>
+/// <param name="Name">The variable name, trimmed.</param>
+public sealed record VariablePlaceholder(int Start, int Length, string Name)
+{
+    /// <summary>Index just after the closing braces.</summary>
+    public int End => Start + Length;
+
+    /// <summary>True when <paramref name="index"/> falls inside the placeholder.</summary>
+    public bool Contains(int index) => index >= Start && index < End;
+}
+
 /// <summary>
 /// Substitutes <c>{{name}}</c> placeholders using layered variables (global &lt; collection &lt;
 /// environment &lt; runtime) and built-in dynamic variables. Values may reference other variables;
@@ -116,6 +129,28 @@ public sealed class VariableResolver
         }
 
         return names;
+    }
+
+    /// <summary>
+    /// Returns every placeholder in <paramref name="text"/> with its position, in order, including repeats.
+    /// Editors use this to highlight variables and to find the one under the pointer.
+    /// </summary>
+    public static IReadOnlyList<VariablePlaceholder> FindPlaceholders(string? text)
+    {
+        var placeholders = new List<VariablePlaceholder>();
+        if (string.IsNullOrEmpty(text))
+        {
+            return placeholders;
+        }
+
+        var position = 0;
+        while (TryFindPlaceholder(text, position, out var start, out var end, out var name))
+        {
+            placeholders.Add(new VariablePlaceholder(start, end - start, name));
+            position = end;
+        }
+
+        return placeholders;
     }
 
     private string ResolveCore(string template, Stack<string> resolving, List<VariableIssue> issues)

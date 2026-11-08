@@ -16,5 +16,6 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 - Workspace oturumu: her değişiklik anında diske yazılır; aktif environment makineye özel saklanır; diskteki değişiklikler (`git pull`) otomatik yüklenir.
 - İstek geçmişi (`.jetapi/history.jsonl`, Git dışı).
 - Gönderimden önce tanımsız değişken uyarısı.
+- Editörlerde değişken vurgulama (tanımlı/tanımsız ayrı renk) ve üzerine gelince çözümlenmiş değer ile kaynağı gösterme.
 - HTTP bağlantı hataları için hata türü (`HttpErrorKind`); arayüz bunları seçili dilde açıklar.
 - Windows, macOS ve Linux üzerinde CI.

@@ -30,7 +30,7 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 - [x] Environment editörü (environment, global ve koleksiyon kapsamları), çözümlenmiş değer, gizli değer maskeleme, tanımsız değişken uyarısı
 - [x] Geçmiş (`.jetapi/`, Git dışı); geçmişten yeniden açma
 - [x] Klavye kısayolları ve komut paleti; açık/koyu tema; Türkçe/İngilizce (yeniden başlatmadan)
-- [ ] Editör içinde değişken vurgulama ve üzerine gelince değer gösterme
+- [x] Editör içinde değişken vurgulama ve üzerine gelince değer gösterme
 - [ ] Motor mesajlarının tamamen yerelleştirilmesi (HTTP bağlantı hataları yerelleştirildi; istek hazırlama ve proto/JSON hataları henüz İngilizce)
 - [ ] Paketleme: Windows (zip/MSIX), macOS (dmg), Linux (AppImage/tar.gz); GitHub Releases
 - [ ] Performans ölçümü: açılış süresi ve bellek (NFR-1, NFR-2)
