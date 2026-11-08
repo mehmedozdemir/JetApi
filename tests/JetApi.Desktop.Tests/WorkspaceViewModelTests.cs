@@ -199,6 +199,55 @@ public sealed class WorkspaceViewModelTests
     }
 
     [Fact]
+    public async Task ClickingACollection_OpensItsScreen_AndLeavingSavesEdits()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        using var vm = workspace.CreateViewModel(new FakeDialogs());
+        var collection = vm.Collections[0];
+
+        vm.OpenNode(collection);
+
+        var screen = vm.NodeSettings.ShouldNotBeNull();
+        collection.IsExpanded.ShouldBeTrue();
+        screen.IsCollection.ShouldBeTrue();
+        screen.Section.ShouldBe(NodeSettingsSection.Variables);
+        screen.HasChanges.ShouldBeFalse();
+
+        var variables = screen.Variables.ShouldNotBeNull();
+        variables.Rows[^1].Name = "apiVersion";
+        variables.Rows[^2].Value = "v2";
+        screen.VariablesBadge.ShouldBe("1");
+        screen.HasChanges.ShouldBeTrue();
+
+        vm.OpenNode(collection.Children.First(c => c.IsRequest));
+
+        vm.NodeSettings.ShouldBeNull();
+        vm.SelectedTab.ShouldNotBeNull();
+        await (screen.SaveCommand.ExecutionTask ?? Task.CompletedTask);
+        workspace.Read($"collections/{collection.CollectionKey}/collection.yaml").ShouldContain("name: apiVersion");
+    }
+
+    [Fact]
+    public async Task ACollectionScreen_IsNotClosedByTheOneItReplaced()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        using var vm = workspace.CreateViewModel(new FakeDialogs());
+        await vm.NewCollectionCommand.ExecuteAsync(null);
+        var first = vm.Collections[0];
+        var second = vm.Collections[1];
+
+        vm.OpenNode(first);
+        var old = vm.NodeSettings!;
+        old.Name = "Renamed";
+        vm.OpenNode(second);
+        var current = vm.NodeSettings.ShouldNotBeNull();
+        current.CollectionKey.ShouldBe(second.CollectionKey);
+
+        await (old.SaveCommand.ExecutionTask ?? Task.CompletedTask);
+        vm.NodeSettings.ShouldBeSameAs(current);
+    }
+
+    [Fact]
     public async Task SidebarModes_OpenAndCloseTheEnvironmentEditor()
     {
         using var workspace = await TempWorkspace.CreateAsync();

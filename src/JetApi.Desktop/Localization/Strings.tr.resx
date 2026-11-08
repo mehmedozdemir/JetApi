@@ -54,10 +54,10 @@
   <data name="Cmd_Reload" xml:space="preserve"><value>Workspace’i diskten yeniden yükle</value></data>
   <data name="Cmd_ToggleLanguage" xml:space="preserve"><value>Türkçe / English</value></data>
   <data name="Cmd_ToggleTheme" xml:space="preserve"><value>Temayı değiştir</value></data>
-  <data name="Col_FolderTitle" xml:space="preserve"><value>Klasör ayarları</value></data>
+  <data name="Col_FolderTitle" xml:space="preserve"><value>Klasör</value></data>
   <data name="Col_Name" xml:space="preserve"><value>Ad</value></data>
-  <data name="Col_Title" xml:space="preserve"><value>Koleksiyon ayarları</value></data>
-  <data name="Col_Variables" xml:space="preserve"><value>Koleksiyon değişkenleri</value></data>
+  <data name="Col_Title" xml:space="preserve"><value>Koleksiyon</value></data>
+  <data name="Col_Variables" xml:space="preserve"><value>Değişkenler</value></data>
   <data name="Confirm_CloseUnsaved" xml:space="preserve"><value>“{0}” kaydedilmemiş değişiklikler içeriyor. Yine de kapatılsın mı?</value></data>
   <data name="Confirm_Delete" xml:space="preserve"><value>“{0}” silinsin mi? Dosyaları workspace klasöründen kaldırılır.</value></data>
   <data name="Confirm_DeleteCollection" xml:space="preserve"><value>“{0}” koleksiyonu ve tüm istekleri silinsin mi? Klasörü workspace’ten kaldırılır.</value></data>
@@ -66,7 +66,6 @@
   <data name="Env_Active" xml:space="preserve"><value>Aktif</value></data>
   <data name="Env_AddVariable" xml:space="preserve"><value>Değişken ekle</value></data>
   <data name="Env_Back" xml:space="preserve"><value>İsteklere dön</value></data>
-  <data name="Env_CollectionScope" xml:space="preserve"><value>{0} koleksiyonu</value></data>
   <data name="Env_Delete" xml:space="preserve"><value>Environment’ı sil</value></data>
   <data name="Env_Disabled" xml:space="preserve"><value>(kapalı)</value></data>
   <data name="Env_DynamicHint" xml:space="preserve"><value>Dinamik değişkenler: $guid, $timestamp, $timestampMs, $isoTimestamp, $randomInt. Değişkenler birbirine başvurabilir; döngüler tespit edilir.</value></data>
@@ -267,4 +266,9 @@
   <data name="Env_PrecedenceLine" xml:space="preserve"><value>Aynı ad birden fazla yerde tanımlıysa en özel olan kazanır: çalışma anı › aktif environment › koleksiyon › global.</value></data>
   <data name="Side_EnvironmentsTip" xml:space="preserve"><value>Environment’lar (Ctrl+E)</value></data>
   <data name="Menu_Open" xml:space="preserve"><value>Aç</value></data>
+  <data name="Col_Subtitle" xml:space="preserve"><value>collections/{0}/collection.yaml · {1} istek</value></data>
+  <data name="Col_OverriddenBy" xml:space="preserve"><value>{0} da bu adı tanımlıyor; onun değeri kullanılır</value></data>
+  <data name="Col_Proto" xml:space="preserve"><value>gRPC proto</value></data>
+  <data name="Col_General" xml:space="preserve"><value>Genel</value></data>
+  <data name="Col_VariablesHint" xml:space="preserve"><value>Bu değişkenleri yalnızca bu koleksiyondaki istekler görür. collection.yaml dosyasına kaydedilir ve Git’e girer. Aynı ad aktif environment’ta da tanımlıysa onun değeri kullanılır.</value></data>
 </root>

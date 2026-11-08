@@ -6,30 +6,102 @@
              xmlns:l="using:JetApi.Desktop.Localization"
              x:Class="JetApi.Desktop.Views.NodeSettingsView"
              x:DataType="vm:NodeSettingsViewModel">
-  <Grid RowDefinitions="48,*,Auto" Background="{DynamicResource App.Surface}">
-    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="12,0">
-      <StackPanel Orientation="Horizontal" Spacing="12">
-        <Button Classes="flat" Command="{Binding CancelCommand}">
-          <StackPanel Orientation="Horizontal" Spacing="6">
-            <c:Icon Data="{StaticResource Icon.Back}" />
-            <TextBlock Text="{l:Tr Env_Back}" />
-          </StackPanel>
-        </Button>
-        <TextBlock Classes="h3" VerticalAlignment="Center" Text="{Binding Title}" />
+  <!-- The collection screen (variables, auth, proto, name) or folder settings (auth, name). -->
+  <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource App.Surface}">
+    <Grid ColumnDefinitions="*,Auto" Margin="28,22,28,14">
+      <StackPanel Spacing="2">
+        <TextBlock Classes="faint small" Text="{Binding Title}" />
+        <TextBlock Classes="h2" FontWeight="SemiBold" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+        <TextBlock Classes="mono faint" FontSize="12" Text="{Binding Subtitle}" IsVisible="{Binding IsCollection}" />
       </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Button Classes="secondary" Content="{l:Tr Btn_Close}" Command="{Binding CancelCommand}" />
+        <Button Classes="primary" Content="{l:Tr Btn_Save}" Command="{Binding SaveCommand}" IsEnabled="{Binding HasChanges}" />
+      </StackPanel>
+    </Grid>
+
+    <Border Grid.Row="1" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="18,0,28,0">
+      <Grid ColumnDefinitions="*,Auto">
+      <CheckBox Grid.Column="1" VerticalAlignment="Center" Content="{l:Tr Env_Reveal}" IsChecked="{Binding Variables.RevealSecrets, FallbackValue=False}"
+                IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Variables}" />
+      <StackPanel Orientation="Horizontal" Spacing="4">
+        <RadioButton Classes="tab" GroupName="node" IsVisible="{Binding IsCollection}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Variables}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock Text="{l:Tr Col_Variables}" />
+            <Border Classes="badge" IsVisible="{Binding VariablesBadge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <TextBlock Text="{Binding VariablesBadge}" />
+            </Border>
+          </StackPanel>
+        </RadioButton>
+        <RadioButton Classes="tab" GroupName="node" Content="{l:Tr Req_Auth}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Auth}" />
+        <RadioButton Classes="tab" GroupName="node" Content="{l:Tr Col_Proto}" IsVisible="{Binding IsCollection}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Proto}" />
+        <RadioButton Classes="tab" GroupName="node" Content="{l:Tr Col_General}"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=General}" />
+      </StackPanel>
+      </Grid>
     </Border>
-    <ScrollViewer Grid.Row="1">
-      <StackPanel Margin="24,20" Spacing="20" MaxWidth="720" HorizontalAlignment="Left">
-        <StackPanel>
-          <TextBlock Classes="field-label" Text="{l:Tr Col_Name}" />
-          <TextBox Text="{Binding Name}" Width="420" HorizontalAlignment="Left" />
-        </StackPanel>
-        <StackPanel Spacing="8">
-          <TextBlock Classes="h3" Text="{l:Tr Req_Auth}" />
+
+    <ScrollViewer Grid.Row="2">
+      <Panel Margin="28,18,28,28">
+        <!-- Variables -->
+        <ContentControl Content="{Binding Variables}" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Variables}">
+          <ContentControl.DataTemplates>
+            <DataTemplate x:DataType="vm:EnvironmentsViewModel">
+              <StackPanel Spacing="14">
+                <StackPanel>
+                  <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
+                    <Grid ColumnDefinitions="40,*,*,*,64,36" Height="34">
+                      <TextBlock Grid.Column="1" Classes="faint small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Env_Name}" />
+                      <TextBlock Grid.Column="2" Classes="faint small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Req_Value}" />
+                      <TextBlock Grid.Column="3" Classes="faint small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Env_Resolved}" />
+                      <TextBlock Grid.Column="4" Classes="faint small" VerticalAlignment="Center" Text="{l:Tr Env_Secret}" />
+                    </Grid>
+                  </Border>
+                  <ItemsControl ItemsSource="{Binding Rows}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:VariableRowViewModel">
+                        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
+                          <Grid ColumnDefinitions="40,*,*,*,64,36" MinHeight="38">
+                            <CheckBox IsChecked="{Binding IsEnabled}" HorizontalAlignment="Center" IsVisible="{Binding !IsPlaceholder}" />
+                            <TextBox Grid.Column="1" Classes="cell mono" Text="{Binding Name}" PlaceholderText="{l:Tr Env_AddVariable}" />
+                            <Panel Grid.Column="2">
+                              <TextBox Classes="cell mono" Text="{Binding Value}" IsVisible="{Binding !IsMasked}" />
+                              <TextBox Classes="cell mono" Text="{Binding Value}" IsVisible="{Binding IsMasked}" PasswordChar="•" />
+                            </Panel>
+                            <StackPanel Grid.Column="3" Margin="6,0" VerticalAlignment="Center">
+                              <TextBlock Classes="mono muted" Text="{Binding Resolved}" TextTrimming="CharacterEllipsis" />
+                              <TextBlock Classes="small" Foreground="{DynamicResource Tone.Warning.Fg}" Text="{Binding Note}" TextTrimming="CharacterEllipsis"
+                                         IsVisible="{Binding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="4" IsChecked="{Binding IsSecret}" IsVisible="{Binding !IsPlaceholder}" />
+                            <Button Grid.Column="5" Classes="icon" IsVisible="{Binding !IsPlaceholder}" AutomationProperties.Name="{l:Tr Btn_Remove}"
+                                    ToolTip.Tip="{l:Tr Btn_Remove}" Command="{Binding RemoveCommand}">
+                              <c:Icon Data="{StaticResource Icon.Close}" Width="12" Height="12" />
+                            </Button>
+                          </Grid>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+                <TextBlock Classes="faint small" TextWrapping="Wrap" LineHeight="19" Text="{l:Tr Col_VariablesHint}" />
+              </StackPanel>
+            </DataTemplate>
+          </ContentControl.DataTemplates>
+        </ContentControl>
+
+        <!-- Auth -->
+        <StackPanel Spacing="8" MaxWidth="640" HorizontalAlignment="Left"
+                    IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Auth}">
           <v:AuthEditorView DataContext="{Binding Auth}" />
         </StackPanel>
-        <StackPanel Spacing="12" IsVisible="{Binding IsCollection}">
-          <TextBlock Classes="h3" Text="gRPC · proto" />
+
+        <!-- Proto -->
+        <StackPanel Spacing="14" MaxWidth="640" HorizontalAlignment="Left"
+                    IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Proto}">
           <StackPanel>
             <TextBlock Classes="field-label" Text="{l:Tr Grpc_ImportPaths}" />
             <TextBox Classes="mono" AcceptsReturn="True" MinHeight="64" VerticalContentAlignment="Top" Text="{Binding ImportPathsText}" PlaceholderText="protos" />
@@ -39,13 +111,14 @@
             <TextBox Classes="mono" AcceptsReturn="True" MinHeight="80" VerticalContentAlignment="Top" Text="{Binding ProtoFilesText}" PlaceholderText="users/v1/users.proto" />
           </StackPanel>
         </StackPanel>
-      </StackPanel>
+
+        <!-- General -->
+        <StackPanel MaxWidth="640" HorizontalAlignment="Left"
+                    IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=General}">
+          <TextBlock Classes="field-label" Text="{l:Tr Col_Name}" />
+          <TextBox Text="{Binding Name}" Width="420" HorizontalAlignment="Left" />
+        </StackPanel>
+      </Panel>
     </ScrollViewer>
-    <Border Grid.Row="2" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="24,12">
-      <StackPanel Orientation="Horizontal" Spacing="8">
-        <Button Classes="primary" Content="{l:Tr Btn_Save}" Command="{Binding SaveCommand}" />
-        <Button Classes="secondary" Content="{l:Tr Btn_Cancel}" Command="{Binding CancelCommand}" />
-      </StackPanel>
-    </Border>
   </Grid>
 </UserControl>

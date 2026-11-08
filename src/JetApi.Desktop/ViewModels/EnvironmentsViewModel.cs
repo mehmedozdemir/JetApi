@@ -99,6 +99,10 @@ public sealed partial class VariableRowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isRevealed;
 
+    /// <summary>"Development overrides this" when the active environment defines the same name; collection scope only.</summary>
+    [ObservableProperty]
+    private string _note = string.Empty;
+
     /// <summary>The empty row at the end.</summary>
     public bool IsPlaceholder => Name.Length == 0 && Value.Length == 0;
 
@@ -125,6 +129,7 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
     private readonly WorkspaceSession _session;
     private readonly IDialogService _dialogs;
     private readonly Action _close;
+    private readonly string? _collectionKey;
     private bool _loading;
 
     [ObservableProperty]
@@ -140,7 +145,17 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
 
     /// <summary>Creates the editor.</summary>
     public EnvironmentsViewModel(WorkspaceSession session, IDialogService dialogs, Action close)
+        : this(session, dialogs, close, null)
     {
+    }
+
+    /// <summary>
+    /// Creates an editor fixed to one collection's variables (the collection screen) when
+    /// <paramref name="collectionKey"/> is given; otherwise the environment editor with environments and globals.
+    /// </summary>
+    public EnvironmentsViewModel(WorkspaceSession session, IDialogService dialogs, Action close, string? collectionKey)
+    {
+        _collectionKey = collectionKey;
         _session = session;
         _dialogs = dialogs;
         _close = close;
@@ -378,10 +393,17 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         }
 
         OtherScopes.Clear();
-        OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Global, string.Empty, Loc.Get("Env_Global"), false, workspace.GlobalVariables.Count)));
-        foreach (var collection in workspace.Collections)
+        if (_collectionKey is null)
         {
-            OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Collection, collection.Key, Loc.Format("Env_CollectionScope", collection.Name), false, collection.Variables.Count)));
+            OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Global, string.Empty, Loc.Get("Env_Global"), false, workspace.GlobalVariables.Count)));
+        }
+        else
+        {
+            // Collection variables are edited on the collection screen, one collection at a time.
+            Environments.Clear();
+            var collection = workspace.FindCollection(_collectionKey) ?? throw new ArgumentException("Unknown collection.", nameof(select));
+            OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Collection, collection.Key, collection.Name, false, collection.Variables.Count)));
+            select = (ScopeKind.Collection, collection.Key);
         }
 
         var all = Environments.Concat(OtherScopes).ToList();
@@ -505,6 +527,11 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
                 var value = resolver.Resolve(row.Value).Value;
                 row.Resolved = row.IsSecret && !RevealSecrets && value.Length > 0 ? "••••••••" : value;
             }
+
+            row.Note = SelectedScope?.Kind == ScopeKind.Collection && !row.IsPlaceholder && _session.ActiveEnvironment is { } environment
+                && environment.Variables.Any(v => v.IsEnabled && v.Name == row.Name.Trim())
+                ? Loc.Format("Col_OverriddenBy", environment.Name)
+                : string.Empty;
         }
     }
 }

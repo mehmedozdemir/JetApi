@@ -103,10 +103,18 @@ public sealed class EnvironmentsViewModelTests
         await vm.SaveAsync();
         workspace.Read("jetapi.yaml").ShouldContain("name: region");
 
-        vm.SelectCommand.Execute(vm.OtherScopes[1]);
-        vm.FileName.ShouldBe("collections/examples/collection.yaml");
-        vm.Rows[^1].Name = "version";
-        await vm.SaveAsync();
+        // Collection variables are edited on the collection screen, not in this list.
+        vm.OtherScopes.ShouldHaveSingleItem().Kind.ShouldBe(ScopeKind.Global);
+
+        var collection = new EnvironmentsViewModel(workspace.Session, new FakeDialogs(), () => { }, "examples");
+        collection.Environments.ShouldBeEmpty();
+        collection.SelectedScope!.Kind.ShouldBe(ScopeKind.Collection);
+        collection.FileName.ShouldBe("collections/examples/collection.yaml");
+        collection.Rows[^1].Name = "version";
+        collection.Rows[^1].Name = "baseUrl";
+        collection.Rows.Single(r => r.Name == "baseUrl").Note.ShouldContain("Development");
+        collection.Rows.Single(r => r.Name == "version").Note.ShouldBeEmpty();
+        await collection.SaveAsync();
         workspace.Read("collections/examples/collection.yaml").ShouldContain("name: version");
     }
 }

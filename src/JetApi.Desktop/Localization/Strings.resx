@@ -54,10 +54,10 @@
   <data name="Cmd_Reload" xml:space="preserve"><value>Reload workspace from disk</value></data>
   <data name="Cmd_ToggleLanguage" xml:space="preserve"><value>Türkçe / English</value></data>
   <data name="Cmd_ToggleTheme" xml:space="preserve"><value>Switch theme</value></data>
-  <data name="Col_FolderTitle" xml:space="preserve"><value>Folder settings</value></data>
+  <data name="Col_FolderTitle" xml:space="preserve"><value>Folder</value></data>
   <data name="Col_Name" xml:space="preserve"><value>Name</value></data>
-  <data name="Col_Title" xml:space="preserve"><value>Collection settings</value></data>
-  <data name="Col_Variables" xml:space="preserve"><value>Collection variables</value></data>
+  <data name="Col_Title" xml:space="preserve"><value>Collection</value></data>
+  <data name="Col_Variables" xml:space="preserve"><value>Variables</value></data>
   <data name="Confirm_CloseUnsaved" xml:space="preserve"><value>“{0}” has unsaved changes. Close it anyway?</value></data>
   <data name="Confirm_Delete" xml:space="preserve"><value>Delete “{0}”? Its files are removed from the workspace folder.</value></data>
   <data name="Confirm_DeleteCollection" xml:space="preserve"><value>Delete the collection “{0}” and all its requests? Its folder is removed from the workspace.</value></data>
@@ -66,7 +66,6 @@
   <data name="Env_Active" xml:space="preserve"><value>Active</value></data>
   <data name="Env_AddVariable" xml:space="preserve"><value>Add variable</value></data>
   <data name="Env_Back" xml:space="preserve"><value>Back to requests</value></data>
-  <data name="Env_CollectionScope" xml:space="preserve"><value>{0} collection</value></data>
   <data name="Env_Delete" xml:space="preserve"><value>Delete environment</value></data>
   <data name="Env_Disabled" xml:space="preserve"><value>(disabled)</value></data>
   <data name="Env_DynamicHint" xml:space="preserve"><value>Dynamic variables: $guid, $timestamp, $timestampMs, $isoTimestamp, $randomInt. Variables may refer to each other; cycles are detected.</value></data>
@@ -267,4 +266,9 @@
   <data name="Env_PrecedenceLine" xml:space="preserve"><value>When a name is defined in several places, the most specific wins: runtime › active environment › collection › global.</value></data>
   <data name="Side_EnvironmentsTip" xml:space="preserve"><value>Environments (Ctrl+E)</value></data>
   <data name="Menu_Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Col_Subtitle" xml:space="preserve"><value>collections/{0}/collection.yaml · {1} requests</value></data>
+  <data name="Col_OverriddenBy" xml:space="preserve"><value>{0} defines this name too; its value wins</value></data>
+  <data name="Col_Proto" xml:space="preserve"><value>gRPC proto</value></data>
+  <data name="Col_General" xml:space="preserve"><value>General</value></data>
+  <data name="Col_VariablesHint" xml:space="preserve"><value>Only requests in this collection see these variables. They are saved in collection.yaml and go to Git. If the active environment defines the same name, its value is used.</value></data>
 </root>

@@ -207,6 +207,14 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     public void OpenNode(TreeNodeViewModel node)
     {
         ArgumentNullException.ThrowIfNull(node);
+        if (node.IsCollection)
+        {
+            // A collection opens its screen (variables, auth, proto); the chevron collapses it.
+            node.IsExpanded = true;
+            OpenNodeSettings(node);
+            return;
+        }
+
         if (node.IsContainer)
         {
             node.IsExpanded = !node.IsExpanded;
@@ -219,6 +227,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <summary>Opens the request at <paramref name="path"/> or focuses its tab.</summary>
     public RequestTabViewModel? OpenRequest(string collectionKey, IReadOnlyList<string> path)
     {
+        LeaveNodeSettings();
         var identity = $"{collectionKey}/{string.Join('/', path)}";
         if (Tabs.FirstOrDefault(t => t.Identity == identity) is { } existing)
         {
@@ -412,7 +421,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         if (node.IsContainer)
         {
             SidebarMode = SidebarMode.Collections;
-            NodeSettings = new NodeSettingsViewModel(Session, Dialogs, node.CollectionKey, node.Path, _ => NodeSettings = null);
+            ShowNodeSettings(node.CollectionKey, node.Path);
         }
     }
 
@@ -443,6 +452,42 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     [RelayCommand]
     private Task SendSelectedAsync() => SelectedTab?.SendAsync() ?? Task.CompletedTask;
 
+    // Opens the collection screen or folder settings; a screen already open for the same node stays as it is.
+    private void ShowNodeSettings(string collectionKey, IReadOnlyList<string> path)
+    {
+        if (NodeSettings is { } open && open.CollectionKey == collectionKey && open.Path.SequenceEqual(path))
+        {
+            return;
+        }
+
+        LeaveNodeSettings();
+        NodeSettingsViewModel? screen = null;
+        screen = new NodeSettingsViewModel(Session, Dialogs, collectionKey, path, _ =>
+        {
+            // Only this screen closes itself; a newer one opened meanwhile stays.
+            if (ReferenceEquals(NodeSettings, screen))
+            {
+                NodeSettings = null;
+            }
+        });
+        NodeSettings = screen;
+    }
+
+    // Leaves the collection screen, writing its edits if there are any (opening a request or another screen).
+    private void LeaveNodeSettings()
+    {
+        if (NodeSettings is not { } screen)
+        {
+            return;
+        }
+
+        NodeSettings = null;
+        if (screen.HasChanges)
+        {
+            screen.SaveCommand.Execute(null);
+        }
+    }
+
     /// <summary>The sidebar shows the history list.</summary>
     public bool IsHistoryVisible
     {
@@ -460,7 +505,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     [RelayCommand]
     public void ShowEnvironments()
     {
-        NodeSettings = null;
+        LeaveNodeSettings();
         Environments ??= new EnvironmentsViewModel(Session, Dialogs, () =>
         {
             Environments = null;
@@ -590,7 +635,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         if (Session.Workspace.FindCollection(collectionKey) is not null)
         {
             SidebarMode = SidebarMode.Collections;
-            NodeSettings = new NodeSettingsViewModel(Session, Dialogs, collectionKey, [], _ => NodeSettings = null);
+            ShowNodeSettings(collectionKey, []);
         }
     }
 

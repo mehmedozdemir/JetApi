@@ -95,7 +95,7 @@ public sealed partial class WorkspaceView : UserControl
     {
         if (_pressedNode is { } node && e.InitialPressMouseButton == MouseButton.Left)
         {
-            if (node.IsRequest)
+            if (node.IsRequest || (node.IsCollection && !IsOnExpander(e.Source)))
             {
                 ViewModel?.OpenNode(node);
             }
