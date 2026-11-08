@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- UI strings. Every key must exist in both Strings.resx (English) and Strings.tr.resx (Turkish); a test checks this. -->
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AppName" xml:space="preserve"><value>JetApi</value></data>
+  <data name="Auth_ApiKey" xml:space="preserve"><value>API key</value></data>
+  <data name="Auth_Basic" xml:space="preserve"><value>Basic</value></data>
+  <data name="Auth_Bearer" xml:space="preserve"><value>Bearer token</value></data>
+  <data name="Auth_ExplicitHeaderWins" xml:space="preserve"><value>Kendi eklediğiniz Authorization header’ı önceliklidir.</value></data>
+  <data name="Auth_InHeader" xml:space="preserve"><value>Header</value></data>
+  <data name="Auth_InQuery" xml:space="preserve"><value>Query parametresi</value></data>
+  <data name="Auth_Inherit" xml:space="preserve"><value>Üst öğeden miras al</value></data>
+  <data name="Auth_InheritedFrom" xml:space="preserve"><value>“{0}” öğesinin auth ayarını kullanıyor: {1}.</value></data>
+  <data name="Auth_InheritedNone" xml:space="preserve"><value>Hiçbir üst öğe auth tanımlamıyor, auth gönderilmez.</value></data>
+  <data name="Auth_KeyName" xml:space="preserve"><value>Anahtar adı</value></data>
+  <data name="Auth_KeyValue" xml:space="preserve"><value>Değer</value></data>
+  <data name="Auth_None" xml:space="preserve"><value>Yok</value></data>
+  <data name="Auth_Password" xml:space="preserve"><value>Şifre</value></data>
+  <data name="Auth_SendIn" xml:space="preserve"><value>Gönderim yeri</value></data>
+  <data name="Auth_Token" xml:space="preserve"><value>Token</value></data>
+  <data name="Auth_Type" xml:space="preserve"><value>Tür</value></data>
+  <data name="Auth_Username" xml:space="preserve"><value>Kullanıcı adı</value></data>
+  <data name="Btn_Add" xml:space="preserve"><value>Ekle</value></data>
+  <data name="Btn_Browse" xml:space="preserve"><value>Gözat…</value></data>
+  <data name="Btn_Cancel" xml:space="preserve"><value>Vazgeç</value></data>
+  <data name="Btn_Cancel_Request" xml:space="preserve"><value>İptal</value></data>
+  <data name="Btn_Close" xml:space="preserve"><value>Kapat</value></data>
+  <data name="Btn_Copy" xml:space="preserve"><value>Kopyala</value></data>
+  <data name="Btn_Create" xml:space="preserve"><value>Oluştur</value></data>
+  <data name="Btn_Delete" xml:space="preserve"><value>Sil</value></data>
+  <data name="Btn_Dismiss" xml:space="preserve"><value>Kapat</value></data>
+  <data name="Btn_FillTemplate" xml:space="preserve"><value>Şablonla doldur</value></data>
+  <data name="Btn_Format" xml:space="preserve"><value>Biçimlendir</value></data>
+  <data name="Btn_Invoke" xml:space="preserve"><value>Çağır</value></data>
+  <data name="Btn_NewTab" xml:space="preserve"><value>Yeni istek</value></data>
+  <data name="Btn_Ok" xml:space="preserve"><value>Tamam</value></data>
+  <data name="Btn_OpenEnvironments" xml:space="preserve"><value>Environment’ları aç</value></data>
+  <data name="Btn_Remove" xml:space="preserve"><value>Kaldır</value></data>
+  <data name="Btn_Retry" xml:space="preserve"><value>Tekrar dene</value></data>
+  <data name="Btn_Save" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Btn_SaveToFile" xml:space="preserve"><value>Dosyaya kaydet</value></data>
+  <data name="Btn_Send" xml:space="preserve"><value>Gönder</value></data>
+  <data name="Btn_SendAnyway" xml:space="preserve"><value>Yine de gönder</value></data>
+  <data name="Cmd_CloseWorkspace" xml:space="preserve"><value>Workspace’i kapat</value></data>
+  <data name="Cmd_Environments" xml:space="preserve"><value>Environment’ları düzenle</value></data>
+  <data name="Cmd_History" xml:space="preserve"><value>Geçmişi göster</value></data>
+  <data name="Cmd_NewCollection" xml:space="preserve"><value>Yeni koleksiyon</value></data>
+  <data name="Cmd_NewGrpc" xml:space="preserve"><value>Yeni gRPC isteği</value></data>
+  <data name="Cmd_NewHttp" xml:space="preserve"><value>Yeni HTTP isteği</value></data>
+  <data name="Cmd_Reload" xml:space="preserve"><value>Workspace’i diskten yeniden yükle</value></data>
+  <data name="Cmd_ToggleLanguage" xml:space="preserve"><value>Türkçe / English</value></data>
+  <data name="Cmd_ToggleTheme" xml:space="preserve"><value>Temayı değiştir</value></data>
+  <data name="Col_FolderTitle" xml:space="preserve"><value>Klasör ayarları</value></data>
+  <data name="Col_Name" xml:space="preserve"><value>Ad</value></data>
+  <data name="Col_Title" xml:space="preserve"><value>Koleksiyon ayarları</value></data>
+  <data name="Col_Variables" xml:space="preserve"><value>Koleksiyon değişkenleri</value></data>
+  <data name="Confirm_CloseUnsaved" xml:space="preserve"><value>“{0}” kaydedilmemiş değişiklikler içeriyor. Yine de kapatılsın mı?</value></data>
+  <data name="Confirm_Delete" xml:space="preserve"><value>“{0}” silinsin mi? Dosyaları workspace klasöründen kaldırılır.</value></data>
+  <data name="Confirm_DeleteCollection" xml:space="preserve"><value>“{0}” koleksiyonu ve tüm istekleri silinsin mi? Klasörü workspace’ten kaldırılır.</value></data>
+  <data name="Copy_Suffix" xml:space="preserve"><value>{0} (kopya)</value></data>
+  <data name="Diag_Skipped" xml:space="preserve"><value>{0} dosya atlandı, workspace’in geri kalanı yüklendi</value></data>
+  <data name="Env_Active" xml:space="preserve"><value>Aktif</value></data>
+  <data name="Env_AddVariable" xml:space="preserve"><value>Değişken ekle</value></data>
+  <data name="Env_Back" xml:space="preserve"><value>İsteklere dön</value></data>
+  <data name="Env_CollectionScope" xml:space="preserve"><value>{0} koleksiyonu</value></data>
+  <data name="Env_Delete" xml:space="preserve"><value>Environment’ı sil</value></data>
+  <data name="Env_Disabled" xml:space="preserve"><value>(kapalı)</value></data>
+  <data name="Env_Duplicate" xml:space="preserve"><value>Çoğalt</value></data>
+  <data name="Env_DynamicHint" xml:space="preserve"><value>Dinamik değişkenler: $guid, $timestamp, $timestampMs, $isoTimestamp, $randomInt. Değişkenler birbirine başvurabilir; döngüler tespit edilir.</value></data>
+  <data name="Env_Environments" xml:space="preserve"><value>Environment’lar</value></data>
+  <data name="Env_Global" xml:space="preserve"><value>Global (workspace)</value></data>
+  <data name="Env_Hide" xml:space="preserve"><value>Gizli değerleri maskele</value></data>
+  <data name="Env_MakeActive" xml:space="preserve"><value>Aktif yap</value></data>
+  <data name="Env_Name" xml:space="preserve"><value>Ad</value></data>
+  <data name="Env_New" xml:space="preserve"><value>Yeni environment</value></data>
+  <data name="Env_None" xml:space="preserve"><value>Henüz environment yok.</value></data>
+  <data name="Env_OtherScopes" xml:space="preserve"><value>Diğer kapsamlar</value></data>
+  <data name="Env_Precedence" xml:space="preserve"><value>Öncelik sırası</value></data>
+  <data name="Env_Precedence1" xml:space="preserve"><value>1 · Global</value></data>
+  <data name="Env_Precedence2" xml:space="preserve"><value>2 · Koleksiyon</value></data>
+  <data name="Env_Precedence3" xml:space="preserve"><value>3 · Aktif environment</value></data>
+  <data name="Env_Precedence4" xml:space="preserve"><value>4 · Çalışma anı (veri dosyası)</value></data>
+  <data name="Env_PrecedenceHint" xml:space="preserve"><value>Aynı ad birden fazla yerde tanımlıysa üstteki kazanır.</value></data>
+  <data name="Env_ProdWarning" xml:space="preserve"><value>Bu dosya Git’e girer. Production sırlarını (token, şifre) buraya yazmayın. Gizli işaretli değerler şimdilik yalnızca ekranda maskelenir; işletim sistemi anahtarlığında saklama v0.5’te geliyor.</value></data>
+  <data name="Env_Resolved" xml:space="preserve"><value>Çözümlenmiş</value></data>
+  <data name="Env_Reveal" xml:space="preserve"><value>Gizli değerleri göster</value></data>
+  <data name="Env_Saved" xml:space="preserve"><value>Kaydedildi</value></data>
+  <data name="Env_Secret" xml:space="preserve"><value>Gizli</value></data>
+  <data name="Env_Title" xml:space="preserve"><value>Environment’lar ve değişkenler</value></data>
+  <data name="Env_Unsaved" xml:space="preserve"><value>Kaydedilmemiş değişiklikler</value></data>
+  <data name="Error_Open" xml:space="preserve"><value>Workspace açılamadı: {0}</value></data>
+  <data name="Error_Preparation" xml:space="preserve"><value>İstek gönderilmedi</value></data>
+  <data name="Error_Save" xml:space="preserve"><value>Değişiklik kaydedilemedi: {0}</value></data>
+  <data name="Error_Title" xml:space="preserve"><value>Bir sorun oluştu</value></data>
+  <data name="Grpc_Deadline" xml:space="preserve"><value>Deadline (ms)</value></data>
+  <data name="Grpc_EmitDefaults" xml:space="preserve"><value>Yanıtta varsayılan değerleri göster (0, "", false)</value></data>
+  <data name="Grpc_ErrorStatusHint" xml:space="preserve"><value>gRPC hata status’ları HTTP’deki 4xx/5xx gibi tamamlanmış çağrılardır; ağ hatası değildir.</value></data>
+  <data name="Grpc_Fields" xml:space="preserve"><value>Alanlar</value></data>
+  <data name="Grpc_ImportPaths" xml:space="preserve"><value>Import path’leri (her satıra bir tane, workspace’e göre)</value></data>
+  <data name="Grpc_JsonHint" xml:space="preserve"><value>int64 değerleri string, enum’lar isimle yazılır (proto3 JSON). camelCase ve snake_case adlar kabul edilir.</value></data>
+  <data name="Grpc_Message" xml:space="preserve"><value>Mesaj</value></data>
+  <data name="Grpc_Metadata" xml:space="preserve"><value>Metadata</value></data>
+  <data name="Grpc_MetadataHint" xml:space="preserve"><value>Anahtarlar küçük harfe çevrilir. -bin ile biten anahtarlar base64 değer alır.</value></data>
+  <data name="Grpc_Method" xml:space="preserve"><value>Metot</value></data>
+  <data name="Grpc_NoProto" xml:space="preserve"><value>Bu koleksiyonda henüz proto dosyası yok.</value></data>
+  <data name="Grpc_Plaintext" xml:space="preserve"><value>Plaintext (h2c)</value></data>
+  <data name="Grpc_ProtoErrors" xml:space="preserve"><value>Proto dosyaları yüklenemedi</value></data>
+  <data name="Grpc_ProtoFiles" xml:space="preserve"><value>Proto dosyaları (her satıra bir tane, import path’e göre)</value></data>
+  <data name="Grpc_ProtoLoaded" xml:space="preserve"><value>Proto yüklendi</value></data>
+  <data name="Grpc_ProtoSettings" xml:space="preserve"><value>Proto ayarları (koleksiyon)</value></data>
+  <data name="Grpc_ProtoSummary" xml:space="preserve"><value>{0} servis · {1} mesaj · dosyalar değişince otomatik yenilenir</value></data>
+  <data name="Grpc_RequestType" xml:space="preserve"><value>İstek mesajı: {0}</value></data>
+  <data name="Grpc_Response" xml:space="preserve"><value>Yanıt</value></data>
+  <data name="Grpc_ResponseType" xml:space="preserve"><value>Yanıt mesajı: {0}</value></data>
+  <data name="Grpc_SentMetadata" xml:space="preserve"><value>Gönderilen</value></data>
+  <data name="Grpc_Server" xml:space="preserve"><value>Sunucu</value></data>
+  <data name="Grpc_ServerMessage" xml:space="preserve"><value>Sunucunun mesajı</value></data>
+  <data name="Grpc_Service" xml:space="preserve"><value>Servis</value></data>
+  <data name="Grpc_StreamingLater" xml:space="preserve"><value>streaming (v0.4)</value></data>
+  <data name="Grpc_Tls" xml:space="preserve"><value>TLS</value></data>
+  <data name="Grpc_Trailers" xml:space="preserve"><value>Trailer’lar</value></data>
+  <data name="Menu_CollectionSettings" xml:space="preserve"><value>Koleksiyon ayarları</value></data>
+  <data name="Menu_Delete" xml:space="preserve"><value>Sil</value></data>
+  <data name="Menu_Duplicate" xml:space="preserve"><value>Çoğalt</value></data>
+  <data name="Menu_FolderSettings" xml:space="preserve"><value>Klasör ayarları</value></data>
+  <data name="Menu_MoveToRoot" xml:space="preserve"><value>Koleksiyon köküne taşı</value></data>
+  <data name="Menu_NewFolder" xml:space="preserve"><value>Yeni klasör</value></data>
+  <data name="Menu_NewGrpc" xml:space="preserve"><value>Yeni gRPC isteği</value></data>
+  <data name="Menu_NewHttp" xml:space="preserve"><value>Yeni HTTP isteği</value></data>
+  <data name="Menu_Rename" xml:space="preserve"><value>Yeniden adlandır</value></data>
+  <data name="Palette_ActiveEnv" xml:space="preserve"><value>aktif</value></data>
+  <data name="Palette_Close" xml:space="preserve"><value>kapat</value></data>
+  <data name="Palette_Commands" xml:space="preserve"><value>Komutlar</value></data>
+  <data name="Palette_Environments" xml:space="preserve"><value>Environment’lar</value></data>
+  <data name="Palette_NoResults" xml:space="preserve"><value>Sonuç yok.</value></data>
+  <data name="Palette_Open" xml:space="preserve"><value>aç</value></data>
+  <data name="Palette_Placeholder" xml:space="preserve"><value>İstek, komut veya environment ara</value></data>
+  <data name="Palette_Requests" xml:space="preserve"><value>İstekler</value></data>
+  <data name="Palette_Select" xml:space="preserve"><value>seç</value></data>
+  <data name="Palette_SwitchEnv" xml:space="preserve"><value>Environment: {0}</value></data>
+  <data name="Palette_SwitchHint" xml:space="preserve"><value>geçiş yap</value></data>
+  <data name="Prompt_Name" xml:space="preserve"><value>Ad</value></data>
+  <data name="Prompt_NewCollectionName" xml:space="preserve"><value>Yeni koleksiyon</value></data>
+  <data name="Prompt_NewEnvironmentName" xml:space="preserve"><value>Yeni environment</value></data>
+  <data name="Prompt_NewFolderName" xml:space="preserve"><value>Yeni klasör</value></data>
+  <data name="Prompt_NewRequestName" xml:space="preserve"><value>Yeni istek</value></data>
+  <data name="Req_AddRow" xml:space="preserve"><value>Satır ekle</value></data>
+  <data name="Req_Auth" xml:space="preserve"><value>Auth</value></data>
+  <data name="Req_AutoFromAuth" xml:space="preserve"><value>auth’tan: {0}</value></data>
+  <data name="Req_AutoFromBody" xml:space="preserve"><value>body türünden</value></data>
+  <data name="Req_AutoHeaders" xml:space="preserve"><value>JetApi’nin otomatik ekleyeceği header’lar</value></data>
+  <data name="Req_AutoHeadersHint" xml:space="preserve"><value>Aynı adla kendi header’ınızı eklerseniz sizinki kullanılır.</value></data>
+  <data name="Req_Body" xml:space="preserve"><value>Body</value></data>
+  <data name="Req_Body_File" xml:space="preserve"><value>Dosya</value></data>
+  <data name="Req_Body_FilePath" xml:space="preserve"><value>Dosya (workspace’e göre)</value></data>
+  <data name="Req_Body_Form" xml:space="preserve"><value>Form</value></data>
+  <data name="Req_Body_Json" xml:space="preserve"><value>JSON</value></data>
+  <data name="Req_Body_Multipart" xml:space="preserve"><value>Multipart</value></data>
+  <data name="Req_Body_NoBody" xml:space="preserve"><value>Bu isteğin gövdesi yok.</value></data>
+  <data name="Req_Body_None" xml:space="preserve"><value>Yok</value></data>
+  <data name="Req_Body_Text" xml:space="preserve"><value>Metin</value></data>
+  <data name="Req_Body_Xml" xml:space="preserve"><value>XML</value></data>
+  <data name="Req_Description" xml:space="preserve"><value>Açıklama</value></data>
+  <data name="Req_Enabled" xml:space="preserve"><value>Etkin</value></data>
+  <data name="Req_FollowRedirects" xml:space="preserve"><value>Yönlendirmeleri izle (3xx)</value></data>
+  <data name="Req_FormatInvalidJson" xml:space="preserve"><value>Gövde geçerli bir JSON değil.</value></data>
+  <data name="Req_Headers" xml:space="preserve"><value>Headers</value></data>
+  <data name="Req_Key" xml:space="preserve"><value>Anahtar</value></data>
+  <data name="Req_Method" xml:space="preserve"><value>HTTP metodu</value></data>
+  <data name="Req_Params" xml:space="preserve"><value>Params</value></data>
+  <data name="Req_Part_IsFile" xml:space="preserve"><value>Dosya</value></data>
+  <data name="Req_Settings" xml:space="preserve"><value>Ayarlar</value></data>
+  <data name="Req_SourceCollection" xml:space="preserve"><value>{0} koleksiyonu</value></data>
+  <data name="Req_SourceDynamic" xml:space="preserve"><value>dinamik değişken</value></data>
+  <data name="Req_SourceEnvironment" xml:space="preserve"><value>{0} environment’ı</value></data>
+  <data name="Req_SourceGlobal" xml:space="preserve"><value>workspace global değişkenleri</value></data>
+  <data name="Req_SourceRuntime" xml:space="preserve"><value>çalışma anı değeri</value></data>
+  <data name="Req_Timeout" xml:space="preserve"><value>Zaman aşımı (ms)</value></data>
+  <data name="Req_TimeoutHint" xml:space="preserve"><value>Boş bırakılırsa varsayılan (30 000 ms) kullanılır.</value></data>
+  <data name="Req_Unsaved" xml:space="preserve"><value>Kaydedilmemiş değişiklik</value></data>
+  <data name="Req_Url" xml:space="preserve"><value>URL</value></data>
+  <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/yol veya https://…</value></data>
+  <data name="Req_ValidateCertificates" xml:space="preserve"><value>TLS sertifikasını doğrula</value></data>
+  <data name="Req_Value" xml:space="preserve"><value>Değer</value></data>
+  <data name="Req_VariableSource" xml:space="preserve"><value>kaynak: {0}</value></data>
+  <data name="Req_VariableUndefined" xml:space="preserve"><value>tanımlı değil</value></data>
+  <data name="Res_Automatic" xml:space="preserve"><value>otomatik</value></data>
+  <data name="Res_Body" xml:space="preserve"><value>Body</value></data>
+  <data name="Res_Cancelled" xml:space="preserve"><value>İptal edildi</value></data>
+  <data name="Res_Connect" xml:space="preserve"><value>TCP bağlantı</value></data>
+  <data name="Res_Dns" xml:space="preserve"><value>DNS çözümleme</value></data>
+  <data name="Res_Download" xml:space="preserve"><value>İndirme</value></data>
+  <data name="Res_Empty" xml:space="preserve"><value>Yanıtı görmek için isteği gönderin.</value></data>
+  <data name="Res_EmptyShortcut" xml:space="preserve"><value>Ctrl+Enter isteği gönderir.</value></data>
+  <data name="Res_Failed" xml:space="preserve"><value>Yanıt yok</value></data>
+  <data name="Res_FirstByte" xml:space="preserve"><value>İlk bayt (TLS + sunucu)</value></data>
+  <data name="Res_Headers" xml:space="preserve"><value>Headers</value></data>
+  <data name="Res_Hex" xml:space="preserve"><value>Hex</value></data>
+  <data name="Res_NoBody" xml:space="preserve"><value>Yanıtın gövdesi yok.</value></data>
+  <data name="Res_NotSent" xml:space="preserve"><value>Gönderilmedi</value></data>
+  <data name="Res_Pretty" xml:space="preserve"><value>Pretty</value></data>
+  <data name="Res_Raw" xml:space="preserve"><value>Raw</value></data>
+  <data name="Res_Sending" xml:space="preserve"><value>Gönderiliyor…</value></data>
+  <data name="Res_Sent" xml:space="preserve"><value>Gönderilen istek</value></data>
+  <data name="Res_SentHint" xml:space="preserve"><value>Ağa gönderilen istek, uygulamanın eklediği header’lar dahil.</value></data>
+  <data name="Res_TimedOut" xml:space="preserve"><value>Zaman aşımı</value></data>
+  <data name="Res_Timing" xml:space="preserve"><value>Zamanlama</value></data>
+  <data name="Res_TimingNew" xml:space="preserve"><value>Yeni bağlantı açıldı. İlk bayt süresi TLS el sıkışmasını ve sunucunun işlem süresini içerir.</value></data>
+  <data name="Res_TimingReused" xml:space="preserve"><value>Var olan bağlantı yeniden kullanıldı; DNS ve bağlantı süresi yok.</value></data>
+  <data name="Res_Total" xml:space="preserve"><value>Toplam</value></data>
+  <data name="Res_Truncated" xml:space="preserve"><value>Gövde {0} sınırını aştığı için kesildi.</value></data>
+  <data name="Shortcut_Close" xml:space="preserve"><value>Sekmeyi kapat</value></data>
+  <data name="Shortcut_Env" xml:space="preserve"><value>Environment’lar</value></data>
+  <data name="Shortcut_New" xml:space="preserve"><value>Yeni istek</value></data>
+  <data name="Shortcut_Palette" xml:space="preserve"><value>Komut paleti</value></data>
+  <data name="Shortcut_Save" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Shortcut_Send" xml:space="preserve"><value>Gönder / çağır</value></data>
+  <data name="Shortcut_Url" xml:space="preserve"><value>URL’ye odaklan</value></data>
+  <data name="Side_BackToCollections" xml:space="preserve"><value>Koleksiyonlar</value></data>
+  <data name="Side_ClearHistory" xml:space="preserve"><value>Geçmişi temizle</value></data>
+  <data name="Side_Collections" xml:space="preserve"><value>Koleksiyonlar</value></data>
+  <data name="Side_EmptyCollections" xml:space="preserve"><value>Henüz koleksiyon yok. İstek eklemek için bir koleksiyon oluşturun.</value></data>
+  <data name="Side_EmptyHistory" xml:space="preserve"><value>Gönderdiğiniz istekler burada görünür.</value></data>
+  <data name="Side_Environments" xml:space="preserve"><value>Environment’lar</value></data>
+  <data name="Side_Filter" xml:space="preserve"><value>Filtrele</value></data>
+  <data name="Side_History" xml:space="preserve"><value>Geçmiş</value></data>
+  <data name="Side_HistoryHint" xml:space="preserve"><value>bu makinede</value></data>
+  <data name="Side_Import" xml:space="preserve"><value>İçe aktar (v0.2)</value></data>
+  <data name="Side_NewCollection" xml:space="preserve"><value>Yeni koleksiyon</value></data>
+  <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
+  <data name="Status_Saved" xml:space="preserve"><value>Tüm değişiklikler kaydedildi</value></data>
+  <data name="Status_Unsaved" xml:space="preserve"><value>Kaydedilmemiş: {0}</value></data>
+  <data name="Theme_Dark" xml:space="preserve"><value>Koyu</value></data>
+  <data name="Theme_Light" xml:space="preserve"><value>Açık</value></data>
+  <data name="Theme_System" xml:space="preserve"><value>Sistem</value></data>
+  <data name="Top_CloseWorkspace" xml:space="preserve"><value>Workspace’i kapat</value></data>
+  <data name="Top_Language" xml:space="preserve"><value>Dil</value></data>
+  <data name="Top_NoEnvironment" xml:space="preserve"><value>Environment yok</value></data>
+  <data name="Top_Reload" xml:space="preserve"><value>Diskten yeniden yükle</value></data>
+  <data name="Top_Search" xml:space="preserve"><value>İstek ara veya komut çalıştır…</value></data>
+  <data name="Top_Settings" xml:space="preserve"><value>Ayarlar</value></data>
+  <data name="Top_Theme" xml:space="preserve"><value>Tema</value></data>
+  <data name="Top_Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Vars_Cycle" xml:space="preserve"><value>kendine başvuruyor</value></data>
+  <data name="Vars_UndefinedBody" xml:space="preserve"><value>Aktif environment: {0}. Bu değişkenler hiçbir kapsamda tanımlı değil ve olduğu gibi gönderilecek:</value></data>
+  <data name="Vars_UndefinedTitle" xml:space="preserve"><value>{0} değişken tanımlı değil</value></data>
+  <data name="Vars_UndefinedTitleOne" xml:space="preserve"><value>1 değişken tanımlı değil</value></data>
+  <data name="Welcome_CollectionsCount" xml:space="preserve"><value>{0} koleksiyon</value></data>
+  <data name="Welcome_Create" xml:space="preserve"><value>Yeni workspace</value></data>
+  <data name="Welcome_CreateHint" xml:space="preserve"><value>Boş bir klasörde jetapi.yaml ve örnek bir koleksiyon oluşturur.</value></data>
+  <data name="Welcome_GitTip" xml:space="preserve"><value>İpucu: .jetapi/ klasörü bu makineye özel geçmişi ve durumu tutar, Git’e eklenmez. Diğer her şey okunabilir YAML dosyalarıdır ve code review’da normal kod gibi incelenebilir.</value></data>
+  <data name="Welcome_Import" xml:space="preserve"><value>Postman’den taşı</value></data>
+  <data name="Welcome_ImportHint" xml:space="preserve"><value>Postman koleksiyonu ve environment’ları, OpenAPI veya cURL. v0.2’de geliyor.</value></data>
+  <data name="Welcome_NoRecent" xml:space="preserve"><value>Açtığınız workspace’ler burada listelenir.</value></data>
+  <data name="Welcome_NotWorkspace" xml:space="preserve"><value>Bu klasör bir JetApi workspace’i değil (jetapi.yaml bulunamadı). Burada yeni bir workspace oluşturulsun mu?</value></data>
+  <data name="Welcome_Open" xml:space="preserve"><value>Klasör aç</value></data>
+  <data name="Welcome_OpenHint" xml:space="preserve"><value>Var olan bir workspace’i veya Git’ten klonladığınız depoyu açın.</value></data>
+  <data name="Welcome_PickEmptyFolder" xml:space="preserve"><value>Yeni workspace için bir klasör seçin</value></data>
+  <data name="Welcome_PickFolder" xml:space="preserve"><value>Workspace klasörünü seçin</value></data>
+  <data name="Welcome_Recent" xml:space="preserve"><value>Son açılanlar</value></data>
+  <data name="Welcome_RemoveRecent" xml:space="preserve"><value>Listeden kaldır</value></data>
+  <data name="Welcome_Subtitle" xml:space="preserve"><value>Workspace, koleksiyonlarınızın ve environment’larınızın durduğu bir klasördür. Ekibinizle Git üzerinden paylaşılır; hesap veya bulut gerekmez.</value></data>
+  <data name="Welcome_Title" xml:space="preserve"><value>JetApi’ye hoş geldiniz</value></data>
+  <data name="Welcome_WorkspaceName" xml:space="preserve"><value>Workspace adı</value></data>
+</root>

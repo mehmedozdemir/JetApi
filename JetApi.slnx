@@ -8,6 +8,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/JetApi.Core.Tests/JetApi.Core.Tests.csproj" />
+    <Project Path="tests/JetApi.Desktop.Tests/JetApi.Desktop.Tests.csproj" />
     <Project Path="tests/JetApi.Grpc.Tests/JetApi.Grpc.Tests.csproj" />
     <Project Path="tests/JetApi.Http.Tests/JetApi.Http.Tests.csproj" />
     <Project Path="tests/JetApi.Storage.Tests/JetApi.Storage.Tests.csproj" />

@@ -13,6 +13,15 @@
           "MicroCom.Runtime": "0.11.6"
         }
       },
+      "Avalonia.AvaloniaEdit": {
+        "type": "Direct",
+        "requested": "[12.0.0, )",
+        "resolved": "12.0.0",
+        "contentHash": "VNfaYdTbiQ2DlSkSMoLg4DhTbQmQR0cFT6nqEqLkaYGLjBWmUdv5BNIuoObK4c9cgzFqnEJXBaOp4R/bxgFKfQ==",
+        "dependencies": {
+          "Avalonia": "12.0.0"
+        }
+      },
       "Avalonia.Desktop": {
         "type": "Direct",
         "requested": "[12.1.5, )",
@@ -45,11 +54,32 @@
           "Avalonia": "12.1.5"
         }
       },
+      "AvaloniaEdit.TextMate": {
+        "type": "Direct",
+        "requested": "[12.0.0, )",
+        "resolved": "12.0.0",
+        "contentHash": "FArIpBB2zcraoYqQIPNkevviNtuzKrA5tEVAAE03PboZMy2recf4TJEXk1BfCw7Oo4fBBh7srUqOdK5RNSUNrg==",
+        "dependencies": {
+          "Avalonia": "12.0.0",
+          "Avalonia.AvaloniaEdit": "12.0.0",
+          "TextMateSharp": "2.0.3",
+          "TextMateSharp.Grammars": "2.0.3"
+        }
+      },
       "CommunityToolkit.Mvvm": {
         "type": "Direct",
         "requested": "[8.4.2, )",
         "resolved": "8.4.2",
         "contentHash": "WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg=="
+      },
+      "TextMateSharp.Grammars": {
+        "type": "Direct",
+        "requested": "[2.0.5, )",
+        "resolved": "2.0.5",
+        "contentHash": "s7YZZokJxVtKeWyU3xc11lDJwZpKZfRZt82+5YVALZr+R4bhhxd9o2yDqyywyAMQvYBMIug7IDcmGa/T/MUXbA==",
+        "dependencies": {
+          "TextMateSharp": "2.0.5"
+        }
       },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
@@ -191,6 +221,11 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.1"
         }
       },
+      "Onigwrap": {
+        "type": "Transitive",
+        "resolved": "1.0.11",
+        "contentHash": "5/WAxSYWfiiPzp1X13qqdqjFmYLKDD/U7Vh3WCkKxWG9BjqdrXnQE5fCKCFJX+xWvuYLTxwZIVWBwBWObViE8g=="
+      },
       "protobuf-net.Core": {
         "type": "Transitive",
         "resolved": "3.4.40",
@@ -224,6 +259,14 @@
         "type": "Transitive",
         "resolved": "3.119.4",
         "contentHash": "XOpbx/4CReO2wYsq2s6rbvdauc6dntG4Zv499sHGTJ87bwZaFXszFkwql3+FIZMc8kUPeaj3Mx2ezIJmo8a1Kg=="
+      },
+      "TextMateSharp": {
+        "type": "Transitive",
+        "resolved": "2.0.5",
+        "contentHash": "nzoxbQsoB1jNtZVTF+bwc4/hbC3L8RDvWkjvV00p5o0MzViyHYPFxWo3wUXIrpH00it6cEFw7h6hbT9jJX0aeg==",
+        "dependencies": {
+          "Onigwrap": "1.0.11"
+        }
       },
       "Tmds.DBus.Protocol": {
         "type": "Transitive",

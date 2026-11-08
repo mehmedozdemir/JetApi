@@ -3,9 +3,12 @@
     <OutputType>WinExe</OutputType>
     <Description>JetApi desktop application (Avalonia).</Description>
     <AssemblyName>JetApi</AssemblyName>
+    <RootNamespace>JetApi.Desktop</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+    <!-- View model members are bound from XAML, which needs instance members even when they read only static state. -->
+    <NoWarn>$(NoWarn);CA1822</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
@@ -19,5 +22,11 @@
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" />
+    <PackageReference Include="AvaloniaEdit.TextMate" />
+    <PackageReference Include="TextMateSharp.Grammars" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Desktop.Tests" />
   </ItemGroup>
 </Project>

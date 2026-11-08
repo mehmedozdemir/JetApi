@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- UI strings. Every key must exist in both Strings.resx (English) and Strings.tr.resx (Turkish); a test checks this. -->
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AppName" xml:space="preserve"><value>JetApi</value></data>
+  <data name="Auth_ApiKey" xml:space="preserve"><value>API key</value></data>
+  <data name="Auth_Basic" xml:space="preserve"><value>Basic</value></data>
+  <data name="Auth_Bearer" xml:space="preserve"><value>Bearer token</value></data>
+  <data name="Auth_ExplicitHeaderWins" xml:space="preserve"><value>An Authorization header you add yourself takes precedence.</value></data>
+  <data name="Auth_InHeader" xml:space="preserve"><value>Header</value></data>
+  <data name="Auth_InQuery" xml:space="preserve"><value>Query parameter</value></data>
+  <data name="Auth_Inherit" xml:space="preserve"><value>Inherit from parent</value></data>
+  <data name="Auth_InheritedFrom" xml:space="preserve"><value>Uses the auth of “{0}”: {1}.</value></data>
+  <data name="Auth_InheritedNone" xml:space="preserve"><value>No parent defines auth, so none is sent.</value></data>
+  <data name="Auth_KeyName" xml:space="preserve"><value>Key name</value></data>
+  <data name="Auth_KeyValue" xml:space="preserve"><value>Value</value></data>
+  <data name="Auth_None" xml:space="preserve"><value>No auth</value></data>
+  <data name="Auth_Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Auth_SendIn" xml:space="preserve"><value>Send in</value></data>
+  <data name="Auth_Token" xml:space="preserve"><value>Token</value></data>
+  <data name="Auth_Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Auth_Username" xml:space="preserve"><value>Username</value></data>
+  <data name="Btn_Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Btn_Browse" xml:space="preserve"><value>Browse…</value></data>
+  <data name="Btn_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Btn_Cancel_Request" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Btn_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Btn_Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Btn_Create" xml:space="preserve"><value>Create</value></data>
+  <data name="Btn_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Btn_Dismiss" xml:space="preserve"><value>Dismiss</value></data>
+  <data name="Btn_FillTemplate" xml:space="preserve"><value>Fill from template</value></data>
+  <data name="Btn_Format" xml:space="preserve"><value>Format</value></data>
+  <data name="Btn_Invoke" xml:space="preserve"><value>Invoke</value></data>
+  <data name="Btn_NewTab" xml:space="preserve"><value>New request</value></data>
+  <data name="Btn_Ok" xml:space="preserve"><value>OK</value></data>
+  <data name="Btn_OpenEnvironments" xml:space="preserve"><value>Open environments</value></data>
+  <data name="Btn_Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="Btn_Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="Btn_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Btn_SaveToFile" xml:space="preserve"><value>Save to file</value></data>
+  <data name="Btn_Send" xml:space="preserve"><value>Send</value></data>
+  <data name="Btn_SendAnyway" xml:space="preserve"><value>Send anyway</value></data>
+  <data name="Cmd_CloseWorkspace" xml:space="preserve"><value>Close workspace</value></data>
+  <data name="Cmd_Environments" xml:space="preserve"><value>Edit environments</value></data>
+  <data name="Cmd_History" xml:space="preserve"><value>Show history</value></data>
+  <data name="Cmd_NewCollection" xml:space="preserve"><value>New collection</value></data>
+  <data name="Cmd_NewGrpc" xml:space="preserve"><value>New gRPC request</value></data>
+  <data name="Cmd_NewHttp" xml:space="preserve"><value>New HTTP request</value></data>
+  <data name="Cmd_Reload" xml:space="preserve"><value>Reload workspace from disk</value></data>
+  <data name="Cmd_ToggleLanguage" xml:space="preserve"><value>Türkçe / English</value></data>
+  <data name="Cmd_ToggleTheme" xml:space="preserve"><value>Switch theme</value></data>
+  <data name="Col_FolderTitle" xml:space="preserve"><value>Folder settings</value></data>
+  <data name="Col_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Col_Title" xml:space="preserve"><value>Collection settings</value></data>
+  <data name="Col_Variables" xml:space="preserve"><value>Collection variables</value></data>
+  <data name="Confirm_CloseUnsaved" xml:space="preserve"><value>“{0}” has unsaved changes. Close it anyway?</value></data>
+  <data name="Confirm_Delete" xml:space="preserve"><value>Delete “{0}”? Its files are removed from the workspace folder.</value></data>
+  <data name="Confirm_DeleteCollection" xml:space="preserve"><value>Delete the collection “{0}” and all its requests? Its folder is removed from the workspace.</value></data>
+  <data name="Copy_Suffix" xml:space="preserve"><value>{0} (copy)</value></data>
+  <data name="Diag_Skipped" xml:space="preserve"><value>{0} files were skipped; the rest of the workspace loaded</value></data>
+  <data name="Env_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Env_AddVariable" xml:space="preserve"><value>Add variable</value></data>
+  <data name="Env_Back" xml:space="preserve"><value>Back to requests</value></data>
+  <data name="Env_CollectionScope" xml:space="preserve"><value>{0} collection</value></data>
+  <data name="Env_Delete" xml:space="preserve"><value>Delete environment</value></data>
+  <data name="Env_Disabled" xml:space="preserve"><value>(disabled)</value></data>
+  <data name="Env_Duplicate" xml:space="preserve"><value>Duplicate</value></data>
+  <data name="Env_DynamicHint" xml:space="preserve"><value>Dynamic variables: $guid, $timestamp, $timestampMs, $isoTimestamp, $randomInt. Variables may refer to each other; cycles are detected.</value></data>
+  <data name="Env_Environments" xml:space="preserve"><value>Environments</value></data>
+  <data name="Env_Global" xml:space="preserve"><value>Global (workspace)</value></data>
+  <data name="Env_Hide" xml:space="preserve"><value>Mask secret values</value></data>
+  <data name="Env_MakeActive" xml:space="preserve"><value>Make active</value></data>
+  <data name="Env_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Env_New" xml:space="preserve"><value>New environment</value></data>
+  <data name="Env_None" xml:space="preserve"><value>No environments yet.</value></data>
+  <data name="Env_OtherScopes" xml:space="preserve"><value>Other scopes</value></data>
+  <data name="Env_Precedence" xml:space="preserve"><value>Precedence</value></data>
+  <data name="Env_Precedence1" xml:space="preserve"><value>1 · Global</value></data>
+  <data name="Env_Precedence2" xml:space="preserve"><value>2 · Collection</value></data>
+  <data name="Env_Precedence3" xml:space="preserve"><value>3 · Active environment</value></data>
+  <data name="Env_Precedence4" xml:space="preserve"><value>4 · Runtime (data file)</value></data>
+  <data name="Env_PrecedenceHint" xml:space="preserve"><value>When a name is defined in several places, the one higher up wins.</value></data>
+  <data name="Env_ProdWarning" xml:space="preserve"><value>This file is committed to Git. Do not put production secrets (tokens, passwords) here. Secret values are only masked on screen for now; keychain storage arrives in v0.5.</value></data>
+  <data name="Env_Resolved" xml:space="preserve"><value>Resolved</value></data>
+  <data name="Env_Reveal" xml:space="preserve"><value>Show secret values</value></data>
+  <data name="Env_Saved" xml:space="preserve"><value>Saved</value></data>
+  <data name="Env_Secret" xml:space="preserve"><value>Secret</value></data>
+  <data name="Env_Title" xml:space="preserve"><value>Environments and variables</value></data>
+  <data name="Env_Unsaved" xml:space="preserve"><value>Unsaved changes</value></data>
+  <data name="Error_Open" xml:space="preserve"><value>The workspace could not be opened: {0}</value></data>
+  <data name="Error_Preparation" xml:space="preserve"><value>The request was not sent</value></data>
+  <data name="Error_Save" xml:space="preserve"><value>The change could not be saved: {0}</value></data>
+  <data name="Error_Title" xml:space="preserve"><value>Something went wrong</value></data>
+  <data name="Grpc_Deadline" xml:space="preserve"><value>Deadline (ms)</value></data>
+  <data name="Grpc_EmitDefaults" xml:space="preserve"><value>Show default values in the response (0, "", false)</value></data>
+  <data name="Grpc_ErrorStatusHint" xml:space="preserve"><value>gRPC error statuses are completed calls, like HTTP 4xx/5xx; not network errors.</value></data>
+  <data name="Grpc_Fields" xml:space="preserve"><value>Fields</value></data>
+  <data name="Grpc_ImportPaths" xml:space="preserve"><value>Import paths (one per line, relative to the workspace)</value></data>
+  <data name="Grpc_JsonHint" xml:space="preserve"><value>int64 values are strings and enums are names (proto3 JSON). Both camelCase and snake_case names are accepted.</value></data>
+  <data name="Grpc_Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Grpc_Metadata" xml:space="preserve"><value>Metadata</value></data>
+  <data name="Grpc_MetadataHint" xml:space="preserve"><value>Keys are lowercased. Keys ending in -bin take base64 values.</value></data>
+  <data name="Grpc_Method" xml:space="preserve"><value>Method</value></data>
+  <data name="Grpc_NoProto" xml:space="preserve"><value>This collection has no proto files yet.</value></data>
+  <data name="Grpc_Plaintext" xml:space="preserve"><value>Plaintext (h2c)</value></data>
+  <data name="Grpc_ProtoErrors" xml:space="preserve"><value>Proto files could not be loaded</value></data>
+  <data name="Grpc_ProtoFiles" xml:space="preserve"><value>Proto files (one per line, relative to an import path)</value></data>
+  <data name="Grpc_ProtoLoaded" xml:space="preserve"><value>Proto loaded</value></data>
+  <data name="Grpc_ProtoSettings" xml:space="preserve"><value>Proto settings (collection)</value></data>
+  <data name="Grpc_ProtoSummary" xml:space="preserve"><value>{0} services · {1} messages · reloaded automatically when files change</value></data>
+  <data name="Grpc_RequestType" xml:space="preserve"><value>Request message: {0}</value></data>
+  <data name="Grpc_Response" xml:space="preserve"><value>Response</value></data>
+  <data name="Grpc_ResponseType" xml:space="preserve"><value>Response message: {0}</value></data>
+  <data name="Grpc_SentMetadata" xml:space="preserve"><value>Sent</value></data>
+  <data name="Grpc_Server" xml:space="preserve"><value>Server</value></data>
+  <data name="Grpc_ServerMessage" xml:space="preserve"><value>Server message</value></data>
+  <data name="Grpc_Service" xml:space="preserve"><value>Service</value></data>
+  <data name="Grpc_StreamingLater" xml:space="preserve"><value>streaming (v0.4)</value></data>
+  <data name="Grpc_Tls" xml:space="preserve"><value>TLS</value></data>
+  <data name="Grpc_Trailers" xml:space="preserve"><value>Trailers</value></data>
+  <data name="Menu_CollectionSettings" xml:space="preserve"><value>Collection settings</value></data>
+  <data name="Menu_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Menu_Duplicate" xml:space="preserve"><value>Duplicate</value></data>
+  <data name="Menu_FolderSettings" xml:space="preserve"><value>Folder settings</value></data>
+  <data name="Menu_MoveToRoot" xml:space="preserve"><value>Move to collection root</value></data>
+  <data name="Menu_NewFolder" xml:space="preserve"><value>New folder</value></data>
+  <data name="Menu_NewGrpc" xml:space="preserve"><value>New gRPC request</value></data>
+  <data name="Menu_NewHttp" xml:space="preserve"><value>New HTTP request</value></data>
+  <data name="Menu_Rename" xml:space="preserve"><value>Rename</value></data>
+  <data name="Palette_ActiveEnv" xml:space="preserve"><value>active</value></data>
+  <data name="Palette_Close" xml:space="preserve"><value>close</value></data>
+  <data name="Palette_Commands" xml:space="preserve"><value>Commands</value></data>
+  <data name="Palette_Environments" xml:space="preserve"><value>Environments</value></data>
+  <data name="Palette_NoResults" xml:space="preserve"><value>No results.</value></data>
+  <data name="Palette_Open" xml:space="preserve"><value>open</value></data>
+  <data name="Palette_Placeholder" xml:space="preserve"><value>Search requests, environments or commands</value></data>
+  <data name="Palette_Requests" xml:space="preserve"><value>Requests</value></data>
+  <data name="Palette_Select" xml:space="preserve"><value>select</value></data>
+  <data name="Palette_SwitchEnv" xml:space="preserve"><value>Environment: {0}</value></data>
+  <data name="Palette_SwitchHint" xml:space="preserve"><value>switch</value></data>
+  <data name="Prompt_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Prompt_NewCollectionName" xml:space="preserve"><value>New collection</value></data>
+  <data name="Prompt_NewEnvironmentName" xml:space="preserve"><value>New environment</value></data>
+  <data name="Prompt_NewFolderName" xml:space="preserve"><value>New folder</value></data>
+  <data name="Prompt_NewRequestName" xml:space="preserve"><value>New request</value></data>
+  <data name="Req_AddRow" xml:space="preserve"><value>Add row</value></data>
+  <data name="Req_Auth" xml:space="preserve"><value>Auth</value></data>
+  <data name="Req_AutoFromAuth" xml:space="preserve"><value>from auth: {0}</value></data>
+  <data name="Req_AutoFromBody" xml:space="preserve"><value>from body type</value></data>
+  <data name="Req_AutoHeaders" xml:space="preserve"><value>Headers JetApi adds automatically</value></data>
+  <data name="Req_AutoHeadersHint" xml:space="preserve"><value>A header you add with the same name replaces the automatic one.</value></data>
+  <data name="Req_Body" xml:space="preserve"><value>Body</value></data>
+  <data name="Req_Body_File" xml:space="preserve"><value>File</value></data>
+  <data name="Req_Body_FilePath" xml:space="preserve"><value>File (relative to the workspace)</value></data>
+  <data name="Req_Body_Form" xml:space="preserve"><value>Form</value></data>
+  <data name="Req_Body_Json" xml:space="preserve"><value>JSON</value></data>
+  <data name="Req_Body_Multipart" xml:space="preserve"><value>Multipart</value></data>
+  <data name="Req_Body_NoBody" xml:space="preserve"><value>This request has no body.</value></data>
+  <data name="Req_Body_None" xml:space="preserve"><value>None</value></data>
+  <data name="Req_Body_Text" xml:space="preserve"><value>Text</value></data>
+  <data name="Req_Body_Xml" xml:space="preserve"><value>XML</value></data>
+  <data name="Req_Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Req_Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Req_FollowRedirects" xml:space="preserve"><value>Follow redirects (3xx)</value></data>
+  <data name="Req_FormatInvalidJson" xml:space="preserve"><value>The body is not valid JSON.</value></data>
+  <data name="Req_Headers" xml:space="preserve"><value>Headers</value></data>
+  <data name="Req_Key" xml:space="preserve"><value>Key</value></data>
+  <data name="Req_Method" xml:space="preserve"><value>HTTP method</value></data>
+  <data name="Req_Params" xml:space="preserve"><value>Params</value></data>
+  <data name="Req_Part_IsFile" xml:space="preserve"><value>File</value></data>
+  <data name="Req_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Req_SourceCollection" xml:space="preserve"><value>{0} collection</value></data>
+  <data name="Req_SourceDynamic" xml:space="preserve"><value>dynamic variable</value></data>
+  <data name="Req_SourceEnvironment" xml:space="preserve"><value>{0} environment</value></data>
+  <data name="Req_SourceGlobal" xml:space="preserve"><value>workspace globals</value></data>
+  <data name="Req_SourceRuntime" xml:space="preserve"><value>runtime value</value></data>
+  <data name="Req_Timeout" xml:space="preserve"><value>Timeout (ms)</value></data>
+  <data name="Req_TimeoutHint" xml:space="preserve"><value>Empty uses the default (30 000 ms).</value></data>
+  <data name="Req_Unsaved" xml:space="preserve"><value>Unsaved changes</value></data>
+  <data name="Req_Url" xml:space="preserve"><value>URL</value></data>
+  <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/path or https://…</value></data>
+  <data name="Req_ValidateCertificates" xml:space="preserve"><value>Validate TLS certificates</value></data>
+  <data name="Req_Value" xml:space="preserve"><value>Value</value></data>
+  <data name="Req_VariableSource" xml:space="preserve"><value>source: {0}</value></data>
+  <data name="Req_VariableUndefined" xml:space="preserve"><value>not defined</value></data>
+  <data name="Res_Automatic" xml:space="preserve"><value>automatic</value></data>
+  <data name="Res_Body" xml:space="preserve"><value>Body</value></data>
+  <data name="Res_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Res_Connect" xml:space="preserve"><value>TCP connect</value></data>
+  <data name="Res_Dns" xml:space="preserve"><value>DNS lookup</value></data>
+  <data name="Res_Download" xml:space="preserve"><value>Download</value></data>
+  <data name="Res_Empty" xml:space="preserve"><value>Send the request to see the response.</value></data>
+  <data name="Res_EmptyShortcut" xml:space="preserve"><value>Ctrl+Enter sends the request.</value></data>
+  <data name="Res_Failed" xml:space="preserve"><value>No response</value></data>
+  <data name="Res_FirstByte" xml:space="preserve"><value>First byte (TLS + server)</value></data>
+  <data name="Res_Headers" xml:space="preserve"><value>Headers</value></data>
+  <data name="Res_Hex" xml:space="preserve"><value>Hex</value></data>
+  <data name="Res_NoBody" xml:space="preserve"><value>The response has no body.</value></data>
+  <data name="Res_NotSent" xml:space="preserve"><value>Not sent</value></data>
+  <data name="Res_Pretty" xml:space="preserve"><value>Pretty</value></data>
+  <data name="Res_Raw" xml:space="preserve"><value>Raw</value></data>
+  <data name="Res_Sending" xml:space="preserve"><value>Sending…</value></data>
+  <data name="Res_Sent" xml:space="preserve"><value>Sent request</value></data>
+  <data name="Res_SentHint" xml:space="preserve"><value>The request as it went on the wire, including headers JetApi added.</value></data>
+  <data name="Res_TimedOut" xml:space="preserve"><value>Timed out</value></data>
+  <data name="Res_Timing" xml:space="preserve"><value>Timing</value></data>
+  <data name="Res_TimingNew" xml:space="preserve"><value>A new connection was opened. First byte includes the TLS handshake and server processing.</value></data>
+  <data name="Res_TimingReused" xml:space="preserve"><value>An existing connection was reused, so there was no DNS lookup or connect.</value></data>
+  <data name="Res_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Res_Truncated" xml:space="preserve"><value>The body is larger than {0} and was cut off.</value></data>
+  <data name="Shortcut_Close" xml:space="preserve"><value>Close tab</value></data>
+  <data name="Shortcut_Env" xml:space="preserve"><value>Environments</value></data>
+  <data name="Shortcut_New" xml:space="preserve"><value>New request</value></data>
+  <data name="Shortcut_Palette" xml:space="preserve"><value>Command palette</value></data>
+  <data name="Shortcut_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Shortcut_Send" xml:space="preserve"><value>Send / invoke</value></data>
+  <data name="Shortcut_Url" xml:space="preserve"><value>Focus URL</value></data>
+  <data name="Side_BackToCollections" xml:space="preserve"><value>Collections</value></data>
+  <data name="Side_ClearHistory" xml:space="preserve"><value>Clear history</value></data>
+  <data name="Side_Collections" xml:space="preserve"><value>Collections</value></data>
+  <data name="Side_EmptyCollections" xml:space="preserve"><value>No collections yet. Create one to add requests.</value></data>
+  <data name="Side_EmptyHistory" xml:space="preserve"><value>Requests you send appear here.</value></data>
+  <data name="Side_Environments" xml:space="preserve"><value>Environments</value></data>
+  <data name="Side_Filter" xml:space="preserve"><value>Filter</value></data>
+  <data name="Side_History" xml:space="preserve"><value>History</value></data>
+  <data name="Side_HistoryHint" xml:space="preserve"><value>on this machine</value></data>
+  <data name="Side_Import" xml:space="preserve"><value>Import (v0.2)</value></data>
+  <data name="Side_NewCollection" xml:space="preserve"><value>New collection</value></data>
+  <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
+  <data name="Status_Saved" xml:space="preserve"><value>All changes saved</value></data>
+  <data name="Status_Unsaved" xml:space="preserve"><value>Unsaved: {0}</value></data>
+  <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
+  <data name="Theme_Light" xml:space="preserve"><value>Light</value></data>
+  <data name="Theme_System" xml:space="preserve"><value>System</value></data>
+  <data name="Top_CloseWorkspace" xml:space="preserve"><value>Close workspace</value></data>
+  <data name="Top_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Top_NoEnvironment" xml:space="preserve"><value>No environment</value></data>
+  <data name="Top_Reload" xml:space="preserve"><value>Reload from disk</value></data>
+  <data name="Top_Search" xml:space="preserve"><value>Search requests or run a command…</value></data>
+  <data name="Top_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Top_Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="Top_Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Vars_Cycle" xml:space="preserve"><value>refers to itself</value></data>
+  <data name="Vars_UndefinedBody" xml:space="preserve"><value>Active environment: {0}. These placeholders are not defined in any scope and would be sent as typed:</value></data>
+  <data name="Vars_UndefinedTitle" xml:space="preserve"><value>{0} variables are not defined</value></data>
+  <data name="Vars_UndefinedTitleOne" xml:space="preserve"><value>1 variable is not defined</value></data>
+  <data name="Welcome_CollectionsCount" xml:space="preserve"><value>{0} collections</value></data>
+  <data name="Welcome_Create" xml:space="preserve"><value>New workspace</value></data>
+  <data name="Welcome_CreateHint" xml:space="preserve"><value>Creates jetapi.yaml and an example collection in an empty folder.</value></data>
+  <data name="Welcome_GitTip" xml:space="preserve"><value>Tip: the .jetapi/ folder keeps this machine’s history and state and is not committed. Everything else is readable YAML you can review like any other code.</value></data>
+  <data name="Welcome_Import" xml:space="preserve"><value>Move from Postman</value></data>
+  <data name="Welcome_ImportHint" xml:space="preserve"><value>Postman collections and environments, OpenAPI or cURL. Coming in v0.2.</value></data>
+  <data name="Welcome_NoRecent" xml:space="preserve"><value>Workspaces you open will be listed here.</value></data>
+  <data name="Welcome_NotWorkspace" xml:space="preserve"><value>This folder is not a JetApi workspace (jetapi.yaml was not found). Create a new workspace here?</value></data>
+  <data name="Welcome_Open" xml:space="preserve"><value>Open folder</value></data>
+  <data name="Welcome_OpenHint" xml:space="preserve"><value>Open an existing workspace or a repository you cloned from Git.</value></data>
+  <data name="Welcome_PickEmptyFolder" xml:space="preserve"><value>Choose a folder for the new workspace</value></data>
+  <data name="Welcome_PickFolder" xml:space="preserve"><value>Choose the workspace folder</value></data>
+  <data name="Welcome_Recent" xml:space="preserve"><value>Recent</value></data>
+  <data name="Welcome_RemoveRecent" xml:space="preserve"><value>Remove from list</value></data>
+  <data name="Welcome_Subtitle" xml:space="preserve"><value>A workspace is a folder holding your collections and environments. Share it with your team through Git; no account or cloud required.</value></data>
+  <data name="Welcome_Title" xml:space="preserve"><value>Welcome to JetApi</value></data>
+  <data name="Welcome_WorkspaceName" xml:space="preserve"><value>Workspace name</value></data>
+</root>
