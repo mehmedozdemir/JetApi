@@ -68,6 +68,9 @@ public sealed record AppSettings
     /// <summary>Timeout of requests that do not set their own, in seconds.</summary>
     public int RequestTimeoutSeconds { get; init; } = DefaultRequestTimeoutSeconds;
 
+    /// <summary>Keep cookies that servers set and send them with later requests (per workspace, in memory).</summary>
+    public bool UseCookieJar { get; init; }
+
     /// <summary>Record sent requests in the workspace's local history.</summary>
     public bool SaveHistory { get; init; } = true;
 

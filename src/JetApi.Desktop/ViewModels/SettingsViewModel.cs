@@ -89,6 +89,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private bool _saveHistory;
 
     [ObservableProperty]
+    private bool _useCookieJar;
+
+    [ObservableProperty]
     private SettingsOption<RenderingPreference>? _rendering;
 
     /// <summary>Creates the view model; <paramref name="installedFonts"/> come from the platform (empty in tests is fine).</summary>
@@ -163,6 +166,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             ConfirmUndefinedVariables = ConfirmUndefinedVariables,
             RequestTimeoutSeconds = (int)Math.Clamp(RequestTimeoutSeconds, 1, 3600),
             SaveHistory = SaveHistory,
+            UseCookieJar = UseCookieJar,
             Rendering = Rendering?.Value ?? current.Rendering,
         });
         if (e.PropertyName == nameof(Rendering))
@@ -184,6 +188,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         ConfirmUndefinedVariables = settings.ConfirmUndefinedVariables;
         RequestTimeoutSeconds = settings.RequestTimeoutSeconds;
         SaveHistory = settings.SaveHistory;
+        UseCookieJar = settings.UseCookieJar;
         Rendering = RenderingOptions.First(o => o.Value == settings.Rendering);
         _loading = false;
         OnPropertyChanged(nameof(RenderingNeedsRestart));

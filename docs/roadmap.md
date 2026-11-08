@@ -42,7 +42,7 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 - [x] OpenAPI 3.x / Swagger 2.0 import ([eşleştirme](openapi-import.md))
 - [x] cURL import (yapıştır) ve export; kod parçası üretimi (C#, curl, JS, Python; ayrıca PowerShell ve cmd)
 - [x] OAuth 2.0 (client credentials, authorization code + PKCE, password), token önbelleği
-- [ ] Cookie jar (isteğe bağlı)
+- [x] Cookie jar (isteğe bağlı)
 
 ## M3 — Test otomasyonu → `v0.3.0`
 

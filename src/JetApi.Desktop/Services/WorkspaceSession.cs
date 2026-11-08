@@ -30,6 +30,12 @@ public sealed class WorkspaceSession
     /// <summary>Absolute path of the workspace directory.</summary>
     public string Root { get; }
 
+    /// <summary>Cookies set by servers while the workspace is open (used when the cookie jar is on); never written to disk.</summary>
+    public System.Net.CookieContainer Cookies { get; private set; } = new();
+
+    /// <summary>Forgets every cookie.</summary>
+    public void ClearCookies() => Cookies = new System.Net.CookieContainer();
+
     /// <summary>OAuth 2.0 tokens of this workspace on this machine (<c>.jetapi/tokens.json</c>, not in Git).</summary>
     public OAuth2TokenStore Tokens { get; }
 

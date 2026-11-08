@@ -46,6 +46,7 @@
   <data name="Btn_SaveToFile" xml:space="preserve"><value>Dosyaya kaydet</value></data>
   <data name="Btn_Send" xml:space="preserve"><value>Gönder</value></data>
   <data name="Btn_SendAnyway" xml:space="preserve"><value>Yine de gönder</value></data>
+  <data name="Cmd_ClearCookies" xml:space="preserve"><value>Cookie’leri temizle</value></data>
   <data name="Cmd_CloseWorkspace" xml:space="preserve"><value>Workspace’i kapat</value></data>
   <data name="Cmd_CodeSnippet" xml:space="preserve"><value>Kod örneği…</value></data>
   <data name="Cmd_CopyAsCurl" xml:space="preserve"><value>cURL olarak kopyala</value></data>
@@ -65,6 +66,7 @@
   <data name="Confirm_CloseUnsaved" xml:space="preserve"><value>“{0}” kaydedilmemiş değişiklikler içeriyor. Yine de kapatılsın mı?</value></data>
   <data name="Confirm_Delete" xml:space="preserve"><value>“{0}” silinsin mi? Dosyaları workspace klasöründen kaldırılır.</value></data>
   <data name="Confirm_DeleteCollection" xml:space="preserve"><value>“{0}” koleksiyonu ve tüm istekleri silinsin mi? Klasörü workspace’ten kaldırılır.</value></data>
+  <data name="Cookies_Count" xml:space="preserve"><value>{0} cookie</value></data>
   <data name="Copy_Suffix" xml:space="preserve"><value>{0} (kopya)</value></data>
   <data name="Curl_ClipboardNoCommand" xml:space="preserve"><value>Panoda bir cURL komutu yok. Bir tane kopyalayın (örneğin tarayıcının geliştirici araçlarındaki “Copy as cURL” ile) ve yeniden deneyin.</value></data>
   <data name="Curl_ImportFailed" xml:space="preserve"><value>cURL komutu içe aktarılamadı: {0}</value></data>
@@ -245,6 +247,8 @@
   <data name="Res_TimingReused" xml:space="preserve"><value>Var olan bağlantı yeniden kullanıldı; DNS ve bağlantı süresi yok.</value></data>
   <data name="Res_Total" xml:space="preserve"><value>Toplam</value></data>
   <data name="Res_Truncated" xml:space="preserve"><value>Gövde {0} sınırını aştığı için kesildi.</value></data>
+  <data name="Settings_CookieJar" xml:space="preserve"><value>İstekler arasında cookie’leri sakla</value></data>
+  <data name="Settings_CookieJarHint" xml:space="preserve"><value>Sunucuların koyduğu cookie’ler, bir tarayıcıdaki gibi aynı siteye giden sonraki isteklerle gönderilir. Workspace kapanana kadar workspace başına tutulur, diske yazılmaz. İstekteki Cookie header’ı önceliklidir.</value></data>
   <data name="Shortcut_Close" xml:space="preserve"><value>Sekmeyi kapat</value></data>
   <data name="Shortcut_Env" xml:space="preserve"><value>Environment’lar</value></data>
   <data name="Shortcut_New" xml:space="preserve"><value>Yeni istek</value></data>

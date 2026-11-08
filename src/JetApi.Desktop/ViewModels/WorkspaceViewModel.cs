@@ -1014,6 +1014,15 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewCollection"), string.Empty, string.Empty, NewCollectionAsync));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ImportPostman"), string.Empty, string.Empty, ImportFromPostmanAsync));
         items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewFromCurl"), string.Empty, string.Empty, NewRequestFromCurlAsync));
+        if (_host.Settings.UseCookieJar)
+        {
+            items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ClearCookies"), Loc.Format("Cookies_Count", Session.Cookies.Count), string.Empty, () =>
+            {
+                Session.ClearCookies();
+                return Task.CompletedTask;
+            }));
+        }
+
         if (SelectedTab is HttpRequestTabViewModel http)
         {
             items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_CodeSnippet"), http.Name, string.Empty, http.ShowCodeSnippetAsync));

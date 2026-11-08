@@ -46,6 +46,7 @@
   <data name="Btn_SaveToFile" xml:space="preserve"><value>Save to file</value></data>
   <data name="Btn_Send" xml:space="preserve"><value>Send</value></data>
   <data name="Btn_SendAnyway" xml:space="preserve"><value>Send anyway</value></data>
+  <data name="Cmd_ClearCookies" xml:space="preserve"><value>Clear cookies</value></data>
   <data name="Cmd_CloseWorkspace" xml:space="preserve"><value>Close workspace</value></data>
   <data name="Cmd_CodeSnippet" xml:space="preserve"><value>Code snippet…</value></data>
   <data name="Cmd_CopyAsCurl" xml:space="preserve"><value>Copy as cURL</value></data>
@@ -65,6 +66,7 @@
   <data name="Confirm_CloseUnsaved" xml:space="preserve"><value>“{0}” has unsaved changes. Close it anyway?</value></data>
   <data name="Confirm_Delete" xml:space="preserve"><value>Delete “{0}”? Its files are removed from the workspace folder.</value></data>
   <data name="Confirm_DeleteCollection" xml:space="preserve"><value>Delete the collection “{0}” and all its requests? Its folder is removed from the workspace.</value></data>
+  <data name="Cookies_Count" xml:space="preserve"><value>{0} cookies</value></data>
   <data name="Copy_Suffix" xml:space="preserve"><value>{0} (copy)</value></data>
   <data name="Curl_ClipboardNoCommand" xml:space="preserve"><value>The clipboard does not hold a cURL command. Copy one (for example with “Copy as cURL” in the browser’s developer tools) and try again.</value></data>
   <data name="Curl_ImportFailed" xml:space="preserve"><value>The cURL command could not be imported: {0}</value></data>
@@ -245,6 +247,8 @@
   <data name="Res_TimingReused" xml:space="preserve"><value>An existing connection was reused, so there was no DNS lookup or connect.</value></data>
   <data name="Res_Total" xml:space="preserve"><value>Total</value></data>
   <data name="Res_Truncated" xml:space="preserve"><value>The body is larger than {0} and was cut off.</value></data>
+  <data name="Settings_CookieJar" xml:space="preserve"><value>Keep cookies between requests</value></data>
+  <data name="Settings_CookieJarHint" xml:space="preserve"><value>Cookies that servers set are sent with later requests to the same site, as a browser does. They are kept per workspace until it is closed and are never written to disk. A Cookie header on the request wins.</value></data>
   <data name="Shortcut_Close" xml:space="preserve"><value>Close tab</value></data>
   <data name="Shortcut_Env" xml:space="preserve"><value>Environments</value></data>
   <data name="Shortcut_New" xml:space="preserve"><value>New request</value></data>

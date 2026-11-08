@@ -93,6 +93,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
         _applyAppearance?.Invoke(settings);
         UiScale = Math.Clamp(settings.UiScale, 0.75, 2);
         _runner.DefaultHttpTimeout = TimeSpan.FromSeconds(Math.Clamp(settings.RequestTimeoutSeconds, 1, 3600));
+        _runner.UseCookieJar = settings.UseCookieJar;
     }
 
     /// <inheritdoc cref="IMainHost.Settings" />

@@ -45,7 +45,7 @@
 | REST-8 | İsteği iptal etme | M1 | ✅ |
 | REST-9 | Büyük yanıtlarda bellek koruması (kesme + uyarı) | M1 | ✅ |
 | REST-10 | Yanıtı dosyaya kaydetme | M1 | ✅ |
-| REST-11 | Cookie jar (workspace bazında, isteğe bağlı) | M2 | 🔜 |
+| REST-11 | Cookie jar (workspace bazında, isteğe bağlı) | M2 | ✅ Ayarlar → İstekler'den açılır (varsayılan kapalı); workspace başına bellekte, diske yazılmaz; istekteki Cookie header'ı önceliklidir; komut paletinden temizlenir. Yönlendirme ara adımlarındaki Set-Cookie'ler görülmez |
 | REST-12 | Proxy ayarları (sistem proxy'si varsayılan) | M2 | ✅ |
 | REST-13 | İstemci sertifikası (mTLS) | M4 | 🔜 |
 

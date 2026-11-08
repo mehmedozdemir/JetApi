@@ -75,7 +75,7 @@
         <!-- Requests -->
         <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Requests}">
           <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Requests}" />
-          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto" RowSpacing="16">
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
             <StackPanel VerticalAlignment="Center">
               <TextBlock Text="{l:Tr Settings_Timeout}" />
               <TextBlock Classes="faint small" Text="{l:Tr Settings_TimeoutHint}" TextWrapping="Wrap" />
@@ -83,6 +83,10 @@
             <NumericUpDown Grid.Column="1" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="1" Maximum="3600" Increment="5" FormatString="0"
                            Value="{Binding RequestTimeoutSeconds}" AutomationProperties.Name="{l:Tr Settings_Timeout}" />
             <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding ConfirmUndefinedVariables}" Content="{l:Tr Settings_ConfirmUndefined}" />
+            <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4">
+              <CheckBox IsChecked="{Binding UseCookieJar}" Content="{l:Tr Settings_CookieJar}" />
+              <TextBlock Classes="faint small" Margin="28,0,0,0" TextWrapping="Wrap" Text="{l:Tr Settings_CookieJarHint}" />
+            </StackPanel>
           </Grid>
         </StackPanel>
 

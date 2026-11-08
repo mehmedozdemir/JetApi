@@ -434,7 +434,7 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
         }
 
         Response.IsSending = true;
-        var result = await Host.Runner.ExecuteHttpAsync(preparation.Request!, cancellationToken).ConfigureAwait(true);
+        var result = await Host.Runner.ExecuteHttpAsync(preparation.Request!, Host.Session.Cookies, cancellationToken).ConfigureAwait(true);
         Response.SetResult(result, preparation.Request!.Headers);
         ResponseSection = result.Outcome == HttpExecutionOutcome.Completed ? ResponseSection.Body : ResponseSection.Timing;
 

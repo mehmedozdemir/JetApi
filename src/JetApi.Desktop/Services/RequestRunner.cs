@@ -102,12 +102,59 @@ public sealed class RequestRunner : IDisposable
     /// <summary>Timeout for requests that do not set their own (from the settings).</summary>
     public TimeSpan DefaultHttpTimeout { get; set; } = TimeSpan.FromSeconds(AppSettings.DefaultRequestTimeoutSeconds);
 
+    /// <summary>Keep and send cookies (from the settings).</summary>
+    public bool UseCookieJar { get; set; }
+
     /// <summary>Sends a prepared HTTP request.</summary>
-    public Task<HttpExecutionResult> ExecuteHttpAsync(PreparedHttpRequest request, CancellationToken cancellationToken)
+    /// <param name="request">The request.</param>
+    /// <param name="cookies">The workspace's cookie jar; used when <see cref="UseCookieJar"/> is on.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    public async Task<HttpExecutionResult> ExecuteHttpAsync(PreparedHttpRequest request, System.Net.CookieContainer? cookies, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
-        var withTimeout = request.Settings.Timeout is null ? request with { Settings = request.Settings with { Timeout = DefaultHttpTimeout } } : request;
-        return _http.ExecuteAsync(withTimeout, cancellationToken);
+        var jar = UseCookieJar ? cookies : null;
+        var toSend = request.Settings.Timeout is null ? request with { Settings = request.Settings with { Timeout = DefaultHttpTimeout } } : request;
+        if (jar is not null)
+        {
+            toSend = WithCookies(toSend, jar);
+        }
+
+        var result = await _http.ExecuteAsync(toSend, cancellationToken).ConfigureAwait(true);
+        if (jar is not null)
+        {
+            KeepCookies(result, request.Url, jar);
+        }
+
+        return result;
+    }
+
+    // A Cookie header written on the request wins over the jar.
+    private static PreparedHttpRequest WithCookies(PreparedHttpRequest request, System.Net.CookieContainer jar)
+    {
+        if (request.Headers.Any(h => h.Key.Equals("Cookie", StringComparison.OrdinalIgnoreCase)))
+        {
+            return request;
+        }
+
+        var header = jar.GetCookieHeader(request.Url);
+        return header.Length == 0 ? request : request with { Headers = [.. request.Headers, new("Cookie", header)] };
+    }
+
+    // Set-Cookie of the final response (redirect hops are followed by the HTTP stack and not seen here).
+    private static void KeepCookies(HttpExecutionResult result, Uri requestUrl, System.Net.CookieContainer jar)
+    {
+        var url = result.FinalUrl ?? requestUrl;
+        foreach (var header in result.Headers.Where(h => h.Key.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase)))
+        {
+            try
+            {
+                jar.SetCookies(url, header.Value);
+            }
+            catch (System.Net.CookieException)
+            {
+                // A malformed cookie is ignored, as browsers do.
+            }
+        }
     }
 
     /// <summary>Loads the collection's schema, resolves variables and auth and encodes the message.</summary>

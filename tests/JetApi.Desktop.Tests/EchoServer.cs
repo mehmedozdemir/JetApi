@@ -26,7 +26,13 @@ public sealed class EchoServer : IAsyncLifetime
             method = context.Request.Method,
             query = context.Request.QueryString.Value,
             authorization = context.Request.Headers.Authorization.ToString(),
+            cookie = context.Request.Headers.Cookie.ToString(),
         }));
+        _app.Map("/login", (HttpContext context) =>
+        {
+            context.Response.Headers.Append("Set-Cookie", "session=abc123; Path=/; HttpOnly");
+            return Results.Ok();
+        });
         await _app.StartAsync();
         BaseUrl = _app.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()!.Addresses.First();
     }
