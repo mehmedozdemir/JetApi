@@ -46,4 +46,6 @@
   <data name="OpenApi_Version" xml:space="preserve"><value>Sürüm: {0}</value></data>
   <data name="OpenApi_Webhooks" xml:space="preserve"><value>{0} webhook aktarılmadı; bunlar gönderilecek istekleri değil, API’nin yaptığı çağrıları tanımlar.</value></data>
   <data name="OpenApi_XmlBody" xml:space="preserve"><value>XML body şemadan üretildi; göndermeden önce öğe adlarını kontrol edin.</value></data>
+  <data name="Import_OAuthRedirect" xml:space="preserve"><value>'{0}' yönlendirme adresi JetApi'de oturum açma yanıtını alamaz; bu yüzden {1} kullanılır. Yetkilendirme sunucusunda http://127.0.0.1 adresini (herhangi bir port) yönlendirme adresi olarak kaydedin.</value></data>
+  <data name="Import_OAuthToken" xml:space="preserve"><value>OAuth 2.0 ayarları aktarıldı, token aktarılmadı. Auth sekmesinden yeni bir erişim token'ı alın.</value></data>
 </root>

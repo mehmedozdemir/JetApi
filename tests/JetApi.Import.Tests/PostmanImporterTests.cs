@@ -140,7 +140,7 @@ public sealed class PostmanImporterTests
         issues.ShouldContain(i => i.Location == "Collection" && i.Message.Contains("Pre-request", StringComparison.Ordinal));
         issues.ShouldContain(i => i.Location == "Orders / Get order" && i.Message.Contains("Test script", StringComparison.Ordinal));
         issues.ShouldContain(i => i.Location == "Orders / List orders" && i.Severity == ImportIssueSeverity.Info);
-        issues.ShouldContain(i => i.Location == "Customers / Import file" && i.Message.Contains("oauth2", StringComparison.Ordinal));
+        issues.ShouldContain(i => i.Location == "Customers / Import file" && i.Message.Contains("OAuth 2.0", StringComparison.Ordinal) && i.Severity == ImportIssueSeverity.Info);
         issues.ShouldContain(i => i.Location == "Customers / Upload avatar" && i.Message.Contains("/Users/ayse/avatar.png", StringComparison.Ordinal));
         issues.ShouldContain(i => i.Location == "Customers / Search" && i.Severity == ImportIssueSeverity.Info);
         // $randomUUID is supported; $randomEmail is not.
@@ -174,6 +174,61 @@ public sealed class PostmanImporterTests
             new Variable("retries", "3", IsEnabled: false),
         ]);
         PostmanImporter.ImportEnvironment(Sample("shop.postman_collection.json"), []).Succeeded.ShouldBeFalse();
+    }
+
+    [Theory]
+    [InlineData("client_credentials", OAuth2GrantType.ClientCredentials)]
+    [InlineData("password_credentials", OAuth2GrantType.Password)]
+    [InlineData("authorization_code_with_pkce", OAuth2GrantType.AuthorizationCode)]
+    public void OAuth2Settings_AreCarriedOver_WithoutTheToken(string grantType, OAuth2GrantType expected)
+    {
+        var json = """
+            { "info": { "name": "OAuth", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+              "auth": { "type": "oauth2", "oauth2": [
+                { "key": "grant_type", "value": "GRANT" },
+                { "key": "accessTokenUrl", "value": "{{auth}}/token" },
+                { "key": "authUrl", "value": "{{auth}}/authorize" },
+                { "key": "clientId", "value": "app" },
+                { "key": "clientSecret", "value": "{{secret}}" },
+                { "key": "scope", "value": "read write" },
+                { "key": "username", "value": "ayse" },
+                { "key": "password", "value": "pw" },
+                { "key": "redirect_uri", "value": "https://oauth.pstmn.io/v1/callback" },
+                { "key": "client_authentication", "value": "body" },
+                { "key": "accessToken", "value": "old" } ] },
+              "item": [] }
+            """.Replace("GRANT", grantType, StringComparison.Ordinal);
+
+        var result = PostmanImporter.ImportCollection(json, []);
+
+        var auth = result.Value!.Collection.Auth.ShouldBeOfType<OAuth2Auth>();
+        auth.GrantType.ShouldBe(expected);
+        auth.TokenUrl.ShouldBe("{{auth}}/token");
+        auth.ClientId.ShouldBe("app");
+        auth.ClientSecret.ShouldBe("{{secret}}");
+        auth.Scope.ShouldBe("read write");
+        auth.ClientAuthentication.ShouldBe(OAuth2ClientAuthentication.Body);
+        auth.AuthorizationUrl.ShouldBe(expected == OAuth2GrantType.AuthorizationCode ? "{{auth}}/authorize" : string.Empty);
+        auth.Username.ShouldBe(expected == OAuth2GrantType.Password ? "ayse" : string.Empty);
+        auth.UsePkce.ShouldBe(expected == OAuth2GrantType.AuthorizationCode);
+        auth.RedirectUri.ShouldBe(OAuth2Auth.DefaultRedirectUri);
+        result.Issues.ShouldContain(i => i.Message.Contains("token was not", StringComparison.Ordinal) && !i.IsWarning);
+        result.Issues.Any(i => i.Message.Contains("oauth.pstmn.io", StringComparison.Ordinal)).ShouldBe(expected == OAuth2GrantType.AuthorizationCode);
+    }
+
+    [Fact]
+    public void ImplicitOAuth2_BecomesNoAuthWithAWarning()
+    {
+        const string json = """
+            { "info": { "name": "Implicit", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+              "auth": { "type": "oauth2", "oauth2": [ { "key": "grant_type", "value": "implicit" } ] },
+              "item": [] }
+            """;
+
+        var result = PostmanImporter.ImportCollection(json, []);
+
+        result.Value!.Collection.Auth.ShouldBe(AuthConfig.None);
+        result.Issues.ShouldContain(i => i.Message.Contains("oauth2 (implicit)", StringComparison.Ordinal) && i.IsWarning);
     }
 
     [Fact]

@@ -46,4 +46,6 @@
   <data name="OpenApi_Version" xml:space="preserve"><value>Version: {0}</value></data>
   <data name="OpenApi_Webhooks" xml:space="preserve"><value>{0} webhook(s) were not imported; they describe calls the API makes, not requests to send.</value></data>
   <data name="OpenApi_XmlBody" xml:space="preserve"><value>The XML body was generated from the schema; check the element names before sending.</value></data>
+  <data name="Import_OAuthRedirect" xml:space="preserve"><value>The redirect URI '{0}' cannot receive the sign-in in JetApi, so {1} is used. Register http://127.0.0.1 (any port) as a redirect URI with the authorization server.</value></data>
+  <data name="Import_OAuthToken" xml:space="preserve"><value>OAuth 2.0 settings were carried over, the token was not. Get a new access token in the Auth tab.</value></data>
 </root>

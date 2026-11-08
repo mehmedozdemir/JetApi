@@ -31,7 +31,8 @@ aktarılırsa ikisi de kalır (`shop-api`, `shop-api-2`).
 | Body `file` | Dosya | Yol raporda |
 | Body `graphql` | JSON (`query`, `variables`) | Postman'in gönderdiği biçim; raporda bilgi |
 | Auth: bearer, basic, apikey, noauth | Aynı türler | Belirtilmemişse üstten miras |
-| Diğer auth türleri (OAuth 2.0, digest, AWS…) | Auth yok | Başka kimlik bilgisi miras alınıp yanlışlıkla gönderilmesin diye; raporda uyarı |
+| Auth: oauth2 (client credentials, authorization code ±PKCE, password) | OAuth 2.0 | Token aktarılmaz, Auth sekmesinden yeni token alınır (raporda bilgi). Loopback olmayan redirect URI (ör. `oauth.pstmn.io`) `http://127.0.0.1:0/callback` olur; raporda uyarı |
+| Diğer auth türleri (oauth2 implicit, digest, AWS…) | Auth yok | Başka kimlik bilgisi miras alınıp yanlışlıkla gönderilmesin diye; raporda uyarı |
 | Koleksiyon değişkenleri | Koleksiyon değişkenleri | Devre dışı ve `secret` türü korunur |
 | `followRedirects`, `strictSSL` | İstek ayarları | |
 | Environment değerleri | Environment | `enabled` ve `secret` korunur |

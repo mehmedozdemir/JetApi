@@ -54,6 +54,8 @@ public sealed class OpenApiImporterTests
             new Variable("token", string.Empty, IsSecret: true),
             new Variable("petId", "42"),
             new Variable("apiKey", string.Empty, IsSecret: true),
+            new Variable("clientId", string.Empty),
+            new Variable("clientSecret", string.Empty, IsSecret: true),
         ]);
         import.RequestCount.ShouldBe(8);
         import.FolderCount.ShouldBe(2);
@@ -148,13 +150,73 @@ public sealed class OpenApiImporterTests
     }
 
     [Fact]
-    public void OpenApi30Yaml_OAuth2BecomesNoAuthWithAnIssue()
+    public void OpenApi30Yaml_OAuth2BecomesOAuth2AuthWithClientVariables()
     {
         var result = Import("petstore.openapi.yaml");
 
-        Node<HttpRequestDefinition>(result.Value!, "store", "Place an order").Auth.ShouldBe(AuthConfig.None);
-        result.Issues.ShouldContain(i => i.Location == "store / Place an order" && i.Message.Contains("petstore_auth", StringComparison.Ordinal)
-            && i.Message.Contains("oauth2", StringComparison.Ordinal) && i.IsWarning);
+        Node<HttpRequestDefinition>(result.Value!, "store", "Place an order").Auth.ShouldBe(new OAuth2Auth(
+            OAuth2GrantType.ClientCredentials,
+            TokenUrl: "https://petstore.example.com/oauth/token",
+            ClientId: "{{clientId}}",
+            ClientSecret: "{{clientSecret}}",
+            Scope: "write:orders"));
+        var variables = result.Value!.Collection.Variables;
+        variables.ShouldContain(new Variable("clientId", string.Empty));
+        variables.ShouldContain(new Variable("clientSecret", string.Empty, IsSecret: true));
+        result.Issues.ShouldNotContain(i => i.Message.Contains("petstore_auth", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void OAuth2Flows_PreferAuthorizationCode_AndResolveRelativeUrls()
+    {
+        const string document = """
+            {
+              "openapi": "3.0.3",
+              "info": { "title": "Flows", "version": "1" },
+              "servers": [{ "url": "https://api.example.com" }],
+              "security": [{ "oauth": ["read", "write"] }],
+              "paths": { "/a": { "get": { "operationId": "a" } } },
+              "components": { "securitySchemes": { "oauth": { "type": "oauth2", "flows": {
+                "implicit": { "authorizationUrl": "/implicit", "scopes": {} },
+                "clientCredentials": { "tokenUrl": "/token", "scopes": {} },
+                "authorizationCode": { "authorizationUrl": "/authorize", "tokenUrl": "/token", "scopes": {} }
+              } } } }
+            }
+            """;
+
+        var auth = OpenApiImporter.Import(document, []).Value!.Collection.Auth.ShouldBeOfType<OAuth2Auth>();
+
+        auth.GrantType.ShouldBe(OAuth2GrantType.AuthorizationCode);
+        auth.AuthorizationUrl.ShouldBe("{{baseUrl}}/authorize");
+        auth.TokenUrl.ShouldBe("{{baseUrl}}/token");
+        auth.Scope.ShouldBe("read write");
+        auth.UsePkce.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void Swagger2PasswordFlow_BecomesPasswordGrant()
+    {
+        const string document = """
+            {
+              "swagger": "2.0",
+              "info": { "title": "Legacy", "version": "1" },
+              "host": "api.example.com",
+              "security": [{ "pw": [] }],
+              "paths": { "/a": { "get": { "operationId": "a" } } },
+              "securityDefinitions": { "pw": { "type": "oauth2", "flow": "password", "tokenUrl": "https://api.example.com/token" } }
+            }
+            """;
+
+        var import = OpenApiImporter.Import(document, []).Value!;
+
+        import.Collection.Auth.ShouldBe(new OAuth2Auth(
+            OAuth2GrantType.Password,
+            TokenUrl: "https://api.example.com/token",
+            ClientId: "{{clientId}}",
+            ClientSecret: "{{clientSecret}}",
+            Username: "{{username}}",
+            Password: "{{password}}"));
+        import.Collection.Variables.ShouldContain(new Variable("password", string.Empty, IsSecret: true));
     }
 
     [Fact]

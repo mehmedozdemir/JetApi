@@ -69,7 +69,8 @@ Güvenlik gereksinimleri alternatiftir; JetApi'nin gönderebildiği ilk gereksin
 | `http` + `basic` (Swagger: `basic`) | Basic `{{username}}` / `{{password}}` |
 | `apiKey` header ya da query | API key, değer `{{apiKey}}` (ikinci bir API key şeması kendi adıyla bir değişken alır) |
 | `apiKey` cookie | Auth yok; raporda eklenecek `Cookie` header'ı yazılır |
-| `oauth2`, `openIdConnect`, diğer `http` şemaları | Auth yok; raporda uyarı |
+| `oauth2` (authorization code, client credentials, password akışları) | OAuth 2.0; `{{clientId}}` / `{{clientSecret}}` değişkenleri, gereksinimdeki scope'lar, göreli URL'ler `{{baseUrl}}` ile. Birden fazla akış varsa sıra: authorization code, client credentials, password |
+| `oauth2` yalnızca implicit, `openIdConnect`, diğer `http` şemaları | Auth yok; raporda uyarı |
 
 ## Taşınmayanlar
 
@@ -77,4 +78,4 @@ Güvenlik gereksinimleri alternatiftir; JetApi'nin gönderebildiği ilk gereksin
 - Webhook'lar ve callback'ler (API'nin yaptığı çağrılar; raporda bilgi).
 - İşlem ya da path düzeyindeki ayrı `servers` (istek `{{baseUrl}}` kullanır; raporda bilgi).
 - Başka dosyadaki referanslar ve `externalValue` örnekleri (raporda).
-- OAuth 2.0 ve OpenID Connect (raporda; OAuth 2.0 desteği ayrıca geliyor).
+- OAuth 2.0 implicit akışı (güvenlik önerilerince kullanımdan kaldırıldı) ve OpenID Connect (raporda).

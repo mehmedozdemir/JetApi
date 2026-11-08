@@ -368,12 +368,61 @@ public static partial class PostmanImporter
             case "apikey":
                 var where = Field("in") == "query" ? ApiKeyLocation.Query : ApiKeyLocation.Header;
                 return new ApiKeyAuth(Field("key"), Field("value"), where);
+            case "oauth2":
+                return OAuth2(Field, location.Length == 0 ? Messages.Get("Import_CollectionLocation") : location, context) ?? AuthConfig.None;
             default:
                 // Sending no credentials is safer than inheriting ones that were never meant for this request.
                 context.Add(location.Length == 0 ? Messages.Get("Import_CollectionLocation") : location, Messages.Format("Import_AuthNotSupported", type));
                 return AuthConfig.None;
         }
     }
+
+    // Postman's OAuth 2.0 settings; the token itself is not carried over. The implicit grant is not supported.
+    private static OAuth2Auth? OAuth2(Func<string, string> field, string location, Context context)
+    {
+        var grantName = field("grant_type");
+        OAuth2GrantType? grant = grantName switch
+        {
+            "" or "authorization_code" or "authorization_code_with_pkce" => OAuth2GrantType.AuthorizationCode,
+            "client_credentials" => OAuth2GrantType.ClientCredentials,
+            "password_credentials" or "password" => OAuth2GrantType.Password,
+            _ => null,
+        };
+        if (grant is not { } grantType)
+        {
+            context.Add(location, Messages.Format("Import_AuthNotSupported", $"oauth2 ({grantName})"));
+            return null;
+        }
+
+        var redirect = field("redirect_uri");
+        if (!IsLoopback(redirect))
+        {
+            if (grantType == OAuth2GrantType.AuthorizationCode && redirect.Length > 0)
+            {
+                context.Add(location, Messages.Format("Import_OAuthRedirect", redirect, OAuth2Auth.DefaultRedirectUri));
+            }
+
+            redirect = OAuth2Auth.DefaultRedirectUri;
+        }
+
+        context.Add(location, Messages.Get("Import_OAuthToken"), ImportIssueSeverity.Info);
+        return new OAuth2Auth(
+            grantType,
+            TokenUrl: field("accessTokenUrl"),
+            ClientId: field("clientId"),
+            ClientSecret: field("clientSecret"),
+            Scope: field("scope"),
+            Audience: field("audience"),
+            AuthorizationUrl: grantType == OAuth2GrantType.AuthorizationCode ? field("authUrl") : string.Empty,
+            Username: grantType == OAuth2GrantType.Password ? field("username") : string.Empty,
+            Password: grantType == OAuth2GrantType.Password ? field("password") : string.Empty,
+            RedirectUri: redirect,
+            UsePkce: grantName == "authorization_code_with_pkce",
+            ClientAuthentication: field("client_authentication") == "body" ? OAuth2ClientAuthentication.Body : OAuth2ClientAuthentication.BasicHeader);
+    }
+
+    private static bool IsLoopback(string uri) =>
+        Uri.TryCreate(uri, UriKind.Absolute, out var parsed) && parsed.Scheme == Uri.UriSchemeHttp && parsed.IsLoopback;
 
     private static List<Variable> ConvertVariables(JsonElement variables) =>
         variables.ValueKind != JsonValueKind.Array

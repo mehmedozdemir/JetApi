@@ -5,6 +5,13 @@ namespace JetApi.Import;
 
 public static partial class OpenApiImporter
 {
+    private static readonly (string Name, OAuth2GrantType Grant)[] OAuthFlows =
+    [
+        ("authorizationCode", OAuth2GrantType.AuthorizationCode),
+        ("clientCredentials", OAuth2GrantType.ClientCredentials),
+        ("password", OAuth2GrantType.Password),
+    ];
+
     private sealed partial class Converter
     {
         /// <summary>
@@ -37,7 +44,7 @@ public static partial class OpenApiImporter
                     Add(location, Messages.Format("OpenApi_CombinedSecurity", string.Join(", ", names), applied));
                 }
 
-                return SchemeAuth(applied, location, report: true)!;
+                return SchemeAuth(applied, location, report: true, requirement[applied])!;
             }
 
             // Nothing usable: say why for each scheme of the first requirement.
@@ -51,7 +58,7 @@ public static partial class OpenApiImporter
 
         // The auth for a named scheme, or null when JetApi cannot send it. With report, unusable schemes are explained
         // once and the variables of usable ones are added.
-        private AuthConfig? SchemeAuth(string name, string location, bool report)
+        private AuthConfig? SchemeAuth(string name, string location, bool report, JsonNode? scopes = null)
         {
             var schemes = root[isSwagger ? "securityDefinitions" : "components"] is JsonObject container
                 ? isSwagger ? container : container["securitySchemes"] as JsonObject
@@ -109,10 +116,73 @@ public static partial class OpenApiImporter
                 }
             }
 
+            if (type == "oauth2" && OAuthFlow(scheme) is { } flow)
+            {
+                var password = flow.Grant == OAuth2GrantType.Password;
+                if (report)
+                {
+                    AddVariable("clientId", string.Empty);
+                    AddVariable("clientSecret", string.Empty, isSecret: true);
+                    if (password)
+                    {
+                        AddVariable("username", string.Empty);
+                        AddVariable("password", string.Empty, isSecret: true);
+                    }
+                }
+
+                return new OAuth2Auth(
+                    flow.Grant,
+                    TokenUrl: OAuthUrl(flow.TokenUrl),
+                    ClientId: "{{clientId}}",
+                    ClientSecret: "{{clientSecret}}",
+                    Scope: scopes is JsonArray list ? string.Join(' ', list.Select(s => Text(s)).Where(s => s.Length > 0)) : string.Empty,
+                    AuthorizationUrl: OAuthUrl(flow.AuthorizationUrl),
+                    Username: password ? "{{username}}" : string.Empty,
+                    Password: password ? "{{password}}" : string.Empty);
+            }
+
             var description = type == "http" && httpScheme.Length > 0 ? $"{type} {httpScheme}" : type;
             Explain(name, location, report, Messages.Format("OpenApi_SecurityNotSupported", name, description));
             return null;
         }
+
+        // The first flow JetApi can run: authorization code, then client credentials, then password. Implicit is not
+        // supported (the OAuth 2.0 Security BCP deprecates it).
+        private (OAuth2GrantType Grant, string TokenUrl, string AuthorizationUrl)? OAuthFlow(JsonObject scheme)
+        {
+            if (isSwagger)
+            {
+                OAuth2GrantType? grant = Text(scheme["flow"]) switch
+                {
+                    "accessCode" => OAuth2GrantType.AuthorizationCode,
+                    "application" => OAuth2GrantType.ClientCredentials,
+                    "password" => OAuth2GrantType.Password,
+                    _ => null,
+                };
+                return grant is { } swaggerGrant ? (swaggerGrant, Text(scheme["tokenUrl"]), Text(scheme["authorizationUrl"])) : null;
+            }
+
+            if (scheme["flows"] is not JsonObject flows)
+            {
+                return null;
+            }
+
+            foreach (var (name, grant) in OAuthFlows)
+            {
+                if (flows[name] is JsonObject flow)
+                {
+                    return (grant, Text(flow["tokenUrl"]), Text(flow["authorizationUrl"]));
+                }
+            }
+
+            return null;
+        }
+
+        // OAuth URLs may be relative to the server (OpenAPI 3).
+        private static string OAuthUrl(string url) =>
+            url.Length == 0 || url.Contains("://", StringComparison.Ordinal) || url.StartsWith("{{", StringComparison.Ordinal)
+                ? url
+                : "{{baseUrl}}" + (url.StartsWith('/') ? url : "/" + url);
 
         private void Explain(string scheme, string location, bool report, string message)
         {
