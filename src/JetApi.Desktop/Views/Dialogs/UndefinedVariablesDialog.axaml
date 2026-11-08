@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:JetApi.Desktop.Localization"
+        x:Class="JetApi.Desktop.Views.Dialogs.UndefinedVariablesDialog"
+        Width="520" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Background="{DynamicResource App.Surface}">
+  <StackPanel Margin="24" Spacing="14">
+    <TextBlock x:Name="TitleText" Classes="h3" />
+    <TextBlock x:Name="BodyText" TextWrapping="Wrap" Classes="muted" LineHeight="19" />
+    <ItemsControl x:Name="IssueList">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Spacing="6" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="x:String">
+          <Border Classes="danger" Padding="10,7">
+            <TextBlock Classes="mono" Text="{Binding}" />
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+      <Button Classes="secondary" Content="{l:Tr Btn_Cancel}" IsCancel="True" Click="OnCancel" />
+      <Button Classes="secondary" Content="{l:Tr Btn_SendAnyway}" Click="OnSend" />
+      <Button Classes="primary" Content="{l:Tr Btn_OpenEnvironments}" IsDefault="True" Click="OnOpenEnvironments" />
+    </StackPanel>
+  </StackPanel>
+</Window>

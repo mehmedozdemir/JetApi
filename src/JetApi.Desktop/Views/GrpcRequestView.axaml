@@ -1,0 +1,307 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:v="using:JetApi.Desktop.Views"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.GrpcRequestView"
+             x:DataType="vm:GrpcRequestTabViewModel">
+  <Grid RowDefinitions="Auto,*">
+    <Border Background="{DynamicResource App.Surface}" Padding="16,12,16,10" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
+      <StackPanel Spacing="10">
+        <TextBlock Classes="muted small" Text="{Binding Breadcrumb}" TextTrimming="CharacterEllipsis" />
+        <Grid ColumnDefinitions="2*,12,1.4*,12,1.2*,Auto,Auto">
+          <StackPanel>
+            <TextBlock Classes="field-label" Text="{l:Tr Grpc_Server}" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBox x:Name="UrlBox" Classes="mono" Text="{Binding ServerUrl}" CornerRadius="6,0,0,6" PlaceholderText="http://localhost:5000" />
+              <Border Grid.Column="1" CornerRadius="0,6,6,0" Padding="10,0" Margin="-1,0,0,0" BorderThickness="1" BorderBrush="{DynamicResource App.BorderStrong}"
+                      Background="{DynamicResource Tone.Warning.Bg}" IsVisible="{Binding IsPlaintext}">
+                <TextBlock Classes="small" FontWeight="Medium" Text="{l:Tr Grpc_Plaintext}" VerticalAlignment="Center" Foreground="{DynamicResource Tone.Warning.Fg}" />
+              </Border>
+              <Border Grid.Column="1" CornerRadius="0,6,6,0" Padding="10,0" Margin="-1,0,0,0" BorderThickness="1" BorderBrush="{DynamicResource App.BorderStrong}"
+                      Background="{DynamicResource Tone.Success.Bg}" IsVisible="{Binding !IsPlaintext}">
+                <TextBlock Classes="small" FontWeight="Medium" Text="{l:Tr Grpc_Tls}" VerticalAlignment="Center" Foreground="{DynamicResource Tone.Success.Fg}" />
+              </Border>
+            </Grid>
+          </StackPanel>
+          <StackPanel Grid.Column="2">
+            <TextBlock Classes="field-label" Text="{l:Tr Grpc_Service}" />
+            <ComboBox ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedService}" HorizontalAlignment="Stretch" FontFamily="{DynamicResource App.MonoFont}" FontSize="12.5" />
+          </StackPanel>
+          <StackPanel Grid.Column="4">
+            <TextBlock Classes="field-label" Text="{l:Tr Grpc_Method}" />
+            <ComboBox ItemsSource="{Binding Methods}" SelectedItem="{Binding SelectedMethod}" HorizontalAlignment="Stretch" FontFamily="{DynamicResource App.MonoFont}" FontSize="12.5">
+              <ComboBox.ItemContainerTheme>
+                <ControlTheme TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}" x:DataType="vm:MethodOption">
+                  <Setter Property="IsEnabled" Value="{Binding IsUnary}" />
+                </ControlTheme>
+              </ComboBox.ItemContainerTheme>
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:MethodOption">
+                  <TextBlock Text="{Binding Label}" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </StackPanel>
+          <Button Grid.Column="5" Classes="primary" Margin="8,0,0,0" VerticalAlignment="Bottom" MinHeight="34" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="{Binding SendLabel}" />
+              <TextBlock Text="Ctrl ↵" FontFamily="{DynamicResource App.MonoFont}" FontSize="11" Opacity="0.85" />
+            </StackPanel>
+          </Button>
+          <Button Grid.Column="5" Classes="secondary" Margin="8,0,0,0" VerticalAlignment="Bottom" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" Content="{l:Tr Btn_Cancel_Request}" />
+          <Button Grid.Column="6" Classes="secondary" Margin="8,0,0,0" VerticalAlignment="Bottom" Command="{Binding SaveCommand}" Content="{l:Tr Btn_Save}" />
+        </Grid>
+
+        <ItemsControl ItemsSource="{Binding UrlHints}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:VariableHint">
+              <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,0">
+                <Border CornerRadius="4" Padding="6,1" Background="{DynamicResource Tone.Success.Bg}" IsVisible="{Binding IsDefined}">
+                  <TextBlock Classes="mono small" Text="{Binding Placeholder}" Foreground="{DynamicResource Tone.Success.Fg}" />
+                </Border>
+                <Border CornerRadius="4" Padding="6,1" Background="{DynamicResource Tone.Danger.Bg}" IsVisible="{Binding !IsDefined}">
+                  <TextBlock Classes="mono small" Text="{Binding Placeholder}" Foreground="{DynamicResource Tone.Danger.Fg}" />
+                </Border>
+                <TextBlock Classes="muted small mono" Text="{Binding Value, StringFormat='= {0}'}" IsVisible="{Binding IsDefined}" />
+                <TextBlock Classes="muted small" Text="{Binding Description, StringFormat='· {0}'}" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Proto status -->
+        <Grid ColumnDefinitions="*,Auto,Auto" IsVisible="{Binding IsProtoLoaded}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" Foreground="{DynamicResource Tone.Success.Fg}" VerticalAlignment="Center" />
+            <TextBlock Classes="small" Foreground="{DynamicResource Tone.Success.Fg}" Text="{l:Tr Grpc_ProtoLoaded}" VerticalAlignment="Center" />
+            <TextBlock Classes="small mono muted" Text="{Binding ProtoFilesText}" VerticalAlignment="Center" />
+            <TextBlock Classes="small muted" Text="{Binding ProtoSummary, StringFormat='· {0}'}" VerticalAlignment="Center" />
+          </StackPanel>
+          <Button Grid.Column="1" Classes="link" Command="{Binding ReloadProtoCommand}" Content="{l:Tr Top_Reload}" />
+          <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+        </Grid>
+        <Border Classes="danger" IsVisible="{Binding HasProtoErrors}">
+          <StackPanel Spacing="6">
+            <Grid ColumnDefinitions="*,Auto,Auto">
+              <TextBlock FontWeight="SemiBold" Text="{l:Tr Grpc_ProtoErrors}" VerticalAlignment="Center" />
+              <Button Grid.Column="1" Classes="link" Command="{Binding ReloadProtoCommand}" Content="{l:Tr Top_Reload}" />
+              <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+            </Grid>
+            <ItemsControl ItemsSource="{Binding ProtoErrors}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                  <SelectableTextBlock Classes="mono" Text="{Binding}" TextWrapping="Wrap" Foreground="{DynamicResource Tone.Danger.Fg}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+        <Border Classes="note" IsVisible="{Binding HasNoProto}">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="{l:Tr Grpc_NoProto}" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+          </Grid>
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="1" ColumnDefinitions="*,1,*" Background="{DynamicResource App.Surface}">
+      <Grid RowDefinitions="Auto,*">
+        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="8,0">
+          <StackPanel Orientation="Horizontal" Spacing="2">
+            <RadioButton Classes="tab" GroupName="greq" Content="{l:Tr Grpc_Message}"
+                         IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}" />
+            <RadioButton Classes="tab" GroupName="greq" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Headers}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Grpc_Metadata}" />
+                <TextBlock Classes="faint small" Text="{Binding MetadataBadge}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Classes="tab" GroupName="greq" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Auth}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Req_Auth}" />
+                <TextBlock Classes="faint small" Text="{Binding AuthBadge}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Classes="tab" GroupName="greq" Content="{l:Tr Req_Settings}"
+                         IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Settings}" />
+          </StackPanel>
+        </Border>
+        <Panel Grid.Row="1">
+          <Grid ColumnDefinitions="3*,12,2*" Margin="12" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}">
+            <Grid RowDefinitions="Auto,*,Auto">
+              <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,8">
+                <TextBlock Classes="muted small" Text="{Binding InputTypeText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <Button Grid.Column="1" Classes="link" Content="{l:Tr Btn_Format}" Command="{Binding FormatMessageCommand}" />
+                <Button Grid.Column="2" Classes="link" Content="{l:Tr Btn_FillTemplate}" Command="{Binding FillTemplateCommand}" />
+              </Grid>
+              <Border Grid.Row="1" Classes="code">
+                <c:CodeEditor Text="{Binding Message}" Language="json" />
+              </Border>
+              <Border Grid.Row="2" Classes="danger" Margin="0,8,0,0" IsVisible="{Binding MessageError, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <SelectableTextBlock Classes="mono" Text="{Binding MessageError}" TextWrapping="Wrap" />
+              </Border>
+            </Grid>
+            <Border Grid.Column="2" Background="{DynamicResource App.Sidebar}" BorderBrush="{DynamicResource App.Border}" BorderThickness="1" CornerRadius="6" Padding="12,10">
+              <ScrollViewer>
+                <StackPanel Spacing="6">
+                  <TextBlock Classes="muted small" FontWeight="SemiBold" Text="{l:Tr Grpc_Fields}" />
+                  <ItemsControl ItemsSource="{Binding Fields}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:FieldInfo">
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                          <TextBlock Classes="mono" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Grid.Column="1" Classes="mono muted" Margin="8,0,0,0" Text="{Binding Type}" />
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <TextBlock Classes="muted small" Margin="0,6,0,0" TextWrapping="Wrap" LineHeight="17" Text="{l:Tr Grpc_JsonHint}" />
+                </StackPanel>
+              </ScrollViewer>
+            </Border>
+          </Grid>
+
+          <ScrollViewer IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Headers}">
+            <StackPanel Margin="12" Spacing="10">
+              <v:KeyValueTable DataContext="{Binding Metadata}" />
+              <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Grpc_MetadataHint}" />
+            </StackPanel>
+          </ScrollViewer>
+
+          <ScrollViewer IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Auth}">
+            <v:AuthEditorView DataContext="{Binding Auth}" Margin="16" />
+          </ScrollViewer>
+
+          <StackPanel Margin="16" Spacing="12" MaxWidth="560" HorizontalAlignment="Left"
+                      IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Settings}">
+            <CheckBox IsChecked="{Binding ValidateCertificates}" Content="{l:Tr Req_ValidateCertificates}" />
+            <StackPanel>
+              <TextBlock Classes="field-label" Text="{l:Tr Grpc_Deadline}" />
+              <TextBox Classes="mono" Width="140" HorizontalAlignment="Left" Text="{Binding DeadlineText}" PlaceholderText="30000" />
+            </StackPanel>
+            <CheckBox IsChecked="{Binding EmitDefaults}" Content="{l:Tr Grpc_EmitDefaults}" />
+          </StackPanel>
+        </Panel>
+      </Grid>
+
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+
+      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,*">
+        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="12,0" Height="41" IsVisible="{Binding !Response.IsEmpty}">
+          <StackPanel Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+            <c:StatusPill Tone="{Binding Response.Tone}" Text="{Binding Response.StatusText}" />
+            <TextBlock Classes="small" FontWeight="SemiBold" Text="{Binding Response.DurationText}" VerticalAlignment="Center" />
+            <TextBlock Classes="small" FontWeight="SemiBold" Text="{Binding Response.SizeText}" VerticalAlignment="Center" />
+            <TextBlock Classes="small muted" Text="{l:Tr Res_Sending}" IsVisible="{Binding Response.IsSending}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Row="1" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="8,0" IsVisible="{Binding Response.HasResult}">
+          <StackPanel Orientation="Horizontal" Spacing="2">
+            <RadioButton Classes="tab" GroupName="gres" Content="{l:Tr Grpc_Response}"
+                         IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}" />
+            <RadioButton Classes="tab" GroupName="gres"
+                         IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Headers}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Res_Headers}" />
+                <TextBlock Classes="faint small" Text="{Binding Response.HeadersBadge}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Classes="tab" GroupName="gres"
+                         IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Timing}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Grpc_Trailers}" />
+                <TextBlock Classes="faint small" Text="{Binding Response.TrailersBadge}" />
+              </StackPanel>
+            </RadioButton>
+            <RadioButton Classes="tab" GroupName="gres" Content="{l:Tr Grpc_SentMetadata}"
+                         IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Sent}" />
+          </StackPanel>
+        </Border>
+        <Panel Grid.Row="2">
+          <StackPanel IsVisible="{Binding Response.IsEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+            <c:Icon Data="{StaticResource Icon.Server}" Width="32" Height="32" Foreground="{DynamicResource App.TextFaint}" HorizontalAlignment="Center" />
+            <TextBlock Classes="muted" Text="{l:Tr Res_Empty}" HorizontalAlignment="Center" />
+            <TextBlock Classes="faint small" Text="{l:Tr Res_EmptyShortcut}" HorizontalAlignment="Center" />
+          </StackPanel>
+          <TextBlock IsVisible="{Binding Response.IsSending}" Classes="muted" Text="{l:Tr Res_Sending}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <StackPanel IsVisible="{Binding Response.HasPreparationErrors}" Margin="16" Spacing="8">
+            <TextBlock Classes="h3" Text="{l:Tr Error_Preparation}" />
+            <ItemsControl ItemsSource="{Binding Response.PreparationErrors}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                  <Border Classes="danger" Margin="0,0,0,6">
+                    <SelectableTextBlock Classes="mono" Text="{Binding}" TextWrapping="Wrap" />
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <Panel IsVisible="{Binding Response.HasResult}">
+            <Grid RowDefinitions="Auto,*" Margin="12,8,12,12"
+                  IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}">
+              <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8" IsVisible="{Binding Response.HasMessage}">
+                <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{Binding OutputTypeText}" />
+                <Button Grid.Column="1" Classes="link" Content="{l:Tr Btn_Copy}" Command="{Binding CopyResponseCommand}" />
+              </Grid>
+              <Border Grid.Row="1" Classes="code" IsVisible="{Binding Response.HasMessage}">
+                <c:CodeEditor Text="{Binding Response.ResponseJson, Mode=OneWay}" Language="json" IsReadOnly="True" />
+              </Border>
+              <StackPanel Grid.Row="1" Spacing="10" IsVisible="{Binding Response.HasStatusDetail}" VerticalAlignment="Top">
+                <TextBlock Classes="muted small" FontWeight="SemiBold" Text="{l:Tr Grpc_ServerMessage}" />
+                <Border Classes="code" Padding="12">
+                  <SelectableTextBlock Text="{Binding Response.StatusDetail}" TextWrapping="Wrap" />
+                </Border>
+                <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Grpc_ErrorStatusHint}" />
+              </StackPanel>
+            </Grid>
+            <ScrollViewer IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Headers}">
+              <ItemsControl ItemsSource="{Binding Response.Headers}" Margin="12">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:HeaderLine">
+                    <Grid ColumnDefinitions="220,*" Margin="0,3">
+                      <SelectableTextBlock Classes="mono" Foreground="{DynamicResource App.TextMuted}" Text="{Binding Name}" />
+                      <SelectableTextBlock Grid.Column="1" Classes="mono" Text="{Binding Value}" TextWrapping="Wrap" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+            <ScrollViewer IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Timing}">
+              <ItemsControl ItemsSource="{Binding Response.Trailers}" Margin="12">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:HeaderLine">
+                    <Grid ColumnDefinitions="220,*" Margin="0,3">
+                      <SelectableTextBlock Classes="mono" Foreground="{DynamicResource App.TextMuted}" Text="{Binding Name}" />
+                      <SelectableTextBlock Grid.Column="1" Classes="mono" Text="{Binding Value}" TextWrapping="Wrap" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+            <ScrollViewer IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Sent}">
+              <ItemsControl ItemsSource="{Binding Response.SentMetadata}" Margin="12">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:HeaderLine">
+                    <Grid ColumnDefinitions="220,*" Margin="0,3">
+                      <SelectableTextBlock Classes="mono" Foreground="{DynamicResource App.TextMuted}" Text="{Binding Name}" />
+                      <SelectableTextBlock Grid.Column="1" Classes="mono" Text="{Binding Value}" TextWrapping="Wrap" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Panel>
+        </Panel>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

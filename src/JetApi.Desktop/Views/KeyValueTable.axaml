@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.KeyValueTable"
+             x:DataType="vm:KeyValueListViewModel"
+             x:Name="Root">
+  <!-- Editable key/value rows; the last row is always empty and adds an entry when typed into. -->
+  <Grid RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="36,*,*,*,Auto,32" Margin="0,0,0,2">
+      <TextBlock Grid.Column="1" Classes="muted small" Margin="6,6" Text="{l:Tr Req_Key}" />
+      <TextBlock Grid.Column="2" Classes="muted small" Margin="6,6" Text="{l:Tr Req_Value}" />
+      <TextBlock Grid.Column="3" Classes="muted small" Margin="6,6" Text="{l:Tr Req_Description}" IsVisible="{Binding #Root.ShowDescription}" />
+      <TextBlock Grid.Column="4" Classes="muted small" Margin="6,6" Text="{l:Tr Req_Part_IsFile}" IsVisible="{Binding #Root.ShowFileToggle}" />
+    </Grid>
+    <ItemsControl Grid.Row="1" ItemsSource="{Binding Rows}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:KeyValueRowViewModel">
+          <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="36,*,*,*,Auto,32">
+              <CheckBox Grid.Column="0" IsChecked="{Binding IsEnabled}" HorizontalAlignment="Center"
+                        IsVisible="{Binding !IsPlaceholder}" ToolTip.Tip="{l:Tr Req_Enabled}" />
+              <TextBox Grid.Column="1" Classes="cell mono" Text="{Binding Key}" PlaceholderText="{l:Tr Req_Key}" />
+              <TextBox Grid.Column="2" Classes="cell mono" Text="{Binding Value}" PlaceholderText="{l:Tr Req_Value}" />
+              <TextBox Grid.Column="3" Classes="cell" Text="{Binding Description}" PlaceholderText="{l:Tr Req_Description}"
+                       IsVisible="{Binding #Root.ShowDescription}" />
+              <CheckBox Grid.Column="4" IsChecked="{Binding IsFile}" Margin="8,0" IsVisible="{Binding #Root.ShowFileToggle}"
+                        ToolTip.Tip="{l:Tr Req_Part_IsFile}" />
+              <Button Grid.Column="5" Classes="icon" IsVisible="{Binding !IsPlaceholder}"
+                      Command="{Binding RemoveCommand}"
+                      ToolTip.Tip="{l:Tr Btn_Remove}" AutomationProperties.Name="{l:Tr Btn_Remove}">
+                <c:Icon Data="{StaticResource Icon.Close}" Width="12" Height="12" />
+              </Button>
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </Grid>
+</UserControl>

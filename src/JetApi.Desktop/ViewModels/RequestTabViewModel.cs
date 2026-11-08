@@ -35,6 +35,12 @@ public interface IRequestHost
 
     /// <summary>Records a sent request in the history list.</summary>
     void AddHistory(HistoryEntry entry);
+
+    /// <summary>Opens the settings of a collection (name, auth, proto files).</summary>
+    void OpenCollectionSettings(string collectionKey);
+
+    /// <summary>Closes a tab (asking first when it has unsaved changes).</summary>
+    Task CloseTabAsync(RequestTabViewModel? tab);
 }
 
 /// <summary>A variable used in the URL or message, with its value for the hint line.</summary>
@@ -157,6 +163,10 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     /// <summary>Cancels a running request.</summary>
     [RelayCommand(CanExecute = nameof(IsBusy))]
     private void Cancel() => _sending?.Cancel();
+
+    /// <summary>Closes this tab.</summary>
+    [RelayCommand]
+    private Task CloseAsync() => Host.CloseTabAsync(this);
 
     /// <summary>Saves the request to its file.</summary>
     [RelayCommand]

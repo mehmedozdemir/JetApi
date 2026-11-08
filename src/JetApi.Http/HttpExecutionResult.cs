@@ -18,6 +18,31 @@ public enum HttpExecutionOutcome
     Cancelled,
 }
 
+/// <summary>Why no response was received, so the UI can explain it in the user's language.</summary>
+public enum HttpErrorKind
+{
+    /// <summary>No error.</summary>
+    None,
+
+    /// <summary>The host name could not be resolved.</summary>
+    DnsFailure,
+
+    /// <summary>Nothing is listening on the port.</summary>
+    ConnectionRefused,
+
+    /// <summary>The TLS handshake failed (certificate, protocol).</summary>
+    TlsFailure,
+
+    /// <summary>Another network error.</summary>
+    Network,
+
+    /// <summary>The timeout elapsed.</summary>
+    TimedOut,
+
+    /// <summary>The user cancelled.</summary>
+    Cancelled,
+}
+
 /// <summary>
 /// Where the time went. <see cref="Dns"/> and <see cref="Connect"/> are <c>null</c> when an
 /// existing connection was reused. <see cref="TimeToFirstByte"/> is measured from the start and
@@ -80,6 +105,9 @@ public sealed record HttpExecutionResult
     /// <summary>The remote IP endpoint of a newly opened connection.</summary>
     public string? RemoteEndPoint { get; init; }
 
-    /// <summary>Why the request failed, in user-facing language.</summary>
+    /// <summary>Why the request failed, in English.</summary>
     public string? ErrorMessage { get; init; }
+
+    /// <summary>Category of the failure.</summary>
+    public HttpErrorKind ErrorKind { get; init; }
 }

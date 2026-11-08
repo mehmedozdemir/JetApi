@@ -68,20 +68,21 @@ public sealed class HttpRequestExecutor : IDisposable
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            return Failure(HttpExecutionOutcome.Cancelled, message, recorder, stopwatch, "The request was cancelled.");
+            return Failure(HttpExecutionOutcome.Cancelled, HttpErrorKind.Cancelled, message, recorder, stopwatch, "The request was cancelled.");
         }
         catch (OperationCanceledException) when (timeout.IsCancellationRequested)
         {
             var limit = request.Settings.Timeout ?? _options.DefaultTimeout;
-            return Failure(HttpExecutionOutcome.TimedOut, message, recorder, stopwatch, $"No response within {limit.TotalMilliseconds:0} ms.");
+            return Failure(HttpExecutionOutcome.TimedOut, HttpErrorKind.TimedOut, message, recorder, stopwatch, $"No response within {limit.TotalMilliseconds:0} ms.");
         }
         catch (HttpRequestException exception)
         {
-            return Failure(HttpExecutionOutcome.Failed, message, recorder, stopwatch, Describe(exception));
+            var (kind, description) = Describe(exception);
+            return Failure(HttpExecutionOutcome.Failed, kind, message, recorder, stopwatch, description);
         }
         catch (IOException exception)
         {
-            return Failure(HttpExecutionOutcome.Failed, message, recorder, stopwatch, exception.Message);
+            return Failure(HttpExecutionOutcome.Failed, HttpErrorKind.Network, message, recorder, stopwatch, exception.Message);
         }
     }
 
@@ -276,12 +277,13 @@ public sealed class HttpRequestExecutor : IDisposable
         return new SentHttpRequest(
             message.Method.Method,
             message.RequestUri!,
-            [.. headers.SelectMany(h => h.Value.Select(v => new KeyValuePair<string, string>(h.Key, v)))],
+            [.. headers.Select(h => new KeyValuePair<string, string>(h.Key, string.Join(", ", h.Value)))],
             message.Content?.Headers.ContentLength);
     }
 
     private static HttpExecutionResult Failure(
         HttpExecutionOutcome outcome,
+        HttpErrorKind kind,
         HttpRequestMessage message,
         TimingRecorder recorder,
         Stopwatch stopwatch,
@@ -292,21 +294,22 @@ public sealed class HttpRequestExecutor : IDisposable
             Timings = new HttpTimings(recorder.Dns, recorder.Connect, TimeSpan.Zero, TimeSpan.Zero, stopwatch.Elapsed),
             RemoteEndPoint = recorder.RemoteEndPoint,
             ErrorMessage = error,
+            ErrorKind = kind,
         };
 
-    private static string Describe(HttpRequestException exception)
+    private static (HttpErrorKind Kind, string Message) Describe(HttpRequestException exception)
     {
         var root = exception.InnerException;
         return root switch
         {
             SocketException { SocketErrorCode: SocketError.HostNotFound or SocketError.NoData } =>
-                "The host name could not be resolved (DNS). Check the URL and your network or VPN.",
+                (HttpErrorKind.DnsFailure, "The host name could not be resolved (DNS). Check the URL and your network or VPN."),
             SocketException { SocketErrorCode: SocketError.ConnectionRefused } =>
-                "Connection refused. Is the server running and listening on this port?",
-            SocketException socket => $"Network error: {socket.Message}",
+                (HttpErrorKind.ConnectionRefused, "Connection refused. Is the server running and listening on this port?"),
+            SocketException socket => (HttpErrorKind.Network, $"Network error: {socket.Message}"),
             AuthenticationException auth =>
-                $"TLS handshake failed: {(auth.InnerException ?? auth).Message} You can disable certificate validation for this request in its settings.",
-            _ => exception.Message,
+                (HttpErrorKind.TlsFailure, $"TLS handshake failed: {(auth.InnerException ?? auth).Message} You can disable certificate validation for this request in its settings."),
+            _ => (HttpErrorKind.Network, exception.Message),
         };
     }
 

@@ -505,6 +505,16 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     }
 
     /// <inheritdoc />
+    public void OpenCollectionSettings(string collectionKey)
+    {
+        if (Session.Workspace.FindCollection(collectionKey) is not null)
+        {
+            Environments = null;
+            NodeSettings = new NodeSettingsViewModel(Session, Dialogs, collectionKey, [], _ => NodeSettings = null);
+        }
+    }
+
+    /// <inheritdoc />
     public void Dispose()
     {
         _watcher?.Dispose();

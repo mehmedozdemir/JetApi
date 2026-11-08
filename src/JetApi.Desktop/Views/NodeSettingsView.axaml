@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:v="using:JetApi.Desktop.Views"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.NodeSettingsView"
+             x:DataType="vm:NodeSettingsViewModel">
+  <Grid RowDefinitions="48,*,Auto" Background="{DynamicResource App.Surface}">
+    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <Button Classes="flat" Command="{Binding CancelCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <c:Icon Data="{StaticResource Icon.Back}" />
+            <TextBlock Text="{l:Tr Env_Back}" />
+          </StackPanel>
+        </Button>
+        <TextBlock Classes="h3" VerticalAlignment="Center" Text="{Binding Title}" />
+      </StackPanel>
+    </Border>
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Margin="24,20" Spacing="20" MaxWidth="720" HorizontalAlignment="Left">
+        <StackPanel>
+          <TextBlock Classes="field-label" Text="{l:Tr Col_Name}" />
+          <TextBox Text="{Binding Name}" Width="420" HorizontalAlignment="Left" />
+        </StackPanel>
+        <StackPanel Spacing="8">
+          <TextBlock Classes="h3" Text="{l:Tr Req_Auth}" />
+          <v:AuthEditorView DataContext="{Binding Auth}" />
+        </StackPanel>
+        <StackPanel Spacing="12" IsVisible="{Binding IsCollection}">
+          <TextBlock Classes="h3" Text="gRPC · proto" />
+          <StackPanel>
+            <TextBlock Classes="field-label" Text="{l:Tr Grpc_ImportPaths}" />
+            <TextBox Classes="mono" AcceptsReturn="True" MinHeight="64" VerticalContentAlignment="Top" Text="{Binding ImportPathsText}" PlaceholderText="protos" />
+          </StackPanel>
+          <StackPanel>
+            <TextBlock Classes="field-label" Text="{l:Tr Grpc_ProtoFiles}" />
+            <TextBox Classes="mono" AcceptsReturn="True" MinHeight="80" VerticalContentAlignment="Top" Text="{Binding ProtoFilesText}" PlaceholderText="users/v1/users.proto" />
+          </StackPanel>
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+    <Border Grid.Row="2" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="24,12">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Classes="primary" Content="{l:Tr Btn_Save}" Command="{Binding SaveCommand}" />
+        <Button Classes="secondary" Content="{l:Tr Btn_Cancel}" Command="{Binding CancelCommand}" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

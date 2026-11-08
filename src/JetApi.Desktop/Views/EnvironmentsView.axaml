@@ -1,0 +1,145 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.EnvironmentsView"
+             x:DataType="vm:EnvironmentsViewModel"
+             x:Name="Root">
+  <Grid RowDefinitions="48,*" Background="{DynamicResource App.Surface}">
+    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="12,0">
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+        <Button Classes="flat" Command="{Binding CloseCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <c:Icon Data="{StaticResource Icon.Back}" />
+            <TextBlock Text="{l:Tr Env_Back}" />
+          </StackPanel>
+        </Button>
+        <TextBlock Grid.Column="1" Classes="h3" Margin="12,0" VerticalAlignment="Center" Text="{l:Tr Env_Title}" />
+        <TextBlock Grid.Column="3" Classes="muted small" VerticalAlignment="Center" Text="Ctrl E" />
+      </Grid>
+    </Border>
+    <Grid Grid.Row="1" ColumnDefinitions="260,*">
+      <Border Background="{DynamicResource App.Sidebar}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,1,0" Padding="8,12">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
+          <Grid ColumnDefinitions="*,Auto" Margin="8,0,0,6">
+            <TextBlock Classes="label" Text="{l:Tr Env_Environments}" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Classes="icon" Command="{Binding AddEnvironmentCommand}" ToolTip.Tip="{l:Tr Env_New}" AutomationProperties.Name="{l:Tr Env_New}">
+              <c:Icon Data="{StaticResource Icon.Plus}" />
+            </Button>
+          </Grid>
+          <ItemsControl Grid.Row="1" ItemsSource="{Binding Environments}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ScopeItemViewModel">
+                <Button Classes="flat" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="32"
+                        Command="{Binding SelectCommand}">
+                  <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                    <Ellipse Width="8" Height="8" Fill="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding IsActive}" Margin="0,0,8,0" />
+                    <TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="2" Classes="faint small" Margin="8,0" Text="{l:Tr Env_Active}" IsVisible="{Binding IsActive}" />
+                    <TextBlock Grid.Column="3" Classes="faint small" Text="{Binding Count}" />
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Grid.Row="1" Classes="muted small" Margin="8" Text="{l:Tr Env_None}" IsVisible="{Binding HasNoEnvironments}" />
+          <TextBlock Grid.Row="2" Classes="label" Margin="8,16,0,6" Text="{l:Tr Env_OtherScopes}" />
+          <ItemsControl Grid.Row="3" ItemsSource="{Binding OtherScopes}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ScopeItemViewModel">
+                <Button Classes="flat" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="32"
+                        Command="{Binding SelectCommand}">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="1" Classes="faint small" Text="{Binding Count}" />
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Border Grid.Row="5" Classes="card" Padding="12" Margin="4,12,4,0">
+            <StackPanel Spacing="6">
+              <TextBlock FontWeight="SemiBold" Classes="small" Text="{l:Tr Env_Precedence}" />
+              <Border CornerRadius="4" Padding="8,4" Background="{DynamicResource App.Text}">
+                <TextBlock Classes="small" Foreground="{DynamicResource App.Surface}" Text="{l:Tr Env_Precedence4}" />
+              </Border>
+              <Border CornerRadius="4" Padding="8,4" Background="{DynamicResource App.Accent}">
+                <TextBlock Classes="small" Foreground="{DynamicResource App.AccentForeground}" Text="{l:Tr Env_Precedence3}" />
+              </Border>
+              <Border CornerRadius="4" Padding="8,4" Background="{DynamicResource App.Selection}">
+                <TextBlock Classes="small" Text="{l:Tr Env_Precedence2}" />
+              </Border>
+              <Border CornerRadius="4" Padding="8,4" Background="{DynamicResource App.Subtle}">
+                <TextBlock Classes="small" Text="{l:Tr Env_Precedence1}" />
+              </Border>
+              <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Env_PrecedenceHint}" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+
+      <ScrollViewer Grid.Column="1">
+        <StackPanel Margin="24,20" Spacing="16">
+          <StackPanel Spacing="12">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Classes="h2" Text="{Binding Title}" />
+              <TextBlock Classes="mono muted" VerticalAlignment="Center" Text="{Binding FileName}" />
+              <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{l:Tr Env_Unsaved}" IsVisible="{Binding IsDirty}" />
+            </StackPanel>
+            <WrapPanel ItemSpacing="8" LineSpacing="8">
+              <Button Classes="primary" Content="{l:Tr Btn_Save}" Command="{Binding SaveCommand}" IsEnabled="{Binding IsDirty}" />
+              <Button Classes="secondary" Content="{l:Tr Env_MakeActive}" Command="{Binding MakeActiveCommand}" IsVisible="{Binding CanMakeActive}" />
+              <Button Classes="secondary" Content="{Binding RevealLabel}" Command="{Binding ToggleRevealCommand}" />
+              <Button Classes="secondary" Content="{l:Tr Env_Duplicate}" Command="{Binding DuplicateCommand}" IsVisible="{Binding IsEnvironmentScope}" />
+              <Button Classes="secondary" Content="{l:Tr Env_Delete}" Command="{Binding DeleteEnvironmentCommand}" IsVisible="{Binding IsEnvironmentScope}" />
+            </WrapPanel>
+          </StackPanel>
+
+          <Border Classes="warning" IsVisible="{Binding ShowProductionWarning}">
+            <Grid ColumnDefinitions="Auto,*">
+              <c:Icon Data="{StaticResource Icon.Warning}" Width="18" Height="18" Foreground="{DynamicResource Tone.Warning.Fg}" VerticalAlignment="Top" Margin="0,1,10,0" />
+              <TextBlock Grid.Column="1" TextWrapping="Wrap" LineHeight="18" Text="{l:Tr Env_ProdWarning}" />
+            </Grid>
+          </Border>
+
+          <Border Classes="card" CornerRadius="8">
+            <StackPanel>
+              <Grid ColumnDefinitions="48,*,*,*,64,40" Background="{DynamicResource App.Sidebar}" Height="34">
+                
+                <TextBlock Grid.Column="1" Classes="muted small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Env_Name}" />
+                <TextBlock Grid.Column="2" Classes="muted small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Req_Value}" />
+                <TextBlock Grid.Column="3" Classes="muted small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Env_Resolved}" />
+                <TextBlock Grid.Column="4" Classes="muted small" VerticalAlignment="Center" Text="{l:Tr Env_Secret}" />
+              </Grid>
+              <ItemsControl ItemsSource="{Binding Rows}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:VariableRowViewModel">
+                    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0">
+                      <Grid ColumnDefinitions="48,*,*,*,64,40">
+                        <CheckBox IsChecked="{Binding IsEnabled}" HorizontalAlignment="Center" IsVisible="{Binding !IsPlaceholder}" />
+                        <TextBox Grid.Column="1" Classes="cell mono" Text="{Binding Name}" PlaceholderText="{l:Tr Env_AddVariable}" />
+                        <Panel Grid.Column="2">
+                          <TextBox Classes="cell mono" Text="{Binding Value}" IsVisible="{Binding !IsMasked}" PlaceholderText="{l:Tr Req_Value}" />
+                          <TextBox Classes="cell mono" Text="{Binding Value}" IsVisible="{Binding IsMasked}" PasswordChar="•" />
+                        </Panel>
+                        <TextBlock Grid.Column="3" Classes="mono muted" Margin="6,0" VerticalAlignment="Center" Text="{Binding Resolved}" TextTrimming="CharacterEllipsis" />
+                        <CheckBox Grid.Column="4" IsChecked="{Binding IsSecret}" IsVisible="{Binding !IsPlaceholder}" />
+                        <Button Grid.Column="5" Classes="icon" IsVisible="{Binding !IsPlaceholder}" AutomationProperties.Name="{l:Tr Btn_Remove}"
+                                Command="{Binding RemoveCommand}">
+                          <c:Icon Data="{StaticResource Icon.Close}" Width="12" Height="12" />
+                        </Button>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+
+          <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Env_DynamicHint}" />
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.CommandPaletteView"
+             x:DataType="vm:CommandPaletteViewModel"
+             x:Name="Root">
+  <Panel Background="{DynamicResource App.Overlay}" PointerPressed="OnBackgroundPressed">
+    <Border Classes="card" Width="640" VerticalAlignment="Top" Margin="0,96,0,0" CornerRadius="12" BoxShadow="0 24 64 0 #40000000"
+            PointerPressed="OnCardPressed">
+      <Grid RowDefinitions="52,Auto,Auto">
+        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="16,0">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <c:Icon Data="{StaticResource Icon.Search}" Width="18" Height="18" Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Center" />
+            <TextBox x:Name="QueryBox" Grid.Column="1" Text="{Binding Query}" BorderThickness="0" Background="Transparent" FontSize="15"
+                     PlaceholderText="{l:Tr Palette_Placeholder}" KeyDown="OnQueryKeyDown" Margin="8,0" />
+            <Border Grid.Column="2" Classes="kbd" VerticalAlignment="Center">
+              <TextBlock Text="Esc" />
+            </Border>
+          </Grid>
+        </Border>
+        <ScrollViewer Grid.Row="1" MaxHeight="420" Padding="6">
+          <StackPanel>
+            <ItemsControl ItemsSource="{Binding Results}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:PaletteItemViewModel">
+                  <Button Classes="flat" HorizontalAlignment="Stretch" MinHeight="44" Padding="10,4"
+                          Background="{Binding IsSelected, Converter={x:Static c:BoolToBrushConverter.Selection}}"
+                          Command="{Binding RunCommand}">
+                    <Grid ColumnDefinitions="56,*,Auto">
+                      <c:MethodBadge Text="{Binding Badge}" IsVisible="{Binding IsRequest}" />
+                      <TextBlock Classes="muted" Text="{Binding Badge}" FontSize="15" IsVisible="{Binding !IsRequest}" VerticalAlignment="Center" />
+                      <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" IsVisible="{Binding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="2" Classes="muted small mono" Text="{Binding Shortcut}" VerticalAlignment="Center" />
+                    </Grid>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Classes="muted" Margin="16" HorizontalAlignment="Center" Text="{l:Tr Palette_NoResults}" IsVisible="{Binding IsEmpty}" />
+          </StackPanel>
+        </ScrollViewer>
+        <Border Grid.Row="2" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Background="{DynamicResource App.Sidebar}" Padding="16,8" CornerRadius="0,0,12,12">
+          <StackPanel Orientation="Horizontal" Spacing="18">
+            <TextBlock Classes="muted small"><Run FontFamily="{DynamicResource App.MonoFont}" Text="↑↓ " /><Run Text="{l:Tr Palette_Select}" /></TextBlock>
+            <TextBlock Classes="muted small"><Run FontFamily="{DynamicResource App.MonoFont}" Text="↵ " /><Run Text="{l:Tr Palette_Open}" /></TextBlock>
+            <TextBlock Classes="muted small"><Run FontFamily="{DynamicResource App.MonoFont}" Text="&gt; " /><Run Text="{l:Tr Palette_Commands}" /></TextBlock>
+            <TextBlock Classes="muted small"><Run FontFamily="{DynamicResource App.MonoFont}" Text="Esc " /><Run Text="{l:Tr Palette_Close}" /></TextBlock>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </Border>
+  </Panel>
+</UserControl>

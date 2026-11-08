@@ -2,7 +2,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="JetApi.Desktop.App"
              RequestedThemeVariant="Default">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://JetApi/Themes/Tokens.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <Color x:Key="SystemAccentColor">#3451D1</Color>
+      <Color x:Key="SystemAccentColorDark1">#22389E</Color>
+      <Color x:Key="SystemAccentColorLight1">#7C93F5</Color>
+    </ResourceDictionary>
+  </Application.Resources>
   <Application.Styles>
     <FluentTheme />
+    <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+    <StyleInclude Source="avares://JetApi/Themes/Styles.axaml" />
   </Application.Styles>
 </Application>

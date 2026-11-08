@@ -13,6 +13,7 @@
   <data name="Auth_InHeader" xml:space="preserve"><value>Header</value></data>
   <data name="Auth_InQuery" xml:space="preserve"><value>Query parametresi</value></data>
   <data name="Auth_Inherit" xml:space="preserve"><value>Üst öğeden miras al</value></data>
+  <data name="Auth_InheritBadge" xml:space="preserve"><value>miras</value></data>
   <data name="Auth_InheritedFrom" xml:space="preserve"><value>“{0}” öğesinin auth ayarını kullanıyor: {1}.</value></data>
   <data name="Auth_InheritedNone" xml:space="preserve"><value>Hiçbir üst öğe auth tanımlamıyor, auth gönderilmez.</value></data>
   <data name="Auth_KeyName" xml:space="preserve"><value>Anahtar adı</value></data>
@@ -91,6 +92,12 @@
   <data name="Env_Secret" xml:space="preserve"><value>Gizli</value></data>
   <data name="Env_Title" xml:space="preserve"><value>Environment’lar ve değişkenler</value></data>
   <data name="Env_Unsaved" xml:space="preserve"><value>Kaydedilmemiş değişiklikler</value></data>
+  <data name="Err_Cancelled" xml:space="preserve"><value>İstek iptal edildi.</value></data>
+  <data name="Err_Dns" xml:space="preserve"><value>Sunucu adı çözümlenemedi (DNS). URL’yi, ağ ve VPN bağlantınızı kontrol edin.</value></data>
+  <data name="Err_Network" xml:space="preserve"><value>Ağ hatası: {0}</value></data>
+  <data name="Err_Refused" xml:space="preserve"><value>Bağlantı reddedildi. Sunucu çalışıyor ve bu portu dinliyor mu?</value></data>
+  <data name="Err_Timeout" xml:space="preserve"><value>{0} içinde yanıt gelmedi. Bu isteğin zaman aşımını Ayarlar sekmesinden artırabilirsiniz.</value></data>
+  <data name="Err_Tls" xml:space="preserve"><value>TLS el sıkışması başarısız. Bu istek için sertifika doğrulamasını Ayarlar sekmesinden kapatabilirsiniz. Ayrıntı: {0}</value></data>
   <data name="Error_Open" xml:space="preserve"><value>Workspace açılamadı: {0}</value></data>
   <data name="Error_Preparation" xml:space="preserve"><value>İstek gönderilmedi</value></data>
   <data name="Error_Save" xml:space="preserve"><value>Değişiklik kaydedilemedi: {0}</value></data>

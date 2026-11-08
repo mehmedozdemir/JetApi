@@ -40,6 +40,9 @@ public sealed partial class PaletteItemViewModel : ViewModelBase
     /// <summary>The action.</summary>
     public Func<Task> Execute { get; }
 
+    /// <summary>Runs the item from the palette (closes it first).</summary>
+    public CommunityToolkit.Mvvm.Input.IAsyncRelayCommand? RunCommand { get; internal set; }
+
     /// <summary>Badge is a request method.</summary>
     public bool IsRequest => Badge.Length > 1;
 }
@@ -60,6 +63,11 @@ public sealed partial class CommandPaletteViewModel : ViewModelBase
     {
         _all = items;
         _close = close;
+        foreach (var item in items)
+        {
+            item.RunCommand = new AsyncRelayCommand(() => RunAsync(item));
+        }
+
         Filter();
     }
 

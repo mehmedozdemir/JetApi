@@ -44,6 +44,41 @@ public enum ResponseSection
     Sent,
 }
 
+/// <summary>A body type pill; selecting it changes the body mode of its tab.</summary>
+public sealed class BodyModeChoice : ViewModelBase, ILabeled
+{
+    private readonly HttpRequestTabViewModel _owner;
+
+    /// <summary>Creates the choice.</summary>
+    public BodyModeChoice(HttpRequestTabViewModel owner, LocalizedOption<HttpBodyMode> option)
+    {
+        _owner = owner;
+        Option = option;
+    }
+
+    /// <summary>The option.</summary>
+    public LocalizedOption<HttpBodyMode> Option { get; }
+
+    /// <inheritdoc />
+    public string Label => Option.Label;
+
+    /// <summary>True for the tab's current body mode.</summary>
+    public bool IsSelected
+    {
+        get => _owner.SelectedBodyMode == Option;
+        set
+        {
+            if (value)
+            {
+                _owner.SelectedBodyMode = Option;
+            }
+        }
+    }
+
+    /// <summary>Refreshes <see cref="IsSelected"/>.</summary>
+    public void Refresh() => OnPropertyChanged(nameof(IsSelected));
+}
+
 /// <summary>An open HTTP request.</summary>
 public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
 {
@@ -102,6 +137,7 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
             new(HttpBodyMode.Multipart, "Req_Body_Multipart"), new(HttpBodyMode.File, "Req_Body_File"),
         ];
         _selectedBodyMode = BodyModes.First(m => m.Value == request.Body.Mode);
+        BodyModeChoices = [.. BodyModes.Select(mode => new BodyModeChoice(this, mode))];
         _bodyText = request.Body.Content;
         _bodyFilePath = request.Body.FilePath;
         _followRedirects = request.Settings.FollowRedirects;
@@ -131,6 +167,9 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
 
     /// <summary>Body modes.</summary>
     public IReadOnlyList<LocalizedOption<HttpBodyMode>> BodyModes { get; }
+
+    /// <summary>Body modes as selectable pills.</summary>
+    public IReadOnlyList<BodyModeChoice> BodyModeChoices { get; }
 
     /// <summary>Query parameters.</summary>
     public KeyValueListViewModel QueryParameters { get; }
@@ -180,7 +219,7 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
     public string BodyBadge => SelectedBodyMode.Value == HttpBodyMode.None ? string.Empty : SelectedBodyMode.Label;
 
     /// <summary>Auth tab badge.</summary>
-    public string AuthBadge => Auth.IsInherit ? Loc.Get("Auth_Inherit").Split(' ')[0].ToLower(Loc.Instance.Culture) : string.Empty;
+    public string AuthBadge => Auth.IsInherit ? Loc.Get("Auth_InheritBadge") : string.Empty;
 
     /// <summary>Headers JetApi will add, unless the user sets the same header.</summary>
     public IReadOnlyList<HeaderLine> AutoHeaders
@@ -360,6 +399,14 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
         if (e.PropertyName == nameof(BodyText))
         {
             BodyError = null;
+        }
+
+        if (e.PropertyName == nameof(SelectedBodyMode) && BodyModeChoices is not null)
+        {
+            foreach (var choice in BodyModeChoices)
+            {
+                choice.Refresh();
+            }
         }
     }
 

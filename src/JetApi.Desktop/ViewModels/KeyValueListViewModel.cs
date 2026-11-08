@@ -28,6 +28,9 @@ public sealed partial class KeyValueRowViewModel : ViewModelBase
 
     /// <summary>True for the always-present empty row at the end that adds a new entry when typed into.</summary>
     public bool IsPlaceholder => Key.Length == 0 && Value.Length == 0 && Description.Length == 0;
+
+    /// <summary>Removes this row from its table.</summary>
+    public CommunityToolkit.Mvvm.Input.IRelayCommand? RemoveCommand { get; internal set; }
 }
 
 /// <summary>
@@ -103,6 +106,7 @@ public sealed partial class KeyValueListViewModel : ViewModelBase
 
     private void AddRow(KeyValueRowViewModel row)
     {
+        row.RemoveCommand = new RelayCommand(() => Remove(row));
         row.PropertyChanged += OnRowChanged;
         Rows.Add(row);
     }

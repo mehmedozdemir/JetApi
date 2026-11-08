@@ -26,6 +26,12 @@ public sealed class RecentItemViewModel : ViewModelBase
     /// <summary>First letter, for the avatar.</summary>
     public string Initial => Workspace.Name.Length == 0 ? "?" : Workspace.Name[..1].ToUpper(Loc.Instance.Culture);
 
+    /// <summary>Opens this workspace.</summary>
+    public IAsyncRelayCommand? OpenCommand { get; internal set; }
+
+    /// <summary>Removes this workspace from the list.</summary>
+    public IRelayCommand? RemoveCommand { get; internal set; }
+
     /// <summary>When it was last opened.</summary>
     public string LastOpened => Workspace.LastOpened.ToLocalTime().ToString("g", Loc.Instance.Culture);
 }
@@ -95,7 +101,10 @@ public sealed partial class WelcomeViewModel : ViewModelBase
         Recent.Clear();
         foreach (var workspace in _host.Settings.RecentWorkspaces)
         {
-            Recent.Add(new RecentItemViewModel(workspace));
+            var item = new RecentItemViewModel(workspace);
+            item.OpenCommand = new AsyncRelayCommand(() => OpenRecentAsync(item));
+            item.RemoveCommand = new RelayCommand(() => RemoveRecent(item));
+            Recent.Add(item);
         }
 
         OnPropertyChanged(nameof(HasNoRecent));

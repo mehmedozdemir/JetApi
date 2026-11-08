@@ -1,10 +1,22 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:JetApi.Desktop.ViewModels"
+        xmlns:v="using:JetApi.Desktop.Views"
         x:Class="JetApi.Desktop.MainWindow"
-        Title="JetApi"
-        Width="1280" Height="800"
-        MinWidth="900" MinHeight="560"
-        WindowStartupLocation="CenterScreen">
-  <!-- Application shell. The workspace UI is built in milestone M1, see docs/roadmap.md. -->
-  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="JetApi" FontSize="28" />
+        x:DataType="vm:MainWindowViewModel"
+        Title="{Binding Title}"
+        Width="1440" Height="900"
+        MinWidth="960" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource App.Background}">
+  <ContentControl x:Name="Host" Content="{Binding Content}">
+    <ContentControl.DataTemplates>
+      <DataTemplate x:DataType="vm:WelcomeViewModel">
+        <v:WelcomeView />
+      </DataTemplate>
+      <DataTemplate x:DataType="vm:WorkspaceViewModel">
+        <v:WorkspaceView />
+      </DataTemplate>
+    </ContentControl.DataTemplates>
+  </ContentControl>
 </Window>

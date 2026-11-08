@@ -52,6 +52,9 @@ public sealed class ScopeItemViewModel : ViewModelBase
     /// <summary>Is an environment.</summary>
     public bool IsEnvironment => Kind == ScopeKind.Environment;
 
+    /// <summary>Selects this scope in the editor.</summary>
+    public CommunityToolkit.Mvvm.Input.IAsyncRelayCommand? SelectCommand { get; internal set; }
+
     /// <summary>Looks like a production environment (gets the Git warning).</summary>
     public bool IsProduction => IsEnvironment && (Key.Contains("prod", StringComparison.OrdinalIgnoreCase) || Name.Contains("prod", StringComparison.OrdinalIgnoreCase));
 }
@@ -79,6 +82,9 @@ public sealed partial class VariableRowViewModel : ViewModelBase
 
     /// <summary>The empty row at the end.</summary>
     public bool IsPlaceholder => Name.Length == 0 && Value.Length == 0;
+
+    /// <summary>Removes this row.</summary>
+    public CommunityToolkit.Mvvm.Input.IRelayCommand? RemoveCommand { get; internal set; }
 
     /// <summary>Value as shown: masked when secret and not revealed.</summary>
     public bool IsMasked => IsSecret && !IsRevealed;
@@ -308,14 +314,14 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         Environments.Clear();
         foreach (var environment in workspace.Environments)
         {
-            Environments.Add(new ScopeItemViewModel(ScopeKind.Environment, environment.Key, environment.Name, environment.Key == _session.ActiveEnvironmentKey, environment.Variables.Count));
+            Environments.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Environment, environment.Key, environment.Name, environment.Key == _session.ActiveEnvironmentKey, environment.Variables.Count)));
         }
 
         OtherScopes.Clear();
-        OtherScopes.Add(new ScopeItemViewModel(ScopeKind.Global, string.Empty, Loc.Get("Env_Global"), false, workspace.GlobalVariables.Count));
+        OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Global, string.Empty, Loc.Get("Env_Global"), false, workspace.GlobalVariables.Count)));
         foreach (var collection in workspace.Collections)
         {
-            OtherScopes.Add(new ScopeItemViewModel(ScopeKind.Collection, collection.Key, Loc.Format("Env_CollectionScope", collection.Name), false, collection.Variables.Count));
+            OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Collection, collection.Key, Loc.Format("Env_CollectionScope", collection.Name), false, collection.Variables.Count)));
         }
 
         var all = Environments.Concat(OtherScopes).ToList();
@@ -323,6 +329,16 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
             ?? (Environments.Count > 0 ? Environments[0] : OtherScopes[0]);
         OnPropertyChanged(nameof(HasNoEnvironments));
     }
+
+    private ScopeItemViewModel WithSelect(ScopeItemViewModel scope)
+    {
+        scope.SelectCommand = new AsyncRelayCommand(() => SelectAsync(scope));
+        return scope;
+    }
+
+    /// <summary>Shows or masks secret values.</summary>
+    [RelayCommand]
+    private void ToggleReveal() => RevealSecrets = !RevealSecrets;
 
     private void LoadRows()
     {
@@ -353,6 +369,7 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
 
     private void AddRow(VariableRowViewModel row)
     {
+        row.RemoveCommand = new RelayCommand(() => RemoveRow(row));
         row.PropertyChanged += OnRowChanged;
         Rows.Add(row);
     }
@@ -418,7 +435,7 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
             else
             {
                 var value = resolver.Resolve(row.Value).Value;
-                row.Resolved = row.IsSecret && !RevealSecrets ? "••••••••" : value;
+                row.Resolved = row.IsSecret && !RevealSecrets && value.Length > 0 ? "••••••••" : value;
             }
         }
     }

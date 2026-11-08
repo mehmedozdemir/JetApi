@@ -114,7 +114,7 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
     public GrpcResponseViewModel Response { get; } = new();
 
     /// <summary>True when the server URL is plaintext (h2c).</summary>
-    public bool IsPlaintext => ServerUrl.TrimStart().StartsWith("http://", StringComparison.OrdinalIgnoreCase);
+    public bool IsPlaintext => RequestRunner.CreateResolver(Host.Session, CollectionKey).Resolve(ServerUrl).Value.TrimStart().StartsWith("http://", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Variables in the server URL.</summary>
     public IReadOnlyList<VariableHint> UrlHints => BuildHints(ServerUrl);
@@ -154,7 +154,7 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
     public string MetadataBadge => Metadata.Badge;
 
     /// <summary>Auth tab badge.</summary>
-    public string AuthBadge => Auth.IsInherit ? Loc.Get("Auth_Inherit").Split(' ')[0].ToLower(Loc.Instance.Culture) : string.Empty;
+    public string AuthBadge => Auth.IsInherit ? Loc.Get("Auth_InheritBadge") : string.Empty;
 
     /// <summary>Replaces the message with an example of the request type.</summary>
     [RelayCommand]
@@ -185,6 +185,10 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
         OnPropertyChanged(string.Empty);
         ValidateMessage();
     }
+
+    /// <summary>Opens the collection's proto settings.</summary>
+    [RelayCommand]
+    private void OpenProtoSettings() => Host.OpenCollectionSettings(CollectionKey);
 
     /// <summary>Selects a request section.</summary>
     [RelayCommand]

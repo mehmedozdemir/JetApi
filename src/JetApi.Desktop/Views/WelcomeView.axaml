@@ -1,0 +1,99 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.WelcomeView"
+             x:DataType="vm:WelcomeViewModel"
+             x:Name="Root">
+  <Grid RowDefinitions="48,*" Background="{DynamicResource App.Background}">
+    <Border Background="{DynamicResource App.Surface}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="16,0">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <c:Icon Data="{StaticResource Icon.Logo}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" VerticalAlignment="Center" />
+          <TextBlock Text="JetApi" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
+          <RadioButton Classes="pill" GroupName="lang" Content="TR" IsChecked="{Binding IsTurkish, Mode=OneWay}" Command="{Binding SetLanguageCommand}" CommandParameter="tr" />
+          <RadioButton Classes="pill" GroupName="lang" Content="EN" Margin="6,0,0,0" IsChecked="{Binding !IsTurkish, Mode=OneWay}" Command="{Binding SetLanguageCommand}" CommandParameter="en" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel MaxWidth="880" Margin="24,64,24,40" Spacing="32">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="h1" Text="{l:Tr Welcome_Title}" />
+          <TextBlock Classes="muted" FontSize="15" LineHeight="22" TextWrapping="Wrap" MaxWidth="640" HorizontalAlignment="Left" Text="{l:Tr Welcome_Subtitle}" />
+        </StackPanel>
+
+        <UniformGrid Columns="3" ColumnSpacing="16">
+          <Button Classes="primary" Padding="20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" CornerRadius="10" Command="{Binding OpenFolderCommand}">
+            <StackPanel Spacing="10">
+              <c:Icon Data="{StaticResource Icon.Folder}" Width="22" Height="22" Foreground="{DynamicResource App.AccentForeground}" />
+              <TextBlock FontSize="15" FontWeight="SemiBold" Text="{l:Tr Welcome_Open}" />
+              <TextBlock FontSize="12.5" FontWeight="Normal" TextWrapping="Wrap" LineHeight="18" Opacity="0.9" Text="{l:Tr Welcome_OpenHint}" />
+            </StackPanel>
+          </Button>
+          <Button Classes="secondary" Padding="20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" CornerRadius="10" Command="{Binding CreateWorkspaceCommand}">
+            <StackPanel Spacing="10">
+              <c:Icon Data="{StaticResource Icon.Plus}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" />
+              <TextBlock FontSize="15" FontWeight="SemiBold" Text="{l:Tr Welcome_Create}" />
+              <TextBlock Classes="muted" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Text="{l:Tr Welcome_CreateHint}" />
+            </StackPanel>
+          </Button>
+          <Button Classes="secondary" Padding="20" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" CornerRadius="10" IsEnabled="False">
+            <StackPanel Spacing="10">
+              <c:Icon Data="{StaticResource Icon.Import}" Width="22" Height="22" Foreground="{DynamicResource App.TextFaint}" />
+              <TextBlock FontSize="15" FontWeight="SemiBold" Text="{l:Tr Welcome_Import}" />
+              <TextBlock Classes="muted" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Text="{l:Tr Welcome_ImportHint}" />
+            </StackPanel>
+          </Button>
+        </UniformGrid>
+
+        <StackPanel Spacing="8">
+          <TextBlock Classes="label" Text="{l:Tr Welcome_Recent}" />
+          <Border Classes="card" ClipToBounds="True">
+            <StackPanel>
+              <ItemsControl ItemsSource="{Binding Recent}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:RecentItemViewModel">
+                    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
+                      <Grid ColumnDefinitions="*,Auto">
+                        <Button Classes="flat" HorizontalAlignment="Stretch" Padding="16,10" CornerRadius="0"
+                                Command="{Binding OpenCommand}">
+                          <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Border Width="32" Height="32" CornerRadius="8" Background="{DynamicResource App.AccentSoft}" Margin="0,0,14,0">
+                              <TextBlock Text="{Binding Initial}" FontWeight="Bold" Foreground="{DynamicResource App.Accent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                              <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
+                              <TextBlock Classes="mono muted" FontSize="11.5" Text="{Binding Path}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="2" Classes="muted small" VerticalAlignment="Center" Text="{Binding LastOpened}" />
+                          </Grid>
+                        </Button>
+                        <Button Grid.Column="1" Classes="icon" Margin="8,0" ToolTip.Tip="{l:Tr Welcome_RemoveRecent}" AutomationProperties.Name="{l:Tr Welcome_RemoveRecent}"
+                                Command="{Binding RemoveCommand}">
+                          <c:Icon Data="{StaticResource Icon.Close}" Width="12" Height="12" />
+                        </Button>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Classes="muted" Margin="16,14" Text="{l:Tr Welcome_NoRecent}" IsVisible="{Binding HasNoRecent}" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <Border Classes="card" Padding="16,14">
+          <Grid ColumnDefinitions="Auto,*">
+            <c:Icon Data="{StaticResource Icon.Info}" Width="18" Height="18" Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Top" Margin="0,1,12,0" />
+            <TextBlock Grid.Column="1" Classes="muted small" TextWrapping="Wrap" LineHeight="19" Text="{l:Tr Welcome_GitTip}" />
+          </Grid>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

@@ -48,6 +48,9 @@ public sealed record TimingRow(string LabelKey, string Value, double Offset, dou
 {
     /// <summary>Localized phase name.</summary>
     public string Label => Loc.Get(LabelKey);
+
+    /// <summary>Phase name used to pick the bar color (Dns, Connect, FirstByte, Download, Total).</summary>
+    public string Phase => LabelKey["Res_".Length..];
 }
 
 /// <summary>A header line.</summary>
@@ -139,8 +142,17 @@ public sealed partial class HttpResponseViewModel : ViewModelBase
     /// <summary>Response content type.</summary>
     public string ContentType => _result?.ContentType ?? string.Empty;
 
-    /// <summary>Error message for failures.</summary>
-    public string ErrorMessage => _result?.ErrorMessage ?? string.Empty;
+    /// <summary>Error message for failures, in the UI language.</summary>
+    public string ErrorMessage => _result switch
+    {
+        null => string.Empty,
+        { ErrorKind: HttpErrorKind.DnsFailure } => Loc.Get("Err_Dns"),
+        { ErrorKind: HttpErrorKind.ConnectionRefused } => Loc.Get("Err_Refused"),
+        { ErrorKind: HttpErrorKind.TimedOut } => Loc.Format("Err_Timeout", DurationText),
+        { ErrorKind: HttpErrorKind.Cancelled } => Loc.Get("Err_Cancelled"),
+        { ErrorKind: HttpErrorKind.TlsFailure } => Loc.Format("Err_Tls", _result.ErrorMessage),
+        _ => Loc.Format("Err_Network", _result.ErrorMessage),
+    };
 
     /// <summary>The body was cut off.</summary>
     public bool IsTruncated => _result?.IsBodyTruncated ?? false;
@@ -244,7 +256,7 @@ public sealed partial class HttpResponseViewModel : ViewModelBase
     }
 
     /// <summary>Explains whether the connection was new or reused.</summary>
-    public string TimingNote => _result?.Timings is { } t ? Loc.Get(t.IsConnectionReused ? "Res_TimingReused" : "Res_TimingNew") : string.Empty;
+    public string TimingNote => _result?.Timings is { } t && HasResponse ? Loc.Get(t.IsConnectionReused ? "Res_TimingReused" : "Res_TimingNew") : string.Empty;
 
     /// <summary>Headers as sent, with automatic ones marked.</summary>
     public IReadOnlyList<HeaderLine> SentHeaders =>

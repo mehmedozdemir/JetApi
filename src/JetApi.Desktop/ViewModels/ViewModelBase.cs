@@ -16,9 +16,16 @@ public abstract class ViewModelBase : ObservableObject, ILocalizable
     public virtual void OnLanguageChanged() => OnPropertyChanged(string.Empty);
 }
 
+/// <summary>Something with a display label (lets XAML templates bind options of any type).</summary>
+public interface ILabeled
+{
+    /// <summary>The label in the current language.</summary>
+    string Label { get; }
+}
+
 /// <summary>A choice in a list whose label is a localized string.</summary>
 /// <typeparam name="T">The value type.</typeparam>
-public sealed class LocalizedOption<T> : ViewModelBase
+public sealed class LocalizedOption<T> : ViewModelBase, ILabeled
 {
     /// <summary>Creates the option.</summary>
     public LocalizedOption(T value, string labelKey)

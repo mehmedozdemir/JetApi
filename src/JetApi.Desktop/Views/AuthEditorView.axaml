@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:core="using:JetApi.Core.Model"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.AuthEditorView"
+             x:DataType="vm:AuthEditorViewModel">
+  <StackPanel Spacing="12" MaxWidth="560" HorizontalAlignment="Left">
+    <StackPanel>
+      <TextBlock Classes="field-label" Text="{l:Tr Auth_Type}" />
+      <ComboBox ItemsSource="{Binding Kinds}" SelectedItem="{Binding SelectedKind}" MinWidth="260">
+        <ComboBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:ILabeled">
+            <TextBlock Text="{Binding Label}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+    </StackPanel>
+
+    <StackPanel IsVisible="{Binding IsBearer}">
+      <TextBlock Classes="field-label" Text="{l:Tr Auth_Token}" />
+      <TextBox Classes="mono" Text="{Binding Token}" PlaceholderText="{}{{token}}" />
+    </StackPanel>
+
+    <Grid ColumnDefinitions="*,12,*" IsVisible="{Binding IsBasic}">
+      <StackPanel>
+        <TextBlock Classes="field-label" Text="{l:Tr Auth_Username}" />
+        <TextBox Classes="mono" Text="{Binding Username}" />
+      </StackPanel>
+      <StackPanel Grid.Column="2">
+        <TextBlock Classes="field-label" Text="{l:Tr Auth_Password}" />
+        <TextBox Classes="mono" Text="{Binding Password}" PasswordChar="•" />
+      </StackPanel>
+    </Grid>
+
+    <StackPanel Spacing="12" IsVisible="{Binding IsApiKey}">
+      <Grid ColumnDefinitions="*,12,*">
+        <StackPanel>
+          <TextBlock Classes="field-label" Text="{l:Tr Auth_KeyName}" />
+          <TextBox Classes="mono" Text="{Binding ApiKeyName}" PlaceholderText="X-Api-Key" />
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+          <TextBlock Classes="field-label" Text="{l:Tr Auth_KeyValue}" />
+          <TextBox Classes="mono" Text="{Binding ApiKeyValue}" />
+        </StackPanel>
+      </Grid>
+      <StackPanel>
+        <TextBlock Classes="field-label" Text="{l:Tr Auth_SendIn}" />
+        <ComboBox ItemsSource="{Binding Locations}" SelectedItem="{Binding SelectedLocation}" MinWidth="200">
+          <ComboBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ILabeled">
+              <TextBlock Text="{Binding Label}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </StackPanel>
+    </StackPanel>
+
+    <Border Classes="note" IsVisible="{Binding IsInherit}">
+      <TextBlock TextWrapping="Wrap" Text="{Binding InheritedDescription}" LineHeight="18" />
+    </Border>
+    <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Auth_ExplicitHeaderWins}" />
+  </StackPanel>
+</UserControl>

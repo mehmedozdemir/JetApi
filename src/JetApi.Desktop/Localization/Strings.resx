@@ -13,6 +13,7 @@
   <data name="Auth_InHeader" xml:space="preserve"><value>Header</value></data>
   <data name="Auth_InQuery" xml:space="preserve"><value>Query parameter</value></data>
   <data name="Auth_Inherit" xml:space="preserve"><value>Inherit from parent</value></data>
+  <data name="Auth_InheritBadge" xml:space="preserve"><value>inherit</value></data>
   <data name="Auth_InheritedFrom" xml:space="preserve"><value>Uses the auth of “{0}”: {1}.</value></data>
   <data name="Auth_InheritedNone" xml:space="preserve"><value>No parent defines auth, so none is sent.</value></data>
   <data name="Auth_KeyName" xml:space="preserve"><value>Key name</value></data>
@@ -91,6 +92,12 @@
   <data name="Env_Secret" xml:space="preserve"><value>Secret</value></data>
   <data name="Env_Title" xml:space="preserve"><value>Environments and variables</value></data>
   <data name="Env_Unsaved" xml:space="preserve"><value>Unsaved changes</value></data>
+  <data name="Err_Cancelled" xml:space="preserve"><value>The request was cancelled.</value></data>
+  <data name="Err_Dns" xml:space="preserve"><value>The host name could not be resolved (DNS). Check the URL and your network or VPN.</value></data>
+  <data name="Err_Network" xml:space="preserve"><value>Network error: {0}</value></data>
+  <data name="Err_Refused" xml:space="preserve"><value>Connection refused. Is the server running and listening on this port?</value></data>
+  <data name="Err_Timeout" xml:space="preserve"><value>No response within {0}. You can raise this request’s timeout in its settings.</value></data>
+  <data name="Err_Tls" xml:space="preserve"><value>TLS handshake failed. You can turn off certificate validation for this request in its settings. Details: {0}</value></data>
   <data name="Error_Open" xml:space="preserve"><value>The workspace could not be opened: {0}</value></data>
   <data name="Error_Preparation" xml:space="preserve"><value>The request was not sent</value></data>
   <data name="Error_Save" xml:space="preserve"><value>The change could not be saved: {0}</value></data>
