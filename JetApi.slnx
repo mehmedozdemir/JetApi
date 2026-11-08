@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/JetApi.Core/JetApi.Core.csproj" />
+    <Project Path="src/JetApi.Http/JetApi.Http.csproj" />
+    <Project Path="src/JetApi.Storage/JetApi.Storage.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/JetApi.Core.Tests/JetApi.Core.Tests.csproj" />
+    <Project Path="tests/JetApi.Http.Tests/JetApi.Http.Tests.csproj" />
+    <Project Path="tests/JetApi.Storage.Tests/JetApi.Storage.Tests.csproj" />
+  </Folder>
+</Solution>
