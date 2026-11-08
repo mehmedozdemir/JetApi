@@ -78,6 +78,57 @@ public sealed class HttpRequestPreparerTests
     }
 
     [Fact]
+    public void Prepare_OAuth2_AppliesTheTokenOfTheResolvedAuth()
+    {
+        var auth = new OAuth2Auth(OAuth2GrantType.ClientCredentials, "{{baseUrl}}/token", "{{name}}", "{{token}}");
+        OAuth2Auth? asked = null;
+
+        var result = HttpRequestPreparer.Prepare(Request(), auth, Variables, Path.GetTempPath(), resolved =>
+        {
+            asked = resolved;
+            return new OAuth2Token("access-1", "bearer");
+        });
+
+        result.Request!.Headers.ShouldContain(new KeyValuePair<string, string>("Authorization", "Bearer access-1"));
+        asked.ShouldBe(auth with { TokenUrl = "https://api.test/token", ClientId = "Ayşe Yılmaz", ClientSecret = "secret" });
+    }
+
+    [Fact]
+    public void Prepare_OAuth2_UsesTheTokenType()
+    {
+        var auth = new OAuth2Auth(OAuth2GrantType.ClientCredentials, "https://id.test/token", "app");
+
+        HttpRequestPreparer.Prepare(Request(), auth, Variables, Path.GetTempPath(), _ => new OAuth2Token("x", "DPoP"))
+            .Request!.Headers.ShouldContain(new KeyValuePair<string, string>("Authorization", "DPoP x"));
+    }
+
+    [Fact]
+    public void Prepare_OAuth2WithoutToken_AsksTheUserToGetOne()
+    {
+        var auth = new OAuth2Auth(OAuth2GrantType.ClientCredentials, "https://id.test/token", "app");
+
+        var withoutProvider = Prepare(Request(), auth);
+        var withoutToken = HttpRequestPreparer.Prepare(Request(), auth, Variables, Path.GetTempPath(), _ => null);
+        var emptyToken = HttpRequestPreparer.Prepare(Request(), auth, Variables, Path.GetTempPath(), _ => new OAuth2Token(""));
+
+        foreach (var result in new[] { withoutProvider, withoutToken, emptyToken })
+        {
+            result.IsSuccess.ShouldBeFalse();
+            result.Errors.ShouldBe(["There is no OAuth 2.0 access token yet. Get a new access token in the Auth tab, then send again."]);
+        }
+    }
+
+    [Fact]
+    public void Prepare_OAuth2_ExplicitAuthorizationHeaderWins_WithoutAskingForAToken()
+    {
+        var request = Request() with { Headers = [new("Authorization", "Custom x")] };
+
+        var result = HttpRequestPreparer.Prepare(request, new OAuth2Auth(), Variables, Path.GetTempPath(), _ => throw new InvalidOperationException("not asked"));
+
+        result.Request!.Headers.ShouldBe([new("Authorization", "Custom x")]);
+    }
+
+    [Fact]
     public void Prepare_ExplicitAuthorizationHeader_WinsOverAuth()
     {
         var request = Request() with { Headers = [new("authorization", "Custom x")] };

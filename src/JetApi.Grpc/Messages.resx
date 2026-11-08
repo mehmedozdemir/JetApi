@@ -9,6 +9,7 @@
   <data name="Grpc_DeadlineExceeded" xml:space="preserve"><value>The deadline was exceeded.</value></data>
   <data name="Grpc_EmptyServerUrl" xml:space="preserve"><value>The server URL is empty. Use https://host:port for TLS or http://host:port for plaintext.</value></data>
   <data name="Grpc_InvalidServerUrl" xml:space="preserve"><value>'{0}' is not a valid server URL. Use https://host:port for TLS or http://host:port for plaintext.</value></data>
+  <data name="Grpc_NoOAuthToken" xml:space="preserve"><value>There is no OAuth 2.0 access token yet. Get a new access token in the Auth tab, then call again.</value></data>
   <data name="Grpc_RequestMessage" xml:space="preserve"><value>Request message: {0}</value></data>
   <data name="Grpc_SelectMethod" xml:space="preserve"><value>Select a service and a method.</value></data>
   <data name="Grpc_StreamingNotSupported" xml:space="preserve"><value>'{0}/{1}' is a streaming method; streaming calls are not supported yet.</value></data>

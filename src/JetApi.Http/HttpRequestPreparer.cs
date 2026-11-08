@@ -33,11 +33,17 @@ public static class HttpRequestPreparer
     /// <param name="effectiveAuth">The auth that applies, typically from <see cref="AuthResolver"/>.</param>
     /// <param name="variables">Variables of the active environment, collection and workspace.</param>
     /// <param name="workspaceRoot">Base directory for relative file paths in bodies.</param>
+    /// <param name="tokens">
+    /// Supplies the access token when the effective auth is <see cref="OAuth2Auth"/>. It receives the auth with variables
+    /// resolved (look the token up by <see cref="OAuth2Auth.GetTokenCacheKey"/>) and returns <c>null</c> when there is no
+    /// usable token, which is a preparation error. Expired tokens should be refreshed by the caller beforehand.
+    /// </param>
     public static HttpPreparationResult Prepare(
         HttpRequestDefinition request,
         AuthConfig effectiveAuth,
         VariableResolver variables,
-        string workspaceRoot)
+        string workspaceRoot,
+        Func<OAuth2Auth, OAuth2Token?>? tokens = null)
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(effectiveAuth);
@@ -54,7 +60,7 @@ public static class HttpRequestPreparer
 
         var headers = context.ResolveEntries(request.Headers);
         var queryParameters = context.ResolveEntries(request.QueryParameters);
-        ApplyAuth(effectiveAuth, context, headers, queryParameters);
+        ApplyAuth(effectiveAuth, context, headers, queryParameters, tokens);
 
         var url = BuildUrl(context.Resolve(request.Url), queryParameters, context);
         var body = PrepareBody(request.Body, context);
@@ -74,7 +80,8 @@ public static class HttpRequestPreparer
         AuthConfig auth,
         Context context,
         List<KeyValuePair<string, string>> headers,
-        List<KeyValuePair<string, string>> queryParameters)
+        List<KeyValuePair<string, string>> queryParameters,
+        Func<OAuth2Auth, OAuth2Token?>? tokens)
     {
         // An explicit Authorization header typed by the user wins over the auth tab.
         var hasAuthorizationHeader = headers.Any(h => h.Key.Equals("Authorization", StringComparison.OrdinalIgnoreCase));
@@ -86,6 +93,17 @@ public static class HttpRequestPreparer
             case BasicAuth basic when !hasAuthorizationHeader:
                 var credentials = context.Resolve(basic.Username) + ":" + context.Resolve(basic.Password);
                 headers.Add(new("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials))));
+                break;
+            case OAuth2Auth oauth when !hasAuthorizationHeader:
+                if (tokens?.Invoke(oauth.Resolve(context.Resolve)) is { AccessToken.Length: > 0 } token)
+                {
+                    headers.Add(new("Authorization", token.AuthorizationHeaderValue));
+                }
+                else
+                {
+                    context.Errors.Add(Messages.Get("OAuth_NoToken"));
+                }
+
                 break;
             case ApiKeyAuth apiKey:
                 var entry = new KeyValuePair<string, string>(context.Resolve(apiKey.Key), context.Resolve(apiKey.Value));

@@ -9,6 +9,7 @@
   <data name="Grpc_DeadlineExceeded" xml:space="preserve"><value>Süre sınırı (deadline) aşıldı.</value></data>
   <data name="Grpc_EmptyServerUrl" xml:space="preserve"><value>Sunucu URL'si boş. TLS için https://host:port, şifresiz bağlantı için http://host:port kullanın.</value></data>
   <data name="Grpc_InvalidServerUrl" xml:space="preserve"><value>'{0}' geçerli bir sunucu URL'si değil. TLS için https://host:port, şifresiz bağlantı için http://host:port kullanın.</value></data>
+  <data name="Grpc_NoOAuthToken" xml:space="preserve"><value>Henüz OAuth 2.0 erişim token'ı yok. Auth sekmesinden yeni bir erişim token'ı alın, sonra yeniden çağırın.</value></data>
   <data name="Grpc_RequestMessage" xml:space="preserve"><value>İstek mesajı: {0}</value></data>
   <data name="Grpc_SelectMethod" xml:space="preserve"><value>Bir servis ve bir metot seçin.</value></data>
   <data name="Grpc_StreamingNotSupported" xml:space="preserve"><value>'{0}/{1}' bir streaming metodu; streaming çağrılar henüz desteklenmiyor.</value></data>

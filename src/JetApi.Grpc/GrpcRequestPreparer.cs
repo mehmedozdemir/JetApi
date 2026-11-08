@@ -24,7 +24,16 @@ public static class GrpcRequestPreparer
     /// <param name="effectiveAuth">The auth that applies, typically from <see cref="AuthResolver"/>.</param>
     /// <param name="variables">Variables in scope.</param>
     /// <param name="schema">The collection's proto schema.</param>
-    public static GrpcPreparationResult Prepare(GrpcRequestDefinition request, AuthConfig effectiveAuth, VariableResolver variables, ProtoSchema schema)
+    /// <param name="tokens">
+    /// Supplies the access token when the effective auth is <see cref="OAuth2Auth"/>; it receives the auth with variables
+    /// resolved and returns <c>null</c> when there is no usable token, which is a preparation error.
+    /// </param>
+    public static GrpcPreparationResult Prepare(
+        GrpcRequestDefinition request,
+        AuthConfig effectiveAuth,
+        VariableResolver variables,
+        ProtoSchema schema,
+        Func<OAuth2Auth, OAuth2Token?>? tokens = null)
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(effectiveAuth);
@@ -47,7 +56,7 @@ public static class GrpcRequestPreparer
             .Where(entry => entry.IsEnabled && entry.Key.Length > 0)
             .Select(entry => new KeyValuePair<string, string>(Resolve(entry.Key).ToLowerInvariant(), Resolve(entry.Value)))
             .ToList();
-        ApplyAuth(effectiveAuth, Resolve, metadata, errors);
+        ApplyAuth(effectiveAuth, Resolve, metadata, errors, tokens);
 
         var message = Resolve(request.Message);
         byte[]? encoded = null;
@@ -117,7 +126,12 @@ public static class GrpcRequestPreparer
         return method;
     }
 
-    private static void ApplyAuth(AuthConfig auth, Func<string, string> resolve, List<KeyValuePair<string, string>> metadata, List<string> errors)
+    private static void ApplyAuth(
+        AuthConfig auth,
+        Func<string, string> resolve,
+        List<KeyValuePair<string, string>> metadata,
+        List<string> errors,
+        Func<OAuth2Auth, OAuth2Token?>? tokens)
     {
         var hasAuthorization = metadata.Any(entry => entry.Key == "authorization");
         switch (auth)
@@ -128,6 +142,17 @@ public static class GrpcRequestPreparer
             case BasicAuth basic when !hasAuthorization:
                 var credentials = resolve(basic.Username) + ":" + resolve(basic.Password);
                 metadata.Add(new("authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials))));
+                break;
+            case OAuth2Auth oauth when !hasAuthorization:
+                if (tokens?.Invoke(oauth.Resolve(resolve)) is { AccessToken.Length: > 0 } token)
+                {
+                    metadata.Add(new("authorization", token.AuthorizationHeaderValue));
+                }
+                else
+                {
+                    errors.Add(Messages.Get("Grpc_NoOAuthToken"));
+                }
+
                 break;
             case ApiKeyAuth { Location: ApiKeyLocation.Query }:
                 errors.Add(Messages.Get("Grpc_ApiKeyInQuery"));

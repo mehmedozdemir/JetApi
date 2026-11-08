@@ -17,4 +17,33 @@
   <data name="Http_Refused" xml:space="preserve"><value>Connection refused. Is the server running and listening on this port?</value></data>
   <data name="Http_TimedOut" xml:space="preserve"><value>No response within {0} ms.</value></data>
   <data name="Http_Tls" xml:space="preserve"><value>TLS handshake failed: {0} You can disable certificate validation for this request in its settings.</value></data>
+  <data name="OAuth_BrowserRequired" xml:space="preserve"><value>The authorization code grant signs you in through the browser. Use “Get new access token” to start the sign-in.</value></data>
+  <data name="OAuth_Cancelled" xml:space="preserve"><value>Getting the token was cancelled.</value></data>
+  <data name="OAuth_ClientIdRequired" xml:space="preserve"><value>Client ID is required.</value></data>
+  <data name="OAuth_Dns" xml:space="preserve"><value>The token endpoint's host name could not be resolved (DNS). Check the token URL and your network or VPN.</value></data>
+  <data name="OAuth_HintAccessDenied" xml:space="preserve"><value>The sign-in was declined or the user has no access.</value></data>
+  <data name="OAuth_HintInvalidClient" xml:space="preserve"><value>Check the client ID and secret, and whether the server expects them in the Basic header or in the body.</value></data>
+  <data name="OAuth_HintInvalidGrant" xml:space="preserve"><value>The code, refresh token or user credentials are wrong or have expired. Get a new token.</value></data>
+  <data name="OAuth_HintInvalidScope" xml:space="preserve"><value>Check the scope.</value></data>
+  <data name="OAuth_HintUnsupportedGrant" xml:space="preserve"><value>This server does not allow this grant type for the client.</value></data>
+  <data name="OAuth_InvalidAuthorizationUrl" xml:space="preserve"><value>'{0}' is not a valid http or https authorization URL.</value></data>
+  <data name="OAuth_InvalidRedirectUri" xml:space="preserve"><value>'{0}' cannot receive the sign-in response. Use a loopback address such as http://127.0.0.1:0/callback (port 0 picks a free port).</value></data>
+  <data name="OAuth_InvalidTokenUrl" xml:space="preserve"><value>'{0}' is not a valid http or https token URL.</value></data>
+  <data name="OAuth_ListenFailed" xml:space="preserve"><value>Could not wait for the sign-in response on {0}: {1} Choose another port or use port 0.</value></data>
+  <data name="OAuth_Network" xml:space="preserve"><value>Could not reach the token endpoint: {0}</value></data>
+  <data name="OAuth_NoAccessToken" xml:space="preserve"><value>The token endpoint answered HTTP {0} without an access token.</value></data>
+  <data name="OAuth_NoCode" xml:space="preserve"><value>The sign-in response contained neither a code nor an error.</value></data>
+  <data name="OAuth_NoToken" xml:space="preserve"><value>There is no OAuth 2.0 access token yet. Get a new access token in the Auth tab, then send again.</value></data>
+  <data name="OAuth_PageClose" xml:space="preserve"><value>You can close this tab and return to JetApi.</value></data>
+  <data name="OAuth_PageFailed" xml:space="preserve"><value>Sign-in failed</value></data>
+  <data name="OAuth_PageSucceeded" xml:space="preserve"><value>Signed in</value></data>
+  <data name="OAuth_PageTitle" xml:space="preserve"><value>JetApi sign-in</value></data>
+  <data name="OAuth_Refused" xml:space="preserve"><value>The token endpoint refused the connection. Is the server running and listening on this port?</value></data>
+  <data name="OAuth_ServerError" xml:space="preserve"><value>The authorization server returned '{0}'.</value></data>
+  <data name="OAuth_ServerErrorWithDescription" xml:space="preserve"><value>The authorization server returned '{0}': {1}</value></data>
+  <data name="OAuth_SignInTimedOut" xml:space="preserve"><value>No sign-in response within {0} seconds. Try again and finish signing in in the browser.</value></data>
+  <data name="OAuth_StateMismatch" xml:space="preserve"><value>The sign-in response does not belong to this sign-in (state mismatch), so it was rejected. Try again.</value></data>
+  <data name="OAuth_TimedOut" xml:space="preserve"><value>The token endpoint did not answer within {0} ms.</value></data>
+  <data name="OAuth_Tls" xml:space="preserve"><value>TLS handshake with the token endpoint failed: {0}</value></data>
+  <data name="OAuth_UsernameRequired" xml:space="preserve"><value>Username is required for the password grant.</value></data>
 </root>

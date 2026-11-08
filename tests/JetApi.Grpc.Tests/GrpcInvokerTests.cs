@@ -85,6 +85,35 @@ public sealed class GrpcInvokerTests(TestGrpcServer server) : IClassFixture<Test
     }
 
     [Fact]
+    public async Task Invoke_SendsOAuth2TokenFromTheCaller()
+    {
+        var auth = new OAuth2Auth(OAuth2GrantType.ClientCredentials, "https://id.test/token", "{{token}}");
+        OAuth2Auth? asked = null;
+        var prepared = GrpcRequestPreparer.Prepare(Request("EchoMetadata"), auth, Variables, Schema, resolved =>
+        {
+            asked = resolved;
+            return new OAuth2Token("access", "bearer");
+        });
+
+        var result = await _invoker.InvokeUnaryAsync(prepared.Call!, Schema, cancellationToken: Token);
+
+        asked!.ClientId.ShouldBe("t0k3n");
+        using var json = JsonDocument.Parse(result.ResponseJson!);
+        json.RootElement.GetProperty("authorization").GetString().ShouldBe("Bearer access");
+    }
+
+    [Fact]
+    public void Prepare_OAuth2WithoutToken_IsAnError()
+    {
+        var auth = new OAuth2Auth(OAuth2GrantType.ClientCredentials, "https://id.test/token", "app");
+
+        GrpcRequestPreparer.Prepare(Request("Echo"), auth, Variables, Schema, _ => null).Errors
+            .ShouldHaveSingleItem().ShouldContain("no OAuth 2.0 access token");
+        GrpcRequestPreparer.Prepare(Request("Echo"), auth, Variables, Schema).IsSuccess.ShouldBeFalse();
+        GrpcRequestPreparer.Prepare(Request("Echo") with { Metadata = [new("authorization", "Custom x")] }, auth, Variables, Schema).IsSuccess.ShouldBeTrue();
+    }
+
+    [Fact]
     public async Task Invoke_DeadlineExceeded()
     {
         var request = Request("Slow") with { Settings = new GrpcRequestSettings(Deadline: TimeSpan.FromMilliseconds(200)) };

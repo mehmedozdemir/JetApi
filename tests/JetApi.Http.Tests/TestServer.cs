@@ -60,6 +60,8 @@ public sealed class TestServer : IAsyncLifetime
             return Results.Bytes(buffer.ToArray(), "text/plain; charset=utf-8");
         });
 
+        OAuthTestEndpoints.Map(_app);
+
         await _app.StartAsync();
         var address = _app.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()!.Addresses.First();
         BaseUrl = new Uri(address);

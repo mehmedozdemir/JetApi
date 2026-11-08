@@ -17,4 +17,33 @@
   <data name="Http_Refused" xml:space="preserve"><value>Bağlantı reddedildi. Sunucu çalışıyor ve bu portu dinliyor mu?</value></data>
   <data name="Http_TimedOut" xml:space="preserve"><value>{0} ms içinde yanıt gelmedi.</value></data>
   <data name="Http_Tls" xml:space="preserve"><value>TLS el sıkışması başarısız: {0} Bu istek için sertifika doğrulamasını ayarlarından kapatabilirsiniz.</value></data>
+  <data name="OAuth_BrowserRequired" xml:space="preserve"><value>Authorization code yönteminde oturum tarayıcıda açılır. Başlatmak için “Yeni erişim token'ı al”ı kullanın.</value></data>
+  <data name="OAuth_Cancelled" xml:space="preserve"><value>Token alma iptal edildi.</value></data>
+  <data name="OAuth_ClientIdRequired" xml:space="preserve"><value>Client ID gerekli.</value></data>
+  <data name="OAuth_Dns" xml:space="preserve"><value>Token adresinin sunucu adı çözümlenemedi (DNS). Token URL'sini, ağ ya da VPN bağlantınızı kontrol edin.</value></data>
+  <data name="OAuth_HintAccessDenied" xml:space="preserve"><value>Oturum açma reddedildi ya da kullanıcının erişim izni yok.</value></data>
+  <data name="OAuth_HintInvalidClient" xml:space="preserve"><value>Client ID ve secret'ı, sunucunun bunları Basic header'da mı yoksa body'de mi beklediğini kontrol edin.</value></data>
+  <data name="OAuth_HintInvalidGrant" xml:space="preserve"><value>Kod, refresh token ya da kullanıcı bilgileri hatalı veya süresi dolmuş. Yeni bir token alın.</value></data>
+  <data name="OAuth_HintInvalidScope" xml:space="preserve"><value>Scope değerini kontrol edin.</value></data>
+  <data name="OAuth_HintUnsupportedGrant" xml:space="preserve"><value>Bu sunucu, bu client için bu yönteme izin vermiyor.</value></data>
+  <data name="OAuth_InvalidAuthorizationUrl" xml:space="preserve"><value>'{0}' geçerli bir http veya https yetkilendirme URL'si değil.</value></data>
+  <data name="OAuth_InvalidRedirectUri" xml:space="preserve"><value>'{0}' oturum açma yanıtını alamaz. http://127.0.0.1:0/callback gibi bir loopback adresi kullanın (port 0 boş bir port seçer).</value></data>
+  <data name="OAuth_InvalidTokenUrl" xml:space="preserve"><value>'{0}' geçerli bir http veya https token URL'si değil.</value></data>
+  <data name="OAuth_ListenFailed" xml:space="preserve"><value>Oturum açma yanıtı {0} adresinde beklenemedi: {1} Başka bir port seçin ya da port 0 kullanın.</value></data>
+  <data name="OAuth_Network" xml:space="preserve"><value>Token adresine ulaşılamadı: {0}</value></data>
+  <data name="OAuth_NoAccessToken" xml:space="preserve"><value>Token adresi HTTP {0} ile yanıt verdi ama erişim token'ı göndermedi.</value></data>
+  <data name="OAuth_NoCode" xml:space="preserve"><value>Oturum açma yanıtında ne kod ne de hata var.</value></data>
+  <data name="OAuth_NoToken" xml:space="preserve"><value>Henüz OAuth 2.0 erişim token'ı yok. Auth sekmesinden yeni bir erişim token'ı alın, sonra yeniden gönderin.</value></data>
+  <data name="OAuth_PageClose" xml:space="preserve"><value>Bu sekmeyi kapatıp JetApi'ye dönebilirsiniz.</value></data>
+  <data name="OAuth_PageFailed" xml:space="preserve"><value>Oturum açılamadı</value></data>
+  <data name="OAuth_PageSucceeded" xml:space="preserve"><value>Oturum açıldı</value></data>
+  <data name="OAuth_PageTitle" xml:space="preserve"><value>JetApi oturum açma</value></data>
+  <data name="OAuth_Refused" xml:space="preserve"><value>Token adresi bağlantıyı reddetti. Sunucu çalışıyor ve bu portu dinliyor mu?</value></data>
+  <data name="OAuth_ServerError" xml:space="preserve"><value>Yetkilendirme sunucusu '{0}' hatası döndürdü.</value></data>
+  <data name="OAuth_ServerErrorWithDescription" xml:space="preserve"><value>Yetkilendirme sunucusu '{0}' hatası döndürdü: {1}</value></data>
+  <data name="OAuth_SignInTimedOut" xml:space="preserve"><value>{0} saniye içinde oturum açma yanıtı gelmedi. Yeniden deneyin ve oturum açmayı tarayıcıda tamamlayın.</value></data>
+  <data name="OAuth_StateMismatch" xml:space="preserve"><value>Oturum açma yanıtı bu oturum açma isteğine ait değil (state uyuşmuyor), bu yüzden reddedildi. Yeniden deneyin.</value></data>
+  <data name="OAuth_TimedOut" xml:space="preserve"><value>Token adresi {0} ms içinde yanıt vermedi.</value></data>
+  <data name="OAuth_Tls" xml:space="preserve"><value>Token adresiyle TLS el sıkışması başarısız: {0}</value></data>
+  <data name="OAuth_UsernameRequired" xml:space="preserve"><value>Password yönteminde kullanıcı adı gerekli.</value></data>
 </root>
