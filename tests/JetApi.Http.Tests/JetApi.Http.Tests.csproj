@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JetApi.Http\JetApi.Http.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- An in-process Kestrel server is the system under test's counterpart. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+</Project>

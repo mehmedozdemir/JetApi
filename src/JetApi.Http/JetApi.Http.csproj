@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>REST/HTTP request preparation and execution engine with timing measurement.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Http.Tests" />
+  </ItemGroup>
+</Project>
