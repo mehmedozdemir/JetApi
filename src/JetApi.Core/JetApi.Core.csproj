@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>JetApi domain model: workspaces, collections, requests, environments and variable resolution. No I/O.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Core.Tests" />
+  </ItemGroup>
+</Project>
