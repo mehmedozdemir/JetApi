@@ -29,7 +29,7 @@
         <TextBlock Classes="field-label" Text="{l:Tr Var_Name}" />
         <!-- Existing names are offered, so a value can update a variable that already exists. -->
         <AutoCompleteBox x:Name="NameBox" Classes="mono" Text="{Binding Name}" ItemsSource="{Binding NameSuggestions}" FilterMode="ContainsOrdinal"
-                         MinimumPrefixLength="0" MaxDropDownHeight="180" Watermark="userId" AutomationProperties.Name="{l:Tr Var_Name}">
+                         MinimumPrefixLength="0" MaxDropDownHeight="180" PlaceholderText="userId" AutomationProperties.Name="{l:Tr Var_Name}">
           <AutoCompleteBox.KeyBindings>
             <KeyBinding Gesture="Enter" Command="{Binding SaveCommand}" />
           </AutoCompleteBox.KeyBindings>
