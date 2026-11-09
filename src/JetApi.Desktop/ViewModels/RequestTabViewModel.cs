@@ -326,6 +326,14 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
 
         public Variable? Find(VariableSource scope, string name) => VariableWriter.Find(session, collectionKey, scope, name);
 
+        public string ShortSource(VariableSource? source) => source switch
+        {
+            VariableSource.Environment => session.ActiveEnvironment?.Name ?? string.Empty,
+            VariableSource.Collection => session.Workspace.FindCollection(collectionKey)?.Name ?? collectionKey,
+            VariableSource.Global => Loc.Get("Var_SourceGlobal"),
+            _ => string.Empty,
+        };
+
         public IReadOnlyList<string> Names() =>
         [
             .. (session.ActiveEnvironment?.Variables ?? []).Concat(session.Workspace.FindCollection(collectionKey)?.Variables ?? []).Concat(session.Workspace.GlobalVariables)

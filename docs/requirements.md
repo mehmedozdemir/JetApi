@@ -31,7 +31,8 @@
 | VAR-5 | Tanımsız değişken uyarısı (gönderimden önce) | M1 | ✅ |
 | VAR-6 | Gizli (secret) işaretli değişkenlerin arayüzde maskelenmesi | M1 | ✅ |
 | VAR-7 | Üzerine gelinen değişkenin değerini yerinde düzenleyip kaydetme; tanımsızsa environment, koleksiyon veya global'e ekleme | M2 | ✅ Değişken kartı (URL, body, gRPC mesajı, tablo hücreleri, auth alanları); değer tanımlı olduğu katmana yazılır, gizli değer maskeli kutuda düzenlenir, dinamik değişkenler salt okunur |
-| VAR-8 | Seçili metni değişkene çevirme (environment, koleksiyon veya global) | M2 | ✅ Sağ tık → *Değişken olarak ayarla…*: ad, değer ve kaydedileceği yer; seçim `{{ad}}` ile değiştirilir; aynı ad varsa uyarı |
+| VAR-8 | Seçili metni değişkene çevirme (environment, koleksiyon veya global) | M2 | ✅ Sağ tık → *Değişken olarak ayarla…*: ad, değer ve kaydedileceği yer; seçim `{{ad}}` ile değiştirilir; aynı ad varsa uyarı. Yanıtlarda (salt okunur) *Değişkene kaydet…*: seçilen değer yeni veya mevcut bir değişkene yazılır, yanıt değişmez |
+| VAR-9 | `{{` yazınca değişken önerileri (otomatik tamamlama) | M2 | ✅ URL, body, gRPC sunucu/mesaj, tablo hücreleri ve auth alanlarında; ad, değer (gizliyse maskeli) ve kaynak; yazdıkça süzülür, ↑/↓, Enter/Tab ekler ve `}}` tamamlar, Escape kapatır |
 
 ### REST
 

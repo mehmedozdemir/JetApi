@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             x:Class="JetApi.Desktop.Views.VariableCompletionView"
+             Width="400">
+  <!-- The variables offered after "{{": name, value and where it comes from. -->
+  <ListBox x:Name="List" MaxHeight="264" Margin="4" Background="Transparent" Focusable="False"
+           ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+    <ListBox.Styles>
+      <!-- Clicking an item must not take focus from the field being typed in. -->
+      <Style Selector="ListBoxItem">
+        <Setter Property="Focusable" Value="False" />
+      </Style>
+    </ListBox.Styles>
+    <ListBox.ItemTemplate>
+      <DataTemplate x:DataType="vm:VariableSuggestion">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="8,5" ColumnSpacing="10">
+          <TextBlock Classes="mono" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Classes="mono muted" Text="{Binding Value}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="2" Classes="faint small" Text="{Binding Source}" MaxWidth="140" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+        </Grid>
+      </DataTemplate>
+    </ListBox.ItemTemplate>
+  </ListBox>
+</UserControl>

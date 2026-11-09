@@ -313,6 +313,8 @@
   <data name="Var_ScopeEnvironment" xml:space="preserve"><value>Environment: {0}</value></data>
   <data name="Var_ScopeGlobal" xml:space="preserve"><value>Global (whole workspace)</value></data>
   <data name="Var_SetAsVariable" xml:space="preserve"><value>Set as variable…</value></data>
+  <data name="Var_SourceDynamic" xml:space="preserve"><value>dynamic</value></data>
+  <data name="Var_SourceGlobal" xml:space="preserve"><value>Global</value></data>
   <data name="Var_Value" xml:space="preserve"><value>Value</value></data>
   <data name="Var_WillOverwrite" xml:space="preserve"><value>A variable with this name already exists here; its value will be replaced.</value></data>
   <data name="Var_WillUpdate" xml:space="preserve"><value>This variable already exists here; its value will be updated.</value></data>

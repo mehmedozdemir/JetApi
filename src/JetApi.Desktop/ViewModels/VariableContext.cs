@@ -15,7 +15,7 @@ public sealed record VariableScopeOption(VariableSource Source, string Label)
 /// <summary>A variable offered while typing <c>{{</c> or choosing a name.</summary>
 /// <param name="Name">The name, e.g. <c>baseUrl</c> or <c>$guid</c>.</param>
 /// <param name="Value">The resolved value (masked when secret); empty for dynamic variables.</param>
-/// <param name="Source">"Environment: Development", "Global (whole workspace)", "dynamic variable".</param>
+/// <param name="Source">Short source for the list: the environment or collection name, "Global" or "dynamic".</param>
 /// <param name="IsDynamic">A built-in dynamic variable.</param>
 public sealed record VariableSuggestion(string Name, string Value, string Source, bool IsDynamic)
 {
@@ -28,6 +28,9 @@ public interface IVariableStore
 {
     /// <summary>Names of every enabled environment, collection and global variable the request can see.</summary>
     IReadOnlyList<string> Names();
+
+    /// <summary>"Development", "User Service" or "Global" for a layer.</summary>
+    string ShortSource(VariableSource? source);
 
     /// <summary>Where variables can be saved; the environment only when one is active.</summary>
     IReadOnlyList<VariableScopeOption> Scopes { get; }
@@ -88,13 +91,13 @@ public sealed class VariableContext
         foreach (var name in (Store?.Names() ?? []).Distinct(StringComparer.Ordinal).Order(StringComparer.OrdinalIgnoreCase))
         {
             var hint = Describe(name);
-            var source = hint.Source is { } layer && Store!.Scopes.FirstOrDefault(s => s.Source == layer) is { } scope ? scope.Label : hint.Description;
-            list.Add(new VariableSuggestion(name, hint.Value, source, false));
+            list.Add(new VariableSuggestion(name, hint.Value, Store!.ShortSource(hint.Source), false));
         }
 
         if (includeDynamic)
         {
-            list.AddRange(DynamicVariables.SupportedNames.Select(n => new VariableSuggestion("$" + n, string.Empty, Describe("$" + n).Description, true)));
+            var dynamic = Localization.Loc.Get("Var_SourceDynamic");
+            list.AddRange(DynamicVariables.SupportedNames.Select(n => new VariableSuggestion("$" + n, string.Empty, dynamic, true)));
         }
 
         return list;

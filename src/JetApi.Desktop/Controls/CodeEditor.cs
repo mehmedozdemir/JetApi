@@ -107,9 +107,21 @@ public sealed class CodeEditor : UserControl
                 _updating = true;
                 SetCurrentValue(TextProperty, _editor.Document.Text);
                 _updating = false;
+                Completion?.OnTextChanged();
             }
         };
+        _editor.TextArea.Caret.PositionChanged += (_, _) =>
+        {
+            if (Completion is { IsOpen: true } completion)
+            {
+                completion.OnTextChanged();
+            }
+        };
+        _editor.TextArea.LostFocus += (_, _) => Completion?.OnTextChanged();
         _editor.TextArea.AddHandler(KeyDownEvent, OnEditorKeyDown, RoutingStrategies.Tunnel);
+
+        // The frame around the editor shows focus; the default focus rectangle inside it is noise.
+        _editor.TextArea.FocusAdorner = null;
 
         // Ctrl+F opens find (and replace in editable editors).
         _search = SearchPanel.Install(_editor);
@@ -301,6 +313,12 @@ public sealed class CodeEditor : UserControl
 
     private void OnEditorKeyDown(object? sender, KeyEventArgs e)
     {
+        if (Completion?.HandleKey(e.Key) == true)
+        {
+            e.Handled = true;
+            return;
+        }
+
         if (!IsSingleLine)
         {
             return;
@@ -430,6 +448,35 @@ public sealed class CodeEditor : UserControl
         var location = _editor.Document.GetLocation(offset);
         var point = textView.GetVisualPosition(new AvaloniaEdit.TextViewPosition(location), AvaloniaEdit.Rendering.VisualYPosition.LineBottom) - textView.ScrollOffset;
         return textView.TranslatePoint(point, _editor) ?? default;
+    }
+
+    // "{{" completion in request editors that can be typed in.
+    private VariableCompletion? Completion =>
+        HighlightVariables && !IsReadOnly ? VariableCompletion.Attach(new EditorCompletionHost(this)) : null;
+
+    /// <summary>The "{{" completion list of this editor (tests).</summary>
+    internal VariableCompletion? CompletionList => VariableCompletion.Find(_editor);
+
+    private sealed class EditorCompletionHost(CodeEditor owner) : ICompletionHost
+    {
+        public Control Anchor => owner._editor;
+
+        public string Text => owner._editor.Document.Text;
+
+        public int Caret => owner._editor.CaretOffset;
+
+        public bool IsTyping => owner._editor.TextArea.IsKeyboardFocusWithin;
+
+        public VariableContext? Context => owner.ActiveVariables;
+
+        public Point CaretBottom() => owner.SelectionBottomLeft(owner._editor.CaretOffset);
+
+        public void Apply(CompletionEdit edit)
+        {
+            owner._editor.Document.Replace(edit.Start, edit.Length, edit.Insert);
+            owner._editor.CaretOffset = Math.Min(edit.Caret, owner._editor.Document.TextLength);
+            owner._editor.TextArea.Focus();
+        }
     }
 
     /// <summary>The variable card of this editor (tests).</summary>

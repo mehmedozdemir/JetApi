@@ -205,8 +205,8 @@ public sealed class VariableEditingTests(EchoServer server) : IClassFixture<Echo
             var stored = suggestions.Where(s => !s.IsDynamic).ToList();
             stored.Select(s => s.Name).ShouldBe(["apiKey", "baseUrl"]);
             stored[0].Value.ShouldNotContain("k");
-            stored[0].Source.ShouldBe(Loc.Get("Var_ScopeGlobal"));
-            stored[1].Source.ShouldBe("Environment: Development");
+            stored[0].Source.ShouldBe("Global");
+            stored[1].Source.ShouldBe("Development");
             suggestions.Where(s => s.IsDynamic).Select(s => s.Name).ShouldContain("$guid");
             tab.Variables.Suggestions(includeDynamic: false).ShouldAllBe(s => !s.IsDynamic);
         }

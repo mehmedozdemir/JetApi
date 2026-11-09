@@ -45,11 +45,18 @@ public static class VariableHints
             textBox.PointerMoved += OnPointerMoved;
             textBox.PointerExited += OnPointerExited;
             textBox.ContextFlyout = CreateTextBoxMenu(textBox);
+            textBox.TextChanged += OnTextChanged;
+            textBox.LostFocus += OnTextChanged;
+            textBox.AddHandler(InputElement.KeyDownEvent, OnCompletionKeyDown, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         }
         else
         {
             textBox.PointerMoved -= OnPointerMoved;
             textBox.PointerExited -= OnPointerExited;
+            textBox.TextChanged -= OnTextChanged;
+            textBox.LostFocus -= OnTextChanged;
+            textBox.RemoveHandler(InputElement.KeyDownEvent, OnCompletionKeyDown);
+            VariableCompletion.Find(textBox)?.Close();
             VariablePopup.Find(textBox)?.Hide();
         }
     }
@@ -117,6 +124,55 @@ public static class VariableHints
             },
             () => textBox.Focus(),
             new Point(0, textBox.Bounds.Height - 6));
+    }
+
+    private static void OnTextChanged(object? sender, EventArgs e)
+    {
+        if (sender is TextBox textBox && (GetContext(textBox) is not null || VariableCompletion.Find(textBox) is not null))
+        {
+            VariableCompletion.Attach(new TextBoxCompletionHost(textBox)).OnTextChanged();
+        }
+    }
+
+    private static void OnCompletionKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is TextBox textBox && VariableCompletion.Find(textBox)?.HandleKey(e.Key) == true)
+        {
+            e.Handled = true;
+        }
+    }
+
+    // "{{" completion in a text box (table cells, auth fields).
+    private sealed class TextBoxCompletionHost(TextBox textBox) : ICompletionHost
+    {
+        public Control Anchor => textBox;
+
+        public string Text => textBox.Text ?? string.Empty;
+
+        public int Caret => textBox.CaretIndex;
+
+        public bool IsTyping => textBox.IsKeyboardFocusWithin && textBox.PasswordChar == default && !textBox.IsReadOnly;
+
+        public VariableContext? Context => GetContext(textBox);
+
+        public Point CaretBottom()
+        {
+            if (textBox.GetVisualDescendants().OfType<TextPresenter>().FirstOrDefault() is not { } presenter)
+            {
+                return new Point(0, textBox.Bounds.Height);
+            }
+
+            var rect = presenter.TextLayout.HitTestTextPosition(Math.Min(textBox.CaretIndex, Text.Length));
+            return presenter.TranslatePoint(rect.BottomLeft, textBox) ?? new Point(0, textBox.Bounds.Height);
+        }
+
+        public void Apply(CompletionEdit edit)
+        {
+            var text = Text;
+            textBox.Text = text[..edit.Start] + edit.Insert + text[(edit.Start + edit.Length)..];
+            textBox.CaretIndex = Math.Min(edit.Caret, textBox.Text.Length);
+            textBox.Focus();
+        }
     }
 
     private static void OnPointerMoved(object? sender, PointerEventArgs e)

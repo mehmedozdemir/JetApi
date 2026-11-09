@@ -313,6 +313,8 @@
   <data name="Var_ScopeEnvironment" xml:space="preserve"><value>Environment: {0}</value></data>
   <data name="Var_ScopeGlobal" xml:space="preserve"><value>Global (tüm workspace)</value></data>
   <data name="Var_SetAsVariable" xml:space="preserve"><value>Değişken olarak ayarla…</value></data>
+  <data name="Var_SourceDynamic" xml:space="preserve"><value>dinamik</value></data>
+  <data name="Var_SourceGlobal" xml:space="preserve"><value>Global</value></data>
   <data name="Var_Value" xml:space="preserve"><value>Değer</value></data>
   <data name="Var_WillOverwrite" xml:space="preserve"><value>Burada bu adla bir değişken zaten var; değeri değiştirilecek.</value></data>
   <data name="Var_WillUpdate" xml:space="preserve"><value>Bu değişken burada zaten var; değeri güncellenecek.</value></data>
