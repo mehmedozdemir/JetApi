@@ -36,7 +36,7 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 - [x] Performans ölçümü: açılış süresi ve bellek (NFR-1, NFR-2) ([sonuçlar](performance.md))
 - [x] Boşta belleği NFR-2 hedefinin altına indirmek: Windows'ta yazılımla çizim, 263 → 145 MB (macOS/Linux ölçülmedi)
 
-## M2 — Postman'den geçiş → `v0.2.0`
+## M2 — Postman'den geçiş → `v0.2.0` ✅ (2026-11-09)
 
 - [x] Postman Collection v2.1 ve Environment import (import raporu: neyin taşındığı, neyin taşınamadığı) ([eşleştirme](import.md))
 - [x] OpenAPI 3.x / Swagger 2.0 import ([eşleştirme](openapi-import.md))

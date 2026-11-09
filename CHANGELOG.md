@@ -5,6 +5,11 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-09
+
+Postman'den geçiş sürümü (M2). İlk ön sürüm `0.1.0-alpha.1` (2026-11-08) ayrı bir bölüm olarak yazılmadığı için
+o sürümdeki M0 ve M1 değişiklikleri de burada listelenir.
+
 ### Added
 
 - OpenAPI 3.0/3.1 ve Swagger 2.0 içe aktarma (JSON ve YAML): tag’lere göre klasörler, `baseUrl` ve parametre değişkenleri, şemadan örnek body, güvenlik şemalarından auth. Postman ile aynı içe aktarma komutu ve raporu.
@@ -53,7 +58,6 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 - gRPC isteğinde "Proto yüklendi" satırının özeti dar pencerede bağlantıların üzerine biniyordu; artık kısalır, tamamı ipucunda.
 - Workspace kapatılırken, başka workspace açılırken veya uygulamadan çıkılırken kaydedilmemiş istekler sorulmadan atılıyordu; artık kaydetme, atma veya vazgeçme sorulur.
-
 - Dar pencerede veya büyük arayüz boyutunda istek ve yanıt sekmeleri yandaki panele taşıyordu; artık yatayda kaydırılır.
 - Dil değiştirmek environment'ı "kaydedilmemiş" gösteriyordu.
 - Environment veya koleksiyon değişkenine ad yazılınca satırın checkbox, gizli ve sil kontrolleri ancak ekran yenilenince çıkıyordu.
