@@ -22,7 +22,9 @@ internal sealed class FakeDialogs : IDialogService
 
     public Task<string?> PickFolderAsync(string title) => Task.FromResult(FolderToPick);
 
-    public Task<string?> PickFileAsync(string title) => Task.FromResult<string?>(null);
+    public string? FileToPick { get; set; }
+
+    public Task<string?> PickFileAsync(string title) => Task.FromResult(FileToPick);
 
     public Task<string?> PickSaveFileAsync(string title, string suggestedName) => Task.FromResult<string?>(null);
 

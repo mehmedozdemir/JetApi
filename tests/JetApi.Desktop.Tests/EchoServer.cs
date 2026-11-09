@@ -33,6 +33,13 @@ public sealed class EchoServer : IAsyncLifetime
             context.Response.Headers.Append("Set-Cookie", "session=abc123; Path=/; HttpOnly");
             return Results.Ok();
         });
+        // Any other path: its method and path, so collections with several endpoints can run against it.
+        _app.MapFallback((HttpContext context) => Results.Json(new
+        {
+            method = context.Request.Method,
+            path = context.Request.Path.Value,
+            query = context.Request.QueryString.Value,
+        }));
         await _app.StartAsync();
         BaseUrl = _app.Services.GetRequiredService<IServer>().Features.Get<IServerAddressesFeature>()!.Addresses.First();
     }

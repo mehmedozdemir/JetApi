@@ -64,6 +64,7 @@
   <data name="Cmd_NewGrpc" xml:space="preserve"><value>Yeni gRPC isteği</value></data>
   <data name="Cmd_NewHttp" xml:space="preserve"><value>Yeni HTTP isteği</value></data>
   <data name="Cmd_Reload" xml:space="preserve"><value>Workspace’i diskten yeniden yükle</value></data>
+  <data name="Cmd_RunCollection" xml:space="preserve"><value>Çalıştır: {0}</value></data>
   <data name="Cmd_ToggleLanguage" xml:space="preserve"><value>Türkçe / English</value></data>
   <data name="Cmd_ToggleTheme" xml:space="preserve"><value>Temayı değiştir</value></data>
   <data name="Col_FolderTitle" xml:space="preserve"><value>Klasör</value></data>
@@ -149,6 +150,7 @@
   <data name="Menu_NewHttp" xml:space="preserve"><value>Yeni HTTP isteği</value></data>
   <data name="Menu_Paste" xml:space="preserve"><value>Yapıştır</value></data>
   <data name="Menu_Rename" xml:space="preserve"><value>Yeniden adlandır</value></data>
+  <data name="Menu_Run" xml:space="preserve"><value>Çalıştır…</value></data>
   <data name="Menu_SelectAll" xml:space="preserve"><value>Tümünü seç</value></data>
   <data name="OAuth_AccessToken" xml:space="preserve"><value>Erişim token’ı</value></data>
   <data name="OAuth_Audience" xml:space="preserve"><value>Audience (isteğe bağlı)</value></data>
@@ -278,6 +280,30 @@
   <data name="Res_TimingReused" xml:space="preserve"><value>Var olan bağlantı yeniden kullanıldı; DNS ve bağlantı süresi yok.</value></data>
   <data name="Res_Total" xml:space="preserve"><value>Toplam</value></data>
   <data name="Res_Truncated" xml:space="preserve"><value>Gövde {0} sınırını aştığı için kesildi.</value></data>
+  <data name="Run_Cancelled" xml:space="preserve"><value>Durduruldu.</value></data>
+  <data name="Run_ChooseData" xml:space="preserve"><value>CSV veya JSON seç…</value></data>
+  <data name="Run_DataFile" xml:space="preserve"><value>Veri dosyası</value></data>
+  <data name="Run_DataHint" xml:space="preserve"><value>Her satır için bir tekrar yapılır; her sütun bir değişken olur, ör. {{email}}.</value></data>
+  <data name="Run_DataSummary" xml:space="preserve"><value>{0} satır · sütunlar: {1}</value></data>
+  <data name="Run_Delay" xml:space="preserve"><value>Bekleme (ms)</value></data>
+  <data name="Run_Empty" xml:space="preserve"><value>İstekleri ve ayarları seçip Çalıştır'a basın. Sonuçlar her istek bittikçe burada görünür.</value></data>
+  <data name="Run_Environment" xml:space="preserve"><value>Environment</value></data>
+  <data name="Run_EnvironmentHint" xml:space="preserve"><value>Aktif environment kullanılır; üst çubuktan değiştirilir.</value></data>
+  <data name="Run_Iteration" xml:space="preserve"><value>Tekrar {0}</value></data>
+  <data name="Run_IterationRow" xml:space="preserve"><value>Tekrar {0} · {1}</value></data>
+  <data name="Run_Iterations" xml:space="preserve"><value>Tekrar</value></data>
+  <data name="Run_NoEnvironment" xml:space="preserve"><value>Environment yok</value></data>
+  <data name="Run_NoRequests" xml:space="preserve"><value>Burada henüz istek yok.</value></data>
+  <data name="Run_Persist" xml:space="preserve"><value>Çıkarılan değerleri environment, koleksiyon veya global'e yaz</value></data>
+  <data name="Run_PersistHint" xml:space="preserve"><value>"Nereye"si çalışma anı olmayan kurallar için. Aksi hâlde koşu sırasında çıkarılan değerler yalnızca koşu bitene kadar geçerlidir.</value></data>
+  <data name="Run_PickData" xml:space="preserve"><value>Veri dosyası seçin</value></data>
+  <data name="Run_Progress" xml:space="preserve"><value>Tekrar {0} / {1} · {2} istek · {3} test geçti · {4} kaldı · {5}</value></data>
+  <data name="Run_Requests" xml:space="preserve"><value>İstekler (sırayla)</value></data>
+  <data name="Run_Start" xml:space="preserve"><value>Çalıştır</value></data>
+  <data name="Run_Stop" xml:space="preserve"><value>Durdur</value></data>
+  <data name="Run_StopOnFailure" xml:space="preserve"><value>İlk hatada dur</value></data>
+  <data name="Run_Stopped" xml:space="preserve"><value>İlk hatada durduruldu: {0} istek çalıştırılmadı.</value></data>
+  <data name="Run_Title" xml:space="preserve"><value>Koleksiyon çalıştır</value></data>
   <data name="Settings_CookieJar" xml:space="preserve"><value>İstekler arasında cookie’leri sakla</value></data>
   <data name="Settings_CookieJarHint" xml:space="preserve"><value>Sunucuların koyduğu cookie’ler, bir tarayıcıdaki gibi aynı siteye giden sonraki isteklerle gönderilir. Workspace kapanana kadar workspace başına tutulur, diske yazılmaz. İstekteki Cookie header’ı önceliklidir.</value></data>
   <data name="Settings_ResponseBottom" xml:space="preserve"><value>İsteğin altında</value></data>

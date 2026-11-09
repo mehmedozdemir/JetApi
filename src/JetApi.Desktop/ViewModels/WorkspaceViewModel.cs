@@ -99,6 +99,10 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     private NodeSettingsViewModel? _nodeSettings;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasOverlay))]
+    private CollectionRunViewModel? _collectionRun;
+
+    [ObservableProperty]
     private CommandPaletteViewModel? _palette;
 
     [ObservableProperty]
@@ -214,7 +218,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     public bool HasNoCollections => Collections.Count == 0;
 
     /// <summary>An overlay page (environments, settings) covers the editor.</summary>
-    public bool HasOverlay => Environments is not null || NodeSettings is not null;
+    public bool HasOverlay => Environments is not null || NodeSettings is not null || CollectionRun is not null;
 
     /// <summary>The history list is empty.</summary>
     public bool HasNoHistory => HistoryItems.Count == 0;
@@ -251,10 +255,51 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         OpenRequest(node.CollectionKey, node.Path);
     }
 
+    /// <summary>Opens the runner for a collection or folder (from the tree or the palette).</summary>
+    [RelayCommand]
+    private void RunNode(TreeNodeViewModel node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        OpenRunner(node.CollectionKey, node.IsCollection ? [] : node.Path);
+    }
+
+    /// <summary>Opens the runner for a collection (empty path) or folder.</summary>
+    public void OpenRunner(string collectionKey, IReadOnlyList<string> path)
+    {
+        if (Session.Workspace.FindCollection(collectionKey) is null)
+        {
+            return;
+        }
+
+        LeaveNodeSettings();
+        CloseRunner();
+        SidebarMode = SidebarMode.Collections;
+        CollectionRunViewModel? screen = null;
+        screen = new CollectionRunViewModel(Session, Runner, Dialogs, collectionKey, path, () =>
+        {
+            if (ReferenceEquals(CollectionRun, screen))
+            {
+                CloseRunner();
+            }
+        });
+        CollectionRun = screen;
+    }
+
+    // Closing the runner stops a run that is still going.
+    private void CloseRunner()
+    {
+        if (CollectionRun is { } run)
+        {
+            CollectionRun = null;
+            run.Dispose();
+        }
+    }
+
     /// <summary>Opens the request at <paramref name="path"/> or focuses its tab.</summary>
     public RequestTabViewModel? OpenRequest(string collectionKey, IReadOnlyList<string> path)
     {
         LeaveNodeSettings();
+        CloseRunner();
         var identity = $"{collectionKey}/{string.Join('/', path)}";
         if (Tabs.FirstOrDefault(t => t.Identity == identity) is { } existing)
         {
@@ -868,6 +913,8 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         {
             tab.Dispose();
         }
+
+        CollectionRun?.Dispose();
     }
 
     /// <inheritdoc />
@@ -1196,6 +1243,16 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
 
         var commands = Loc.Get("Palette_Commands");
+        foreach (var collection in Session.Workspace.Collections)
+        {
+            var key = collection.Key;
+            items.Add(PaletteItemViewModel.Command(commands, "Icon.Play", Loc.Format("Cmd_RunCollection", collection.Name), string.Empty, string.Empty, () =>
+            {
+                OpenRunner(key, []);
+                return Task.CompletedTask;
+            }));
+        }
+
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Plus", Loc.Get("Cmd_NewHttp"), string.Empty, "Ctrl N", () => NewHttpRequestAsync(null)));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Server", Loc.Get("Cmd_NewGrpc"), string.Empty, string.Empty, () => NewGrpcRequestAsync(null)));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Folder", Loc.Get("Cmd_NewCollection"), string.Empty, string.Empty, NewCollectionAsync));

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Runs a collection or folder (order, iterations, data files, delay, stop on failure) with checks and extractions; shared by the app and the CLI (ADR-0009).</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
+    <ProjectReference Include="..\JetApi.Testing\JetApi.Testing.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Runner.Tests" />
+  </ItemGroup>
+</Project>

@@ -368,6 +368,13 @@
           "YamlDotNet": "[18.1.0, )"
         }
       },
+      "jetapi.runner": {
+        "type": "Project",
+        "dependencies": {
+          "JetApi.Core": "[0.2.0, )",
+          "JetApi.Testing": "[0.2.0, )"
+        }
+      },
       "jetapi.storage": {
         "type": "Project",
         "dependencies": {

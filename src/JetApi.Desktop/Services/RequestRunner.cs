@@ -41,15 +41,16 @@ public sealed class RequestRunner : IDisposable
     public ProtoSchemaCache ProtoSchemas { get; }
 
     /// <summary>Variables in scope for requests of <paramref name="collectionKey"/> with the active environment.</summary>
-    public static VariableResolver CreateResolver(WorkspaceSession session, string? collectionKey)
+    /// <param name="session">The workspace.</param>
+    /// <param name="collectionKey">The request's collection.</param>
+    /// <param name="runVariables">Values of a collection run (data row, extracted values) over everything else.</param>
+    public static VariableResolver CreateResolver(WorkspaceSession session, string? collectionKey, IReadOnlyDictionary<string, string>? runVariables = null)
     {
         ArgumentNullException.ThrowIfNull(session);
         var collection = collectionKey is null ? null : session.Workspace.FindCollection(collectionKey);
-        return VariableResolverFactory.Create(
-            session.Workspace,
-            collection,
-            session.ActiveEnvironment,
-            session.RuntimeVariables.Count == 0 ? null : [.. session.RuntimeVariables.Select(v => new Variable(v.Key, v.Value))]);
+        IEnumerable<KeyValuePair<string, string>> runtime = runVariables is null ? session.RuntimeVariables : [.. session.RuntimeVariables, .. runVariables];
+        var variables = runtime.Select(v => new Variable(v.Key, v.Value)).ToList();
+        return VariableResolverFactory.Create(session.Workspace, collection, session.ActiveEnvironment, variables.Count == 0 ? null : variables);
     }
 
     /// <summary>The auth that applies to a request at <paramref name="path"/> and where it comes from.</summary>
@@ -88,7 +89,8 @@ public sealed class RequestRunner : IDisposable
     /// <param name="tokenPlaceholder">
     /// For code snippets: an OAuth 2.0 request without a usable token gets this text as its token instead of an error.
     /// </param>
-    public static HttpPreparationResult PrepareHttp(WorkspaceSession session, string collectionKey, IReadOnlyList<string> path, HttpRequestDefinition request, string? tokenPlaceholder = null)
+    /// <param name="runVariables">Values of a collection run over everything else.</param>
+    public static HttpPreparationResult PrepareHttp(WorkspaceSession session, string collectionKey, IReadOnlyList<string> path, HttpRequestDefinition request, string? tokenPlaceholder = null, IReadOnlyDictionary<string, string>? runVariables = null)
     {
         ArgumentNullException.ThrowIfNull(session);
         ArgumentNullException.ThrowIfNull(request);
@@ -98,7 +100,7 @@ public sealed class RequestRunner : IDisposable
         return HttpRequestPreparer.Prepare(
             request,
             auth,
-            CreateResolver(session, collectionKey),
+            CreateResolver(session, collectionKey, runVariables),
             session.Root,
             tokenPlaceholder is null ? tokens : oauth => tokens(oauth) ?? new OAuth2Token(tokenPlaceholder));
     }
@@ -162,7 +164,7 @@ public sealed class RequestRunner : IDisposable
     }
 
     /// <summary>Loads the collection's schema, resolves variables and auth and encodes the message.</summary>
-    public GrpcPrepareOutcome PrepareGrpc(WorkspaceSession session, string collectionKey, IReadOnlyList<string> path, GrpcRequestDefinition request)
+    public GrpcPrepareOutcome PrepareGrpc(WorkspaceSession session, string collectionKey, IReadOnlyList<string> path, GrpcRequestDefinition request, IReadOnlyDictionary<string, string>? runVariables = null)
     {
         ArgumentNullException.ThrowIfNull(session);
         ArgumentNullException.ThrowIfNull(request);
@@ -177,7 +179,7 @@ public sealed class RequestRunner : IDisposable
         }
 
         var auth = ResolveAuth(session, collectionKey, path, request.Auth).Auth;
-        var preparation = GrpcRequestPreparer.Prepare(request, auth, CreateResolver(session, collectionKey), schemaResult.Schema, UsableToken(session));
+        var preparation = GrpcRequestPreparer.Prepare(request, auth, CreateResolver(session, collectionKey, runVariables), schemaResult.Schema, UsableToken(session));
         return new GrpcPrepareOutcome(preparation, schemaResult.Schema);
     }
 

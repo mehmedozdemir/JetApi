@@ -376,6 +376,13 @@
             </DataTemplate>
           </ContentControl.DataTemplates>
         </ContentControl>
+        <ContentControl Grid.RowSpan="2" Content="{Binding CollectionRun}" IsVisible="{Binding CollectionRun, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <ContentControl.DataTemplates>
+            <DataTemplate x:DataType="vm:CollectionRunViewModel">
+              <v:CollectionRunView />
+            </DataTemplate>
+          </ContentControl.DataTemplates>
+        </ContentControl>
       </Grid>
     </Grid>
 

@@ -93,8 +93,8 @@
 |---|---|---|---|
 | TEST-1 | Kodsuz assertion'lar: status, header, JSONPath, yanıt süresi, body içerir/eşittir, JSON Schema | M3 | ✅ Testler sekmesi ve Test sonuçları; JSON yanıtta sağ tıkla test ekleme; `tests` bölümü, kendi RFC 9535 JSONPath'imiz, JSON Schema |
 | TEST-2 | Yanıttan değişken çıkarma (ör. token'ı JSONPath ile al → environment) | M3 | ✅ Her gönderimde çalışır; çalışma anı (dosyaya yazılmaz), environment, koleksiyon veya global değişkene; JSON yanıtta sağ tıkla kural ekleme |
-| TEST-3 | Koleksiyon/klasör çalıştırıcı: sıra, gecikme, tekrar, hata durumunda durma | M3 | 🔜 |
-| TEST-4 | Veri odaklı çalıştırma: CSV/JSON dosyasındaki her satır için koşma | M3 | 🔜 |
+| TEST-3 | Koleksiyon/klasör çalıştırıcı: sıra, gecikme, tekrar, hata durumunda durma | M3 | ✅ Ağaçta sağ tık → *Çalıştır…* ya da komut paleti; istek seçimi, tekrar, bekleme, ilk hatada dur; canlı sonuçlar tekrar başına gruplu (`JetApi.Runner`, ADR-0009) |
+| TEST-4 | Veri odaklı çalıştırma: CSV/JSON dosyasındaki her satır için koşma | M3 | ✅ CSV (RFC 4180, virgül ya da noktalı virgül) ve JSON (nesne dizisi); her sütun bir değişken |
 | TEST-5 | Raporlar: JUnit XML (CI), HTML | M3 | 🔜 |
 | TEST-6 | CLI: `jetapi run <koleksiyon> -e <env>` (Windows/macOS/Linux, CI için) | M3 | 🔜 |
 | TEST-7 | JavaScript pre-request/test script'leri (Postman `pm` API alt kümesi) | M5 | 🔜 |

@@ -72,4 +72,45 @@ public static class VariableWriter
 
         return list;
     }
+
+    /// <summary>
+    /// Stores an extracted value where the extraction says (runtime, environment, collection or global).
+    /// </summary>
+    /// <returns>Why it could not, or <c>null</c>.</returns>
+    public static async Task<string?> StoreExtractionAsync(WorkspaceSession session, string collectionKey, Extraction extraction, string value)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(extraction);
+        if (!VariableResolver.IsValidVariableName(extraction.Variable))
+        {
+            return Localization.Loc.Get(extraction.Variable.Length == 0 ? "Var_NameRequired" : "Var_NameInvalid");
+        }
+
+        if (extraction.To == ExtractionTarget.Runtime)
+        {
+            session.SetRuntimeVariable(extraction.Variable, value);
+            return null;
+        }
+
+        if (extraction.To == ExtractionTarget.Environment && session.ActiveEnvironment is null)
+        {
+            return Localization.Loc.Get("Tests_NoEnvironment");
+        }
+
+        var layer = extraction.To switch
+        {
+            ExtractionTarget.Environment => VariableSource.Environment,
+            ExtractionTarget.Collection => VariableSource.Collection,
+            _ => VariableSource.Global,
+        };
+        try
+        {
+            await SetAsync(session, collectionKey, layer, extraction.Variable, value).ConfigureAwait(true);
+            return null;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JetApi.Storage.WorkspaceStorageException or InvalidOperationException)
+        {
+            return Localization.Loc.Format("Error_Save", exception.Message);
+        }
+    }
 }

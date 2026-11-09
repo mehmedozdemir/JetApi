@@ -1,0 +1,150 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.CollectionRunView"
+             x:DataType="vm:CollectionRunViewModel">
+  <Grid RowDefinitions="Auto,*" Background="{DynamicResource App.Surface}">
+    <!-- Header -->
+    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="24,16,24,14">
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+        <StackPanel VerticalAlignment="Bottom">
+          <TextBlock Classes="muted small" Text="{l:Tr Run_Title}" />
+          <TextBlock Classes="h2" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="secondary" VerticalAlignment="Bottom" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}">
+          <c:IconLabel Icon="{StaticResource Icon.Stop}" Text="{l:Tr Run_Stop}" />
+        </Button>
+        <Button Grid.Column="2" Classes="primary" VerticalAlignment="Bottom" Command="{Binding RunCommand}" IsVisible="{Binding IsIdle}">
+          <c:IconLabel Icon="{StaticResource Icon.Play}" Text="{l:Tr Run_Start}" />
+        </Button>
+        <Button Grid.Column="3" Classes="secondary" VerticalAlignment="Bottom" Command="{Binding CloseCommand}" Content="{l:Tr Btn_Close}" />
+      </Grid>
+    </Border>
+
+    <Grid Grid.Row="1" ColumnDefinitions="240,1,*">
+      <!-- Settings -->
+      <ScrollViewer>
+        <StackPanel Margin="16,16" Spacing="14" IsEnabled="{Binding IsIdle}">
+          <StackPanel Spacing="4">
+            <TextBlock Classes="field-label" Text="{l:Tr Run_Requests}" />
+            <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Run_NoRequests}" IsVisible="{Binding HasNoRequests}" />
+            <ItemsControl ItemsSource="{Binding Requests}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:RunRequestOptionViewModel">
+                  <CheckBox IsChecked="{Binding Include}" AutomationProperties.Name="{Binding Name}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <c:MethodBadge Text="{Binding Badge}" Width="44" />
+                      <TextBlock Classes="faint" Text="{Binding Folder}" IsVisible="{Binding Folder, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                      <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" MaxWidth="120" />
+                    </StackPanel>
+                  </CheckBox>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <StackPanel Spacing="4">
+            <TextBlock Classes="field-label" Text="{l:Tr Run_Environment}" />
+            <TextBlock Text="{Binding EnvironmentText}" />
+            <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr Run_EnvironmentHint}" />
+          </StackPanel>
+
+          <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+            <StackPanel Spacing="4" IsVisible="{Binding !HasDataFile}">
+              <TextBlock Classes="field-label" Text="{l:Tr Run_Iterations}" />
+              <NumericUpDown Minimum="1" Maximum="10000" Increment="1" FormatString="0" Value="{Binding Iterations}" AutomationProperties.Name="{l:Tr Run_Iterations}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Spacing="4">
+              <TextBlock Classes="field-label" Text="{l:Tr Run_Delay}" />
+              <NumericUpDown Minimum="0" Maximum="600000" Increment="100" FormatString="0" Value="{Binding DelayMs}" AutomationProperties.Name="{l:Tr Run_Delay}" />
+            </StackPanel>
+          </Grid>
+
+          <StackPanel Spacing="4">
+            <TextBlock Classes="field-label" Text="{l:Tr Run_DataFile}" />
+            <Button Classes="secondary" HorizontalAlignment="Left" Command="{Binding ChooseDataFileCommand}" IsVisible="{Binding !HasDataFile}">
+              <c:IconLabel Icon="{StaticResource Icon.Folder}" Text="{l:Tr Run_ChooseData}" />
+            </Button>
+            <Border Classes="code" Padding="10,8" IsVisible="{Binding HasDataFile}">
+              <StackPanel Spacing="2">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Classes="mono" Text="{Binding DataFileName}" TextTrimming="CharacterEllipsis" />
+                  <Button Grid.Column="1" Classes="link" Command="{Binding ClearDataFileCommand}" Content="{l:Tr Btn_Remove}" />
+                </Grid>
+                <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding DataSummary}" IsVisible="{Binding DataSummary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                <TextBlock Classes="small" TextWrapping="Wrap" Text="{Binding DataError}" Foreground="{DynamicResource Tone.Danger.Fg}"
+                           IsVisible="{Binding DataError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+              </StackPanel>
+            </Border>
+            <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr Run_DataHint}" />
+          </StackPanel>
+
+          <CheckBox IsChecked="{Binding StopOnFailure}" Content="{l:Tr Run_StopOnFailure}" />
+          <StackPanel Spacing="2">
+            <CheckBox IsChecked="{Binding PersistExtractions}" Content="{l:Tr Run_Persist}" />
+            <TextBlock Classes="faint small" Margin="28,0,0,0" TextWrapping="Wrap" Text="{l:Tr Run_PersistHint}" />
+          </StackPanel>
+        </StackPanel>
+      </ScrollViewer>
+
+      <Border Grid.Column="1" Classes="divider" />
+
+      <!-- Results -->
+      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,*" Margin="16,16">
+        <TextBlock Classes="muted" TextWrapping="Wrap" Text="{l:Tr Run_Empty}" IsVisible="{Binding !HasResults}" />
+        <StackPanel Spacing="8" IsVisible="{Binding HasResults}">
+          <TextBlock FontWeight="SemiBold" Text="{Binding ProgressText}" TextWrapping="Wrap" />
+          <ProgressBar Minimum="0" Maximum="1" Value="{Binding Progress}" Height="6" MinHeight="6" CornerRadius="3" />
+        </StackPanel>
+        <Border Grid.Row="1" Classes="note" Margin="0,10,0,0" IsVisible="{Binding EndNote, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+          <TextBlock TextWrapping="Wrap" Text="{Binding EndNote}" />
+        </Border>
+        <ScrollViewer Grid.Row="2" Margin="0,12,0,0">
+          <ItemsControl ItemsSource="{Binding Results}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:RunIterationViewModel">
+                <Border Classes="card" Margin="0,0,0,10" ClipToBounds="True">
+                  <StackPanel>
+                    <Border Background="{DynamicResource App.Code}" Padding="12,7" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
+                      <TextBlock Classes="muted small" FontWeight="SemiBold" Text="{Binding Header}" TextTrimming="CharacterEllipsis" />
+                    </Border>
+                    <ItemsControl ItemsSource="{Binding Items}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:RunResultItemViewModel">
+                          <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="12,7">
+                            <StackPanel Spacing="4">
+                              <Grid ColumnDefinitions="18,44,*,Auto,56,36" ColumnSpacing="6">
+                                <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" Foreground="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding Passed}" />
+                                <c:Icon Data="{StaticResource Icon.Close}" Width="14" Height="14" Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding !Passed}" />
+                                <c:MethodBadge Grid.Column="1" Text="{Binding Badge}" />
+                                <TextBlock Grid.Column="2" Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" ToolTip.Tip="{Binding Name}" />
+                                <Border Grid.Column="3" Classes="chip" Classes.fail="{Binding IsErrorStatus}" IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                  <TextBlock Text="{Binding StatusText}" />
+                                </Border>
+                                <TextBlock Grid.Column="4" Classes="mono muted" Text="{Binding DurationText}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="5" Classes="small" Text="{Binding ChecksText}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                              </Grid>
+                              <ItemsControl ItemsSource="{Binding Problems}" Margin="24,0,0,0" IsVisible="{Binding HasProblems}">
+                                <ItemsControl.ItemTemplate>
+                                  <DataTemplate x:DataType="x:String">
+                                    <SelectableTextBlock Classes="small" TextWrapping="Wrap" Text="{Binding}" Foreground="{DynamicResource Tone.Danger.Fg}" />
+                                  </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                              </ItemsControl>
+                            </StackPanel>
+                          </Border>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

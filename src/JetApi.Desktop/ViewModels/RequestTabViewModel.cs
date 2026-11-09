@@ -200,40 +200,7 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     }
 
     // Puts an extracted value where the extraction says; returns why it could not, or null.
-    private async Task<string?> StoreAsync(Extraction extraction, string value)
-    {
-        if (!VariableResolver.IsValidVariableName(extraction.Variable))
-        {
-            return Loc.Get(extraction.Variable.Length == 0 ? "Var_NameRequired" : "Var_NameInvalid");
-        }
-
-        if (extraction.To == ExtractionTarget.Runtime)
-        {
-            Host.Session.SetRuntimeVariable(extraction.Variable, value);
-            return null;
-        }
-
-        if (extraction.To == ExtractionTarget.Environment && Host.Session.ActiveEnvironment is null)
-        {
-            return Loc.Get("Tests_NoEnvironment");
-        }
-
-        var layer = extraction.To switch
-        {
-            ExtractionTarget.Environment => VariableSource.Environment,
-            ExtractionTarget.Collection => VariableSource.Collection,
-            _ => VariableSource.Global,
-        };
-        try
-        {
-            await VariableWriter.SetAsync(Host.Session, CollectionKey, layer, extraction.Variable, value).ConfigureAwait(true);
-            return null;
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or WorkspaceStorageException or InvalidOperationException)
-        {
-            return Loc.Format("Error_Save", exception.Message);
-        }
-    }
+    private Task<string?> StoreAsync(Extraction extraction, string value) => VariableWriter.StoreExtractionAsync(Host.Session, CollectionKey, extraction, value);
 
     /// <summary>Variables visible to this tab, for highlighting and hover hints in editors.</summary>
     [ObservableProperty]

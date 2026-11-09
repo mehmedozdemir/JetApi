@@ -163,6 +163,7 @@
   <StreamGeometry x:Key="Icon.Open">M14 4h6v6 M20 4l-9 9 M18 14v6H4V6h6</StreamGeometry>
   <StreamGeometry x:Key="Icon.LayoutColumns">M3 5h18v14H3z M12 5v14</StreamGeometry>
   <StreamGeometry x:Key="Icon.LayoutRows">M3 5h18v14H3z M3 12h18</StreamGeometry>
+  <StreamGeometry x:Key="Icon.Play">M7 5l12 7-12 7z</StreamGeometry>
   <StreamGeometry x:Key="Icon.MoveUp">M9 14L4 9l5-5 M4 9h11a5 5 0 0 1 0 10h-3</StreamGeometry>
 
   <FontFamily x:Key="App.MonoFont">Cascadia Mono, JetBrains Mono, SF Mono, Menlo, Consolas, DejaVu Sans Mono, monospace</FontFamily>

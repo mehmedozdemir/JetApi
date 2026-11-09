@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JetApi.Runner\JetApi.Runner.csproj" />
+  </ItemGroup>
+</Project>

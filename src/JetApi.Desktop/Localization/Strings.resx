@@ -64,6 +64,7 @@
   <data name="Cmd_NewGrpc" xml:space="preserve"><value>New gRPC request</value></data>
   <data name="Cmd_NewHttp" xml:space="preserve"><value>New HTTP request</value></data>
   <data name="Cmd_Reload" xml:space="preserve"><value>Reload workspace from disk</value></data>
+  <data name="Cmd_RunCollection" xml:space="preserve"><value>Run: {0}</value></data>
   <data name="Cmd_ToggleLanguage" xml:space="preserve"><value>Türkçe / English</value></data>
   <data name="Cmd_ToggleTheme" xml:space="preserve"><value>Switch theme</value></data>
   <data name="Col_FolderTitle" xml:space="preserve"><value>Folder</value></data>
@@ -149,6 +150,7 @@
   <data name="Menu_NewHttp" xml:space="preserve"><value>New HTTP request</value></data>
   <data name="Menu_Paste" xml:space="preserve"><value>Paste</value></data>
   <data name="Menu_Rename" xml:space="preserve"><value>Rename</value></data>
+  <data name="Menu_Run" xml:space="preserve"><value>Run…</value></data>
   <data name="Menu_SelectAll" xml:space="preserve"><value>Select all</value></data>
   <data name="OAuth_AccessToken" xml:space="preserve"><value>Access token</value></data>
   <data name="OAuth_Audience" xml:space="preserve"><value>Audience (optional)</value></data>
@@ -278,6 +280,30 @@
   <data name="Res_TimingReused" xml:space="preserve"><value>An existing connection was reused, so there was no DNS lookup or connect.</value></data>
   <data name="Res_Total" xml:space="preserve"><value>Total</value></data>
   <data name="Res_Truncated" xml:space="preserve"><value>The body is larger than {0} and was cut off.</value></data>
+  <data name="Run_Cancelled" xml:space="preserve"><value>Stopped.</value></data>
+  <data name="Run_ChooseData" xml:space="preserve"><value>Choose CSV or JSON…</value></data>
+  <data name="Run_DataFile" xml:space="preserve"><value>Data file</value></data>
+  <data name="Run_DataHint" xml:space="preserve"><value>One iteration per row; every column becomes a variable, e.g. {{email}}.</value></data>
+  <data name="Run_DataSummary" xml:space="preserve"><value>{0} rows · columns: {1}</value></data>
+  <data name="Run_Delay" xml:space="preserve"><value>Delay (ms)</value></data>
+  <data name="Run_Empty" xml:space="preserve"><value>Choose the requests and settings, then Run. Results appear here as each request finishes.</value></data>
+  <data name="Run_Environment" xml:space="preserve"><value>Environment</value></data>
+  <data name="Run_EnvironmentHint" xml:space="preserve"><value>The active environment is used; change it in the top bar.</value></data>
+  <data name="Run_Iteration" xml:space="preserve"><value>Iteration {0}</value></data>
+  <data name="Run_IterationRow" xml:space="preserve"><value>Iteration {0} · {1}</value></data>
+  <data name="Run_Iterations" xml:space="preserve"><value>Iterations</value></data>
+  <data name="Run_NoEnvironment" xml:space="preserve"><value>No environment</value></data>
+  <data name="Run_NoRequests" xml:space="preserve"><value>There are no requests here yet.</value></data>
+  <data name="Run_Persist" xml:space="preserve"><value>Write extracted values to their environment, collection or global</value></data>
+  <data name="Run_PersistHint" xml:space="preserve"><value>For rules whose "Store in" is not Runtime. Otherwise values extracted during the run live only until it ends.</value></data>
+  <data name="Run_PickData" xml:space="preserve"><value>Choose a data file</value></data>
+  <data name="Run_Progress" xml:space="preserve"><value>Iteration {0} / {1} · {2} requests · {3} checks passed · {4} failed · {5}</value></data>
+  <data name="Run_Requests" xml:space="preserve"><value>Requests (in order)</value></data>
+  <data name="Run_Start" xml:space="preserve"><value>Run</value></data>
+  <data name="Run_Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Run_StopOnFailure" xml:space="preserve"><value>Stop at the first failure</value></data>
+  <data name="Run_Stopped" xml:space="preserve"><value>Stopped at the first failure: {0} requests did not run.</value></data>
+  <data name="Run_Title" xml:space="preserve"><value>Run collection</value></data>
   <data name="Settings_CookieJar" xml:space="preserve"><value>Keep cookies between requests</value></data>
   <data name="Settings_CookieJarHint" xml:space="preserve"><value>Cookies that servers set are sent with later requests to the same site, as a browser does. They are kept per workspace until it is closed and are never written to disk. A Cookie header on the request wins.</value></data>
   <data name="Settings_ResponseBottom" xml:space="preserve"><value>Below the request</value></data>

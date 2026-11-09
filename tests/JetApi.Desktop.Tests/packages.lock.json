@@ -402,6 +402,7 @@
           "JetApi.Grpc": "[0.2.0, )",
           "JetApi.Http": "[0.2.0, )",
           "JetApi.Import": "[0.2.0, )",
+          "JetApi.Runner": "[0.2.0, )",
           "JetApi.Storage": "[0.2.0, )",
           "JetApi.Testing": "[0.2.0, )",
           "TextMateSharp.Grammars": "[2.0.5, )"
@@ -430,6 +431,13 @@
         "dependencies": {
           "JetApi.Core": "[0.2.0, )",
           "YamlDotNet": "[18.1.0, )"
+        }
+      },
+      "jetapi.runner": {
+        "type": "Project",
+        "dependencies": {
+          "JetApi.Core": "[0.2.0, )",
+          "JetApi.Testing": "[0.2.0, )"
         }
       },
       "jetapi.storage": {

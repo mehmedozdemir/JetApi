@@ -102,6 +102,12 @@
     <Setter Property="Padding" Value="8,3" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
+  <Style Selector="Border.chip.fail">
+    <Setter Property="Background" Value="{DynamicResource Tone.Danger.Bg}" />
+  </Style>
+  <Style Selector="Border.chip.fail TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource Tone.Danger.Fg}" />
+  </Style>
   <Style Selector="Border.chip TextBlock">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
     <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Small}" />

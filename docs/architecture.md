@@ -31,6 +31,7 @@ bağımsız kütüphanelerde durur. Böylece aynı motor masaüstü uygulamasın
 - `JetApi.Core` hiçbir projeye ve hiçbir I/O'ya bağımlı değildir. Saf domain modeli ve kurallardır.
 - Motor projeleri (`Storage`, `Http`, `Grpc`, `Import`, `Testing`) yalnızca `Core`'a bağımlıdır, birbirlerine bağımlı değildir.
 - Arayüz (`Desktop`) ve `Cli` motorları birleştirir. Motorlar arayüzü bilmez.
+- `Runner` yalnızca `Core` ve `Testing`'e bağımlıdır; istek gönderimini arayüzler `IRequestSender` ile sağlar.
 - Döngüsel bağımlılık yoktur. Yeni bir proje eklemek ADR gerektirir.
 
 ## Projeler
@@ -41,6 +42,7 @@ bağımsız kütüphanelerde durur. Böylece aynı motor masaüstü uygulamasın
 | `JetApi.Storage` | Workspace'in Git dostu YAML dosyalarına yazılması ve okunması ([dosya formatı](file-format.md)); makineye özel OAuth token önbelleği | `WorkspaceStore`, `WorkspaceLayout`, `OAuth2TokenStore` |
 | `JetApi.Http` | İsteği hazırlama (değişken, auth, URL, body) ve gönderme; zamanlama ölçümü; OAuth 2.0 token alma, yenileme ve tarayıcıyla oturum açma | `HttpRequestPreparer`, `HttpRequestExecutor`, `OAuth2Client`, `AuthorizationCodeFlow` |
 | `JetApi.Grpc` | `.proto` dosyalarını çalışma anında yükleme; JSON ↔ protobuf codec; unary çağrı | `ProtoSchemaLoader`, `ProtoJsonCodec`, `ProtoJsonTemplate`, `GrpcRequestPreparer`, `GrpcInvoker` |
+| `JetApi.Runner` (M3) | Koleksiyon/klasör çalıştırma: sıra, tekrar, veri dosyası (CSV/JSON), bekleme, ilk hatada durma, koşu değişkenleri; gönderim `IRequestSender` arkasında ([ADR-0009](adr/0009-runner-project.md)). `Core` ve `Testing`'e bağımlı | `CollectionRunner`, `RunOptions`, `RunSummary`, `DataFile`, `IRequestSender` |
 | `JetApi.Testing` (M3) | Kodsuz yanıt kontrolleri ve değişken çıkarma ([ADR-0008](adr/0008-checks-jsonpath-and-schema.md)): JSONPath (RFC 9535, kendi uygulamamız), JSON Schema (LateApexEarlySpeed), karşılaştırmalar | `ResponseChecker`, `ResponseExtractor`, `ResponseSnapshot`, `JsonPathQuery` |
 | `JetApi.Desktop` | Avalonia arayüzü. `Services`: workspace oturumu, istek çalıştırıcı, proto önbelleği, geçmiş, dosya izleyici, ayarlar, dialoglar. `ViewModels`: MVVM (CommunityToolkit.Mvvm), UI'dan bağımsız ve test edilebilir. `Views`: AXAML. `Localization`: TR/EN `.resx` | `WorkspaceSession`, `RequestRunner`, `WorkspaceViewModel`, `HttpRequestTabViewModel`, `GrpcRequestTabViewModel` |
 

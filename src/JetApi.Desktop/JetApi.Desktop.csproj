@@ -33,6 +33,7 @@
     <ProjectReference Include="..\JetApi.Grpc\JetApi.Grpc.csproj" />
     <ProjectReference Include="..\JetApi.Import\JetApi.Import.csproj" />
     <ProjectReference Include="..\JetApi.Testing\JetApi.Testing.csproj" />
+    <ProjectReference Include="..\JetApi.Runner\JetApi.Runner.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" />

@@ -199,6 +199,7 @@ public sealed partial class WorkspaceView : UserControl
             items.Add(Item("Menu_NewFolder", vm.NewFolderCommand, node));
             items.Add(new Separator());
             items.Add(Item(node.IsCollection ? "Menu_CollectionSettings" : "Menu_FolderSettings", vm.OpenNodeSettingsCommand, node));
+            items.Add(Item("Menu_Run", vm.RunNodeCommand, node));
         }
 
         items.Add(Item("Menu_Rename", vm.RenameCommand, node, "F2"));
@@ -228,6 +229,7 @@ public sealed partial class WorkspaceView : UserControl
         "Menu_NewFolder" => Controls.Icon.ForMenu("Icon.Folder"),
         "Menu_CollectionSettings" or "Menu_FolderSettings" => Controls.Icon.ForMenu("Icon.Sliders"),
         "Menu_Rename" => Controls.Icon.ForMenu("Icon.Edit"),
+        "Menu_Run" => Controls.Icon.ForMenu("Icon.Play"),
         "Menu_Duplicate" => Controls.Icon.ForMenu("Icon.Copy"),
         "Menu_MoveToRoot" => Controls.Icon.ForMenu("Icon.MoveUp"),
         "Menu_Delete" => Controls.Icon.ForMenu("Icon.Trash"),
