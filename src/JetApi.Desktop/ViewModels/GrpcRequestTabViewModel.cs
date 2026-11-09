@@ -252,6 +252,7 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
             int.TryParse(DeadlineText, NumberStyles.None, CultureInfo.InvariantCulture, out var ms) && ms > 0 ? TimeSpan.FromMilliseconds(ms) : null),
         Checks = Tests?.ToChecks() ?? [],
         Extractions = Tests?.ToExtractions() ?? [],
+        Scripts = Scripts,
     };
 
     /// <inheritdoc />

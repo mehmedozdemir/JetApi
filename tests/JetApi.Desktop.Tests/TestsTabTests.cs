@@ -28,6 +28,33 @@ public sealed class TestsTabTests(EchoServer server) : IClassFixture<EchoServer>
     }
 
     [Fact]
+    public async Task KeptPostmanScripts_AreShown_AndSurviveSaving()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        var session = workspace.Session;
+        var collection = session.Workspace.Collections[0];
+        var original = collection.Children[0];
+        var scripts = new ScriptSet("pm.variables.set('ts', Date.now());", "console.log(pm.response.json());");
+        await session.SaveNodeAsync(collection.Key, [original.Key], original with { Scripts = scripts }, TestContext.Current.CancellationToken);
+        using var vm = workspace.CreateViewModel(new FakeDialogs());
+        vm.OpenNode(vm.Collections[0].Children[0]);
+        var tab = (HttpRequestTabViewModel)vm.SelectedTab!;
+
+        tab.Tests.HasScripts.ShouldBeTrue();
+        tab.Tests.ShowScripts.ShouldBeFalse();
+        tab.Tests.ToggleScriptsCommand.Execute(null);
+        tab.Tests.ShowScripts.ShouldBeTrue();
+        tab.Tests.ScriptsText.ShouldBe("// Pre-request script (Postman)\npm.variables.set('ts', Date.now());\n\n// Test script (Postman)\nconsole.log(pm.response.json());");
+
+        tab.Url += "?changed=1";
+        await tab.SaveAsync();
+
+        session.Workspace.Collections[0].Children[0].Scripts.ShouldBe(scripts);
+        var reloaded = await JetApi.Storage.WorkspaceStore.LoadAsync(workspace.Root, TestContext.Current.CancellationToken);
+        reloaded.Workspace.Collections[0].Children[0].Scripts.ShouldBe(scripts);
+    }
+
+    [Fact]
     public async Task Sending_RunsTheChecks_AndShowsTheResults()
     {
         var (workspace, vm, tab) = await OpenAsync();
@@ -216,6 +243,51 @@ public sealed class TestsTabTests(EchoServer server) : IClassFixture<EchoServer>
         tab.ResponseSection = ResponseSection.Tests;
         Settle();
         ScreenTests.Capture(window, "ux-42-test-results-dark-tr-min");
+        Loc.Instance.SetLanguage("en");
+        ((App)Application.Current!).ApplyTheme(AppTheme.Light);
+
+        window.Close();
+        HeadlessApp.Log.Messages.ShouldBeEmpty();
+        return true;
+    }
+
+    [Fact]
+    public Task KeptScripts_InTheWindow() => HeadlessApp.Session.Dispatch(ScriptsWalkAsync, TestContext.Current.CancellationToken);
+
+    // The note for Postman scripts kept from an import, opened, in light/English and dark/Turkish at the smallest size.
+    private static async Task<bool> ScriptsWalkAsync()
+    {
+        HeadlessApp.Log.Clear();
+        using var workspace = await ScreenTests.CreateSampleWorkspaceAsync();
+        var loaded = (await JetApi.Storage.WorkspaceStore.LoadAsync(workspace.Root)).Workspace;
+        var collection = loaded.Collections[0];
+        collection = collection with
+        {
+            Children = [.. collection.Children.Select(c => c.Name == "Create user"
+                ? c with { Scripts = new ScriptSet(Test: "pm.test('created', function () {\n    pm.response.to.have.status(201);\n    pm.expect(_.isEmpty(pm.response.json().errors)).to.be.true;\n});") }
+                : c)],
+        };
+        await JetApi.Storage.WorkspaceStore.SaveCollectionAsync(workspace.Root, collection);
+        var settingsFile = Path.Combine(workspace.Root, ".jetapi", "settings.json");
+        using var vm = new MainWindowViewModel(new AppSettingsStore(settingsFile), new FakeDialogs(), theme => ((App)Application.Current!).ApplyTheme(theme), action => Dispatcher.UIThread.Post(action),
+            settings => ((App)Application.Current!).ApplyAppearance(settings));
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 800 };
+        window.Show();
+        await vm.OpenWorkspaceAsync(workspace.Root, offerCreate: false);
+        var ws = vm.Workspace!;
+        ws.OpenNode(ws.Collections[0].Children.Single(c => c.Name == "Create user"));
+        var tab = (HttpRequestTabViewModel)ws.SelectedTab!;
+        tab.Section = RequestSection.Tests;
+        tab.Tests.ToggleScriptsCommand.Execute(null);
+        Settle();
+        ScreenTests.Capture(window, "ux-47-tests-kept-scripts");
+
+        ((App)Application.Current!).ApplyTheme(AppTheme.Dark);
+        Loc.Instance.SetLanguage("tr");
+        window.Width = window.MinWidth;
+        window.Height = window.MinHeight;
+        Settle();
+        ScreenTests.Capture(window, "ux-48-tests-kept-scripts-dark-tr-min");
         Loc.Instance.SetLanguage("en");
         ((App)Application.Current!).ApplyTheme(AppTheme.Light);
 

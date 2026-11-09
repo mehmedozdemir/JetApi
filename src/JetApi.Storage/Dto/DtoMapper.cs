@@ -166,6 +166,7 @@ internal static class DtoMapper
         Settings = ToDto(request.Settings),
         Tests = ToDto(request.Checks),
         Extract = ToDto(request.Extractions),
+        Scripts = ToDto(request.Scripts),
     };
 
     public static HttpRequestDefinition FromDto(HttpRequestFile file, string key) => new()
@@ -182,6 +183,7 @@ internal static class DtoMapper
         Settings = FromDto(file.Settings),
         Checks = FromDto(file.Tests),
         Extractions = FromDto(file.Extract),
+        Scripts = FromDto(file.Scripts),
     };
 
     private static BodyDto? ToDto(HttpBody body) => body.Mode switch
@@ -284,6 +286,7 @@ internal static class DtoMapper
             },
         Tests = ToDto(request.Checks),
         Extract = ToDto(request.Extractions),
+        Scripts = ToDto(request.Scripts),
     };
 
     public static GrpcRequestDefinition FromDto(GrpcRequestFile file, string key) => new()
@@ -304,6 +307,7 @@ internal static class DtoMapper
                 FromMilliseconds(file.Settings.DeadlineMs, "settings.deadlineMs")),
         Checks = FromDto(file.Tests),
         Extractions = FromDto(file.Extract),
+        Scripts = FromDto(file.Scripts),
     };
 
     // ---- Tests and extractions (ADR-0005) ------------------------------------------------
@@ -395,6 +399,16 @@ internal static class DtoMapper
         })];
 
     // ---- Proto settings ------------------------------------------------------------------
+
+    public static ScriptsDto? ToDto(ScriptSet scripts) =>
+        scripts.IsEmpty ? null : new ScriptsDto
+        {
+            PreRequest = string.IsNullOrWhiteSpace(scripts.PreRequest) ? null : NormalizeNewLines(scripts.PreRequest),
+            Test = string.IsNullOrWhiteSpace(scripts.Test) ? null : NormalizeNewLines(scripts.Test),
+        };
+
+    public static ScriptSet FromDto(ScriptsDto? scripts) =>
+        scripts is null ? ScriptSet.None : new ScriptSet(NormalizeNewLines(scripts.PreRequest ?? string.Empty), NormalizeNewLines(scripts.Test ?? string.Empty));
 
     public static ProtoDto? ToDto(ProtoSettings proto) =>
         proto.ImportPaths.Count == 0 && proto.Files.Count == 0

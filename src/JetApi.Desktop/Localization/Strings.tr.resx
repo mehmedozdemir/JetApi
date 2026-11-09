@@ -359,16 +359,21 @@
   <data name="Tests_ExtractedHeader" xml:space="preserve"><value>Çıkarılan değişkenler</value></data>
   <data name="Tests_Extractions" xml:space="preserve"><value>Değişkene çıkar</value></data>
   <data name="Tests_From" xml:space="preserve"><value>Kaynak</value></data>
+  <data name="Tests_HideScripts" xml:space="preserve"><value>Script'leri gizle</value></data>
   <data name="Tests_Hint" xml:space="preserve"><value>Kontroller ve kurallar her yanıtta çalışır ve isteğin dosyasına yazılır, Git'te görünür. Çalışma anı değişkenleri dosyaya yazılmaz; uygulama açıkken geçerlidir ve diğer değişkenleri ezer. Değerlerde {{değişken}} kullanılabilir.</value></data>
   <data name="Tests_NoEnvironment" xml:space="preserve"><value>Aktif environment yok.</value></data>
   <data name="Tests_NotChanged" xml:space="preserve"><value>Değişken değiştirilmedi.</value></data>
   <data name="Tests_Operator" xml:space="preserve"><value>Koşul</value></data>
   <data name="Tests_PathOrName" xml:space="preserve"><value>Yol / ad</value></data>
+  <data name="Tests_PreRequestScript" xml:space="preserve"><value>Pre-request script (Postman)</value></data>
   <data name="Tests_Results" xml:space="preserve"><value>Test sonuçları</value></data>
   <data name="Tests_SchemaTitle" xml:space="preserve"><value>JSON Şemaya uyar</value></data>
+  <data name="Tests_ScriptsNote" xml:space="preserve"><value>Bu istekte içe aktarmadan gelen Postman script'leri var. Dosyada korunuyorlar ama çalışmıyorlar; JetApi'nin anladığı kısımlar aşağıdaki test ve kurallara dönüştü.</value></data>
+  <data name="Tests_ShowScripts" xml:space="preserve"><value>Script'leri göster</value></data>
   <data name="Tests_Summary" xml:space="preserve"><value>{0} geçti · {1} kaldı</value></data>
   <data name="Tests_Tab" xml:space="preserve"><value>Testler</value></data>
   <data name="Tests_Target" xml:space="preserve"><value>Hedef</value></data>
+  <data name="Tests_TestScript" xml:space="preserve"><value>Test script (Postman)</value></data>
   <data name="Tests_To" xml:space="preserve"><value>Nereye</value></data>
   <data name="Tests_Variable" xml:space="preserve"><value>Değişken</value></data>
   <data name="Tests_What" xml:space="preserve"><value>Neyi</value></data>

@@ -15,3 +15,4 @@ durumu "Yerini aldı: ADR-XXXX" yapılır.
 | [0007](0007-oauth2-tokens.md) | OAuth 2.0: token'lar makineye özel önbellekte, YAML'da değil | Kabul edildi |
 | [0008](0008-checks-jsonpath-and-schema.md) | Testler: dosyadaki biçim, kendi JSONPath'imiz, JSON Schema için LateApexEarlySpeed | Kabul edildi |
 | [0009](0009-runner-project.md) | Koleksiyon çalıştırıcı ayrı bir projede, gönderim bir arayüzün arkasında | Kabul edildi |
+| [0010](0010-postman-scripts.md) | Postman script'leri: yaygın test kalıpları kurallara çevrilir, gerisi dosyada saklanır | Kabul edildi |

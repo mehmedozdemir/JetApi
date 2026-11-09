@@ -23,6 +23,7 @@
   <data name="Cli_Passed" xml:space="preserve"><value>Passed</value></data>
   <data name="Cli_ReportFailed" xml:space="preserve"><value>Could not write {0}: {1}</value></data>
   <data name="Cli_ReportWritten" xml:space="preserve"><value>{0} report: {1}</value></data>
+  <data name="Cli_ScriptsNotRun" xml:space="preserve"><value>{0} requests have Postman scripts kept from an import; they do not run. See the Tests tab of those requests.</value></data>
   <data name="Cli_SeeHelp" xml:space="preserve"><value>Run 'jetapi --help' for usage.</value></data>
   <data name="Cli_SkippedFile" xml:space="preserve"><value>Skipped {0}: {1}</value></data>
   <data name="Cli_Stopped" xml:space="preserve"><value>Stopped at the first failure (--bail).</value></data>

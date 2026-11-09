@@ -84,9 +84,9 @@ public static partial class PostmanImporter
                 Children = children,
                 Auth = root.TryGetProperty("auth", out var auth) ? ConvertAuth(auth, string.Empty, context, AuthConfig.None) : AuthConfig.None,
                 Variables = root.TryGetProperty("variable", out var variables) ? ConvertVariables(variables) : [],
+                Scripts = context.Scripts(root, string.Empty, convertTests: false).Kept,
             };
 
-            context.ReportScripts(root, string.Empty);
             context.ReportDynamicVariables(json);
             return new ImportResult<CollectionImport>
             {
@@ -139,11 +139,11 @@ public static partial class PostmanImporter
             var name = Text(item, "name") is { Length: > 0 } itemName ? itemName : Messages.Get("Import_Unnamed");
             var key = NodeKey.CreateUnique(name, nodes.Select(n => n.Key));
             var location = string.Join(" / ", [.. parents, name]);
-            context.ReportScripts(item, location);
 
             if (item.TryGetProperty("item", out var children))
             {
                 context.Folders++;
+                var scripts = context.Scripts(item, location, convertTests: false);
                 nodes.Add(new Folder
                 {
                     Key = key,
@@ -151,12 +151,19 @@ public static partial class PostmanImporter
                     Description = Description(item),
                     Children = ConvertItems(children, [.. parents, name], context),
                     Auth = item.TryGetProperty("auth", out var auth) ? ConvertAuth(auth, location, context, AuthConfig.Inherit) : AuthConfig.Inherit,
+                    Scripts = scripts.Kept,
                 });
             }
             else if (item.TryGetProperty("request", out var request))
             {
                 context.Requests++;
-                nodes.Add(ConvertRequest(request, key, name, Description(item) ?? Description(request), location, context, item));
+                var scripts = context.Scripts(item, location, convertTests: true);
+                nodes.Add(ConvertRequest(request, key, name, Description(item) ?? Description(request), location, context, item) with
+                {
+                    Checks = scripts.Checks,
+                    Extractions = scripts.Extractions,
+                    Scripts = scripts.Kept,
+                });
                 if (item.TryGetProperty("response", out var examples) && examples.ValueKind == JsonValueKind.Array && examples.GetArrayLength() > 0)
                 {
                     context.Add(location, Messages.Format("Import_ExamplesSkipped", examples.GetArrayLength()), ImportIssueSeverity.Info);
@@ -493,24 +500,70 @@ public static partial class PostmanImporter
         public void Add(string location, string message, ImportIssueSeverity severity = ImportIssueSeverity.Warning) =>
             _issues.Add(new ImportIssue(location, message, severity));
 
-        // Pre-request and test scripts run JavaScript; JetApi gets them later (M3 assertions, M5 scripts).
-        public void ReportScripts(JsonElement element, string location)
+        /// <summary>
+        /// The scripts of a collection, folder or request (ADR-0010). A request's test script becomes checks and
+        /// extractions where its statements are understood; whatever is not is kept verbatim (it does not run).
+        /// </summary>
+        public (ScriptSet Kept, IReadOnlyList<ResponseCheck> Checks, IReadOnlyList<Extraction> Extractions) Scripts(JsonElement element, string location, bool convertTests)
+        {
+            var where = location.Length == 0 ? Messages.Get("Import_CollectionLocation") : location;
+            var preRequest = ScriptText(element, "prerequest");
+            var test = ScriptText(element, "test");
+            if (preRequest.Length > 0)
+            {
+                Add(where, Messages.Format("Import_ScriptKept", Messages.Get("Import_PreRequestScript")));
+            }
+
+            if (test.Length == 0 || !convertTests)
+            {
+                if (test.Length > 0)
+                {
+                    Add(where, Messages.Format("Import_ScriptKept", Messages.Get("Import_TestScript")));
+                }
+
+                return (new ScriptSet(preRequest, test), [], []);
+            }
+
+            var conversion = PostmanScripts.ConvertTest(test);
+            var rules = conversion.Checks.Count + conversion.Extractions.Count;
+            if (conversion.IsComplete && rules > 0)
+            {
+                Add(where, Messages.Format("Import_ScriptConverted", conversion.Checks.Count, conversion.Extractions.Count), ImportIssueSeverity.Info);
+                return (new ScriptSet(preRequest), conversion.Checks, conversion.Extractions);
+            }
+
+            Add(where, rules == 0
+                ? Messages.Format("Import_ScriptKept", Messages.Get("Import_TestScript"))
+                : Messages.Format("Import_ScriptPartlyConverted", conversion.Checks.Count, conversion.Extractions.Count));
+            return (new ScriptSet(preRequest, test), conversion.Checks, conversion.Extractions);
+        }
+
+        // The code of every "event" with this "listen" value; "exec" is a list of lines or one string.
+        private static string ScriptText(JsonElement element, string listen)
         {
             if (element.ValueKind != JsonValueKind.Object || !element.TryGetProperty("event", out var events) || events.ValueKind != JsonValueKind.Array)
             {
-                return;
+                return string.Empty;
             }
 
-            foreach (var script in events.EnumerateArray())
+            var scripts = new List<string>();
+            foreach (var script in events.EnumerateArray().Where(e => Text(e, "listen") == listen))
             {
-                var hasCode = script.TryGetProperty("script", out var body) && body.TryGetProperty("exec", out var exec)
-                    && (exec.ValueKind == JsonValueKind.Array ? exec.EnumerateArray().Any(line => (line.GetString() ?? string.Empty).Trim().Length > 0) : Text(body, "exec").Trim().Length > 0);
-                if (hasCode)
+                if (!script.TryGetProperty("script", out var body) || body.ValueKind != JsonValueKind.Object || !body.TryGetProperty("exec", out var exec))
                 {
-                    var kind = Text(script, "listen") == "test" ? Messages.Get("Import_TestScript") : Messages.Get("Import_PreRequestScript");
-                    Add(location.Length == 0 ? Messages.Get("Import_CollectionLocation") : location, Messages.Format("Import_ScriptSkipped", kind));
+                    continue;
+                }
+
+                var code = exec.ValueKind == JsonValueKind.Array
+                    ? string.Join('\n', exec.EnumerateArray().Select(line => line.ValueKind == JsonValueKind.String ? line.GetString() : string.Empty))
+                    : Text(body, "exec");
+                if (code.Trim().Length > 0)
+                {
+                    scripts.Add(code.Replace("\r\n", "\n", StringComparison.Ordinal).TrimEnd());
                 }
             }
+
+            return string.Join("\n\n", scripts);
         }
 
         public void ReportDynamicVariables(string json)

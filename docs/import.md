@@ -37,11 +37,42 @@ aktarılırsa ikisi de kalır (`shop-api`, `shop-api-2`).
 | `followRedirects`, `strictSSL` | İstek ayarları | |
 | Environment değerleri | Environment | `enabled` ve `secret` korunur |
 | Dinamik değişkenler (`$guid`, `$randomUUID`, `$timestamp`, `$isoTimestamp`, `$randomInt`) | Aynı | Desteklenmeyenler (`$randomEmail` vb.) raporda |
+| İsteğin test script'i | Testler (`tests`) ve çıkarma kuralları (`extract`) | Aşağıdaki ifadeler çevrilir; tanınmayan bir ifade varsa script dosyada saklanır |
+| Pre-request script'i; klasör ve koleksiyon script'leri | Dosyada saklanır (`scripts`) | Çalıştırılmaz; raporda uyarı |
+
+## Test script'lerinin çevrilmesi
+
+JetApi henüz JavaScript çalıştırmaz (M5). İsteklerin test script'lerindeki yaygın ifadeler kodsuz kurallara çevrilir
+([ADR-0010](adr/0010-postman-scripts.md)). `pm.test("ad", function () { … })` sarmalayıcıları ve yorumlar yok sayılır;
+testlerin adları taşınmaz. `json`, `pm.response.json()` ya da `var json = pm.response.json();` (veya
+`JSON.parse(responseBody)`) ile tanımlanan bir değişkendir; `json.a.b[0]["c-d"]` → `$.a.b[0]['c-d']`.
+
+| Postman | JetApi |
+|---|---|
+| `pm.response.to.have.status(200)`, `pm.expect(pm.response.code).to.eql(200)`, `tests[…] = responseCode.code === 200` | `status equals 200` |
+| `pm.response.to.be.ok` / `to.be.success` | `status equals 200` / `status greaterThan 199` ve `lessThan 300` |
+| `pm.expect(pm.response.responseTime).to.be.below(500)`, `tests[…] = responseTime < 500` | `time lessThan 500` |
+| `pm.response.to.have.header("X")`, `…header("X", "v")`, `pm.expect(pm.response.headers.get("X")).to.include("v")` | `header X exists / equals v / contains v` |
+| `pm.response.to.have.body("…")`, `pm.expect(pm.response.text()).to.include("…")`, `tests[…] = responseBody.has("…")` | `body equals / contains` |
+| `pm.expect(json.x).to.eql(v)` / `.to.equal(v)` / `.to.not.eql(v)` | `json $.x equals / notEquals v` |
+| `.to.include(v)`, `.to.not.include(v)` | `contains` / `notContains` |
+| `.to.be.above(n)`, `.to.be.below(n)` | `greaterThan` / `lessThan` |
+| `.to.exist`, `.to.not.exist`, `.to.be.ok` | `exists` / `notExists` |
+| `.to.be.true` / `.false` / `.null` | `equals true / false / null` |
+| `.to.match(/re/)`, `/re/i` | `matches` (`i` → `(?i)`) |
+| `pm.expect(json).to.have.property("id")`, `…property("page", 1)` | `$.id exists`, `$.page equals 1` |
+| `pm.environment.set("t", json.token)` | çıkarma: `$.token` → `t`, environment |
+| `pm.collectionVariables.set`, `pm.globals.set`, `pm.variables.set`; `postman.setEnvironmentVariable`, `postman.setGlobalVariable` | koleksiyon, global, çalışma anı; environment, global |
+| …`.set("x", pm.response.headers.get("H"))`, `pm.response.code`, `pm.response.text()` / `responseBody` | header, status, body çıkarması |
+
+Çevrilmeyenler (script saklanır): koşullar ve döngüler, `length`, nesne/dizi karşılaştırması (`to.eql({…})`), tür
+kontrolleri (`to.be.a('string')`), `_` (lodash), `console.log`, `pm.sendRequest`, `/re/g` gibi bayraklar. Rapor her istek
+için sonucu yazar: *dönüştürüldü* (bilgi), *kısmen dönüştürüldü* ya da *saklandı, çalışmıyor* (uyarı).
 
 ## Taşınmayanlar
 
-- **Pre-request ve test script'leri.** Kodsuz doğrulamalar M3'te, JavaScript script'leri M5'te gelir. Her script'in
-  bulunduğu yer raporda yazılır.
+- **JavaScript'in kendisi.** Çevrilemeyen script'ler dosyada saklanır ama çalışmaz (M5'te script desteği gelir).
+  Uygulamada isteğin *Testler* sekmesi bunu bir notla gösterir; `jetapi` CLI koşu başında uyarı yazar.
 - **Kayıtlı örnek yanıtlar.** Raporda bilgi olarak gösterilir.
 - **Desteklenmeyen auth türleri.** Yukarıya bakın.
 

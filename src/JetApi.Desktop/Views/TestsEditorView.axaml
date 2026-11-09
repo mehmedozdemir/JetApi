@@ -7,6 +7,30 @@
              x:DataType="vm:TestsEditorViewModel">
   <!-- The Tests tab: checks and extractions run on every response (ADR-0005). -->
   <!-- As wide as the pane, but never narrower than 480 px: then it scrolls sideways instead of squeezing the columns. -->
+  <StackPanel>
+  <!-- Postman scripts kept from an import (ADR-0010): saved with the request but never run. As wide as the pane. -->
+  <Border Classes="note" Margin="12,12,12,0" IsVisible="{Binding HasScripts}">
+    <StackPanel Spacing="6">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+        <c:Icon Data="{StaticResource Icon.Info}" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" Foreground="{DynamicResource Tone.Info.Fg}" />
+        <StackPanel Grid.Column="1" Spacing="2">
+          <TextBlock TextWrapping="Wrap" Text="{l:Tr Tests_ScriptsNote}" />
+          <Button Classes="link" Padding="0" HorizontalAlignment="Left" Command="{Binding ToggleScriptsCommand}">
+            <Panel>
+              <TextBlock Text="{l:Tr Tests_ShowScripts}" IsVisible="{Binding !ShowScripts}" />
+              <TextBlock Text="{l:Tr Tests_HideScripts}" IsVisible="{Binding ShowScripts}" />
+            </Panel>
+          </Button>
+        </StackPanel>
+      </Grid>
+      <!-- Code keeps its lines; long ones scroll sideways. -->
+      <Border Classes="code" IsVisible="{Binding ShowScripts}">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+          <SelectableTextBlock Classes="mono" Margin="10,8" TextWrapping="NoWrap" Text="{Binding ScriptsText}" />
+        </ScrollViewer>
+      </Border>
+    </StackPanel>
+  </Border>
   <ScrollViewer x:Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
   <StackPanel Margin="12" Spacing="10" MinWidth="480" Width="{Binding #Scroller.Viewport.Width, Converter={x:Static c:SubtractConverter.Instance}, ConverterParameter=24}">
     <Grid ColumnDefinitions="*,Auto">
@@ -134,4 +158,5 @@
     <TextBlock Classes="muted small" TextWrapping="Wrap" LineHeight="17" Text="{l:Tr Tests_Hint}" />
   </StackPanel>
   </ScrollViewer>
+  </StackPanel>
 </UserControl>

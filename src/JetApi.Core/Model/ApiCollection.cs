@@ -26,4 +26,7 @@ public sealed record ApiCollection
 
     /// <summary>Proto schema used by gRPC requests in this collection.</summary>
     public ProtoSettings Proto { get; init; } = ProtoSettings.Empty;
+
+    /// <summary>Postman scripts kept from an import; not run (ADR-0010).</summary>
+    public ScriptSet Scripts { get; init; } = ScriptSet.None;
 }

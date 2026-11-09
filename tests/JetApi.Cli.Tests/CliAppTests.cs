@@ -186,6 +186,19 @@ public sealed class CliAppTests(TestServer server) : IClassFixture<TestServer>, 
     }
 
     [Fact]
+    public async Task KeptPostmanScripts_AreReported_AsNotRun()
+    {
+        await SaveAsync(
+            Request("list", "List users", "{{base}}/users") with { Scripts = new ScriptSet(Test: "console.log(1);") },
+            Request("audit", "Audit", "{{base}}/audit"));
+
+        var (code, _, error) = await RunAsync();
+
+        code.ShouldBe(0);
+        error.ShouldContain("1 requests have Postman scripts kept from an import; they do not run.");
+    }
+
+    [Fact]
     public async Task Bail_StopsAtTheFirstFailure()
     {
         await SaveAsync(Request("missing", "Missing", "{{base}}/missing", [Status(200)]), Request("list", "List users", "{{base}}/users"));

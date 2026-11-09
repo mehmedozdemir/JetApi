@@ -28,6 +28,7 @@ internal sealed class CollectionFile
     public AuthDto? Auth { get; set; }
     public List<VariableDto>? Variables { get; set; }
     public ProtoDto? Proto { get; set; }
+    public ScriptsDto? Scripts { get; set; }
     public List<string>? Order { get; set; }
 }
 
@@ -37,6 +38,7 @@ internal sealed class FolderFile
     public string? Name { get; set; }
     public string? Description { get; set; }
     public AuthDto? Auth { get; set; }
+    public ScriptsDto? Scripts { get; set; }
     public List<string>? Order { get; set; }
 }
 
@@ -54,6 +56,7 @@ internal sealed class HttpRequestFile
     public HttpSettingsDto? Settings { get; set; }
     public List<TestDto>? Tests { get; set; }
     public List<ExtractDto>? Extract { get; set; }
+    public ScriptsDto? Scripts { get; set; }
 }
 
 internal sealed class GrpcRequestFile
@@ -70,6 +73,14 @@ internal sealed class GrpcRequestFile
     public GrpcSettingsDto? Settings { get; set; }
     public List<TestDto>? Tests { get; set; }
     public List<ExtractDto>? Extract { get; set; }
+    public ScriptsDto? Scripts { get; set; }
+}
+
+// Postman scripts kept verbatim from an import; JetApi does not run them (ADR-0010).
+internal sealed class ScriptsDto
+{
+    public string? PreRequest { get; set; }
+    public string? Test { get; set; }
 }
 
 // One entry of "tests": check is status | header | json | body | time | schema.

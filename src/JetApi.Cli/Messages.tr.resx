@@ -23,6 +23,7 @@
   <data name="Cli_Passed" xml:space="preserve"><value>Geçti</value></data>
   <data name="Cli_ReportFailed" xml:space="preserve"><value>{0} yazılamadı: {1}</value></data>
   <data name="Cli_ReportWritten" xml:space="preserve"><value>{0} raporu: {1}</value></data>
+  <data name="Cli_ScriptsNotRun" xml:space="preserve"><value>{0} istekte içe aktarmadan gelen Postman script'leri var; bunlar çalışmaz. Bu isteklerin Testler sekmesine bakın.</value></data>
   <data name="Cli_SeeHelp" xml:space="preserve"><value>Kullanım için 'jetapi --help' çalıştırın.</value></data>
   <data name="Cli_SkippedFile" xml:space="preserve"><value>Atlandı, {0}: {1}</value></data>
   <data name="Cli_Stopped" xml:space="preserve"><value>İlk hatada durduruldu (--bail).</value></data>

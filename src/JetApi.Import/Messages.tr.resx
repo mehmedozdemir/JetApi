@@ -31,7 +31,9 @@
   <data name="Import_NotEnvironment" xml:space="preserve"><value>Bu dosya bir Postman environment dışa aktarımı değil.</value></data>
   <data name="Import_PathVariable" xml:space="preserve"><value>:{0} yol değişkeninin değeri yok; {{{{{0}}}}} olarak aktarıldı. {0} değişkenini bir environment’ta tanımlayın.</value></data>
   <data name="Import_PreRequestScript" xml:space="preserve"><value>Pre-request script’i</value></data>
-  <data name="Import_ScriptSkipped" xml:space="preserve"><value>{0} aktarılmadı; script desteği ileriki bir sürümde gelecek.</value></data>
+  <data name="Import_ScriptConverted" xml:space="preserve"><value>Test script'i dönüştürüldü: {0} test ve {1} çıkarma kuralı.</value></data>
+  <data name="Import_ScriptKept" xml:space="preserve"><value>{0} dosyada korunuyor ama çalışmıyor; JetApi henüz script çalıştırmıyor.</value></data>
+  <data name="Import_ScriptPartlyConverted" xml:space="preserve"><value>Test script'i kısmen dönüştürüldü: {0} test ve {1} çıkarma kuralı. Kalanı dosyada korunuyor ama çalışmıyor.</value></data>
   <data name="Import_TestScript" xml:space="preserve"><value>Test script’i</value></data>
   <data name="Import_Unnamed" xml:space="preserve"><value>Adsız</value></data>
   <data name="Import_UnnamedCollection" xml:space="preserve"><value>İçe aktarılan koleksiyon</value></data>

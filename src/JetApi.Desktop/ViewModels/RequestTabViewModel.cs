@@ -105,6 +105,7 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
         _name = request.Name;
         Key = request.Key;
         Description = request.Description;
+        Scripts = request.Scripts;
         _savedYaml = path is null ? string.Empty : RequestFiles.Serialize(request);
         Variables = CreateVariableContext();
         Tests = new TestsEditorViewModel(request, () =>
@@ -220,6 +221,9 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
 
     /// <summary>Markdown description, kept as is.</summary>
     protected string? Description { get; }
+
+    /// <summary>Postman scripts kept from an import: saved with the request as they are, never run (ADR-0010).</summary>
+    protected ScriptSet Scripts { get; }
 
     /// <summary>True for gRPC tabs.</summary>
     public abstract bool IsGrpc { get; }

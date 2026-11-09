@@ -63,8 +63,10 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 
 M1 and M2 are done; `v0.2.0` was tagged on 2026-11-09. Only Windows packages are needed (macOS/Linux optional).
 
-Next, M3 (test automation): no-code assertions and extracting variables from responses (ADR-0005), a collection/folder
-runner, data-driven runs (CSV/JSON), the `jetapi` CLI with JUnit XML and HTML reports, importing Postman `pm.test`.
+M3 (test automation) is done on the branch, not yet released as `v0.3.0`: checks and extractions (ADR-0005, 0008), the
+collection runner with data files (ADR-0009), the `jetapi` CLI with JUnit XML and HTML reports (docs/cli.md), and Postman
+`pm.test` import (ADR-0010: common statements become rules, the rest is kept in a `scripts` section and does not run).
+Next is M4 (advanced gRPC).
 
 Notes:
 - CI (`ci.yml`) runs on pushes to every branch (lint, then Windows, Ubuntu and macOS); still run the full test suite

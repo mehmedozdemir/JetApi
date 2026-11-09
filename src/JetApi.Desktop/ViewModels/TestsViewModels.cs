@@ -290,12 +290,14 @@ public sealed partial class ExtractionRowViewModel : ViewModelBase
 public sealed partial class TestsEditorViewModel : ViewModelBase
 {
     private readonly Action _changed;
+    private readonly ScriptSet _scripts;
 
     /// <summary>Creates the editor for the checks and extractions of <paramref name="request"/>.</summary>
     public TestsEditorViewModel(RequestNode request, Action changed)
     {
         ArgumentNullException.ThrowIfNull(request);
         _changed = changed;
+        _scripts = request.Scripts;
         foreach (var check in request.Checks)
         {
             Checks.Add(NewRow(check));
@@ -318,6 +320,24 @@ public sealed partial class TestsEditorViewModel : ViewModelBase
 
     /// <summary>No checks and no extractions.</summary>
     public bool IsEmpty => Checks.Count == 0 && Extractions.Count == 0;
+
+    /// <summary>The request has Postman scripts kept from an import (ADR-0010): a note says they do not run.</summary>
+    public bool HasScripts => !_scripts.IsEmpty;
+
+    /// <summary>The kept scripts are shown under the note.</summary>
+    [ObservableProperty]
+    public partial bool ShowScripts { get; set; }
+
+    /// <summary>Shows or hides the kept scripts.</summary>
+    [RelayCommand]
+    private void ToggleScripts() => ShowScripts = !ShowScripts;
+
+    /// <summary>The kept scripts, for reading: the pre-request script, then the test script.</summary>
+    public string ScriptsText => string.Join(
+        "\n\n",
+        new[] { (Loc.Get("Tests_PreRequestScript"), _scripts.PreRequest), (Loc.Get("Tests_TestScript"), _scripts.Test) }
+            .Where(s => !string.IsNullOrWhiteSpace(s.Item2))
+            .Select(s => $"// {s.Item1}\n{s.Item2.TrimEnd()}"));
 
     /// <summary>Has checks (shows their table).</summary>
     public bool HasChecks => Checks.Count > 0;

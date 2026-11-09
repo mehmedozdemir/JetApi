@@ -7,6 +7,7 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Added
 
+- Postman test script'leri içe aktarılırken yaygın ifadeler (`pm.response.to.have.status`, `pm.expect(json.x).to.eql(…)`, yanıt süresi, header, body, `pm.environment.set(…)` ve benzerleri) testlere ve çıkarma kurallarına çevrilir. Çevrilemeyen script'ler, pre-request script'leri ve klasör/koleksiyon script'leri dosyada yeni `scripts` bölümünde aynen saklanır ama çalışmaz; rapor, isteğin *Testler* sekmesi ve `jetapi` bunu söyler (ADR-0010, [import.md](docs/import.md)).
 - `jetapi` komut satırı aracı: `jetapi run <workspace> [koleksiyon/klasör] -e <environment>` koleksiyonu uygulamayla aynı kurallarla çalıştırır; veri dosyası, tekrar, bekleme, `--bail`, `--var`, `--persist`, `--lang`. Çıkış kodları: 0 geçti, 1 kaldı, 2 yanlış girdi. `--junit` ve `--html` ile rapor. Her sürümde platform başına tek dosyalık arşiv (`jetapi-cli-<sürüm>-<rid>`). GitHub Actions, GitLab, Azure DevOps ve Jenkins örnekleri: [docs/cli.md](docs/cli.md).
 - Çalıştırıcıda *Rapor* düğmesi: biten koşu HTML ya da JUnit XML olarak kaydedilir.
 - Koleksiyon çalıştırıcı: ağaçta koleksiyon ya da klasöre sağ tık → *Çalıştır…* (ya da komut paleti). İstek seçimi, tekrar, istekler arası bekleme, ilk hatada durma, CSV/JSON veri dosyasıyla her satır için bir tekrar; sonuçlar canlı ve tekrar başına gruplu. Çalıştırma mantığı uygulama ve CLI için ortak `JetApi.Runner` projesinde (ADR-0009).

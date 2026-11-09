@@ -178,5 +178,7 @@ pipeline {
 
 ## Sınırlar
 
+- Postman'den içe aktarmada saklanan script'ler ([ADR-0010](adr/0010-postman-scripts.md)) çalışmaz; koşudaki script'li
+  istek sayısı başta uyarı olarak yazılır.
 - Yalnızca unary gRPC çağrıları ve HTTP istekleri çalışır (uygulamadaki gibi).
 - `dotnet tool` paketi henüz yok; NuGet'e yayın ayrı bir karar olarak bekliyor.

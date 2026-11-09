@@ -85,7 +85,7 @@
 | IMP-3 | OpenAPI 3.x / Swagger 2.0 import | M2 | ✅ JSON ve YAML; eşleştirme [openapi-import.md](openapi-import.md) |
 | IMP-4 | cURL import (yapıştır) ve cURL export | M2 | ✅ bash, cmd, PowerShell sözdizimi; URL alanına yapıştırma, panodan yeni istek, cURL olarak kopyala ([curl-and-snippets.md](curl-and-snippets.md)) |
 | IMP-5 | Kod parçası üretimi (C# HttpClient, curl, JavaScript fetch, Python requests) | M2 | ✅ ayrıca PowerShell ve Windows cmd; istek satırındaki `</>` düğmesi |
-| IMP-6 | Postman test script'lerinin (`pm.test`) import'u | M3 | 🔜 |
+| IMP-6 | Postman test script'lerinin (`pm.test`) import'u | M3 | ✅ Yaygın ifadeler kontrol ve çıkarma kurallarına çevrilir; gerisi dosyada saklanır, çalışmaz, raporda ve Testler sekmesinde görünür ([import.md](import.md#test-scriptlerinin-çevrilmesi), ADR-0010) |
 
 ### Test ve otomasyon
 

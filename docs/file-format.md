@@ -217,6 +217,24 @@ herhangi bir yerinde), `exists`, `notExists`.
   değiştirilmez ve sonuçta neden bulunamadığı yazılır. Çalışma anı değişkenleri dosyaya yazılmaz; uygulama açıkken
   (ya da bir koşu boyunca) geçerlidir ve environment'taki aynı adlı değişkeni ezer.
 
+## `scripts` — içe aktarmadan saklanan Postman script'leri
+
+İstek, `folder.yaml` ve `collection.yaml` dosyalarında isteğe bağlı bölüm ([ADR-0010](adr/0010-postman-scripts.md)).
+Postman'den içe aktarmada kurallara çevrilemeyen JavaScript burada **aynen** saklanır. JetApi bu script'leri
+**çalıştırmaz**; uygulama düzenlemez ama istek kaydedilirken korur.
+
+```yaml
+scripts:
+  preRequest: |-
+    pm.variables.set('ts', Date.now());
+  test: |-
+    pm.test('liste dolu', function () {
+        pm.expect(pm.response.json().items.length).to.be.above(0);
+    });
+```
+
+Boş script yazılmaz. Bölüm yalnızca saklanacak bir script varsa bulunur.
+
 ## Auth türleri
 
 | `type` | Alanlar | REST | gRPC |
@@ -263,7 +281,7 @@ auth:
 
 - Her dosya `schemaVersion` taşır. Desteklenenden yeni bir sürüm okunduğunda dosya atlanır ve "JetApi'yi güncelleyin" uyarısı verilir. Dosya asla üzerine yazılmaz.
 - Formatı bozan bir değişiklik `schemaVersion`'ı artırır, CHANGELOG'da geçiş notuyla belgelenir ve uygulama eski sürümü otomatik olarak yükseltir.
-- Yeni bir auth veya body türü ya da `tests`/`extract` bölümleri gibi **eklemeler** `schemaVersion`'ı artırmaz: mevcut dosyalar aynen okunur. Yeni türü
+- Yeni bir auth veya body türü ya da `tests`/`extract`/`scripts` bölümleri gibi **eklemeler** `schemaVersion`'ı artırmaz: mevcut dosyalar aynen okunur. Yeni türü
   kullanan bir dosyayı eski bir JetApi sürümü okuyamaz; dosyayı tanılama mesajıyla atlar (`oauth2` için: bilinmeyen
   `grant` anahtarı ya da bilinmeyen `auth.type`) ve üzerine yazmaz. `oauth2` bir koleksiyonun `collection.yaml` dosyasındaysa
   eski sürümde koleksiyonun tamamı atlanır. Ekipteki herkesin `oauth2` kullanmadan önce JetApi'yi güncellemesi gerekir.

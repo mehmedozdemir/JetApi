@@ -48,10 +48,11 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 
 ## M3 — Test otomasyonu → `v0.3.0`
 
-- [ ] Kodsuz assertion'lar ve yanıttan değişken çıkarma (ADR-0005)
-- [ ] Koleksiyon/klasör çalıştırıcı (sıra, gecikme, tekrar, hata durumunda durma)
-- [ ] CSV/JSON veri dosyasıyla veri odaklı çalıştırma
+- [x] Kodsuz assertion'lar ve yanıttan değişken çıkarma (ADR-0005)
+- [x] Koleksiyon/klasör çalıştırıcı (sıra, gecikme, tekrar, hata durumunda durma)
+- [x] CSV/JSON veri dosyasıyla veri odaklı çalıştırma
 - [x] `jetapi` CLI (her platform için tek dosya; `dotnet tool` paketi sonraya), JUnit XML ve HTML raporları, CI örnekleri (GitHub Actions, GitLab, Azure DevOps, Jenkins)
+- [x] Postman `pm.test` script'lerinin içe aktarılması: yaygın ifadeler kurallara çevrilir, gerisi saklanır (ADR-0010)
 
 ## M4 — İleri gRPC → `v0.4.0`
 

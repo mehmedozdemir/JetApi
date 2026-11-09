@@ -11,6 +11,9 @@ public abstract record CollectionNode
 
     /// <summary>Optional Markdown documentation.</summary>
     public string? Description { get; init; }
+
+    /// <summary>Postman scripts kept from an import; not run (ADR-0010).</summary>
+    public ScriptSet Scripts { get; init; } = ScriptSet.None;
 }
 
 /// <summary>A folder that groups requests and other folders, and can override auth.</summary>

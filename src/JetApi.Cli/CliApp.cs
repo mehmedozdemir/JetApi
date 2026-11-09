@@ -103,6 +103,12 @@ internal static class CliApp
             return console.Fail(Messages.Get("Cli_NothingToRun"));
         }
 
+        // Postman scripts kept from an import do not run (ADR-0010); say so rather than pass silently.
+        if (target.Requests.Count(r => !r.Request.Scripts.IsEmpty) is > 0 and var withScripts)
+        {
+            console.Warn(Messages.Format("Cli_ScriptsNotRun", withScripts));
+        }
+
         IReadOnlyList<IReadOnlyDictionary<string, string>>? rows = null;
         if (options.DataFile is { } dataPath)
         {
@@ -130,9 +136,15 @@ internal static class CliApp
             cancellationToken).ConfigureAwait(false);
         console.Summary(summary);
 
-        var reportsWritten = await WriteReportAsync(options.JUnitPath, "JUnit", () => RunReports.JUnit(summary, info), console).ConfigureAwait(false)
-            & await WriteReportAsync(options.HtmlPath, "HTML", () => RunReports.Html(summary, info), console).ConfigureAwait(false);
-        return !reportsWritten ? ExitCodes.Usage : summary.Succeeded ? ExitCodes.Passed : ExitCodes.Failed;
+        // Both reports are attempted even when the first cannot be written.
+        var junitWritten = await WriteReportAsync(options.JUnitPath, "JUnit", () => RunReports.JUnit(summary, info), console).ConfigureAwait(false);
+        var htmlWritten = await WriteReportAsync(options.HtmlPath, "HTML", () => RunReports.Html(summary, info), console).ConfigureAwait(false);
+        if (!junitWritten || !htmlWritten)
+        {
+            return ExitCodes.Usage;
+        }
+
+        return summary.Succeeded ? ExitCodes.Passed : ExitCodes.Failed;
     }
 
     private static async Task<bool> WriteReportAsync(string? path, string kind, Func<string> render, ConsoleOutput console)

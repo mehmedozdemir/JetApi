@@ -31,7 +31,9 @@
   <data name="Import_NotEnvironment" xml:space="preserve"><value>This file is not a Postman environment export.</value></data>
   <data name="Import_PathVariable" xml:space="preserve"><value>Path variable :{0} has no value, so it became {{{{{0}}}}}. Define {0} in an environment.</value></data>
   <data name="Import_PreRequestScript" xml:space="preserve"><value>Pre-request script</value></data>
-  <data name="Import_ScriptSkipped" xml:space="preserve"><value>{0} was not imported; scripts arrive in a later version.</value></data>
+  <data name="Import_ScriptConverted" xml:space="preserve"><value>Test script converted: {0} checks and {1} extraction rules.</value></data>
+  <data name="Import_ScriptKept" xml:space="preserve"><value>{0} is kept in the file but does not run; JetApi does not run scripts yet.</value></data>
+  <data name="Import_ScriptPartlyConverted" xml:space="preserve"><value>Test script partly converted: {0} checks and {1} extraction rules. The rest is kept in the file but does not run.</value></data>
   <data name="Import_TestScript" xml:space="preserve"><value>Test script</value></data>
   <data name="Import_Unnamed" xml:space="preserve"><value>Unnamed</value></data>
   <data name="Import_UnnamedCollection" xml:space="preserve"><value>Imported collection</value></data>

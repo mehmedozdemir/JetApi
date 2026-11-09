@@ -359,16 +359,21 @@
   <data name="Tests_ExtractedHeader" xml:space="preserve"><value>Extracted variables</value></data>
   <data name="Tests_Extractions" xml:space="preserve"><value>Save to variables</value></data>
   <data name="Tests_From" xml:space="preserve"><value>From</value></data>
+  <data name="Tests_HideScripts" xml:space="preserve"><value>Hide scripts</value></data>
   <data name="Tests_Hint" xml:space="preserve"><value>Checks and rules run on every response and are saved in the request's file, so they show in Git. Runtime variables are not written to a file; they last while the app is open and override other variables. Values may use {{variables}}.</value></data>
   <data name="Tests_NoEnvironment" xml:space="preserve"><value>There is no active environment.</value></data>
   <data name="Tests_NotChanged" xml:space="preserve"><value>The variable was not changed.</value></data>
   <data name="Tests_Operator" xml:space="preserve"><value>Condition</value></data>
   <data name="Tests_PathOrName" xml:space="preserve"><value>Path / name</value></data>
+  <data name="Tests_PreRequestScript" xml:space="preserve"><value>Pre-request script (Postman)</value></data>
   <data name="Tests_Results" xml:space="preserve"><value>Test results</value></data>
   <data name="Tests_SchemaTitle" xml:space="preserve"><value>Matches the JSON Schema</value></data>
+  <data name="Tests_ScriptsNote" xml:space="preserve"><value>This request has Postman scripts from an import. They are kept in the file but do not run; the parts JetApi understood became the checks and rules below.</value></data>
+  <data name="Tests_ShowScripts" xml:space="preserve"><value>Show scripts</value></data>
   <data name="Tests_Summary" xml:space="preserve"><value>{0} passed · {1} failed</value></data>
   <data name="Tests_Tab" xml:space="preserve"><value>Tests</value></data>
   <data name="Tests_Target" xml:space="preserve"><value>Target</value></data>
+  <data name="Tests_TestScript" xml:space="preserve"><value>Test script (Postman)</value></data>
   <data name="Tests_To" xml:space="preserve"><value>Store in</value></data>
   <data name="Tests_Variable" xml:space="preserve"><value>Variable</value></data>
   <data name="Tests_What" xml:space="preserve"><value>Check</value></data>

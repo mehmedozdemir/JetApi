@@ -132,6 +132,7 @@ public static class WorkspaceStore
             Auth = DtoMapper.ToDto(collection.Auth, AuthConfig.None),
             Variables = DtoMapper.ToDto(collection.Variables),
             Proto = DtoMapper.ToDto(collection.Proto),
+            Scripts = DtoMapper.ToDto(collection.Scripts),
             Order = OrderOf(collection.Children),
         };
         await WriteAsync(Path.Combine(directory, WorkspaceLayout.CollectionFileName), file, cancellationToken).ConfigureAwait(false);
@@ -250,6 +251,7 @@ public static class WorkspaceStore
                 Auth = DtoMapper.FromDto(file.Auth, AuthConfig.None),
                 Variables = DtoMapper.FromDto(file.Variables, "variables"),
                 Proto = DtoMapper.FromDto(file.Proto),
+                Scripts = DtoMapper.FromDto(file.Scripts),
                 Children = children,
             }, out var collection))
             {
@@ -287,6 +289,7 @@ public static class WorkspaceStore
                 Name = file.Name!,
                 Description = file.Description,
                 Auth = DtoMapper.FromDto(file.Auth, AuthConfig.Inherit),
+                Scripts = DtoMapper.FromDto(file.Scripts),
                 Children = folderChildren,
             }, out var folder) && context.TryClaimKey(keys, key, manifestPath))
             {
@@ -359,6 +362,7 @@ public static class WorkspaceStore
                         Name = folder.Name,
                         Description = folder.Description,
                         Auth = DtoMapper.ToDto(folder.Auth, AuthConfig.Inherit),
+                        Scripts = DtoMapper.ToDto(folder.Scripts),
                         Order = OrderOf(folder.Children),
                     };
                     await WriteAsync(Path.Combine(folderDirectory, WorkspaceLayout.FolderFileName), file, cancellationToken).ConfigureAwait(false);

@@ -365,6 +365,7 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
             int.TryParse(TimeoutText, NumberStyles.None, CultureInfo.InvariantCulture, out var ms) && ms > 0 ? TimeSpan.FromMilliseconds(ms) : null),
         Checks = Tests?.ToChecks() ?? [],
         Extractions = Tests?.ToExtractions() ?? [],
+        Scripts = Scripts,
     };
 
     /// <inheritdoc />
