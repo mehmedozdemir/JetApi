@@ -5,6 +5,14 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+### Added
+
+- Yanıt kontrolleri ve değişken çıkarma için motor (`JetApi.Testing`) ve dosya biçimi: istek dosyalarında `tests`
+  (status, header, JSONPath, body, süre, JSON Schema; `equals`, `contains`, `matches`, `exists`…) ve `extract` (JSONPath,
+  header, status, body → çalışma anı, environment, koleksiyon veya global değişken). JSONPath RFC 9535'e göre kendi
+  uygulamamızdır; JSON Schema için BSD-3-Clause lisanslı LateApexEarlySpeed.Json.Schema (ADR-0008). Arayüz sonraki adımda.
+- CI artık her dalda çalışır (önceden yalnızca olmayan `main` dalında).
+
 ### Fixed
 
 - Environment olarak "Yok" seçimi hatırlanmıyordu; workspace yeniden açılınca ilk environment seçili geliyordu.

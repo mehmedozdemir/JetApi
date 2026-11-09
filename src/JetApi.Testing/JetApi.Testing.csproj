@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Runs no-code response checks and extractions (ADR-0005): JSONPath (RFC 9535), JSON Schema, comparisons.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="LateApexEarlySpeed.Json.Schema" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JetApi.Testing.Tests" />
+  </ItemGroup>
+</Project>

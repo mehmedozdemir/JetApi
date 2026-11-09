@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Check_BodyNotJson" xml:space="preserve"><value>Body geçerli bir JSON değil.</value></data>
+  <data name="Check_EmptyBody" xml:space="preserve"><value>Body boş.</value></data>
+  <data name="Check_ExpectedContains" xml:space="preserve"><value>{0} içermesi bekleniyordu, {1} geldi.</value></data>
+  <data name="Check_ExpectedLess" xml:space="preserve"><value>{0} değerinden küçük bekleniyordu, {1} geldi.</value></data>
+  <data name="Check_ExpectedMatch" xml:space="preserve"><value>{0} desenine uyması bekleniyordu, {1} geldi.</value></data>
+  <data name="Check_ExpectedMissing" xml:space="preserve"><value>Olmaması bekleniyordu, {0} geldi.</value></data>
+  <data name="Check_ExpectedMore" xml:space="preserve"><value>{0} değerinden büyük bekleniyordu, {1} geldi.</value></data>
+  <data name="Check_ExpectedNotContains" xml:space="preserve"><value>{0} içermemesi bekleniyordu, {1} geldi.</value></data>
+  <data name="Check_ExpectedOther" xml:space="preserve"><value>{0} dışında bir değer bekleniyordu.</value></data>
+  <data name="Check_ExpectedValue" xml:space="preserve"><value>{0} bekleniyordu, {1} geldi.</value></data>
+  <data name="Check_InvalidRegex" xml:space="preserve"><value>Geçersiz düzenli ifade: {0}</value></data>
+  <data name="Check_NoHeader" xml:space="preserve"><value>{0} header'ı yok.</value></data>
+  <data name="Check_NoJsonValue" xml:space="preserve"><value>{0} yolunda bir şey bulunamadı.</value></data>
+  <data name="Check_NoResponse" xml:space="preserve"><value>Yanıt yok.</value></data>
+  <data name="Check_NotNumber" xml:space="preserve"><value>{0} bir sayı değil.</value></data>
+  <data name="Check_OperatorNotSupported" xml:space="preserve"><value>Bu operatör burada kullanılamaz.</value></data>
+  <data name="Check_RegexTimeout" xml:space="preserve"><value>Düzenli ifade çok uzun sürdü.</value></data>
+  <data name="Check_SchemaFailed" xml:space="preserve"><value>Body şemaya uymuyor: {0}</value></data>
+  <data name="Check_SchemaInvalid" xml:space="preserve"><value>JSON Schema geçerli değil: {0}</value></data>
+  <data name="Path_BadNumber" xml:space="preserve"><value>geçersiz sayı</value></data>
+  <data name="Path_BadString" xml:space="preserve"><value>geçersiz metin</value></data>
+  <data name="Path_Error" xml:space="preserve"><value>Geçersiz JSONPath, {0}. karakter: {1}</value></data>
+  <data name="Path_Expected" xml:space="preserve"><value>'{0}' bekleniyordu</value></data>
+  <data name="Path_ExpectedInstead" xml:space="preserve"><value>'{1}' yerine '{0}' bekleniyordu</value></data>
+  <data name="Path_ExpectedName" xml:space="preserve"><value>bir alan adı bekleniyordu</value></data>
+  <data name="Path_NotATest" xml:space="preserve"><value>burada filtrenin bir karşılaştırma ya da sorgu içermesi gerekir</value></data>
+  <data name="Path_StartWithRoot" xml:space="preserve"><value>yol $ ile başlar</value></data>
+  <data name="Path_Unexpected" xml:space="preserve"><value>beklenmeyen '{0}'</value></data>
+  <data name="Path_UnexpectedEnd" xml:space="preserve"><value>yol erken bitiyor</value></data>
+  <data name="Path_UnknownFunction" xml:space="preserve"><value>bilinmeyen fonksiyon '{0}' (desteklenenler: length, count, match, search, value)</value></data>
+</root>

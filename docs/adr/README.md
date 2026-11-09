@@ -13,3 +13,4 @@ durumu "Yerini aldı: ADR-XXXX" yapılır.
 | [0005](0005-assertions-before-scripting.md) | Test: önce kodsuz assertion'lar, sonra JavaScript | Kabul edildi |
 | [0006](0006-localization.md) | Türkçe ve İngilizce arayüz | Kabul edildi |
 | [0007](0007-oauth2-tokens.md) | OAuth 2.0: token'lar makineye özel önbellekte, YAML'da değil | Kabul edildi |
+| [0008](0008-checks-jsonpath-and-schema.md) | Testler: dosyadaki biçim, kendi JSONPath'imiz, JSON Schema için LateApexEarlySpeed | Kabul edildi |

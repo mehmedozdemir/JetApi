@@ -164,6 +164,59 @@ settings:
   deadlineMs: 3000
 ```
 
+## `tests` ve `extract` — yanıt kontrolleri ve değişken çıkarma
+
+REST ve gRPC istek dosyalarında isteğe bağlı iki bölüm ([ADR-0005](adr/0005-assertions-before-scripting.md),
+[ADR-0008](adr/0008-checks-jsonpath-and-schema.md)). Her gönderimde çalışır; değerlerde `{{değişken}}` kullanılabilir.
+
+```yaml
+tests:
+- check: status          # status | header | json | body | time | schema
+  op: equals
+  value: 200
+- check: header
+  name: Content-Type
+  op: contains
+  value: application/json
+- check: json
+  path: $.items[?@.active].id   # JSONPath (RFC 9535)
+  op: exists
+- check: time            # milisaniye
+  op: lessThan
+  value: 500
+- check: schema          # op yok; value bir JSON Schema
+  value: |-
+    { "type": "object", "required": ["id"] }
+  enabled: false         # yalnızca kapalıyken yazılır
+extract:
+- from: json             # json | header | status | body
+  path: $.access_token
+  variable: token
+  to: environment        # runtime (varsayılan, yazılmaz) | environment | collection | global
+- from: header
+  name: Location
+  variable: nextUrl
+```
+
+| `check` | Hedef | Değer | Not |
+|---|---|---|---|
+| `status` | — | sayı | gRPC'de status kodu numarası (0 = OK) |
+| `header` | `name` (büyük/küçük harf duyarsız) | metin | aynı adda birden fazla header `, ` ile birleşir |
+| `json` | `path` | JSON ya da metin | birden fazla düğüm seçen yol bir dizi gibi kontrol edilir |
+| `body` | — | metin | gRPC'de yanıt mesajının JSON hali |
+| `time` | — | milisaniye | |
+| `schema` | — | JSON Schema | `op` yazılmaz; Draft 7, 2019-09, 2020-12 |
+
+`op`: `equals`, `notEquals`, `greaterThan`, `lessThan`, `contains`, `notContains`, `matches` (düzenli ifade, metnin
+herhangi bir yerinde), `exists`, `notExists`.
+
+- `equals`: sayılar değere göre (`200` = `200.0`); JSON değerleri yapıya göre karşılaştırılır. Metin bir JSON değeriyse
+  hem `Ayşe` hem `"Ayşe"` yazılabilir.
+- `contains`: metinde alt metin; dizide eşit bir eleman; nesnede bu adda bir alan.
+- `extract`: JSON metinleri tırnaksız, diğer JSON değerleri JSON metni olarak alınır. Değer bulunamazsa değişken
+  değiştirilmez ve sonuçta neden bulunamadığı yazılır. Çalışma anı değişkenleri dosyaya yazılmaz; uygulama açıkken
+  (ya da bir koşu boyunca) geçerlidir ve environment'taki aynı adlı değişkeni ezer.
+
 ## Auth türleri
 
 | `type` | Alanlar | REST | gRPC |
@@ -210,7 +263,7 @@ auth:
 
 - Her dosya `schemaVersion` taşır. Desteklenenden yeni bir sürüm okunduğunda dosya atlanır ve "JetApi'yi güncelleyin" uyarısı verilir. Dosya asla üzerine yazılmaz.
 - Formatı bozan bir değişiklik `schemaVersion`'ı artırır, CHANGELOG'da geçiş notuyla belgelenir ve uygulama eski sürümü otomatik olarak yükseltir.
-- Yeni bir auth veya body türü gibi **eklemeler** `schemaVersion`'ı artırmaz: mevcut dosyalar aynen okunur. Yeni türü
+- Yeni bir auth veya body türü ya da `tests`/`extract` bölümleri gibi **eklemeler** `schemaVersion`'ı artırmaz: mevcut dosyalar aynen okunur. Yeni türü
   kullanan bir dosyayı eski bir JetApi sürümü okuyamaz; dosyayı tanılama mesajıyla atlar (`oauth2` için: bilinmeyen
   `grant` anahtarı ya da bilinmeyen `auth.type`) ve üzerine yazmaz. `oauth2` bir koleksiyonun `collection.yaml` dosyasındaysa
   eski sürümde koleksiyonun tamamı atlanır. Ekipteki herkesin `oauth2` kullanmadan önce JetApi'yi güncellemesi gerekir.

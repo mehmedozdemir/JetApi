@@ -32,6 +32,8 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 - `src/JetApi.Storage`: YAML workspace read/write (`WorkspaceStore`, `RequestFiles`).
 - `src/JetApi.Http`: `HttpRequestPreparer` (pure) and `HttpRequestExecutor` (timing, error kinds).
 - `src/JetApi.Grpc`: runtime `.proto` loading (protobuf-net.Reflection, `extern alias pbnet`), `ProtoJsonCodec`, `GrpcInvoker`.
+- `src/JetApi.Testing`: response checks and extractions (`tests`/`extract` in request files), our own RFC 9535 JSONPath,
+  JSON Schema via LateApexEarlySpeed (ADR-0008; the json-everything packages need a maintenance fee, do not add them).
 - `src/JetApi.Desktop`: Avalonia 12 + CommunityToolkit.Mvvm. `Services/`, `ViewModels/` (UI-free, unit tested), `Views/`,
   `Themes/Tokens.axaml` (all colors and icons, light and dark), `Themes/Styles.axaml`, `Localization/Strings*.resx`.
 - `tests/*`: one test project per source project. The gRPC codec is cross-checked against Google's generated code.
@@ -43,7 +45,7 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
   Target runtimes are listed in `src/Directory.Build.props`, so publishing with `-r <rid>` does not change lock files.
   `nuget.config` restores only from nuget.org.
 - Every UI string goes in both `Strings.resx` (EN) and `Strings.tr.resx` (TR). A test checks parity and that every used key exists.
-  Use `{l:Tr Key}` in XAML and `Loc.Get` / `Loc.Format` in code. Engine projects (`Http`, `Grpc`, `Storage`) have their own
+  Use `{l:Tr Key}` in XAML and `Loc.Get` / `Loc.Format` in code. Engine projects (`Http`, `Grpc`, `Storage`, `Import`, `Testing`) have their own
   `Messages.resx` / `Messages.tr.resx` and an internal `Messages.Get/Format`; their tests pin en-US.
 - Colors only via `{DynamicResource ...}` tokens, never hard-coded, so the theme switches live.
 - No element-name or `$parent` bindings inside item templates: put commands on the item view model

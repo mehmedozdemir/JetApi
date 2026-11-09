@@ -91,8 +91,8 @@
 
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
-| TEST-1 | Kodsuz assertion'lar: status, header, JSONPath, yanıt süresi, body içerir/eşittir, JSON Schema | M3 | 🔜 |
-| TEST-2 | Yanıttan değişken çıkarma (ör. token'ı JSONPath ile al → environment) | M3 | 🔜 |
+| TEST-1 | Kodsuz assertion'lar: status, header, JSONPath, yanıt süresi, body içerir/eşittir, JSON Schema | M3 | 🟡 Motor ve dosya formatı hazır (`JetApi.Testing`, `tests` bölümü, kendi RFC 9535 JSONPath'imiz); arayüz B aşamasında |
+| TEST-2 | Yanıttan değişken çıkarma (ör. token'ı JSONPath ile al → environment) | M3 | 🟡 Motor ve dosya formatı hazır (`extract` bölümü); uygulamada çalıştırma ve arayüz B aşamasında |
 | TEST-3 | Koleksiyon/klasör çalıştırıcı: sıra, gecikme, tekrar, hata durumunda durma | M3 | 🔜 |
 | TEST-4 | Veri odaklı çalıştırma: CSV/JSON dosyasındaki her satır için koşma | M3 | 🔜 |
 | TEST-5 | Raporlar: JUnit XML (CI), HTML | M3 | 🔜 |
