@@ -62,6 +62,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private SettingsOption<AppTheme>? _theme;
 
     [ObservableProperty]
+    private SettingsOption<ResponsePanePosition>? _responsePane;
+
+    [ObservableProperty]
     private SettingsOption<string?>? _uiFont;
 
     [ObservableProperty]
@@ -104,6 +107,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(installedFonts);
         _host = host;
         ThemeOptions = [new(AppTheme.System, Loc.Get("Settings_ThemeSystem")), new(AppTheme.Light, Loc.Get("Settings_ThemeLight")), new(AppTheme.Dark, Loc.Get("Settings_ThemeDark"))];
+        ResponsePaneOptions = [new(ResponsePanePosition.Right, Loc.Get("Settings_ResponseRight")), new(ResponsePanePosition.Bottom, Loc.Get("Settings_ResponseBottom"))];
         UiFontOptions = [new(null, Loc.Get("Settings_FontBuiltIn")), .. installedFonts.Select(f => new SettingsOption<string?>(f, f))];
         UiScaleOptions = [.. Scales.Select(s => new SettingsOption<double>(s, s.ToString("P0", Loc.Instance.Culture)))];
         EditorFontOptions = [new(null, Loc.Get("Settings_FontDefaultMono")), .. Appearance.InstalledMonoFonts(installedFonts).Select(f => new SettingsOption<string?>(f, f))];
@@ -111,6 +115,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
         RenderingOptions = [new(RenderingPreference.Software, Loc.Get("Settings_RenderingSoftware")), new(RenderingPreference.Gpu, Loc.Get("Settings_RenderingGpu"))];
         Load(host.Settings);
     }
+
+    /// <summary>Response pane positions.</summary>
+    public IReadOnlyList<SettingsOption<ResponsePanePosition>> ResponsePaneOptions { get; }
 
     /// <summary>Theme choices.</summary>
     public IReadOnlyList<SettingsOption<AppTheme>> ThemeOptions { get; }
@@ -160,6 +167,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         _host.ApplySettings(current with
         {
             Theme = Theme?.Value ?? current.Theme,
+            ResponsePane = ResponsePane?.Value ?? current.ResponsePane,
             UiFontFamily = UiFont is null ? current.UiFontFamily : UiFont.Value,
             UiScale = UiScale?.Value ?? current.UiScale,
             EditorFontFamily = EditorFont is null ? current.EditorFontFamily : EditorFont.Value,
@@ -183,6 +191,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
     {
         _loading = true;
         Theme = ThemeOptions.First(o => o.Value == settings.Theme);
+        ResponsePane = ResponsePaneOptions.First(o => o.Value == settings.ResponsePane);
         UiFont = UiFontOptions.FirstOrDefault(o => o.Value == settings.UiFontFamily) ?? AddFont(UiFontOptions, settings.UiFontFamily);
         UiScale = UiScaleOptions.MinBy(o => Math.Abs(o.Value - settings.UiScale));
         EditorFont = EditorFontOptions.FirstOrDefault(o => o.Value == settings.EditorFontFamily) ?? AddFont(EditorFontOptions, settings.EditorFontFamily);

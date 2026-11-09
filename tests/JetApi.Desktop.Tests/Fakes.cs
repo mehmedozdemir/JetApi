@@ -126,6 +126,11 @@ internal sealed class FakeWorkspaceHost : IWorkspaceHost
 
     public List<(string Path, bool OfferCreate)> Opened { get; } = [];
 
+    public void ToggleResponsePane() => Settings = Settings with
+    {
+        ResponsePane = Settings.ResponsePane == ResponsePanePosition.Right ? ResponsePanePosition.Bottom : ResponsePanePosition.Right,
+    };
+
     public Task OpenWorkspaceAsync(string path, bool offerCreate)
     {
         Opened.Add((path, offerCreate));

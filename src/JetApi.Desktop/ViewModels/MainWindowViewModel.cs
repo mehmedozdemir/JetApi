@@ -94,6 +94,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
         UiScale = Math.Clamp(settings.UiScale, 0.75, 2);
         _runner.DefaultHttpTimeout = TimeSpan.FromSeconds(Math.Clamp(settings.RequestTimeoutSeconds, 1, 3600));
         _runner.UseCookieJar = settings.UseCookieJar;
+        Workspace?.OnLayoutChanged();
     }
 
     /// <inheritdoc cref="IMainHost.Settings" />
@@ -211,6 +212,19 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
         };
         UpdateSettings(Settings with { Theme = next });
         _applyTheme(next);
+    }
+
+    /// <inheritdoc />
+    public void ToggleResponsePane() => ApplySettings(Settings with
+    {
+        ResponsePane = Settings.ResponsePane == ResponsePanePosition.Right ? ResponsePanePosition.Bottom : ResponsePanePosition.Right,
+    });
+
+    /// <summary>Remembers where the user dragged the divider between request and response.</summary>
+    public void SetRequestShare(bool stacked, double share)
+    {
+        var clamped = Math.Clamp(share, 0.1, 0.9);
+        ApplySettings(stacked ? Settings with { RequestShareBottom = clamped } : Settings with { RequestShareRight = clamped });
     }
 
     /// <inheritdoc />

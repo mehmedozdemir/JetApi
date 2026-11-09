@@ -390,7 +390,16 @@
           <c:Icon Data="{StaticResource Icon.Branch}" Width="12" Height="12" Foreground="{DynamicResource App.TextFaint}" VerticalAlignment="Center" />
           <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{Binding GitBranch}" />
         </StackPanel>
-        <TextBlock Grid.Column="3" Classes="muted small" VerticalAlignment="Center" Text="{Binding UnsavedText}" />
+        <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="10">
+          <TextBlock Classes="muted small" VerticalAlignment="Center" Text="{Binding UnsavedText}" />
+          <Button x:Name="ResponsePaneButton" Classes="icon" Width="22" Height="22" VerticalAlignment="Center" Command="{Binding ToggleResponsePaneCommand}"
+                  ToolTip.Tip="{Binding ResponsePaneToggleText}" AutomationProperties.Name="{Binding ResponsePaneToggleText}">
+            <Panel>
+              <c:Icon Data="{StaticResource Icon.LayoutRows}" Width="14" Height="14" IsVisible="{Binding !IsResponseBelow}" />
+              <c:Icon Data="{StaticResource Icon.LayoutColumns}" Width="14" Height="14" IsVisible="{Binding IsResponseBelow}" />
+            </Panel>
+          </Button>
+        </StackPanel>
       </Grid>
     </Border>
 

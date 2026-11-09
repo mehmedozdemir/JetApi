@@ -87,5 +87,8 @@ public static class Appearance
         }
 
         resources["App.WrapResponses"] = settings.WrapResponseLines;
+        resources["App.ResponseBelow"] = settings.ResponsePane == ResponsePanePosition.Bottom;
+        resources["App.RequestShareRight"] = Math.Clamp(settings.RequestShareRight, 0.1, 0.9);
+        resources["App.RequestShareBottom"] = Math.Clamp(settings.RequestShareBottom, 0.1, 0.9);
     }
 }

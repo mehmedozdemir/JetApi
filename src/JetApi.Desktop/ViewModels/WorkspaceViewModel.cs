@@ -52,6 +52,9 @@ public interface IWorkspaceHost
     /// <summary>Runs <paramref name="action"/> on the UI thread.</summary>
     void Post(Action action);
 
+    /// <summary>Moves the response pane between the right and below the request.</summary>
+    void ToggleResponsePane();
+
     /// <summary>Opens another workspace in place of this one; offers to create one when the folder is not a workspace.</summary>
     Task OpenWorkspaceAsync(string path, bool offerCreate);
 }
@@ -796,6 +799,23 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     [RelayCommand]
     private void ToggleLanguage() => _host.ToggleLanguage();
 
+    /// <summary>The response pane is below the request (otherwise on the right).</summary>
+    public bool IsResponseBelow => _host.Settings.ResponsePane == ResponsePanePosition.Bottom;
+
+    /// <summary>Tooltip of the layout button: what a click does.</summary>
+    public string ResponsePaneToggleText => Loc.Get(IsResponseBelow ? "Layout_ResponseRight" : "Layout_ResponseBelow");
+
+    /// <summary>Moves the response pane between the right and below.</summary>
+    [RelayCommand]
+    private void ToggleResponsePane() => _host.ToggleResponsePane();
+
+    /// <summary>Called after the layout settings changed.</summary>
+    public void OnLayoutChanged()
+    {
+        OnPropertyChanged(nameof(IsResponseBelow));
+        OnPropertyChanged(nameof(ResponsePaneToggleText));
+    }
+
     /// <inheritdoc />
     public async Task<IReadOnlyList<string>> SaveRequestAsync(RequestTabViewModel tab, RequestNode request)
     {
@@ -1205,6 +1225,11 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             return Task.CompletedTask;
         }));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Refresh", Loc.Get("Cmd_Reload"), string.Empty, string.Empty, ReloadAsync));
+        items.Add(PaletteItemViewModel.Command(commands, IsResponseBelow ? "Icon.LayoutColumns" : "Icon.LayoutRows", ResponsePaneToggleText, string.Empty, "Ctrl Alt V", () =>
+        {
+            _host.ToggleResponsePane();
+            return Task.CompletedTask;
+        }));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Moon", Loc.Get("Cmd_ToggleTheme"), string.Empty, string.Empty, () =>
         {
             _host.ToggleTheme();

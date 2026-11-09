@@ -129,6 +129,8 @@
   <data name="Grpc_StreamingLater" xml:space="preserve"><value>streaming (v0.4)</value></data>
   <data name="Grpc_Tls" xml:space="preserve"><value>TLS</value></data>
   <data name="Grpc_Trailers" xml:space="preserve"><value>Trailer’lar</value></data>
+  <data name="Layout_ResponseBelow" xml:space="preserve"><value>Yanıtı alta al (Ctrl+Alt+V)</value></data>
+  <data name="Layout_ResponseRight" xml:space="preserve"><value>Yanıtı sağa al (Ctrl+Alt+V)</value></data>
   <data name="Menu_CollectionSettings" xml:space="preserve"><value>Koleksiyon ayarları</value></data>
   <data name="Menu_Cut" xml:space="preserve"><value>Kes</value></data>
   <data name="Menu_Delete" xml:space="preserve"><value>Sil</value></data>
@@ -261,6 +263,9 @@
   <data name="Res_Truncated" xml:space="preserve"><value>Gövde {0} sınırını aştığı için kesildi.</value></data>
   <data name="Settings_CookieJar" xml:space="preserve"><value>İstekler arasında cookie’leri sakla</value></data>
   <data name="Settings_CookieJarHint" xml:space="preserve"><value>Sunucuların koyduğu cookie’ler, bir tarayıcıdaki gibi aynı siteye giden sonraki isteklerle gönderilir. Workspace kapanana kadar workspace başına tutulur, diske yazılmaz. İstekteki Cookie header’ı önceliklidir.</value></data>
+  <data name="Settings_ResponseBottom" xml:space="preserve"><value>İsteğin altında</value></data>
+  <data name="Settings_ResponsePane" xml:space="preserve"><value>Yanıt paneli</value></data>
+  <data name="Settings_ResponseRight" xml:space="preserve"><value>İsteğin sağında</value></data>
   <data name="Settings_UiFontSize" xml:space="preserve"><value>Arayüz puntosu</value></data>
   <data name="Settings_UiFontSizeHint" xml:space="preserve"><value>Yalnızca yazılar; başlıklar ve küçük yazılar birlikte değişir.</value></data>
   <data name="Shortcut_Close" xml:space="preserve"><value>Sekmeyi kapat</value></data>

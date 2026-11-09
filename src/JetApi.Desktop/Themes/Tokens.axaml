@@ -161,6 +161,8 @@
   <StreamGeometry x:Key="Icon.Sparkle">M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8z M19 15v5 M16.5 17.5h5</StreamGeometry>
   <StreamGeometry x:Key="Icon.Format">M4 6h16 M8 10h12 M8 14h12 M4 18h16</StreamGeometry>
   <StreamGeometry x:Key="Icon.Open">M14 4h6v6 M20 4l-9 9 M18 14v6H4V6h6</StreamGeometry>
+  <StreamGeometry x:Key="Icon.LayoutColumns">M3 5h18v14H3z M12 5v14</StreamGeometry>
+  <StreamGeometry x:Key="Icon.LayoutRows">M3 5h18v14H3z M3 12h18</StreamGeometry>
   <StreamGeometry x:Key="Icon.MoveUp">M9 14L4 9l5-5 M4 9h11a5 5 0 0 1 0 10h-3</StreamGeometry>
 
   <FontFamily x:Key="App.MonoFont">Cascadia Mono, JetBrains Mono, SF Mono, Menlo, Consolas, DejaVu Sans Mono, monospace</FontFamily>
@@ -168,6 +170,10 @@
   <FontFamily x:Key="App.UiFont">fonts:Inter#Inter, $Default</FontFamily>
   <x:Double x:Key="App.EditorFontSize">12.5</x:Double>
   <x:Boolean x:Key="App.WrapResponses">False</x:Boolean>
+  <!-- Request and response panes (Controls/SplitPane.cs); overridden from the settings. -->
+  <x:Boolean x:Key="App.ResponseBelow">False</x:Boolean>
+  <x:Double x:Key="App.RequestShareRight">0.5</x:Double>
+  <x:Double x:Key="App.RequestShareBottom">0.5</x:Double>
 
   <!-- Type scale of the interface (the editor size comes from the settings). Change sizes here, not in views. -->
   <x:Double x:Key="App.FontSize.Display">24</x:Double>

@@ -42,7 +42,7 @@
         <!-- Appearance -->
         <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Appearance}">
           <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Appearance}" />
-          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="14">
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="14">
             <TextBlock Text="{l:Tr Settings_Theme}" VerticalAlignment="Center" />
             <ComboBox Grid.Column="1" MinWidth="240" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding Theme}" AutomationProperties.Name="{l:Tr Settings_Theme}" />
             <TextBlock Grid.Row="1" Text="{l:Tr Settings_UiFont}" VerticalAlignment="Center" />
@@ -57,6 +57,8 @@
               <TextBlock Text="{l:Tr Settings_UiScale}" />
               <TextBlock Classes="faint small" Text="{l:Tr Settings_UiScaleHint}" TextWrapping="Wrap" />
             </StackPanel>
+            <TextBlock Grid.Row="4" Text="{l:Tr Settings_ResponsePane}" VerticalAlignment="Center" />
+            <ComboBox Grid.Row="4" Grid.Column="1" MinWidth="240" ItemsSource="{Binding ResponsePaneOptions}" SelectedItem="{Binding ResponsePane}" AutomationProperties.Name="{l:Tr Settings_ResponsePane}" />
             <ComboBox Grid.Row="3" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding UiScaleOptions}" SelectedItem="{Binding UiScale}" AutomationProperties.Name="{l:Tr Settings_UiScale}" />
           </Grid>
 

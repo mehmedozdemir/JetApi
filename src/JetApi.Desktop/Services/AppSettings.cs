@@ -16,6 +16,16 @@ public enum AppTheme
     Dark,
 }
 
+/// <summary>Where the response pane sits relative to the request pane.</summary>
+public enum ResponsePanePosition
+{
+    /// <summary>Side by side, response on the right.</summary>
+    Right,
+
+    /// <summary>Stacked, response below the request.</summary>
+    Bottom,
+}
+
 /// <summary>How the window is drawn (Windows); see docs/performance.md.</summary>
 public enum RenderingPreference
 {
@@ -64,6 +74,15 @@ public sealed record AppSettings
 
     /// <summary>Code editor font size in points.</summary>
     public double EditorFontSize { get; init; } = DefaultEditorFontSize;
+
+    /// <summary>Where the response pane sits.</summary>
+    public ResponsePanePosition ResponsePane { get; init; }
+
+    /// <summary>Share of the request pane when the response is on the right (0.1 to 0.9).</summary>
+    public double RequestShareRight { get; init; } = 0.5;
+
+    /// <summary>Share of the request pane when the response is below (0.1 to 0.9).</summary>
+    public double RequestShareBottom { get; init; } = 0.5;
 
     /// <summary>Wrap long lines in response bodies instead of scrolling sideways.</summary>
     public bool WrapResponseLines { get; init; }

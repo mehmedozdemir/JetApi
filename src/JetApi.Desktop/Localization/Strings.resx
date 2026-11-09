@@ -129,6 +129,8 @@
   <data name="Grpc_StreamingLater" xml:space="preserve"><value>streaming (v0.4)</value></data>
   <data name="Grpc_Tls" xml:space="preserve"><value>TLS</value></data>
   <data name="Grpc_Trailers" xml:space="preserve"><value>Trailers</value></data>
+  <data name="Layout_ResponseBelow" xml:space="preserve"><value>Move the response below (Ctrl+Alt+V)</value></data>
+  <data name="Layout_ResponseRight" xml:space="preserve"><value>Move the response to the right (Ctrl+Alt+V)</value></data>
   <data name="Menu_CollectionSettings" xml:space="preserve"><value>Collection settings</value></data>
   <data name="Menu_Cut" xml:space="preserve"><value>Cut</value></data>
   <data name="Menu_Delete" xml:space="preserve"><value>Delete</value></data>
@@ -261,6 +263,9 @@
   <data name="Res_Truncated" xml:space="preserve"><value>The body is larger than {0} and was cut off.</value></data>
   <data name="Settings_CookieJar" xml:space="preserve"><value>Keep cookies between requests</value></data>
   <data name="Settings_CookieJarHint" xml:space="preserve"><value>Cookies that servers set are sent with later requests to the same site, as a browser does. They are kept per workspace until it is closed and are never written to disk. A Cookie header on the request wins.</value></data>
+  <data name="Settings_ResponseBottom" xml:space="preserve"><value>Below the request</value></data>
+  <data name="Settings_ResponsePane" xml:space="preserve"><value>Response pane</value></data>
+  <data name="Settings_ResponseRight" xml:space="preserve"><value>Right of the request</value></data>
   <data name="Settings_UiFontSize" xml:space="preserve"><value>Interface font size</value></data>
   <data name="Settings_UiFontSizeHint" xml:space="preserve"><value>Text only; headings and small text follow.</value></data>
   <data name="Shortcut_Close" xml:space="preserve"><value>Close tab</value></data>

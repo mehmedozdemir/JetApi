@@ -66,7 +66,8 @@
       </StackPanel>
     </Border>
 
-    <Grid Grid.Row="1" ColumnDefinitions="*,1,*" Background="{DynamicResource App.Surface}">
+    <c:SplitPane Grid.Row="1" Background="{DynamicResource App.Surface}">
+      <c:SplitPane.First>
       <!-- Request -->
       <Grid RowDefinitions="Auto,*">
         <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="10,0,12,0">
@@ -196,11 +197,11 @@
         </Panel>
       </Grid>
 
-      <Border Grid.Column="1" Classes="divider" />
-      <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+      </c:SplitPane.First>
+      <c:SplitPane.Second>
 
       <!-- Response -->
-      <Grid Grid.Column="2" RowDefinitions="Auto,Auto,*">
+      <Grid RowDefinitions="Auto,Auto,*">
         <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="12,0" Height="37" IsVisible="{Binding !Response.IsEmpty}">
           <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
             <c:StatusPill Tone="{Binding Response.Tone}" Text="{Binding Response.StatusText}" />
@@ -345,6 +346,7 @@
           </Panel>
         </Panel>
       </Grid>
-    </Grid>
+      </c:SplitPane.Second>
+    </c:SplitPane>
   </Grid>
 </UserControl>

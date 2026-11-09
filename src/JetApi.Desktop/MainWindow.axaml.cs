@@ -14,6 +14,7 @@ public sealed partial class MainWindow : Window
     {
         InitializeComponent();
         AddHandler(KeyDownEvent, OnShortcut, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        AddHandler(Controls.SplitPane.ShareChangedEvent, (_, e) => ViewModel?.SetRequestShare(e.IsStacked, e.FirstShare));
     }
 
     private bool _closeConfirmed;
@@ -67,6 +68,13 @@ public sealed partial class MainWindow : Window
 
         if (!e.KeyModifiers.HasFlag(command))
         {
+            return;
+        }
+
+        if (e.Key == Key.V && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        {
+            ViewModel?.ToggleResponsePane();
+            e.Handled = true;
             return;
         }
 
