@@ -22,6 +22,13 @@ public sealed partial class PaletteItemViewModel : ViewModelBase
         Execute = execute;
     }
 
+    /// <summary>A command row with an icon (an <c>Icon.*</c> resource key).</summary>
+    public static PaletteItemViewModel Command(string group, string iconKey, string label, string detail, string shortcut, Func<Task> execute) =>
+        new(group, "›", label, detail, shortcut, execute) { IconKey = iconKey };
+
+    /// <summary>Icon of a command row, or <c>null</c>.</summary>
+    public string? IconKey { get; init; }
+
     /// <summary>Group heading.</summary>
     public string Group { get; }
 

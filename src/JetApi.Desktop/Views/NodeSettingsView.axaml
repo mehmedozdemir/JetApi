@@ -105,19 +105,26 @@
           <StackPanel>
             <Grid ColumnDefinitions="*,Auto">
               <TextBlock Classes="field-label" Text="{l:Tr Grpc_ProtoFiles}" VerticalAlignment="Bottom" />
-              <Button Grid.Column="1" Classes="link" Command="{Binding AddProtoFilesCommand}" Content="{l:Tr Proto_AddFiles}" />
+              <Button Grid.Column="1" Classes="link" Command="{Binding AddProtoFilesCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Plus}" Text="{l:Tr Proto_AddFiles}" />
+</Button>
             </Grid>
             <TextBox Classes="mono" AcceptsReturn="True" MinHeight="80" VerticalContentAlignment="Top" Text="{Binding ProtoFilesText}" PlaceholderText="users/v1/users.proto" />
           </StackPanel>
           <StackPanel>
             <Grid ColumnDefinitions="*,Auto">
               <TextBlock Classes="field-label" Text="{l:Tr Grpc_ImportPaths}" VerticalAlignment="Bottom" />
-              <Button Grid.Column="1" Classes="link" Command="{Binding AddImportPathCommand}" Content="{l:Tr Proto_AddFolder}" />
+              <Button Grid.Column="1" Classes="link" Command="{Binding AddImportPathCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Folder}" Text="{l:Tr Proto_AddFolder}" />
+</Button>
             </Grid>
             <TextBox Classes="mono" AcceptsReturn="True" MinHeight="64" VerticalContentAlignment="Top" Text="{Binding ImportPathsText}" PlaceholderText="protos" />
           </StackPanel>
           <Border Classes="warning" IsVisible="{Binding ProtoNote, Converter={x:Static ObjectConverters.IsNotNull}}">
-            <TextBlock TextWrapping="Wrap" Text="{Binding ProtoNote}" />
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+<c:Icon Data="{StaticResource Icon.Warning}" Width="16" Height="16" VerticalAlignment="Top" Margin="0,1,0,0" Foreground="{DynamicResource Tone.Warning.Fg}" />
+<TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{Binding ProtoNote}" />
+</Grid>
           </Border>
           <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Proto_AddHint}" />
         </StackPanel>

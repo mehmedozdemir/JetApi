@@ -364,17 +364,17 @@ public sealed class CodeEditor : UserControl
     // Cut, copy, paste and select all, plus "Set as variable…" in request editors.
     private MenuFlyout CreateMenu()
     {
-        var cut = new MenuItem { Header = Localization.Loc.Get("Menu_Cut"), InputGesture = new KeyGesture(Key.X, KeyModifiers.Control) };
+        var cut = new MenuItem { Header = Localization.Loc.Get("Menu_Cut"), Icon = Icon.ForMenu("Icon.Scissors"), InputGesture = new KeyGesture(Key.X, KeyModifiers.Control) };
         cut.Click += (_, _) => _editor.Cut();
-        var copy = new MenuItem { Header = Localization.Loc.Get("Btn_Copy"), InputGesture = new KeyGesture(Key.C, KeyModifiers.Control) };
+        var copy = new MenuItem { Header = Localization.Loc.Get("Btn_Copy"), Icon = Icon.ForMenu("Icon.Copy"), InputGesture = new KeyGesture(Key.C, KeyModifiers.Control) };
         copy.Click += (_, _) => _editor.Copy();
-        var paste = new MenuItem { Header = Localization.Loc.Get("Menu_Paste"), InputGesture = new KeyGesture(Key.V, KeyModifiers.Control) };
+        var paste = new MenuItem { Header = Localization.Loc.Get("Menu_Paste"), Icon = Icon.ForMenu("Icon.Clipboard"), InputGesture = new KeyGesture(Key.V, KeyModifiers.Control) };
         paste.Click += (_, _) => _editor.Paste();
         var selectAll = new MenuItem { Header = Localization.Loc.Get("Menu_SelectAll"), InputGesture = new KeyGesture(Key.A, KeyModifiers.Control) };
         selectAll.Click += (_, _) => _editor.SelectAll();
         var separator = new Separator();
         var setAsVariable = VariableHints.CreateSetAsVariableItem(SetSelectionAsVariable);
-        var assign = new MenuItem { Header = Localization.Loc.Get("Var_AssignToVariable") };
+        var assign = new MenuItem { Header = Localization.Loc.Get("Var_AssignToVariable"), Icon = Icon.ForMenu("Icon.Variable") };
         assign.Click += (_, _) => AssignSelectionToVariable();
 
         var menu = new MenuFlyout { Items = { cut, copy, paste, selectAll, separator, setAsVariable, assign } };

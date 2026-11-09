@@ -14,16 +14,26 @@
     <Border Grid.RowSpan="2" Background="{DynamicResource App.Sidebar}" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,1,0" Padding="10,18">
       <StackPanel Spacing="2">
         <TextBlock Classes="panel-title" Margin="10,0,0,12" Text="{l:Tr Settings_Title}" />
-        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Appearance}"
-                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Appearance}" />
-        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Language}"
-                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Language}" />
-        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Requests}"
-                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Requests}" />
-        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_History}"
-                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=History}" />
-        <RadioButton Classes="navitem" GroupName="settings" Content="{l:Tr Settings_Advanced}"
-                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Advanced}" />
+        <RadioButton Classes="navitem" GroupName="settings"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Appearance}">
+          <c:IconLabel Icon="{StaticResource Icon.Palette}" Text="{l:Tr Settings_Appearance}" Spacing="8" />
+        </RadioButton>
+        <RadioButton Classes="navitem" GroupName="settings"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Language}">
+          <c:IconLabel Icon="{StaticResource Icon.Globe}" Text="{l:Tr Settings_Language}" Spacing="8" />
+        </RadioButton>
+        <RadioButton Classes="navitem" GroupName="settings"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Requests}">
+          <c:IconLabel Icon="{StaticResource Icon.Send}" Text="{l:Tr Settings_Requests}" Spacing="8" />
+        </RadioButton>
+        <RadioButton Classes="navitem" GroupName="settings"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=History}">
+          <c:IconLabel Icon="{StaticResource Icon.Clock}" Text="{l:Tr Settings_History}" Spacing="8" />
+        </RadioButton>
+        <RadioButton Classes="navitem" GroupName="settings"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Advanced}">
+          <c:IconLabel Icon="{StaticResource Icon.Monitor}" Text="{l:Tr Settings_Advanced}" Spacing="8" />
+        </RadioButton>
       </StackPanel>
     </Border>
 

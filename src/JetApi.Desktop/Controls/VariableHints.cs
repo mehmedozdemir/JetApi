@@ -64,7 +64,7 @@ public static class VariableHints
     /// <summary>The "Set as variable…" menu item; enabled by the owner when text is selected.</summary>
     internal static MenuItem CreateSetAsVariableItem(Action click)
     {
-        var item = new MenuItem { Header = Loc.Get("Var_SetAsVariable") };
+        var item = new MenuItem { Header = Loc.Get("Var_SetAsVariable"), Icon = Icon.ForMenu("Icon.Variable") };
         item.Click += (_, _) => click();
         return item;
     }
@@ -76,11 +76,11 @@ public static class VariableHints
     // Cut, copy and paste as in the default menu, plus "Set as variable…" for the selected text.
     private static MenuFlyout CreateTextBoxMenu(TextBox textBox)
     {
-        var cut = new MenuItem { Header = Loc.Get("Menu_Cut"), InputGesture = new KeyGesture(Key.X, KeyModifiers.Control) };
+        var cut = new MenuItem { Header = Loc.Get("Menu_Cut"), Icon = Icon.ForMenu("Icon.Scissors"), InputGesture = new KeyGesture(Key.X, KeyModifiers.Control) };
         cut.Click += (_, _) => textBox.Cut();
-        var copy = new MenuItem { Header = Loc.Get("Btn_Copy"), InputGesture = new KeyGesture(Key.C, KeyModifiers.Control) };
+        var copy = new MenuItem { Header = Loc.Get("Btn_Copy"), Icon = Icon.ForMenu("Icon.Copy"), InputGesture = new KeyGesture(Key.C, KeyModifiers.Control) };
         copy.Click += (_, _) => textBox.Copy();
-        var paste = new MenuItem { Header = Loc.Get("Menu_Paste"), InputGesture = new KeyGesture(Key.V, KeyModifiers.Control) };
+        var paste = new MenuItem { Header = Loc.Get("Menu_Paste"), Icon = Icon.ForMenu("Icon.Clipboard"), InputGesture = new KeyGesture(Key.V, KeyModifiers.Control) };
         paste.Click += (_, _) => textBox.Paste();
         var separator = new Separator();
         var setAsVariable = CreateSetAsVariableItem(() => SetSelectionAsVariable(textBox));

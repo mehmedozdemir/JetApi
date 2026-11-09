@@ -13,7 +13,7 @@
           <TextBlock Classes="faint" Text="{Binding BreadcrumbParent}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" MaxWidth="480" />
           <TextBlock Classes="h3" Text="{Binding Name}" VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" />
         </StackPanel>
-        <Grid ColumnDefinitions="2*,12,1.4*,12,1.2*,Auto,Auto">
+        <Grid ColumnDefinitions="2.4*,12,1.3*,12,1.1*,Auto,Auto">
           <StackPanel>
             <TextBlock Classes="field-label" Text="{l:Tr Grpc_Server}" />
             <Border Classes="field" MinHeight="28">
@@ -49,9 +49,13 @@
             </ComboBox>
           </StackPanel>
           <Button Grid.Column="5" Classes="primary" Margin="8,0,0,0" VerticalAlignment="Bottom" MinHeight="30" Padding="22,0" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}"
-                  Content="{Binding SendLabel}" ToolTip.Tip="{l:Tr Shortcut_SendTip}" />
+                  ToolTip.Tip="{l:Tr Shortcut_SendTip}">
+<c:IconLabel Icon="{StaticResource Icon.Send}" Text="{Binding SendLabel}" />
+</Button>
           <Button Grid.Column="5" Classes="secondary" Margin="8,0,0,0" VerticalAlignment="Bottom" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" Content="{l:Tr Btn_Cancel_Request}" />
-          <Button Grid.Column="6" Classes="secondary" Margin="8,0,0,0" VerticalAlignment="Bottom" Command="{Binding SaveCommand}" Content="{l:Tr Btn_Save}" />
+          <Button Grid.Column="6" Classes="secondary" Margin="8,0,0,0" VerticalAlignment="Bottom" Command="{Binding SaveCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Save}" Text="{l:Tr Btn_Save}" />
+</Button>
         </Grid>
 
         <ItemsControl ItemsSource="{Binding UrlHints}" MinHeight="20">
@@ -84,16 +88,26 @@
             <TextBlock Classes="small mono muted" Text="{Binding ProtoFilesText}" VerticalAlignment="Center" />
             <TextBlock Classes="small muted" Text="{Binding ProtoSummary, StringFormat='· {0}'}" VerticalAlignment="Center" />
           </StackPanel>
-          <Button Grid.Column="1" Classes="link" Command="{Binding AddProtoFilesCommand}" Content="{l:Tr Proto_AddFiles}" />
-          <Button Grid.Column="2" Classes="link" Command="{Binding ReloadProtoCommand}" Content="{l:Tr Top_Reload}" />
-          <Button Grid.Column="3" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+          <Button Grid.Column="1" Classes="link" Command="{Binding AddProtoFilesCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Plus}" Text="{l:Tr Proto_AddFiles}" />
+</Button>
+          <Button Grid.Column="2" Classes="link" Command="{Binding ReloadProtoCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Refresh}" Text="{l:Tr Top_Reload}" />
+</Button>
+          <Button Grid.Column="3" Classes="link" Command="{Binding OpenProtoSettingsCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Sliders}" Text="{l:Tr Grpc_ProtoSettings}" />
+</Button>
         </Grid>
         <Border Classes="danger" IsVisible="{Binding HasProtoErrors}">
           <StackPanel Spacing="6">
             <Grid ColumnDefinitions="*,Auto,Auto">
               <TextBlock FontWeight="SemiBold" Text="{l:Tr Grpc_ProtoErrors}" VerticalAlignment="Center" />
-              <Button Grid.Column="1" Classes="link" Command="{Binding ReloadProtoCommand}" Content="{l:Tr Top_Reload}" />
-              <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+              <Button Grid.Column="1" Classes="link" Command="{Binding ReloadProtoCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Refresh}" Text="{l:Tr Top_Reload}" />
+</Button>
+              <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Sliders}" Text="{l:Tr Grpc_ProtoSettings}" />
+</Button>
             </Grid>
             <ItemsControl ItemsSource="{Binding ProtoErrors}">
               <ItemsControl.ItemTemplate>
@@ -106,13 +120,23 @@
         </Border>
         <Border Classes="note" IsVisible="{Binding HasNoProto}">
           <Grid ColumnDefinitions="*,Auto,Auto">
-            <TextBlock Text="{l:Tr Grpc_NoProto}" VerticalAlignment="Center" TextWrapping="Wrap" />
-            <Button Grid.Column="1" Classes="secondary" Margin="12,0,4,0" Command="{Binding AddProtoFilesCommand}" Content="{l:Tr Proto_PickFile}" />
-            <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+<c:Icon Data="{StaticResource Icon.Info}" Width="16" Height="16" VerticalAlignment="Center" Foreground="{DynamicResource Tone.Info.Fg}" />
+<TextBlock Grid.Column="1" Text="{l:Tr Grpc_NoProto}" VerticalAlignment="Center" TextWrapping="Wrap" />
+</Grid>
+            <Button Grid.Column="1" Classes="secondary" Margin="12,0,4,0" Command="{Binding AddProtoFilesCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Folder}" Text="{l:Tr Proto_PickFile}" />
+</Button>
+            <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Sliders}" Text="{l:Tr Grpc_ProtoSettings}" />
+</Button>
           </Grid>
         </Border>
         <Border Classes="warning" IsVisible="{Binding ProtoNote, Converter={x:Static ObjectConverters.IsNotNull}}">
-          <TextBlock TextWrapping="Wrap" Text="{Binding ProtoNote}" />
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+<c:Icon Data="{StaticResource Icon.Warning}" Width="16" Height="16" VerticalAlignment="Top" Margin="0,1,0,0" Foreground="{DynamicResource Tone.Warning.Fg}" />
+<TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{Binding ProtoNote}" />
+</Grid>
         </Border>
       </StackPanel>
     </Border>
@@ -148,8 +172,12 @@
             <Grid RowDefinitions="Auto,*,Auto">
               <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,8">
                 <TextBlock Classes="muted small" Text="{Binding InputTypeText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                <Button Grid.Column="1" Classes="link" Content="{l:Tr Btn_Format}" Command="{Binding FormatMessageCommand}" />
-                <Button Grid.Column="2" Classes="link" Content="{l:Tr Btn_FillTemplate}" Command="{Binding FillTemplateCommand}" />
+                <Button Grid.Column="1" Classes="link" Command="{Binding FormatMessageCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Format}" Text="{l:Tr Btn_Format}" />
+</Button>
+                <Button Grid.Column="2" Classes="link" Command="{Binding FillTemplateCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Sparkle}" Text="{l:Tr Btn_FillTemplate}" />
+</Button>
               </Grid>
               <Border Grid.Row="1" Classes="code">
                 <c:CodeEditor Text="{Binding Message}" Language="json" HighlightVariables="True" />

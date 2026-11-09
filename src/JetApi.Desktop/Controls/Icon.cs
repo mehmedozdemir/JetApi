@@ -27,6 +27,13 @@ public sealed class Icon : Control
         HeightProperty.OverrideDefaultValue<Icon>(16);
     }
 
+    /// <summary>The <c>Icon.*</c> geometry with <paramref name="key"/>, or <c>null</c>.</summary>
+    public static Geometry? FromKey(string? key) =>
+        key is not null && Application.Current?.TryFindResource(key, out var value) == true ? value as Geometry : null;
+
+    /// <summary>A small icon for a menu item.</summary>
+    public static Icon ForMenu(string key) => new() { Data = FromKey(key), Width = 14, Height = 14 };
+
     /// <summary>Path data.</summary>
     public Geometry? Data
     {

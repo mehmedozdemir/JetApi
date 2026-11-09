@@ -25,7 +25,9 @@
           <Button.Flyout>
             <MenuFlyout Placement="BottomEdgeAlignedLeft">
               <MenuItem Header="{l:Tr Cmd_Environments}" Command="{Binding ShowEnvironmentsCommand}" InputGesture="Ctrl+E" />
-              <MenuItem Header="{l:Tr Top_Reload}" Command="{Binding ReloadCommand}" />
+              <MenuItem Header="{l:Tr Top_Reload}" Command="{Binding ReloadCommand}">
+<MenuItem.Icon><c:Icon Data="{StaticResource Icon.Refresh}" Width="14" Height="14" /></MenuItem.Icon>
+</MenuItem>
               <Separator />
               <MenuItem Header="{l:Tr Cmd_ToggleTheme}" Command="{Binding ToggleThemeCommand}" />
               <MenuItem Header="{l:Tr Cmd_ToggleLanguage}" Command="{Binding ToggleLanguageCommand}" />
@@ -195,11 +197,19 @@
                                 </Button.KeyBindings>
                                 <Button.ContextMenu>
                                   <ContextMenu>
-                                    <MenuItem Header="{l:Tr Env_MakeActive}" Command="{Binding MakeActiveCommand}" IsVisible="{Binding CanMakeActive}" />
-                                    <MenuItem Header="{l:Tr Menu_Rename}" Command="{Binding RenameCommand}" InputGesture="F2" />
-                                    <MenuItem Header="{l:Tr Menu_Duplicate}" Command="{Binding DuplicateCommand}" InputGesture="Ctrl+D" />
+                                    <MenuItem Header="{l:Tr Env_MakeActive}" Command="{Binding MakeActiveCommand}" IsVisible="{Binding CanMakeActive}">
+<MenuItem.Icon><c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" /></MenuItem.Icon>
+</MenuItem>
+                                    <MenuItem Header="{l:Tr Menu_Rename}" Command="{Binding RenameCommand}" InputGesture="F2">
+<MenuItem.Icon><c:Icon Data="{StaticResource Icon.Edit}" Width="14" Height="14" /></MenuItem.Icon>
+</MenuItem>
+                                    <MenuItem Header="{l:Tr Menu_Duplicate}" Command="{Binding DuplicateCommand}" InputGesture="Ctrl+D">
+<MenuItem.Icon><c:Icon Data="{StaticResource Icon.Copy}" Width="14" Height="14" /></MenuItem.Icon>
+</MenuItem>
                                     <Separator />
-                                    <MenuItem Classes="danger" Header="{l:Tr Menu_Delete}" Command="{Binding DeleteCommand}" InputGesture="Delete" />
+                                    <MenuItem Classes="danger" Header="{l:Tr Menu_Delete}" Command="{Binding DeleteCommand}" InputGesture="Delete">
+<MenuItem.Icon><c:Icon Data="{StaticResource Icon.Trash}" Width="14" Height="14" /></MenuItem.Icon>
+</MenuItem>
                                   </ContextMenu>
                                 </Button.ContextMenu>
                                 <Grid ColumnDefinitions="18,*,Auto">

@@ -28,10 +28,14 @@
             </Grid>
           </Border>
           <Button Grid.Column="1" Classes="primary" Margin="8,0,0,0" MinHeight="34" Padding="22,0" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}"
-                  Content="{Binding SendLabel}" ToolTip.Tip="{l:Tr Shortcut_SendTip}" />
+                  ToolTip.Tip="{l:Tr Shortcut_SendTip}">
+<c:IconLabel Icon="{StaticResource Icon.Send}" Text="{Binding SendLabel}" />
+</Button>
           <Button Grid.Column="1" Classes="secondary" Margin="8,0,0,0" MinHeight="34" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}"
                   Content="{l:Tr Btn_Cancel_Request}" />
-          <Button Grid.Column="2" Classes="secondary" Margin="8,0,0,0" MinHeight="34" Command="{Binding SaveCommand}" Content="{l:Tr Btn_Save}" />
+          <Button Grid.Column="2" Classes="secondary" Margin="8,0,0,0" MinHeight="34" Command="{Binding SaveCommand}">
+<c:IconLabel Icon="{StaticResource Icon.Save}" Text="{l:Tr Btn_Save}" />
+</Button>
           <Button Grid.Column="3" Classes="secondary" Margin="8,0,0,0" MinHeight="34" MinWidth="38" Padding="10,0" Command="{Binding ShowCodeSnippetCommand}"
                   ToolTip.Tip="{l:Tr Snippet_Tip}" AutomationProperties.Name="{l:Tr Snippet_Title}">
             <c:Icon Data="{StaticResource Icon.Code}" Width="16" Height="16" />
@@ -151,7 +155,9 @@
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
               </Border>
-              <Button Grid.Column="1" Classes="link" VerticalAlignment="Center" Content="{l:Tr Btn_Format}" Command="{Binding FormatBodyCommand}" IsVisible="{Binding IsRawBody}" />
+              <Button Grid.Column="1" Classes="link" VerticalAlignment="Center" Command="{Binding FormatBodyCommand}" IsVisible="{Binding IsRawBody}">
+<c:IconLabel Icon="{StaticResource Icon.Format}" Text="{l:Tr Btn_Format}" />
+</Button>
             </Grid>
             <Border Grid.Row="1" Classes="danger" Margin="0,0,0,8" IsVisible="{Binding BodyError, Converter={x:Static ObjectConverters.IsNotNull}}">
               <TextBlock Text="{Binding BodyError}" />

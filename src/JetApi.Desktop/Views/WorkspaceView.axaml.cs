@@ -147,7 +147,7 @@ public sealed partial class WorkspaceView : UserControl
         var items = new List<Control>();
         if (node.IsRequest)
         {
-            var open = new MenuItem { Header = Loc.Get("Menu_Open") };
+            var open = new MenuItem { Header = Loc.Get("Menu_Open"), Icon = Controls.Icon.ForMenu("Icon.Open") };
             open.Click += (_, _) => vm.OpenNode(node);
             items.Add(open);
             items.Add(new Separator());
@@ -182,9 +182,22 @@ public sealed partial class WorkspaceView : UserControl
         e.Handled = true;
     }
 
+    private static Controls.Icon? MenuIcon(string key) => key switch
+    {
+        "Menu_NewHttp" => Controls.Icon.ForMenu("Icon.Plus"),
+        "Menu_NewGrpc" => Controls.Icon.ForMenu("Icon.Server"),
+        "Menu_NewFolder" => Controls.Icon.ForMenu("Icon.Folder"),
+        "Menu_CollectionSettings" or "Menu_FolderSettings" => Controls.Icon.ForMenu("Icon.Sliders"),
+        "Menu_Rename" => Controls.Icon.ForMenu("Icon.Edit"),
+        "Menu_Duplicate" => Controls.Icon.ForMenu("Icon.Copy"),
+        "Menu_MoveToRoot" => Controls.Icon.ForMenu("Icon.MoveUp"),
+        "Menu_Delete" => Controls.Icon.ForMenu("Icon.Trash"),
+        _ => null,
+    };
+
     private static MenuItem Item(string key, System.Windows.Input.ICommand command, TreeNodeViewModel node, string? gesture = null)
     {
-        var item = new MenuItem { Header = Loc.Get(key), Command = command, CommandParameter = node };
+        var item = new MenuItem { Header = Loc.Get(key), Command = command, CommandParameter = node, Icon = MenuIcon(key) };
         if (gesture is not null)
         {
             item.InputGesture = KeyGesture.Parse(gesture);

@@ -995,9 +995,9 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         foreach (var option in EnvironmentOptions)
         {
             var captured = option;
-            items.Add(new PaletteItemViewModel(
+            items.Add(PaletteItemViewModel.Command(
                 environments,
-                "›",
+                "Icon.Layers",
                 Loc.Format("Palette_SwitchEnv", option.Name),
                 Loc.Get(option.Key == Session.ActiveEnvironmentKey ? "Palette_ActiveEnv" : "Palette_SwitchHint"),
                 string.Empty,
@@ -1009,14 +1009,14 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
 
         var commands = Loc.Get("Palette_Commands");
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewHttp"), string.Empty, "Ctrl N", () => NewHttpRequestAsync(null)));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewGrpc"), string.Empty, string.Empty, () => NewGrpcRequestAsync(null)));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewCollection"), string.Empty, string.Empty, NewCollectionAsync));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ImportPostman"), string.Empty, string.Empty, ImportFromPostmanAsync));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_NewFromCurl"), string.Empty, string.Empty, NewRequestFromCurlAsync));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Plus", Loc.Get("Cmd_NewHttp"), string.Empty, "Ctrl N", () => NewHttpRequestAsync(null)));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Server", Loc.Get("Cmd_NewGrpc"), string.Empty, string.Empty, () => NewGrpcRequestAsync(null)));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Folder", Loc.Get("Cmd_NewCollection"), string.Empty, string.Empty, NewCollectionAsync));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Import", Loc.Get("Cmd_ImportPostman"), string.Empty, string.Empty, ImportFromPostmanAsync));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Clipboard", Loc.Get("Cmd_NewFromCurl"), string.Empty, string.Empty, NewRequestFromCurlAsync));
         if (_host.Settings.UseCookieJar)
         {
-            items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ClearCookies"), Loc.Format("Cookies_Count", Session.Cookies.Count), string.Empty, () =>
+            items.Add(PaletteItemViewModel.Command(commands, "Icon.Trash", Loc.Get("Cmd_ClearCookies"), Loc.Format("Cookies_Count", Session.Cookies.Count), string.Empty, () =>
             {
                 Session.ClearCookies();
                 return Task.CompletedTask;
@@ -1025,37 +1025,37 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
 
         if (SelectedTab is HttpRequestTabViewModel http)
         {
-            items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_CodeSnippet"), http.Name, string.Empty, http.ShowCodeSnippetAsync));
-            items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_CopyAsCurl"), http.Name, string.Empty, http.CopyAsCurlAsync));
+            items.Add(PaletteItemViewModel.Command(commands, "Icon.Code", Loc.Get("Cmd_CodeSnippet"), http.Name, string.Empty, http.ShowCodeSnippetAsync));
+            items.Add(PaletteItemViewModel.Command(commands, "Icon.Copy", Loc.Get("Cmd_CopyAsCurl"), http.Name, string.Empty, http.CopyAsCurlAsync));
         }
 
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_Settings"), string.Empty, "Ctrl ,", () =>
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Sliders", Loc.Get("Cmd_Settings"), string.Empty, "Ctrl ,", () =>
         {
             OpenSettings();
             return Task.CompletedTask;
         }));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_Environments"), string.Empty, "Ctrl E", () =>
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Layers", Loc.Get("Cmd_Environments"), string.Empty, "Ctrl E", () =>
         {
             ShowEnvironments();
             return Task.CompletedTask;
         }));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_History"), string.Empty, string.Empty, () =>
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Clock", Loc.Get("Cmd_History"), string.Empty, string.Empty, () =>
         {
             IsHistoryVisible = true;
             return Task.CompletedTask;
         }));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_Reload"), string.Empty, string.Empty, ReloadAsync));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ToggleTheme"), string.Empty, string.Empty, () =>
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Refresh", Loc.Get("Cmd_Reload"), string.Empty, string.Empty, ReloadAsync));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Moon", Loc.Get("Cmd_ToggleTheme"), string.Empty, string.Empty, () =>
         {
             _host.ToggleTheme();
             return Task.CompletedTask;
         }));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_ToggleLanguage"), string.Empty, string.Empty, () =>
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Globe", Loc.Get("Cmd_ToggleLanguage"), string.Empty, string.Empty, () =>
         {
             _host.ToggleLanguage();
             return Task.CompletedTask;
         }));
-        items.Add(new PaletteItemViewModel(commands, "›", Loc.Get("Cmd_CloseWorkspace"), string.Empty, string.Empty, () =>
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Close", Loc.Get("Cmd_CloseWorkspace"), string.Empty, string.Empty, () =>
         {
             _host.CloseWorkspace();
             return Task.CompletedTask;
