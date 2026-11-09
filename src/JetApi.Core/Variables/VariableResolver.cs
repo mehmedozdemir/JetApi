@@ -108,6 +108,12 @@ public sealed class VariableResolver
         return null;
     }
 
+    /// <summary>
+    /// Whether <paramref name="name"/> can be used in a <c>{{name}}</c> placeholder: ASCII letters, digits,
+    /// <c>_</c>, <c>-</c>, <c>.</c> and <c>$</c>.
+    /// </summary>
+    public static bool IsValidVariableName(string? name) => IsValidName(name.AsSpan());
+
     /// <summary>Returns the distinct variable names referenced by <paramref name="template"/>, without resolving them.</summary>
     public static IReadOnlyList<string> FindReferences(string? template)
     {

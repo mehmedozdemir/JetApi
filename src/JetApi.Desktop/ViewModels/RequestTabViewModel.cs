@@ -51,7 +51,17 @@ public interface IRequestHost
 /// <param name="Value">Resolved value (masked when secret), or empty.</param>
 /// <param name="Description">"source: Development environment" or "not defined".</param>
 /// <param name="IsDefined">Whether it resolves.</param>
-public sealed record VariableHint(string Placeholder, string Value, string Description, bool IsDefined);
+public sealed record VariableHint(string Placeholder, string Value, string Description, bool IsDefined)
+{
+    /// <summary>The variable name, without braces.</summary>
+    public string Name => Placeholder.Length > 4 ? Placeholder[2..^2] : Placeholder;
+
+    /// <summary>The layer the value comes from; <c>null</c> for dynamic or undefined variables.</summary>
+    public VariableSource? Source { get; init; }
+
+    /// <summary>The value is a secret (shown masked).</summary>
+    public bool IsSecret { get; init; }
+}
 
 /// <summary>An open request tab (HTTP or gRPC).</summary>
 public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
@@ -283,14 +293,51 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     private VariableContext CreateVariableContext()
     {
         var resolver = RequestRunner.CreateResolver(Host.Session, CollectionKey);
-        return new VariableContext(name =>
+        return new VariableContext(
+            name =>
+            {
+                var lookup = resolver.Lookup(name);
+                var placeholder = "{{" + name + "}}";
+                return lookup is null
+                    ? new VariableHint(placeholder, string.Empty, Loc.Get("Req_VariableUndefined"), false)
+                    : new VariableHint(placeholder, lookup.IsSecret ? "••••••••" : lookup.Value, DescribeSource(lookup.Source), true) { Source = lookup.Source, IsSecret = lookup.IsSecret };
+            },
+            new TabVariableStore(Host.Session, CollectionKey));
+    }
+
+    // Saves variables edited from the request editors (hover card, "set as variable").
+    private sealed class TabVariableStore(WorkspaceSession session, string collectionKey) : IVariableStore
+    {
+        public IReadOnlyList<VariableScopeOption> Scopes
         {
-            var lookup = resolver.Lookup(name);
-            var placeholder = "{{" + name + "}}";
-            return lookup is null
-                ? new VariableHint(placeholder, string.Empty, Loc.Get("Req_VariableUndefined"), false)
-                : new VariableHint(placeholder, lookup.IsSecret ? "••••••••" : lookup.Value, DescribeSource(lookup.Source), true);
-        });
+            get
+            {
+                var scopes = new List<VariableScopeOption>();
+                if (session.ActiveEnvironment is { } environment)
+                {
+                    scopes.Add(new(VariableSource.Environment, Loc.Format("Var_ScopeEnvironment", environment.Name)));
+                }
+
+                scopes.Add(new(VariableSource.Collection, Loc.Format("Var_ScopeCollection", session.Workspace.FindCollection(collectionKey)?.Name ?? collectionKey)));
+                scopes.Add(new(VariableSource.Global, Loc.Get("Var_ScopeGlobal")));
+                return scopes;
+            }
+        }
+
+        public Variable? Find(VariableSource scope, string name) => VariableWriter.Find(session, collectionKey, scope, name);
+
+        public async Task<string?> SaveAsync(VariableSource scope, string name, string value)
+        {
+            try
+            {
+                await VariableWriter.SetAsync(session, collectionKey, scope, name, value).ConfigureAwait(true);
+                return null;
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or WorkspaceStorageException or InvalidOperationException)
+            {
+                return Loc.Format("Error_Save", exception.Message);
+            }
+        }
     }
 
     private string DescribeSource(VariableSource? source) => source switch

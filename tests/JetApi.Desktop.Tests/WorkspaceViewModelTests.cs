@@ -167,7 +167,7 @@ public sealed class WorkspaceViewModelTests
         vm.OpenNode(vm.Collections[0].Children[0]);
         var tab = (HttpRequestTabViewModel)vm.SelectedTab!;
 
-        tab.UrlHints.ShouldHaveSingleItem().ShouldBe(new VariableHint("{{baseUrl}}", "https://httpbin.org", "Development", true));
+        tab.UrlHints.ShouldHaveSingleItem().ShouldBe(new VariableHint("{{baseUrl}}", "https://httpbin.org", "Development", true) { Source = JetApi.Core.Variables.VariableSource.Environment });
 
         vm.SelectedEnvironment = vm.EnvironmentOptions[0];
 

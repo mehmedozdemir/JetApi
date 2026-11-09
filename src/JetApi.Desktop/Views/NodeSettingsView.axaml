@@ -103,13 +103,23 @@
         <StackPanel Spacing="14" MaxWidth="640" HorizontalAlignment="Left"
                     IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Proto}">
           <StackPanel>
-            <TextBlock Classes="field-label" Text="{l:Tr Grpc_ImportPaths}" />
-            <TextBox Classes="mono" AcceptsReturn="True" MinHeight="64" VerticalContentAlignment="Top" Text="{Binding ImportPathsText}" PlaceholderText="protos" />
-          </StackPanel>
-          <StackPanel>
-            <TextBlock Classes="field-label" Text="{l:Tr Grpc_ProtoFiles}" />
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="field-label" Text="{l:Tr Grpc_ProtoFiles}" VerticalAlignment="Bottom" />
+              <Button Grid.Column="1" Classes="link" Command="{Binding AddProtoFilesCommand}" Content="{l:Tr Proto_AddFiles}" />
+            </Grid>
             <TextBox Classes="mono" AcceptsReturn="True" MinHeight="80" VerticalContentAlignment="Top" Text="{Binding ProtoFilesText}" PlaceholderText="users/v1/users.proto" />
           </StackPanel>
+          <StackPanel>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Classes="field-label" Text="{l:Tr Grpc_ImportPaths}" VerticalAlignment="Bottom" />
+              <Button Grid.Column="1" Classes="link" Command="{Binding AddImportPathCommand}" Content="{l:Tr Proto_AddFolder}" />
+            </Grid>
+            <TextBox Classes="mono" AcceptsReturn="True" MinHeight="64" VerticalContentAlignment="Top" Text="{Binding ImportPathsText}" PlaceholderText="protos" />
+          </StackPanel>
+          <Border Classes="warning" IsVisible="{Binding ProtoNote, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TextBlock TextWrapping="Wrap" Text="{Binding ProtoNote}" />
+          </Border>
+          <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Proto_AddHint}" />
         </StackPanel>
 
         <!-- General -->

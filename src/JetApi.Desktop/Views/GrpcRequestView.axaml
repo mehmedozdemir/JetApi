@@ -77,15 +77,16 @@
         </ItemsControl>
 
         <!-- Proto status -->
-        <Grid ColumnDefinitions="*,Auto,Auto" IsVisible="{Binding IsProtoLoaded}">
+        <Grid ColumnDefinitions="*,Auto,Auto,Auto" IsVisible="{Binding IsProtoLoaded}">
           <StackPanel Orientation="Horizontal" Spacing="8">
             <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" Foreground="{DynamicResource Tone.Success.Fg}" VerticalAlignment="Center" />
             <TextBlock Classes="small" Foreground="{DynamicResource Tone.Success.Fg}" Text="{l:Tr Grpc_ProtoLoaded}" VerticalAlignment="Center" />
             <TextBlock Classes="small mono muted" Text="{Binding ProtoFilesText}" VerticalAlignment="Center" />
             <TextBlock Classes="small muted" Text="{Binding ProtoSummary, StringFormat='· {0}'}" VerticalAlignment="Center" />
           </StackPanel>
-          <Button Grid.Column="1" Classes="link" Command="{Binding ReloadProtoCommand}" Content="{l:Tr Top_Reload}" />
-          <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+          <Button Grid.Column="1" Classes="link" Command="{Binding AddProtoFilesCommand}" Content="{l:Tr Proto_AddFiles}" />
+          <Button Grid.Column="2" Classes="link" Command="{Binding ReloadProtoCommand}" Content="{l:Tr Top_Reload}" />
+          <Button Grid.Column="3" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
         </Grid>
         <Border Classes="danger" IsVisible="{Binding HasProtoErrors}">
           <StackPanel Spacing="6">
@@ -104,10 +105,14 @@
           </StackPanel>
         </Border>
         <Border Classes="note" IsVisible="{Binding HasNoProto}">
-          <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Text="{l:Tr Grpc_NoProto}" VerticalAlignment="Center" />
-            <Button Grid.Column="1" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
+          <Grid ColumnDefinitions="*,Auto,Auto">
+            <TextBlock Text="{l:Tr Grpc_NoProto}" VerticalAlignment="Center" TextWrapping="Wrap" />
+            <Button Grid.Column="1" Classes="secondary" Margin="12,0,4,0" Command="{Binding AddProtoFilesCommand}" Content="{l:Tr Proto_PickFile}" />
+            <Button Grid.Column="2" Classes="link" Command="{Binding OpenProtoSettingsCommand}" Content="{l:Tr Grpc_ProtoSettings}" />
           </Grid>
+        </Border>
+        <Border Classes="warning" IsVisible="{Binding ProtoNote, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <TextBlock TextWrapping="Wrap" Text="{Binding ProtoNote}" />
         </Border>
       </StackPanel>
     </Border>

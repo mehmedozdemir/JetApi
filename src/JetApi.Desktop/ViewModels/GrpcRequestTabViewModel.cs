@@ -190,6 +190,35 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
         ValidateMessage();
     }
 
+    /// <summary>Picks <c>.proto</c> files on disk, adds them to the collection, saves it and loads them.</summary>
+    [RelayCommand]
+    private async Task AddProtoFilesAsync()
+    {
+        var files = await Host.Dialogs.PickProtoFilesAsync(Loc.Get("Proto_PickTitle")).ConfigureAwait(true);
+        if (files.Count == 0 || Host.Session.Workspace.FindCollection(CollectionKey) is not { } collection)
+        {
+            return;
+        }
+
+        var result = ProtoPaths.AddFiles(collection.Proto, Host.Session.Root, files);
+        try
+        {
+            await Host.Session.SaveCollectionAsync(collection with { Proto = result.Settings }).ConfigureAwait(true);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            await Host.Dialogs.ShowErrorAsync(Loc.Format("Error_Save", exception.Message)).ConfigureAwait(true);
+            return;
+        }
+
+        ProtoNote = result.OutsideWorkspace ? Loc.Get("Proto_OutsideWorkspace") : null;
+        ReloadProto();
+    }
+
+    /// <summary>A note after adding proto files (e.g. they lie outside the workspace).</summary>
+    [ObservableProperty]
+    public partial string? ProtoNote { get; private set; }
+
     /// <summary>Opens the collection's proto settings.</summary>
     [RelayCommand]
     private void OpenProtoSettings() => Host.OpenCollectionSettings(CollectionKey);

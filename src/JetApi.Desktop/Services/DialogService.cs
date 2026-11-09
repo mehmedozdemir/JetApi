@@ -52,6 +52,23 @@ public sealed class DialogService : IDialogService
     }
 
     /// <inheritdoc />
+    public async Task<IReadOnlyList<string>> PickProtoFilesAsync(string title)
+    {
+        if (_owner() is not { } owner)
+        {
+            return [];
+        }
+
+        var files = await owner.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = title,
+            AllowMultiple = true,
+            FileTypeFilter = [new FilePickerFileType("Protocol Buffers") { Patterns = ["*.proto"] }, FilePickerFileTypes.All],
+        }).ConfigureAwait(true);
+        return [.. files.Select(f => f.TryGetLocalPath()).OfType<string>()];
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<string>> PickJsonFilesAsync(string title)
     {
         if (_owner() is not { } owner)

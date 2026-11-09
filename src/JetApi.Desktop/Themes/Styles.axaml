@@ -54,6 +54,15 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="10" />
   </Style>
+  <!-- Flyouts that hold a small form (the variable card). -->
+  <Style Selector="FlyoutPresenter.card">
+    <Setter Property="Background" Value="{DynamicResource App.Surface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="10" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MaxWidth" Value="420" />
+  </Style>
   <!-- Code and editor areas: no frame, set apart by a tinted ground. -->
   <Style Selector="Border.code">
     <Setter Property="Background" Value="{DynamicResource App.Code}" />
@@ -380,6 +389,9 @@
     <Setter Property="FontSize" Value="12.5" />
     <!-- Hover a {{variable}} to see its value; no-op outside a request tab. -->
     <Setter Property="c:VariableHints.IsEnabled" Value="True" />
+  </Style>
+  <Style Selector="TextBox.secret">
+    <Setter Property="PasswordChar" Value="•" />
   </Style>
   <Style Selector="TextBox.cell">
     <Setter Property="BorderThickness" Value="0" />

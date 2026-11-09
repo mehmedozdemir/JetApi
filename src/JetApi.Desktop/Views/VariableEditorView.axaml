@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.VariableEditorView"
+             x:DataType="vm:VariableEditorViewModel"
+             c:VariableHints.Context="{x:Null}"
+             Width="340">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Escape" Command="{Binding DismissCommand}" />
+  </UserControl.KeyBindings>
+  <StackPanel Spacing="8" Margin="14,12,14,14">
+    <!-- Hovered variable: name, then where the value comes from. -->
+    <StackPanel Spacing="2" IsVisible="{Binding !IsNew}">
+      <Grid ColumnDefinitions="*,Auto">
+        <SelectableTextBlock Classes="mono" FontWeight="SemiBold" Text="{Binding Placeholder}" TextWrapping="Wrap" />
+        <Border Grid.Column="1" CornerRadius="6" Padding="8,2" Margin="8,0,0,0" VerticalAlignment="Center" Background="{DynamicResource Tone.Danger.Bg}" IsVisible="{Binding IsUndefined}">
+          <TextBlock Classes="small" Foreground="{DynamicResource Tone.Danger.Fg}" Text="{Binding Description}" />
+        </Border>
+      </Grid>
+      <TextBlock Classes="muted small" Text="{Binding Description}" IsVisible="{Binding IsDefined}" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <!-- Selected text to a new variable. -->
+    <StackPanel Spacing="8" IsVisible="{Binding IsNew}">
+      <TextBlock Classes="h3" Text="{l:Tr Var_NewTitle}" />
+      <StackPanel>
+        <TextBlock Classes="field-label" Text="{l:Tr Var_Name}" />
+        <TextBox x:Name="NameBox" Classes="mono" Text="{Binding Name}" PlaceholderText="userId" AutomationProperties.Name="{l:Tr Var_Name}">
+          <TextBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding SaveCommand}" />
+          </TextBox.KeyBindings>
+        </TextBox>
+      </StackPanel>
+    </StackPanel>
+
+    <!-- Value: editable for stored variables, text for dynamic ones. -->
+    <StackPanel IsVisible="{Binding CanEdit}">
+      <TextBlock Classes="field-label" Text="{l:Tr Var_Value}" />
+      <TextBox x:Name="ValueBox" Classes="mono" Classes.secret="{Binding IsSecret}" Classes.revealPasswordButton="{Binding IsSecret}" Text="{Binding Value}"
+               AutomationProperties.Name="{l:Tr Var_Value}">
+        <TextBox.KeyBindings>
+          <KeyBinding Gesture="Enter" Command="{Binding SaveCommand}" />
+        </TextBox.KeyBindings>
+      </TextBox>
+      <TextBlock Classes="muted small mono" Margin="0,4,0,0" TextWrapping="Wrap" Text="{Binding ResolvedValue, StringFormat='→ {0}'}"
+                 IsVisible="{Binding ResolvedValue, Converter={x:Static ObjectConverters.IsNotNull}}" />
+    </StackPanel>
+    <SelectableTextBlock Classes="mono" TextWrapping="Wrap" Text="{Binding ShownValue}" IsVisible="{Binding IsReadOnly}" />
+
+    <StackPanel IsVisible="{Binding ShowScopeChoice}">
+      <TextBlock Classes="field-label" Text="{l:Tr Var_SaveTo}" />
+      <ComboBox ItemsSource="{Binding Scopes}" SelectedItem="{Binding SelectedScope}" HorizontalAlignment="Stretch" AutomationProperties.Name="{l:Tr Var_SaveTo}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:VariableScopeOption">
+            <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+    </StackPanel>
+
+    <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Tone.Warning.Fg}" Text="{Binding OverwriteWarning}"
+               IsVisible="{Binding OverwriteWarning, Converter={x:Static ObjectConverters.IsNotNull}}" />
+    <TextBlock Classes="small" TextWrapping="Wrap" Foreground="{DynamicResource Tone.Danger.Fg}" Text="{Binding Error}"
+               IsVisible="{Binding Error, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right" IsVisible="{Binding CanEdit}">
+      <Button Classes="secondary" Content="{l:Tr Btn_Cancel}" Command="{Binding DismissCommand}" IsVisible="{Binding IsNew}" />
+      <Button Classes="primary" Content="{Binding SaveText}" Command="{Binding SaveCommand}" />
+    </StackPanel>
+  </StackPanel>
+</UserControl>

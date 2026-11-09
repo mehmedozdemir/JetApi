@@ -26,7 +26,7 @@ public sealed class ScreenTests
         service UserService { rpc GetUser(GetUserRequest) returns (User); rpc WatchUsers(GetUserRequest) returns (stream User); }
         """;
 
-    private static string ScreenshotDirectory
+    internal static string ScreenshotDirectory
     {
         get
         {
@@ -146,30 +146,45 @@ public sealed class ScreenTests
         return true;
     }
 
-    // Moves the mouse over variables in the URL box and the body editor and checks the hover hints.
+    // Moves the mouse over variables in the URL box and the body editor and checks the variable cards.
     private static void HoverVariables(Window window)
     {
-        // The URL is a single-line editor that highlights variables in place.
-        var urlBox = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.Name == "UrlBox");
-        urlBox.IsSingleLine.ShouldBeTrue();
-        var urlEditor = urlBox.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single();
-        HoverText(window, urlEditor, "{{baseUrl}}");
-        var urlHint = ToolTip.GetTip(urlEditor).ShouldBeAssignableTo<Control>()!.Tag.ShouldBeOfType<VariableHint>();
-        urlHint.Placeholder.ShouldBe("{{baseUrl}}");
-        urlHint.Value.ShouldBe("http://localhost:5000");
+        var (openDelay, closeDelay) = (VariablePopup.OpenDelay, VariablePopup.CloseDelay);
+        VariablePopup.OpenDelay = VariablePopup.CloseDelay = TimeSpan.Zero;
+        try
+        {
+            // The URL is a single-line editor that highlights variables in place.
+            var urlBox = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.Name == "UrlBox");
+            urlBox.IsSingleLine.ShouldBeTrue();
+            var urlEditor = urlBox.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single();
+            HoverText(window, urlEditor, "{{baseUrl}}");
+            var urlCard = urlBox.Popup.ShouldNotBeNull().Current.ShouldNotBeNull();
+            urlCard.Placeholder.ShouldBe("{{baseUrl}}");
+            urlCard.Value.ShouldBe("http://localhost:5000");
+            urlCard.CanEdit.ShouldBeTrue();
 
-        var body = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.HighlightVariables && !e.IsSingleLine);
-        var textView = body.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>().Single();
-        var document = textView.Document;
-        var undefinedAt = document.GetLocation(document.Text.IndexOf("{{teamId}}", StringComparison.Ordinal) + 3);
-        var point = textView.GetVisualPosition(new AvaloniaEdit.TextViewPosition(undefinedAt), AvaloniaEdit.Rendering.VisualYPosition.LineMiddle) - textView.ScrollOffset;
-        window.MouseMove(textView.TranslatePoint(point, window)!.Value);
-        var bodyHint = ToolTip.GetTip(body.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single()).ShouldBeAssignableTo<Control>()!.Tag.ShouldBeOfType<VariableHint>();
-        bodyHint.IsDefined.ShouldBeFalse();
-        Capture(window, "03b-variable-hover");
+            // Moving away closes the card.
+            window.MouseMove(new Avalonia.Point(1, 1));
+            urlBox.Popup!.IsOpen.ShouldBeFalse();
 
-        window.MouseMove(new Avalonia.Point(1, 1));
-        ToolTip.GetTip(urlEditor).ShouldBeNull();
+            var body = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.HighlightVariables && !e.IsSingleLine);
+            var textView = body.GetVisualDescendants().OfType<AvaloniaEdit.Rendering.TextView>().Single();
+            var document = textView.Document;
+            var undefinedAt = document.GetLocation(document.Text.IndexOf("{{teamId}}", StringComparison.Ordinal) + 3);
+            var point = textView.GetVisualPosition(new AvaloniaEdit.TextViewPosition(undefinedAt), AvaloniaEdit.Rendering.VisualYPosition.LineMiddle) - textView.ScrollOffset;
+            window.MouseMove(textView.TranslatePoint(point, window)!.Value);
+            var bodyCard = body.Popup.ShouldNotBeNull().Current.ShouldNotBeNull();
+            bodyCard.IsUndefined.ShouldBeTrue();
+            bodyCard.ShowScopeChoice.ShouldBeTrue();
+            Capture(window, "03b-variable-hover");
+
+            window.MouseMove(new Avalonia.Point(1, 1));
+            body.Popup!.IsOpen.ShouldBeFalse();
+        }
+        finally
+        {
+            (VariablePopup.OpenDelay, VariablePopup.CloseDelay) = (openDelay, closeDelay);
+        }
     }
 
     // Moves the mouse onto the first occurrence of <paramref name="text"/> in an AvaloniaEdit editor.

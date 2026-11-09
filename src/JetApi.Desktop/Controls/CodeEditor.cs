@@ -116,8 +116,9 @@ public sealed class CodeEditor : UserControl
 
         // Added after TextMate so variable colors win over syntax colors.
         _editor.TextArea.TextView.LineTransformers.Add(_variables);
-        _editor.TextArea.TextView.PointerMoved += (_, e) => VariableHints.ShowTip(_editor, HintUnderPointer(e));
-        _editor.TextArea.TextView.PointerExited += (_, _) => VariableHints.ShowTip(_editor, null);
+        _editor.TextArea.TextView.PointerMoved += (_, e) => VariablePopup.For(_editor).Hover(ActiveVariables, HintUnderPointer(e));
+        _editor.TextArea.TextView.PointerExited += (_, _) => VariablePopup.Find(_editor)?.Leave();
+        _editor.ContextFlyout = CreateMenu();
 
         _placeholder = new TextBlock
         {
@@ -341,6 +342,79 @@ public sealed class CodeEditor : UserControl
     }
 
     private VariableContext? ActiveVariables => HighlightVariables ? VariableHints.GetContext(this) : null;
+
+    // Cut, copy, paste and select all, plus "Set as variable…" in request editors.
+    private MenuFlyout CreateMenu()
+    {
+        var cut = new MenuItem { Header = Localization.Loc.Get("Menu_Cut"), InputGesture = new KeyGesture(Key.X, KeyModifiers.Control) };
+        cut.Click += (_, _) => _editor.Cut();
+        var copy = new MenuItem { Header = Localization.Loc.Get("Btn_Copy"), InputGesture = new KeyGesture(Key.C, KeyModifiers.Control) };
+        copy.Click += (_, _) => _editor.Copy();
+        var paste = new MenuItem { Header = Localization.Loc.Get("Menu_Paste"), InputGesture = new KeyGesture(Key.V, KeyModifiers.Control) };
+        paste.Click += (_, _) => _editor.Paste();
+        var selectAll = new MenuItem { Header = Localization.Loc.Get("Menu_SelectAll"), InputGesture = new KeyGesture(Key.A, KeyModifiers.Control) };
+        selectAll.Click += (_, _) => _editor.SelectAll();
+        var separator = new Separator();
+        var setAsVariable = VariableHints.CreateSetAsVariableItem(SetSelectionAsVariable);
+
+        var menu = new MenuFlyout { Items = { cut, copy, paste, selectAll, separator, setAsVariable } };
+        menu.Opening += (_, _) =>
+        {
+            var hasSelection = !_editor.TextArea.Selection.IsEmpty;
+            cut.IsEnabled = hasSelection && !IsReadOnly;
+            copy.IsEnabled = hasSelection;
+            paste.IsVisible = cut.IsVisible = !IsReadOnly;
+            var available = !IsReadOnly && ActiveVariables?.Store is not null;
+            separator.IsVisible = setAsVariable.IsVisible = available;
+            setAsVariable.IsEnabled = available && VariableHints.CanSetAsVariable(ActiveVariables, SelectedText());
+        };
+        return menu;
+    }
+
+    private string SelectedText() => _editor.TextArea.Selection.IsEmpty ? string.Empty : _editor.TextArea.Selection.GetText();
+
+    /// <summary>Opens the "Set as variable" card for the selected text.</summary>
+    internal void SetSelectionAsVariable()
+    {
+        var context = ActiveVariables;
+        var selected = SelectedText();
+        if (!VariableHints.CanSetAsVariable(context, selected))
+        {
+            return;
+        }
+
+        var segment = _editor.TextArea.Selection.SurroundingSegment;
+        var (offset, length) = (segment.Offset, segment.Length);
+        VariablePopup.For(_editor).ShowForSelection(
+            context!,
+            selected,
+            placeholder =>
+            {
+                // Only when the selected text is still where it was.
+                if (offset + length <= _editor.Document.TextLength && _editor.Document.GetText(offset, length) == selected)
+                {
+                    _editor.Document.Replace(offset, length, placeholder);
+                    _editor.CaretOffset = offset + placeholder.Length;
+                }
+            },
+            () => _editor.TextArea.Focus(),
+            SelectionBottomLeft(offset));
+    }
+
+    // The bottom-left corner of the line part at <paramref name="offset"/>, in the coordinates of the inner editor.
+    private Point SelectionBottomLeft(int offset)
+    {
+        var textView = _editor.TextArea.TextView;
+        var location = _editor.Document.GetLocation(offset);
+        var point = textView.GetVisualPosition(new AvaloniaEdit.TextViewPosition(location), AvaloniaEdit.Rendering.VisualYPosition.LineBottom) - textView.ScrollOffset;
+        return textView.TranslatePoint(point, _editor) ?? default;
+    }
+
+    /// <summary>The variable card of this editor (tests).</summary>
+    internal VariablePopup? Popup => VariablePopup.Find(_editor);
+
+    /// <summary>Selects <paramref name="length"/> characters from <paramref name="offset"/> (tests).</summary>
+    internal void Select(int offset, int length) => _editor.Select(offset, length);
 
     private void ApplyVariables()
     {

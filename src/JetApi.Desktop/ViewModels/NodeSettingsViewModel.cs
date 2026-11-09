@@ -45,6 +45,9 @@ public sealed partial class NodeSettingsViewModel : ViewModelBase
     [ObservableProperty]
     private NodeSettingsSection _section;
 
+    [ObservableProperty]
+    private string? _protoNote;
+
     /// <summary>Creates the editor for the collection (empty path) or folder at <paramref name="path"/>.</summary>
     public NodeSettingsViewModel(WorkspaceSession session, IDialogService dialogs, string collectionKey, IReadOnlyList<string> path, Action<bool> close, IOAuthTokenService? tokens = null)
     {
@@ -165,6 +168,41 @@ public sealed partial class NodeSettingsViewModel : ViewModelBase
         {
             await _dialogs.ShowErrorAsync(Loc.Format("Error_Save", exception.Message)).ConfigureAwait(true);
         }
+    }
+
+    /// <summary>Picks <c>.proto</c> files on disk and adds them (and their folders as import paths when needed).</summary>
+    [RelayCommand]
+    private async Task AddProtoFilesAsync()
+    {
+        var files = await _dialogs.PickProtoFilesAsync(Loc.Get("Proto_PickTitle")).ConfigureAwait(true);
+        if (files.Count == 0)
+        {
+            return;
+        }
+
+        var result = ProtoPaths.AddFiles(new ProtoSettings(Lines(ImportPathsText), Lines(ProtoFilesText)), _session.Root, files);
+        ImportPathsText = string.Join('\n', result.Settings.ImportPaths);
+        ProtoFilesText = string.Join('\n', result.Settings.Files);
+        ProtoNote = result.OutsideWorkspace ? Loc.Get("Proto_OutsideWorkspace") : null;
+    }
+
+    /// <summary>Picks a folder and adds it as an import path.</summary>
+    [RelayCommand]
+    private async Task AddImportPathAsync()
+    {
+        if (await _dialogs.PickFolderAsync(Loc.Get("Proto_PickFolderTitle")).ConfigureAwait(true) is not { } folder)
+        {
+            return;
+        }
+
+        var entry = ProtoPaths.ImportPathFor(_session.Root, folder);
+        var paths = Lines(ImportPathsText);
+        if (!paths.Contains(entry, StringComparer.Ordinal))
+        {
+            ImportPathsText = string.Join('\n', [.. paths, entry]);
+        }
+
+        ProtoNote = System.IO.Path.IsPathRooted(entry) ? Loc.Get("Proto_OutsideWorkspace") : null;
     }
 
     /// <summary>Closes without saving.</summary>

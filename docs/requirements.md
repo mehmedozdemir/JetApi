@@ -30,6 +30,8 @@
 | VAR-4 | Editörde değişken vurgulama; üzerine gelince çözümlenmiş değer ve kaynağı | M1 | ✅ Body ve gRPC mesaj editörlerinde vurgulama (tanımlı/tanımsız ayrı renk); URL, tablo hücreleri, auth alanları ve editörlerde üzerine gelince değer ve kaynak |
 | VAR-5 | Tanımsız değişken uyarısı (gönderimden önce) | M1 | ✅ |
 | VAR-6 | Gizli (secret) işaretli değişkenlerin arayüzde maskelenmesi | M1 | ✅ |
+| VAR-7 | Üzerine gelinen değişkenin değerini yerinde düzenleyip kaydetme; tanımsızsa environment, koleksiyon veya global'e ekleme | M2 | ✅ Değişken kartı (URL, body, gRPC mesajı, tablo hücreleri, auth alanları); değer tanımlı olduğu katmana yazılır, gizli değer maskeli kutuda düzenlenir, dinamik değişkenler salt okunur |
+| VAR-8 | Seçili metni değişkene çevirme (environment, koleksiyon veya global) | M2 | ✅ Sağ tık → *Değişken olarak ayarla…*: ad, değer ve kaydedileceği yer; seçim `{{ad}}` ile değiştirilir; aynı ad varsa uyarı |
 
 ### REST
 
@@ -53,7 +55,7 @@
 
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
-| GRPC-1 | Koleksiyon düzeyinde `.proto` dosyaları ve import path'leri | M1 | ✅ |
+| GRPC-1 | Koleksiyon düzeyinde `.proto` dosyaları ve import path'leri | M1 | ✅ Dosya seçiciyle ekleme: koleksiyon ekranında *Dosya ekle… / Klasör ekle…*, gRPC isteğinde *Proto dosyası seç…* (koleksiyona kaydeder ve yükler) |
 | GRPC-2 | Proto derleme hatalarının dosya/satır/kolon ile gösterilmesi | M1 | ✅ |
 | GRPC-3 | Servis ve metot seçimi; istek mesajı için örnek JSON şablonu | M1 | ✅ |
 | GRPC-4 | Unary çağrı; JSON ↔ protobuf (proto3 JSON eşlemesi, well-known type'lar) | M1 | ✅ |

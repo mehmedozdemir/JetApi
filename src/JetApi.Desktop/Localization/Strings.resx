@@ -130,6 +130,7 @@
   <data name="Grpc_Tls" xml:space="preserve"><value>TLS</value></data>
   <data name="Grpc_Trailers" xml:space="preserve"><value>Trailers</value></data>
   <data name="Menu_CollectionSettings" xml:space="preserve"><value>Collection settings</value></data>
+  <data name="Menu_Cut" xml:space="preserve"><value>Cut</value></data>
   <data name="Menu_Delete" xml:space="preserve"><value>Delete</value></data>
   <data name="Menu_Duplicate" xml:space="preserve"><value>Duplicate</value></data>
   <data name="Menu_FolderSettings" xml:space="preserve"><value>Folder settings</value></data>
@@ -137,7 +138,9 @@
   <data name="Menu_NewFolder" xml:space="preserve"><value>New folder</value></data>
   <data name="Menu_NewGrpc" xml:space="preserve"><value>New gRPC request</value></data>
   <data name="Menu_NewHttp" xml:space="preserve"><value>New HTTP request</value></data>
+  <data name="Menu_Paste" xml:space="preserve"><value>Paste</value></data>
   <data name="Menu_Rename" xml:space="preserve"><value>Rename</value></data>
+  <data name="Menu_SelectAll" xml:space="preserve"><value>Select all</value></data>
   <data name="OAuth_AccessToken" xml:space="preserve"><value>Access token</value></data>
   <data name="OAuth_Audience" xml:space="preserve"><value>Audience (optional)</value></data>
   <data name="OAuth_AuthorizationUrl" xml:space="preserve"><value>Authorization URL</value></data>
@@ -183,6 +186,13 @@
   <data name="Prompt_NewEnvironmentName" xml:space="preserve"><value>New environment</value></data>
   <data name="Prompt_NewFolderName" xml:space="preserve"><value>New folder</value></data>
   <data name="Prompt_NewRequestName" xml:space="preserve"><value>New request</value></data>
+  <data name="Proto_AddFiles" xml:space="preserve"><value>Add files…</value></data>
+  <data name="Proto_AddFolder" xml:space="preserve"><value>Add folder…</value></data>
+  <data name="Proto_AddHint" xml:space="preserve"><value>Files picked with "Add files…" are listed relative to the import path that contains them; when none does, their folder is added as an import path.</value></data>
+  <data name="Proto_OutsideWorkspace" xml:space="preserve"><value>These files are outside the workspace, so their folder is saved as an absolute path. It will not work on other machines; copy the protos into the workspace to share them through Git.</value></data>
+  <data name="Proto_PickFile" xml:space="preserve"><value>Choose proto file…</value></data>
+  <data name="Proto_PickFolderTitle" xml:space="preserve"><value>Choose an import folder</value></data>
+  <data name="Proto_PickTitle" xml:space="preserve"><value>Choose proto files</value></data>
   <data name="Req_AddRow" xml:space="preserve"><value>Add row</value></data>
   <data name="Req_Auth" xml:space="preserve"><value>Auth</value></data>
   <data name="Req_AutoFromAuth" xml:space="preserve"><value>from auth: {0}</value></data>
@@ -291,6 +301,18 @@
   <data name="Top_Settings" xml:space="preserve"><value>Settings</value></data>
   <data name="Top_Theme" xml:space="preserve"><value>Theme</value></data>
   <data name="Top_Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Var_Create" xml:space="preserve"><value>Create</value></data>
+  <data name="Var_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Var_NameInvalid" xml:space="preserve"><value>Use only letters, digits and _ - . $</value></data>
+  <data name="Var_NameRequired" xml:space="preserve"><value>Enter a name.</value></data>
+  <data name="Var_NewTitle" xml:space="preserve"><value>Set as variable</value></data>
+  <data name="Var_SaveTo" xml:space="preserve"><value>Save to</value></data>
+  <data name="Var_ScopeCollection" xml:space="preserve"><value>Collection: {0}</value></data>
+  <data name="Var_ScopeEnvironment" xml:space="preserve"><value>Environment: {0}</value></data>
+  <data name="Var_ScopeGlobal" xml:space="preserve"><value>Global (whole workspace)</value></data>
+  <data name="Var_SetAsVariable" xml:space="preserve"><value>Set as variable…</value></data>
+  <data name="Var_Value" xml:space="preserve"><value>Value</value></data>
+  <data name="Var_WillOverwrite" xml:space="preserve"><value>A variable with this name already exists here; its value will be replaced.</value></data>
   <data name="Vars_Cycle" xml:space="preserve"><value>refers to itself</value></data>
   <data name="Vars_UndefinedBody" xml:space="preserve"><value>Active environment: {0}. These placeholders are not defined in any scope and would be sent as typed:</value></data>
   <data name="Vars_UndefinedTitle" xml:space="preserve"><value>{0} variables are not defined</value></data>

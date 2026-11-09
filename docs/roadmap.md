@@ -43,6 +43,8 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 - [x] cURL import (yapıştır) ve export; kod parçası üretimi (C#, curl, JS, Python; ayrıca PowerShell ve cmd)
 - [x] OAuth 2.0 (client credentials, authorization code + PKCE, password), token önbelleği
 - [x] Cookie jar (isteğe bağlı)
+- [x] Değişken kartı (üzerine gelince düzenle ve kaydet), seçili metni değişkene çevirme
+- [x] Proto dosyalarını dosya seçiciyle ekleme
 
 ## M3 — Test otomasyonu → `v0.3.0`
 

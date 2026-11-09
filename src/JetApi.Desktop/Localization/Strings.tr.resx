@@ -130,6 +130,7 @@
   <data name="Grpc_Tls" xml:space="preserve"><value>TLS</value></data>
   <data name="Grpc_Trailers" xml:space="preserve"><value>Trailer’lar</value></data>
   <data name="Menu_CollectionSettings" xml:space="preserve"><value>Koleksiyon ayarları</value></data>
+  <data name="Menu_Cut" xml:space="preserve"><value>Kes</value></data>
   <data name="Menu_Delete" xml:space="preserve"><value>Sil</value></data>
   <data name="Menu_Duplicate" xml:space="preserve"><value>Çoğalt</value></data>
   <data name="Menu_FolderSettings" xml:space="preserve"><value>Klasör ayarları</value></data>
@@ -137,7 +138,9 @@
   <data name="Menu_NewFolder" xml:space="preserve"><value>Yeni klasör</value></data>
   <data name="Menu_NewGrpc" xml:space="preserve"><value>Yeni gRPC isteği</value></data>
   <data name="Menu_NewHttp" xml:space="preserve"><value>Yeni HTTP isteği</value></data>
+  <data name="Menu_Paste" xml:space="preserve"><value>Yapıştır</value></data>
   <data name="Menu_Rename" xml:space="preserve"><value>Yeniden adlandır</value></data>
+  <data name="Menu_SelectAll" xml:space="preserve"><value>Tümünü seç</value></data>
   <data name="OAuth_AccessToken" xml:space="preserve"><value>Erişim token’ı</value></data>
   <data name="OAuth_Audience" xml:space="preserve"><value>Audience (isteğe bağlı)</value></data>
   <data name="OAuth_AuthorizationUrl" xml:space="preserve"><value>Yetkilendirme URL’si</value></data>
@@ -183,6 +186,13 @@
   <data name="Prompt_NewEnvironmentName" xml:space="preserve"><value>Yeni environment</value></data>
   <data name="Prompt_NewFolderName" xml:space="preserve"><value>Yeni klasör</value></data>
   <data name="Prompt_NewRequestName" xml:space="preserve"><value>Yeni istek</value></data>
+  <data name="Proto_AddFiles" xml:space="preserve"><value>Dosya ekle…</value></data>
+  <data name="Proto_AddFolder" xml:space="preserve"><value>Klasör ekle…</value></data>
+  <data name="Proto_AddHint" xml:space="preserve"><value>"Dosya ekle…" ile seçilen dosyalar, içinde bulundukları import path’e göre yazılır; hiçbiri içermiyorsa dosyanın klasörü import path olarak eklenir.</value></data>
+  <data name="Proto_OutsideWorkspace" xml:space="preserve"><value>Bu dosyalar workspace dışında; klasörleri tam yol olarak kaydedildi. Bu yol başka makinelerde çalışmaz. Git ile paylaşmak için proto dosyalarını workspace içine kopyalayın.</value></data>
+  <data name="Proto_PickFile" xml:space="preserve"><value>Proto dosyası seç…</value></data>
+  <data name="Proto_PickFolderTitle" xml:space="preserve"><value>Import klasörünü seçin</value></data>
+  <data name="Proto_PickTitle" xml:space="preserve"><value>Proto dosyalarını seçin</value></data>
   <data name="Req_AddRow" xml:space="preserve"><value>Satır ekle</value></data>
   <data name="Req_Auth" xml:space="preserve"><value>Auth</value></data>
   <data name="Req_AutoFromAuth" xml:space="preserve"><value>auth’tan: {0}</value></data>
@@ -291,6 +301,18 @@
   <data name="Top_Settings" xml:space="preserve"><value>Ayarlar</value></data>
   <data name="Top_Theme" xml:space="preserve"><value>Tema</value></data>
   <data name="Top_Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Var_Create" xml:space="preserve"><value>Oluştur</value></data>
+  <data name="Var_Name" xml:space="preserve"><value>Ad</value></data>
+  <data name="Var_NameInvalid" xml:space="preserve"><value>Yalnızca harf, rakam ve _ - . $ kullanın.</value></data>
+  <data name="Var_NameRequired" xml:space="preserve"><value>Bir ad girin.</value></data>
+  <data name="Var_NewTitle" xml:space="preserve"><value>Değişken olarak ayarla</value></data>
+  <data name="Var_SaveTo" xml:space="preserve"><value>Kaydedileceği yer</value></data>
+  <data name="Var_ScopeCollection" xml:space="preserve"><value>Koleksiyon: {0}</value></data>
+  <data name="Var_ScopeEnvironment" xml:space="preserve"><value>Environment: {0}</value></data>
+  <data name="Var_ScopeGlobal" xml:space="preserve"><value>Global (tüm workspace)</value></data>
+  <data name="Var_SetAsVariable" xml:space="preserve"><value>Değişken olarak ayarla…</value></data>
+  <data name="Var_Value" xml:space="preserve"><value>Değer</value></data>
+  <data name="Var_WillOverwrite" xml:space="preserve"><value>Burada bu adla bir değişken zaten var; değeri değiştirilecek.</value></data>
   <data name="Vars_Cycle" xml:space="preserve"><value>kendine başvuruyor</value></data>
   <data name="Vars_UndefinedBody" xml:space="preserve"><value>Aktif environment: {0}. Bu değişkenler hiçbir kapsamda tanımlı değil ve olduğu gibi gönderilecek:</value></data>
   <data name="Vars_UndefinedTitle" xml:space="preserve"><value>{0} değişken tanımlı değil</value></data>
