@@ -356,8 +356,10 @@ public sealed class CodeEditor : UserControl
         selectAll.Click += (_, _) => _editor.SelectAll();
         var separator = new Separator();
         var setAsVariable = VariableHints.CreateSetAsVariableItem(SetSelectionAsVariable);
+        var assign = new MenuItem { Header = Localization.Loc.Get("Var_AssignToVariable") };
+        assign.Click += (_, _) => AssignSelectionToVariable();
 
-        var menu = new MenuFlyout { Items = { cut, copy, paste, selectAll, separator, setAsVariable } };
+        var menu = new MenuFlyout { Items = { cut, copy, paste, selectAll, separator, setAsVariable, assign } };
         menu.Opening += (_, _) =>
         {
             var hasSelection = !_editor.TextArea.Selection.IsEmpty;
@@ -365,8 +367,14 @@ public sealed class CodeEditor : UserControl
             copy.IsEnabled = hasSelection;
             paste.IsVisible = cut.IsVisible = !IsReadOnly;
             var available = !IsReadOnly && ActiveVariables?.Store is not null;
-            separator.IsVisible = setAsVariable.IsVisible = available;
+            setAsVariable.IsVisible = available;
             setAsVariable.IsEnabled = available && VariableHints.CanSetAsVariable(ActiveVariables, SelectedText());
+
+            // Responses and other read-only text: save the selected value into a variable.
+            var canAssign = IsReadOnly && VariableHints.GetContext(this)?.Store is not null;
+            assign.IsVisible = canAssign;
+            assign.IsEnabled = canAssign && VariableHints.CanSetAsVariable(VariableHints.GetContext(this), SelectedText());
+            separator.IsVisible = available || canAssign;
         };
         return menu;
     }
@@ -399,6 +407,20 @@ public sealed class CodeEditor : UserControl
             },
             () => _editor.TextArea.Focus(),
             SelectionBottomLeft(offset));
+    }
+
+    /// <summary>Opens the card that saves the selected text (e.g. a response value) into a variable.</summary>
+    internal void AssignSelectionToVariable()
+    {
+        var context = VariableHints.GetContext(this);
+        var selected = SelectedText();
+        if (!VariableHints.CanSetAsVariable(context, selected))
+        {
+            return;
+        }
+
+        var offset = _editor.TextArea.Selection.SurroundingSegment.Offset;
+        VariablePopup.For(_editor).ShowForAssignment(context!, selected, () => _editor.TextArea.Focus(), SelectionBottomLeft(offset));
     }
 
     // The bottom-left corner of the line part at <paramref name="offset"/>, in the coordinates of the inner editor.

@@ -301,6 +301,8 @@
   <data name="Top_Settings" xml:space="preserve"><value>Settings</value></data>
   <data name="Top_Theme" xml:space="preserve"><value>Theme</value></data>
   <data name="Top_Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Var_AssignTitle" xml:space="preserve"><value>Save to variable</value></data>
+  <data name="Var_AssignToVariable" xml:space="preserve"><value>Save to variable…</value></data>
   <data name="Var_Create" xml:space="preserve"><value>Create</value></data>
   <data name="Var_Name" xml:space="preserve"><value>Name</value></data>
   <data name="Var_NameInvalid" xml:space="preserve"><value>Use only letters, digits and _ - . $</value></data>
@@ -313,6 +315,7 @@
   <data name="Var_SetAsVariable" xml:space="preserve"><value>Set as variable…</value></data>
   <data name="Var_Value" xml:space="preserve"><value>Value</value></data>
   <data name="Var_WillOverwrite" xml:space="preserve"><value>A variable with this name already exists here; its value will be replaced.</value></data>
+  <data name="Var_WillUpdate" xml:space="preserve"><value>This variable already exists here; its value will be updated.</value></data>
   <data name="Vars_Cycle" xml:space="preserve"><value>refers to itself</value></data>
   <data name="Vars_UndefinedBody" xml:space="preserve"><value>Active environment: {0}. These placeholders are not defined in any scope and would be sent as typed:</value></data>
   <data name="Vars_UndefinedTitle" xml:space="preserve"><value>{0} variables are not defined</value></data>

@@ -24,14 +24,16 @@
 
     <!-- Selected text to a new variable. -->
     <StackPanel Spacing="8" IsVisible="{Binding IsNew}">
-      <TextBlock Classes="h3" Text="{l:Tr Var_NewTitle}" />
+      <TextBlock Classes="h3" Text="{Binding Title}" />
       <StackPanel>
         <TextBlock Classes="field-label" Text="{l:Tr Var_Name}" />
-        <TextBox x:Name="NameBox" Classes="mono" Text="{Binding Name}" PlaceholderText="userId" AutomationProperties.Name="{l:Tr Var_Name}">
-          <TextBox.KeyBindings>
+        <!-- Existing names are offered, so a value can update a variable that already exists. -->
+        <AutoCompleteBox x:Name="NameBox" Classes="mono" Text="{Binding Name}" ItemsSource="{Binding NameSuggestions}" FilterMode="ContainsOrdinal"
+                         MinimumPrefixLength="0" MaxDropDownHeight="180" Watermark="userId" AutomationProperties.Name="{l:Tr Var_Name}">
+          <AutoCompleteBox.KeyBindings>
             <KeyBinding Gesture="Enter" Command="{Binding SaveCommand}" />
-          </TextBox.KeyBindings>
-        </TextBox>
+          </AutoCompleteBox.KeyBindings>
+        </AutoCompleteBox>
       </StackPanel>
     </StackPanel>
 

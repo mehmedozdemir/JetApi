@@ -147,6 +147,20 @@ internal sealed class VariablePopup
         Show(editor, takeFocus: true, restoreFocus, below);
     }
 
+    /// <summary>Opens the card that saves <paramref name="selectedText"/> into a new or existing variable.</summary>
+    /// <param name="context">The variables of the request the text belongs to.</param>
+    /// <param name="selectedText">The selected text, the value.</param>
+    /// <param name="restoreFocus">Gives focus back to the editor after the card closes.</param>
+    /// <param name="below">Where the card opens, in the editor's coordinates.</param>
+    internal void ShowForAssignment(VariableContext context, string selectedText, Action restoreFocus, Point below)
+    {
+        CancelPending();
+        Hide();
+        var editor = VariableEditorViewModel.ForAssignment(context, selectedText);
+        editor.Saved += (_, _) => Hide();
+        Show(editor, takeFocus: true, restoreFocus, below);
+    }
+
     /// <summary>Closes the card.</summary>
     internal void Hide()
     {

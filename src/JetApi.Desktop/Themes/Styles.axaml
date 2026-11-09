@@ -384,6 +384,10 @@
     <Setter Property="BorderBrush" Value="{DynamicResource App.BorderStrong}" />
     <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
   </Style>
+  <Style Selector="AutoCompleteBox.mono">
+    <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
+    <Setter Property="FontSize" Value="12.5" />
+  </Style>
   <Style Selector="TextBox.mono">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
     <Setter Property="FontSize" Value="12.5" />

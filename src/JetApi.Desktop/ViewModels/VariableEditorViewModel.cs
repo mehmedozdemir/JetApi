@@ -35,9 +35,11 @@ public sealed partial class VariableEditorViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     private bool _isSaving;
 
-    private VariableEditorViewModel(IVariableStore? store, string name, string value, bool isNew, VariableHint? hint)
+    private VariableEditorViewModel(IVariableStore? store, string name, string value, bool isNew, VariableHint? hint, bool isAssignment = false)
     {
         _store = store;
+        IsAssignment = isAssignment;
+        NameSuggestions = isNew && store is not null ? [.. store.Names().Order(StringComparer.OrdinalIgnoreCase)] : [];
         _name = name;
         _value = value;
         _savedValue = value;
@@ -69,6 +71,32 @@ public sealed partial class VariableEditorViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(selectedText);
         return new VariableEditorViewModel(context.Store, string.Empty, selectedText, isNew: true, null);
     }
+
+    /// <summary>
+    /// The card that saves <paramref name="selectedText"/> (e.g. from a response) into a new or existing variable;
+    /// the text itself is not changed. A JSON string selected with its quotes is saved without them.
+    /// </summary>
+    public static VariableEditorViewModel ForAssignment(VariableContext context, string selectedText)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(selectedText);
+        var value = selectedText.Trim();
+        if (value.Length >= 2 && value[0] == '"' && value[^1] == '"')
+        {
+            value = value[1..^1];
+        }
+
+        return new VariableEditorViewModel(context.Store, string.Empty, value, isNew: true, null, isAssignment: true);
+    }
+
+    /// <summary>Saving a selected value (from a response) into a variable without changing the text.</summary>
+    public bool IsAssignment { get; }
+
+    /// <summary>"Set as variable" or "Save to variable".</summary>
+    public string Title => Loc.Get(IsAssignment ? "Var_AssignTitle" : "Var_NewTitle");
+
+    /// <summary>Existing variable names offered while typing the name.</summary>
+    public IReadOnlyList<string> NameSuggestions { get; }
 
     /// <summary>The hint the card was opened for; <c>null</c> for a new variable.</summary>
     public VariableHint? Hint { get; }
@@ -116,12 +144,12 @@ public sealed partial class VariableEditorViewModel : ViewModelBase
     public bool KeepsOpen => IsNew || IsChanged || IsSaving || Error is not null;
 
     /// <summary>"Save", "Add" or "Create".</summary>
-    public string SaveText => Loc.Get(IsNew ? "Var_Create" : IsDefined ? "Btn_Save" : "Btn_Add");
+    public string SaveText => Loc.Get(IsAssignment ? "Btn_Save" : IsNew ? "Var_Create" : IsDefined ? "Btn_Save" : "Btn_Add");
 
     /// <summary>Warns that saving replaces a variable of the same name in the chosen scope.</summary>
     public string? OverwriteWarning =>
         IsNew && SelectedScope is { } scope && Name.Length > 0 && _store?.Find(scope.Source, Name.Trim()) is not null
-            ? Loc.Get("Var_WillOverwrite")
+            ? Loc.Get(IsAssignment ? "Var_WillUpdate" : "Var_WillOverwrite")
             : null;
 
     /// <summary>Saves the variable.</summary>
@@ -162,5 +190,17 @@ public sealed partial class VariableEditorViewModel : ViewModelBase
 
     private bool CanSave() => CanEdit && !IsSaving && (IsNew ? Name.Trim().Length > 0 : !IsDefined || IsChanged);
 
-    partial void OnNameChanged(string value) => Error = null;
+    partial void OnNameChanged(string value)
+    {
+        Error = null;
+
+        // Typing the name of an existing variable picks the place it is stored in, so its value is updated
+        // rather than a second one created in another layer.
+        var name = value.Trim();
+        if (IsNew && _store is not null && name.Length > 0 && (SelectedScope is null || _store.Find(SelectedScope.Source, name) is null)
+            && Scopes.FirstOrDefault(s => _store.Find(s.Source, name) is not null) is { } existing)
+        {
+            SelectedScope = existing;
+        }
+    }
 }

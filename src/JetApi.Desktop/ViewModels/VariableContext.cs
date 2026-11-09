@@ -12,9 +12,23 @@ public sealed record VariableScopeOption(VariableSource Source, string Label)
     public override string ToString() => Label;
 }
 
+/// <summary>A variable offered while typing <c>{{</c> or choosing a name.</summary>
+/// <param name="Name">The name, e.g. <c>baseUrl</c> or <c>$guid</c>.</param>
+/// <param name="Value">The resolved value (masked when secret); empty for dynamic variables.</param>
+/// <param name="Source">"Environment: Development", "Global (whole workspace)", "dynamic variable".</param>
+/// <param name="IsDynamic">A built-in dynamic variable.</param>
+public sealed record VariableSuggestion(string Name, string Value, string Source, bool IsDynamic)
+{
+    /// <inheritdoc />
+    public override string ToString() => Name;
+}
+
 /// <summary>Reads and writes the variables a request can see, for editing them from the request editors.</summary>
 public interface IVariableStore
 {
+    /// <summary>Names of every enabled environment, collection and global variable the request can see.</summary>
+    IReadOnlyList<string> Names();
+
     /// <summary>Where variables can be saved; the environment only when one is active.</summary>
     IReadOnlyList<VariableScopeOption> Scopes { get; }
 
@@ -62,6 +76,28 @@ public sealed class VariableContext
         }
 
         return defined;
+    }
+
+    /// <summary>
+    /// Every variable the request can see, sorted by name, with its value and where it comes from; the built-in
+    /// dynamic variables follow when <paramref name="includeDynamic"/> is set.
+    /// </summary>
+    public IReadOnlyList<VariableSuggestion> Suggestions(bool includeDynamic = true)
+    {
+        var list = new List<VariableSuggestion>();
+        foreach (var name in (Store?.Names() ?? []).Distinct(StringComparer.Ordinal).Order(StringComparer.OrdinalIgnoreCase))
+        {
+            var hint = Describe(name);
+            var source = hint.Source is { } layer && Store!.Scopes.FirstOrDefault(s => s.Source == layer) is { } scope ? scope.Label : hint.Description;
+            list.Add(new VariableSuggestion(name, hint.Value, source, false));
+        }
+
+        if (includeDynamic)
+        {
+            list.AddRange(DynamicVariables.SupportedNames.Select(n => new VariableSuggestion("$" + n, string.Empty, Describe("$" + n).Description, true)));
+        }
+
+        return list;
     }
 
     /// <summary>Describes the placeholder that contains <paramref name="index"/>, or returns <c>null</c>.</summary>

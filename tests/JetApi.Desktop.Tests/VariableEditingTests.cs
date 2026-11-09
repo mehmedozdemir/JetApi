@@ -15,7 +15,7 @@ using JetApi.Desktop.Views;
 namespace JetApi.Desktop.Tests;
 
 /// <summary>Editing variables from the request editors: the hover card and "Set as variable".</summary>
-public sealed class VariableEditingTests
+public sealed class VariableEditingTests(EchoServer server) : IClassFixture<EchoServer>
 {
     private static async Task<(TempWorkspace Workspace, WorkspaceViewModel Vm, HttpRequestTabViewModel Tab)> OpenAsync()
     {
@@ -164,6 +164,93 @@ public sealed class VariableEditingTests
         await VariableWriter.SetAsync(workspace.Session, null, VariableSource.Global, "region", "us");
 
         workspace.Session.Workspace.GlobalVariables.ShouldBe([new Variable("region", "us")]);
+    }
+
+    [Fact]
+    public async Task AValueFromAResponse_IsSavedIntoANewOrExistingVariable()
+    {
+        var (workspace, vm, tab) = await OpenAsync();
+        using (workspace)
+        using (vm)
+        {
+            var card = VariableEditorViewModel.ForAssignment(tab.Variables, " \"abc123\" ");
+            card.IsAssignment.ShouldBeTrue();
+            card.Title.ShouldBe(Loc.Get("Var_AssignTitle"));
+            card.Value.ShouldBe("abc123");
+            card.NameSuggestions.ShouldContain("baseUrl");
+
+            // An existing name moves the choice to where it is stored and says it will be updated.
+            card.SelectedScope = card.Scopes.Single(s => s.Source == VariableSource.Global);
+            card.Name = "baseUrl";
+            card.SelectedScope!.Source.ShouldBe(VariableSource.Environment);
+            card.OverwriteWarning.ShouldBe(Loc.Get("Var_WillUpdate"));
+
+            card.Name = "token";
+            await card.SaveCommand.ExecuteAsync(null);
+            workspace.Session.ActiveEnvironment!.Variables.ShouldContain(new Variable("token", "abc123"));
+        }
+    }
+
+    [Fact]
+    public async Task Suggestions_ListVisibleVariables_ThenDynamicOnes()
+    {
+        var (workspace, vm, tab) = await OpenAsync();
+        using (workspace)
+        using (vm)
+        {
+            await workspace.Session.SaveGlobalsAsync([new Variable("apiKey", "k", IsSecret: true), new Variable("off", "x", IsEnabled: false)], TestContext.Current.CancellationToken);
+
+            var suggestions = tab.Variables.Suggestions();
+
+            var stored = suggestions.Where(s => !s.IsDynamic).ToList();
+            stored.Select(s => s.Name).ShouldBe(["apiKey", "baseUrl"]);
+            stored[0].Value.ShouldNotContain("k");
+            stored[0].Source.ShouldBe(Loc.Get("Var_ScopeGlobal"));
+            stored[1].Source.ShouldBe("Environment: Development");
+            suggestions.Where(s => s.IsDynamic).Select(s => s.Name).ShouldContain("$guid");
+            tab.Variables.Suggestions(includeDynamic: false).ShouldAllBe(s => !s.IsDynamic);
+        }
+    }
+
+    [Fact]
+    public Task ResponseValue_ToVariable_InTheWindow() =>
+        HeadlessApp.Session.Dispatch(() => ResponseWalkAsync(server.BaseUrl), TestContext.Current.CancellationToken);
+
+    private static async Task<bool> ResponseWalkAsync(string baseUrl)
+    {
+        HeadlessApp.Log.Clear();
+        using var workspace = await ScreenTests.CreateSampleWorkspaceAsync();
+        using var vm = new MainWindowViewModel(new AppSettingsStore(Path.Combine(workspace.Root, ".jetapi", "settings.json")), new FakeDialogs(), _ => { }, action => Dispatcher.UIThread.Post(action));
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 800 };
+        window.Show();
+        await vm.OpenWorkspaceAsync(workspace.Root, offerCreate: false);
+        var ws = vm.Workspace!;
+        ws.OpenNode(ws.Collections[0].Children.Single(c => c.Name == "Create user"));
+        var tab = (HttpRequestTabViewModel)ws.SelectedTab!;
+        tab.Url = baseUrl.TrimEnd('/') + "/echo";
+        await tab.SendAsync();
+        Settle();
+
+        var response = window.GetVisualDescendants().OfType<CodeEditor>().Single(e => e.IsReadOnly && e.IsEffectivelyVisible);
+        var document = response.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single().Document;
+        var start = document.Text.IndexOf("\"POST\"", StringComparison.Ordinal);
+        response.Select(start, "\"POST\"".Length);
+        response.AssignSelectionToVariable();
+        Settle();
+        var card = response.Popup.ShouldNotBeNull().Current.ShouldNotBeNull();
+        card.Value.ShouldBe("POST");
+        card.Name = "lastMethod";
+        Settle();
+        ScreenTests.Capture(window, "ux-30-response-to-variable");
+        await card.SaveCommand.ExecuteAsync(null);
+        Settle();
+        response.Popup.IsOpen.ShouldBeFalse();
+        ws.Session.ActiveEnvironment!.Variables.ShouldContain(new Variable("lastMethod", "POST"));
+        document.Text.ShouldContain("\"POST\"");
+
+        window.Close();
+        HeadlessApp.Log.Messages.ShouldBeEmpty();
+        return true;
     }
 
     [Fact]

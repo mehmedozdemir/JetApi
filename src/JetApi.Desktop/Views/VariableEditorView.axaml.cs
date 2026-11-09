@@ -14,8 +14,14 @@ public partial class VariableEditorView : UserControl
     /// <summary>Moves focus to the first field (name for a new variable, otherwise the value).</summary>
     public void FocusFirstField() => Dispatcher.UIThread.Post(() =>
     {
-        var box = DataContext is VariableEditorViewModel { IsNew: true } ? NameBox : ValueBox;
-        box.Focus(NavigationMethod.Tab);
-        box.SelectAll();
+        if (DataContext is VariableEditorViewModel { IsNew: true })
+        {
+            NameBox.Focus(NavigationMethod.Tab);
+        }
+        else
+        {
+            ValueBox.Focus(NavigationMethod.Tab);
+            ValueBox.SelectAll();
+        }
     });
 }

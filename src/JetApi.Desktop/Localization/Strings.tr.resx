@@ -301,6 +301,8 @@
   <data name="Top_Settings" xml:space="preserve"><value>Ayarlar</value></data>
   <data name="Top_Theme" xml:space="preserve"><value>Tema</value></data>
   <data name="Top_Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Var_AssignTitle" xml:space="preserve"><value>Değişkene kaydet</value></data>
+  <data name="Var_AssignToVariable" xml:space="preserve"><value>Değişkene kaydet…</value></data>
   <data name="Var_Create" xml:space="preserve"><value>Oluştur</value></data>
   <data name="Var_Name" xml:space="preserve"><value>Ad</value></data>
   <data name="Var_NameInvalid" xml:space="preserve"><value>Yalnızca harf, rakam ve _ - . $ kullanın.</value></data>
@@ -313,6 +315,7 @@
   <data name="Var_SetAsVariable" xml:space="preserve"><value>Değişken olarak ayarla…</value></data>
   <data name="Var_Value" xml:space="preserve"><value>Değer</value></data>
   <data name="Var_WillOverwrite" xml:space="preserve"><value>Burada bu adla bir değişken zaten var; değeri değiştirilecek.</value></data>
+  <data name="Var_WillUpdate" xml:space="preserve"><value>Bu değişken burada zaten var; değeri güncellenecek.</value></data>
   <data name="Vars_Cycle" xml:space="preserve"><value>kendine başvuruyor</value></data>
   <data name="Vars_UndefinedBody" xml:space="preserve"><value>Aktif environment: {0}. Bu değişkenler hiçbir kapsamda tanımlı değil ve olduğu gibi gönderilecek:</value></data>
   <data name="Vars_UndefinedTitle" xml:space="preserve"><value>{0} değişken tanımlı değil</value></data>

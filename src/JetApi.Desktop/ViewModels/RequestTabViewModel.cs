@@ -326,6 +326,14 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
 
         public Variable? Find(VariableSource scope, string name) => VariableWriter.Find(session, collectionKey, scope, name);
 
+        public IReadOnlyList<string> Names() =>
+        [
+            .. (session.ActiveEnvironment?.Variables ?? []).Concat(session.Workspace.FindCollection(collectionKey)?.Variables ?? []).Concat(session.Workspace.GlobalVariables)
+                .Where(v => v.IsEnabled && VariableResolver.IsValidVariableName(v.Name))
+                .Select(v => v.Name)
+                .Distinct(StringComparer.Ordinal),
+        ];
+
         public async Task<string?> SaveAsync(VariableSource scope, string name, string value)
         {
             try
