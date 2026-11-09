@@ -298,7 +298,12 @@
   <data name="Run_PersistHint" xml:space="preserve"><value>"Nereye"si çalışma anı olmayan kurallar için. Aksi hâlde koşu sırasında çıkarılan değerler yalnızca koşu bitene kadar geçerlidir.</value></data>
   <data name="Run_PickData" xml:space="preserve"><value>Veri dosyası seçin</value></data>
   <data name="Run_Progress" xml:space="preserve"><value>Tekrar {0} / {1} · {2} istek · {3} test geçti · {4} kaldı · {5}</value></data>
+  <data name="Run_Report" xml:space="preserve"><value>Rapor</value></data>
+  <data name="Run_ReportFailed" xml:space="preserve"><value>Rapor kaydedilemedi: {0}</value></data>
+  <data name="Run_ReportHtml" xml:space="preserve"><value>HTML raporu…</value></data>
+  <data name="Run_ReportJUnit" xml:space="preserve"><value>JUnit XML (CI için)…</value></data>
   <data name="Run_Requests" xml:space="preserve"><value>İstekler (sırayla)</value></data>
+  <data name="Run_SaveReport" xml:space="preserve"><value>Koşu raporunu kaydet</value></data>
   <data name="Run_Start" xml:space="preserve"><value>Çalıştır</value></data>
   <data name="Run_Stop" xml:space="preserve"><value>Durdur</value></data>
   <data name="Run_StopOnFailure" xml:space="preserve"><value>İlk hatada dur</value></data>

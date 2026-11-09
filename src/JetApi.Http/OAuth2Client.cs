@@ -158,6 +158,56 @@ public sealed class OAuth2Client : IDisposable
         return SendAsync(auth, [new("grant_type", "refresh_token"), new("refresh_token", refreshToken)], refreshToken, cancellationToken);
     }
 
+    /// <summary>
+    /// Makes sure a usable token is cached before a request is prepared: an expired token is refreshed, and the client
+    /// credentials and password grants get a new one without asking. The authorization code grant needs the browser,
+    /// so without a cached token it is left to the caller (preparing the request then reports the missing token).
+    /// </summary>
+    /// <param name="auth">The auth with variables resolved.</param>
+    /// <param name="cached">The cached token, if any.</param>
+    /// <param name="store">Caches a new token.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>An error message, or <c>null</c>.</returns>
+    public async Task<string?> EnsureTokenAsync(OAuth2Auth auth, OAuth2Token? cached, Action<OAuth2Token> store, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(auth);
+        ArgumentNullException.ThrowIfNull(store);
+        if (cached is not null && !cached.IsExpired(_timeProvider))
+        {
+            return null;
+        }
+
+        OAuth2TokenResult? result = null;
+        if (cached?.RefreshToken is { Length: > 0 } refreshToken)
+        {
+            result = await RefreshAsync(auth, refreshToken, cancellationToken).ConfigureAwait(false);
+            if (result.Token is { } refreshed)
+            {
+                // Servers may keep the refresh token and not send it again.
+                store(refreshed.RefreshToken is null ? refreshed with { RefreshToken = refreshToken } : refreshed);
+                return null;
+            }
+        }
+
+        if (auth.GrantType != OAuth2GrantType.AuthorizationCode)
+        {
+            result = await RequestTokenAsync(auth, cancellationToken).ConfigureAwait(false);
+        }
+
+        if (result is null)
+        {
+            return null;
+        }
+
+        if (result.Token is { } token)
+        {
+            store(token);
+            return null;
+        }
+
+        return result.ErrorMessage ?? result.Error;
+    }
+
     /// <inheritdoc />
     public void Dispose() => _invoker.Dispose();
 

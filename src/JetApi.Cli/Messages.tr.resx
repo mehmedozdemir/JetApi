@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Cli_Cancelled" xml:space="preserve"><value>Bitmeden durduruldu.</value></data>
+  <data name="Cli_DataError" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Cli_Failed" xml:space="preserve"><value>Kaldı</value></data>
+  <data name="Cli_InvalidLanguage" xml:space="preserve"><value>'--lang' 'en' ya da 'tr' olur; '{0}' değil.</value></data>
+  <data name="Cli_InvalidNumber" xml:space="preserve"><value>'{0}' en az {1} olan bir tam sayı ister; '{2}' değil.</value></data>
+  <data name="Cli_InvalidVar" xml:space="preserve"><value>'--var' geçerli bir değişken adıyla ad=değer ister; '{0}' değil.</value></data>
+  <data name="Cli_Iteration" xml:space="preserve"><value>Tekrar {0}/{1}</value></data>
+  <data name="Cli_IterationRow" xml:space="preserve"><value>Tekrar {0}/{1} · {2}</value></data>
+  <data name="Cli_MissingValue" xml:space="preserve"><value>'{0}' bir değer ister.</value></data>
+  <data name="Cli_MissingWorkspace" xml:space="preserve"><value>Workspace klasörünü verin: jetapi run &lt;workspace&gt;.</value></data>
+  <data name="Cli_NoEnvironment" xml:space="preserve"><value>environment yok</value></data>
+  <data name="Cli_NoEnvironmentToStore" xml:space="preserve"><value>'{0}' değerini kaydedecek environment yok; --env ile seçin.</value></data>
+  <data name="Cli_NoResponse" xml:space="preserve"><value>{0} istekte yanıt yok</value></data>
+  <data name="Cli_None" xml:space="preserve"><value>(yok)</value></data>
+  <data name="Cli_NotWorkspace" xml:space="preserve"><value>'{0}' bir JetApi workspace'i değil (workspace.yaml yok).</value></data>
+  <data name="Cli_NothingToRun" xml:space="preserve"><value>Çalıştırılacak istek yok.</value></data>
+  <data name="Cli_Passed" xml:space="preserve"><value>Geçti</value></data>
+  <data name="Cli_ReportFailed" xml:space="preserve"><value>{0} yazılamadı: {1}</value></data>
+  <data name="Cli_ReportWritten" xml:space="preserve"><value>{0} raporu: {1}</value></data>
+  <data name="Cli_SeeHelp" xml:space="preserve"><value>Kullanım için 'jetapi --help' çalıştırın.</value></data>
+  <data name="Cli_SkippedFile" xml:space="preserve"><value>Atlandı, {0}: {1}</value></data>
+  <data name="Cli_Stopped" xml:space="preserve"><value>İlk hatada durduruldu (--bail).</value></data>
+  <data name="Cli_StoreFailed" xml:space="preserve"><value>'{0}' kaydedilemedi: {1}</value></data>
+  <data name="Cli_Summary" xml:space="preserve"><value>{0} istek · {1} test geçti · {2} kaldı · {3}</value></data>
+  <data name="Cli_UnexpectedArgument" xml:space="preserve"><value>Beklenmeyen argüman: '{0}'.</value></data>
+  <data name="Cli_UnknownCommand" xml:space="preserve"><value>Bilinmeyen komut: '{0}'. 'jetapi run &lt;workspace&gt;' kullanın.</value></data>
+  <data name="Cli_UnknownEnvironment" xml:space="preserve"><value>'{0}' adında environment yok. Environment'lar: {1}</value></data>
+  <data name="Cli_UnknownOption" xml:space="preserve"><value>Bilinmeyen seçenek: '{0}'.</value></data>
+  <data name="Cli_UnknownTarget" xml:space="preserve"><value>{1} içinde '{0}' adında bir şey yok. Seçenekler: {2}</value></data>
+  <data name="Cli_Usage" xml:space="preserve"><value>jetapi {0} · JetApi koleksiyonlarını komut satırından çalıştırır
+
+Kullanım:
+  jetapi run &lt;workspace&gt; [&lt;koleksiyon&gt;[/&lt;klasör&gt;…]] [seçenekler]
+
+&lt;koleksiyon&gt;/&lt;klasör&gt; anahtar ya da ad olabilir; verilmezse tüm koleksiyonlar çalışır.
+
+Seçenekler:
+  -e, --env &lt;ad&gt;            Environment (anahtar ya da ad)
+  -d, --data &lt;dosya&gt;        CSV ya da JSON veri dosyası: her satır bir tekrar
+  -n, --iterations &lt;n&gt;      Veri dosyası yokken tekrar sayısı (varsayılan 1)
+      --delay &lt;ms&gt;          İstekler arası bekleme
+      --bail                İlk hatada dur
+      --timeout &lt;ms&gt;        Süre sınırı vermeyen isteklerin süre sınırı (varsayılan 30000)
+      --var &lt;ad=değer&gt;      Workspace'tekilerin üstünde bir değişken (tekrarlanabilir)
+      --junit &lt;dosya&gt;       JUnit XML raporu yaz
+      --html &lt;dosya&gt;        HTML raporu yaz
+      --persist             Çıkarılan değerleri environment, koleksiyon ya da global'e kaydet
+      --lang &lt;en|tr&gt;        Çıktının dili
+      --no-color            Renksiz (NO_COLOR tanımlıyken de)
+  -h, --help                Bu yardım
+  -v, --version             Sürüm
+
+Çıkış kodları: 0 hepsi geçti, 1 bir test kaldı ya da bir istek yanıt almadı, 2 yanlış argüman ya da girdi.</value></data>
+</root>

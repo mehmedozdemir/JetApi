@@ -11,4 +11,26 @@
   <data name="Data_ReadFailed" xml:space="preserve"><value>The data file could not be read: {0}</value></data>
   <data name="Data_RowNotObject" xml:space="preserve"><value>Item {0} of the JSON data file is not an object.</value></data>
   <data name="Data_UnclosedQuote" xml:space="preserve"><value>A quote opened on line {0} of the CSV file is never closed.</value></data>
+  <data name="Op_Contains" xml:space="preserve"><value>contains</value></data>
+  <data name="Op_Equals" xml:space="preserve"><value>equals</value></data>
+  <data name="Op_Exists" xml:space="preserve"><value>exists</value></data>
+  <data name="Op_GreaterThan" xml:space="preserve"><value>greater than</value></data>
+  <data name="Op_LessThan" xml:space="preserve"><value>less than</value></data>
+  <data name="Op_Matches" xml:space="preserve"><value>matches</value></data>
+  <data name="Op_NotContains" xml:space="preserve"><value>does not contain</value></data>
+  <data name="Op_NotEquals" xml:space="preserve"><value>does not equal</value></data>
+  <data name="Op_NotExists" xml:space="preserve"><value>is missing</value></data>
+  <data name="Report_Body" xml:space="preserve"><value>Body</value></data>
+  <data name="Report_Cancelled" xml:space="preserve"><value>Stopped before the end.</value></data>
+  <data name="Report_ChecksFailed" xml:space="preserve"><value>{0} failed</value></data>
+  <data name="Report_ChecksPassed" xml:space="preserve"><value>{0} checks passed</value></data>
+  <data name="Report_Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Report_Iteration" xml:space="preserve"><value>{0} · iteration {1}</value></data>
+  <data name="Report_NoResponse" xml:space="preserve"><value>{0} without a response</value></data>
+  <data name="Report_Passed" xml:space="preserve"><value>Passed</value></data>
+  <data name="Report_Requests" xml:space="preserve"><value>{0} requests</value></data>
+  <data name="Report_Schema" xml:space="preserve"><value>Matches the JSON Schema</value></data>
+  <data name="Report_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Report_Stopped" xml:space="preserve"><value>Stopped at the first failure.</value></data>
+  <data name="Report_Time" xml:space="preserve"><value>Time</value></data>
 </root>

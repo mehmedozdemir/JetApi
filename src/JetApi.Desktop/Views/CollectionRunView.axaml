@@ -8,18 +8,27 @@
   <Grid RowDefinitions="Auto,*" Background="{DynamicResource App.Surface}">
     <!-- Header -->
     <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="24,16,24,14">
-      <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
         <StackPanel VerticalAlignment="Bottom">
           <TextBlock Classes="muted small" Text="{l:Tr Run_Title}" />
           <TextBlock Classes="h2" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
         </StackPanel>
-        <Button Grid.Column="1" Classes="secondary" VerticalAlignment="Bottom" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}">
+        <Button Grid.Column="1" Classes="secondary" VerticalAlignment="Bottom" IsVisible="{Binding CanSaveReport}" AutomationProperties.Name="{l:Tr Run_Report}">
+          <c:IconLabel Icon="{StaticResource Icon.Download}" Text="{l:Tr Run_Report}" />
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedRight">
+              <MenuItem Header="{l:Tr Run_ReportHtml}" Command="{Binding SaveHtmlReportCommand}" />
+              <MenuItem Header="{l:Tr Run_ReportJUnit}" Command="{Binding SaveJUnitReportCommand}" />
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+        <Button Grid.Column="2" Classes="secondary" VerticalAlignment="Bottom" Command="{Binding StopCommand}" IsVisible="{Binding IsRunning}">
           <c:IconLabel Icon="{StaticResource Icon.Stop}" Text="{l:Tr Run_Stop}" />
         </Button>
-        <Button Grid.Column="2" Classes="primary" VerticalAlignment="Bottom" Command="{Binding RunCommand}" IsVisible="{Binding IsIdle}">
+        <Button Grid.Column="3" Classes="primary" VerticalAlignment="Bottom" Command="{Binding RunCommand}" IsVisible="{Binding IsIdle}">
           <c:IconLabel Icon="{StaticResource Icon.Play}" Text="{l:Tr Run_Start}" />
         </Button>
-        <Button Grid.Column="3" Classes="secondary" VerticalAlignment="Bottom" Command="{Binding CloseCommand}" Content="{l:Tr Btn_Close}" />
+        <Button Grid.Column="4" Classes="secondary" VerticalAlignment="Bottom" Command="{Binding CloseCommand}" Content="{l:Tr Btn_Close}" />
       </Grid>
     </Border>
 

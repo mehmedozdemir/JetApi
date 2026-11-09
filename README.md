@@ -31,6 +31,7 @@ ettiği, hesap gerektirmeyen bir masaüstü uygulamasıdır. Postman'e hafif ve 
 | [Dosya formatı](docs/file-format.md) | Workspace'in diskteki YAML formatı |
 | [Yol haritası](docs/roadmap.md) | Kilometre taşları ve sürümler |
 | [Arayüz tasarımı](docs/ui-design.md) | M1 ekranları ve tasarım kararları |
+| [Komut satırı](docs/cli.md) | `jetapi run`: CI'da koleksiyon çalıştırma, JUnit/HTML raporları, CI örnekleri |
 | [ADR'ler](docs/adr/README.md) | Mimari karar kayıtları |
 
 ## Gereksinimler
@@ -81,6 +82,9 @@ src/
   JetApi.Storage/    YAML workspace okuma/yazma
   JetApi.Http/       REST motoru
   JetApi.Grpc/       Proto yükleme, JSON↔protobuf codec, gRPC çağrısı
+  JetApi.Testing/    Yanıt kontrolleri, değişken çıkarma, JSONPath, JSON Schema
+  JetApi.Runner/     Koleksiyon çalıştırma (tekrar, veri dosyası) ve JUnit/HTML raporları
+  JetApi.Cli/        `jetapi` komut satırı aracı (CI)
   JetApi.Desktop/    Avalonia masaüstü uygulaması (Services, ViewModels, Views, Themes, Localization)
 tests/               Her proje için test projesi (xUnit v3, Microsoft Testing Platform)
 docs/                Vizyon, gereksinimler, mimari, ADR'ler, yol haritası

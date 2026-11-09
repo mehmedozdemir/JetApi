@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/JetApi.Cli/JetApi.Cli.csproj" />
     <Project Path="src/JetApi.Core/JetApi.Core.csproj" />
     <Project Path="src/JetApi.Desktop/JetApi.Desktop.csproj" />
     <Project Path="src/JetApi.Grpc/JetApi.Grpc.csproj" />
@@ -10,6 +11,7 @@
     <Project Path="src/JetApi.Testing/JetApi.Testing.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/JetApi.Cli.Tests/JetApi.Cli.Tests.csproj" />
     <Project Path="tests/JetApi.Core.Tests/JetApi.Core.Tests.csproj" />
     <Project Path="tests/JetApi.Desktop.Tests/JetApi.Desktop.Tests.csproj" />
     <Project Path="tests/JetApi.Grpc.Tests/JetApi.Grpc.Tests.csproj" />

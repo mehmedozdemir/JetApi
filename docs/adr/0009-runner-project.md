@@ -28,5 +28,7 @@ cookie'ler, proto önbelleği) ise uygulamada `Desktop/Services/RequestRunner` i
 
 - Uygulama ve CLI aynı kuralla çalışır; sonuç modeli ve raporlar (JUnit, HTML) tek yerde yazılır.
 - `IRequestSender` uygulamanın gönderim altyapısını (OAuth, cookie, proto önbelleği) çalıştırıcıya taşımadan kullanmayı sağlar.
-  CLI için bu altyapının bir kısmı paylaşılan bir yere taşınmalıdır (D aşaması).
+  CLI kendi göndericisini (`CliSender`) motorlarla kurar. İki tarafta aynı olması gereken parçalar motorlara taşındı:
+  token yenileme/alma `OAuth2Client.EnsureTokenAsync`, çerezler `HttpCookies`, body metni `ResponseText` (`Http`) ve
+  değişken yazma `VariableList.Set` (`Core`).
 - Mimari diyagramda motorlarla arayüzler arasında yeni bir katman vardır: `Runner`, motorları değil `Core` ve `Testing`'i kullanır.

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Cli_Cancelled" xml:space="preserve"><value>Stopped before the end.</value></data>
+  <data name="Cli_DataError" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Cli_Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Cli_InvalidLanguage" xml:space="preserve"><value>'--lang' is 'en' or 'tr', not '{0}'.</value></data>
+  <data name="Cli_InvalidNumber" xml:space="preserve"><value>'{0}' needs a whole number of at least {1}, not '{2}'.</value></data>
+  <data name="Cli_InvalidVar" xml:space="preserve"><value>'--var' needs name=value with a valid variable name, not '{0}'.</value></data>
+  <data name="Cli_Iteration" xml:space="preserve"><value>Iteration {0}/{1}</value></data>
+  <data name="Cli_IterationRow" xml:space="preserve"><value>Iteration {0}/{1} · {2}</value></data>
+  <data name="Cli_MissingValue" xml:space="preserve"><value>'{0}' needs a value.</value></data>
+  <data name="Cli_MissingWorkspace" xml:space="preserve"><value>Give the workspace folder: jetapi run &lt;workspace&gt;.</value></data>
+  <data name="Cli_NoEnvironment" xml:space="preserve"><value>no environment</value></data>
+  <data name="Cli_NoEnvironmentToStore" xml:space="preserve"><value>There is no environment to save '{0}' in; choose one with --env.</value></data>
+  <data name="Cli_NoResponse" xml:space="preserve"><value>{0} without a response</value></data>
+  <data name="Cli_None" xml:space="preserve"><value>(none)</value></data>
+  <data name="Cli_NotWorkspace" xml:space="preserve"><value>'{0}' is not a JetApi workspace (no workspace.yaml).</value></data>
+  <data name="Cli_NothingToRun" xml:space="preserve"><value>There are no requests to run.</value></data>
+  <data name="Cli_Passed" xml:space="preserve"><value>Passed</value></data>
+  <data name="Cli_ReportFailed" xml:space="preserve"><value>Could not write {0}: {1}</value></data>
+  <data name="Cli_ReportWritten" xml:space="preserve"><value>{0} report: {1}</value></data>
+  <data name="Cli_SeeHelp" xml:space="preserve"><value>Run 'jetapi --help' for usage.</value></data>
+  <data name="Cli_SkippedFile" xml:space="preserve"><value>Skipped {0}: {1}</value></data>
+  <data name="Cli_Stopped" xml:space="preserve"><value>Stopped at the first failure (--bail).</value></data>
+  <data name="Cli_StoreFailed" xml:space="preserve"><value>Could not save '{0}': {1}</value></data>
+  <data name="Cli_Summary" xml:space="preserve"><value>{0} requests · {1} checks passed · {2} failed · {3}</value></data>
+  <data name="Cli_UnexpectedArgument" xml:space="preserve"><value>Unexpected argument '{0}'.</value></data>
+  <data name="Cli_UnknownCommand" xml:space="preserve"><value>Unknown command '{0}'. Use 'jetapi run &lt;workspace&gt;'.</value></data>
+  <data name="Cli_UnknownEnvironment" xml:space="preserve"><value>There is no environment '{0}'. Environments: {1}</value></data>
+  <data name="Cli_UnknownOption" xml:space="preserve"><value>Unknown option '{0}'.</value></data>
+  <data name="Cli_UnknownTarget" xml:space="preserve"><value>There is nothing named '{0}' in {1}. Choose from: {2}</value></data>
+  <data name="Cli_Usage" xml:space="preserve"><value>jetapi {0} · runs JetApi collections from the command line
+
+Usage:
+  jetapi run &lt;workspace&gt; [&lt;collection&gt;[/&lt;folder&gt;…]] [options]
+
+&lt;collection&gt;/&lt;folder&gt; are keys or names; without it, every collection runs.
+
+Options:
+  -e, --env &lt;name&gt;          Environment (key or name)
+  -d, --data &lt;file&gt;         CSV or JSON data file: one iteration per row
+  -n, --iterations &lt;n&gt;      Iterations without a data file (default 1)
+      --delay &lt;ms&gt;          Wait between requests
+      --bail                Stop at the first failure
+      --timeout &lt;ms&gt;        Timeout of requests that set none (default 30000)
+      --var &lt;name=value&gt;    A variable over the workspace's (repeatable)
+      --junit &lt;file&gt;        Write a JUnit XML report
+      --html &lt;file&gt;         Write an HTML report
+      --persist             Save extracted values to the environment, collection or globals
+      --lang &lt;en|tr&gt;        Language of the output
+      --no-color            No colors (also when NO_COLOR is set)
+  -h, --help                This help
+  -v, --version             The version
+
+Exit codes: 0 all passed, 1 a check failed or a request got no response, 2 wrong arguments or input.</value></data>
+</root>

@@ -28,14 +28,14 @@ public static class VariableWriter
         {
             case VariableSource.Environment:
                 var environment = session.ActiveEnvironment ?? throw new InvalidOperationException("No active environment.");
-                await session.SaveEnvironmentAsync(environment with { Variables = With(environment.Variables, name, value) }).ConfigureAwait(true);
+                await session.SaveEnvironmentAsync(environment with { Variables = VariableList.Set(environment.Variables, name, value) }).ConfigureAwait(true);
                 break;
             case VariableSource.Collection:
                 var collection = (collectionKey is null ? null : session.Workspace.FindCollection(collectionKey)) ?? throw new InvalidOperationException("Unknown collection.");
-                await session.SaveCollectionAsync(collection with { Variables = With(collection.Variables, name, value) }).ConfigureAwait(true);
+                await session.SaveCollectionAsync(collection with { Variables = VariableList.Set(collection.Variables, name, value) }).ConfigureAwait(true);
                 break;
             case VariableSource.Global:
-                await session.SaveGlobalsAsync(With(session.Workspace.GlobalVariables, name, value)).ConfigureAwait(true);
+                await session.SaveGlobalsAsync(VariableList.Set(session.Workspace.GlobalVariables, name, value)).ConfigureAwait(true);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(scope), scope, "Only environment, collection and global variables can be set.");
@@ -49,29 +49,6 @@ public static class VariableWriter
         VariableSource.Global => session.Workspace.GlobalVariables,
         _ => null,
     };
-
-    private static List<Variable> With(IReadOnlyList<Variable> variables, string name, string value)
-    {
-        var list = variables.ToList();
-
-        // The enabled one wins when resolving, so that is the one to change.
-        var index = list.FindLastIndex(v => v.Name == name && v.IsEnabled);
-        if (index < 0)
-        {
-            index = list.FindLastIndex(v => v.Name == name);
-        }
-
-        if (index < 0)
-        {
-            list.Add(new Variable(name, value));
-        }
-        else
-        {
-            list[index] = list[index] with { Value = value, IsEnabled = true };
-        }
-
-        return list;
-    }
 
     /// <summary>
     /// Stores an extracted value where the extraction says (runtime, environment, collection or global).

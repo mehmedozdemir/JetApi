@@ -118,6 +118,8 @@ public sealed partial class CollectionRunViewModel : ViewModelBase, IDisposable
     private int _planned;
     private int _done;
     private int _iteration;
+    private DateTimeOffset? _startedAt;
+    private string? _environmentName;
 
     [ObservableProperty]
     private decimal _iterations = 1;
@@ -255,12 +257,15 @@ public sealed partial class CollectionRunViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(HasResults));
         _summary = null;
         OnPropertyChanged(nameof(EndNote));
+        OnPropertyChanged(nameof(CanSaveReport));
         var options = new RunOptions((int)Math.Clamp(Iterations, 1, 10000), TimeSpan.FromMilliseconds((double)Math.Clamp(DelayMs, 0, 600000)), StopOnFailure, _dataRows, PersistExtractions);
         _planned = (_dataRows?.Count ?? options.Iterations) * requests.Count;
         _done = 0;
         UpdateProgress(0);
         _running?.Dispose();
         _running = new CancellationTokenSource();
+        _startedAt = DateTimeOffset.Now;
+        _environmentName = _session.ActiveEnvironment?.Name;
         IsRunning = true;
         try
         {
@@ -290,6 +295,41 @@ public sealed partial class CollectionRunViewModel : ViewModelBase, IDisposable
         UpdateProgress(Results.Count);
         OnPropertyChanged(nameof(EndNote));
         OnPropertyChanged(nameof(Summary));
+        OnPropertyChanged(nameof(CanSaveReport));
+    }
+
+    /// <summary>A finished run can be saved as a report.</summary>
+    public bool CanSaveReport => _summary is not null && !IsRunning;
+
+    /// <summary>Saves the last run as a single-file HTML report.</summary>
+    [RelayCommand]
+    private Task SaveHtmlReportAsync() => SaveReportAsync(".html", RunReports.Html);
+
+    /// <summary>Saves the last run as JUnit XML (what CI servers read).</summary>
+    [RelayCommand]
+    private Task SaveJUnitReportAsync() => SaveReportAsync(".xml", RunReports.JUnit);
+
+    private async Task SaveReportAsync(string extension, Func<RunSummary, ReportInfo, string> render)
+    {
+        if (_summary is not { } summary || _startedAt is not { } startedAt)
+        {
+            return;
+        }
+
+        var name = string.Concat(Title.Split(Path.GetInvalidFileNameChars())) + "-" + startedAt.ToString("yyyyMMdd-HHmm", System.Globalization.CultureInfo.InvariantCulture) + extension;
+        if (await _dialogs.PickSaveFileAsync(Loc.Get("Run_SaveReport"), name).ConfigureAwait(true) is not { } path)
+        {
+            return;
+        }
+
+        try
+        {
+            await File.WriteAllTextAsync(path, render(summary, new ReportInfo(Title, _environmentName, startedAt)), new System.Text.UTF8Encoding(false)).ConfigureAwait(true);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            await _dialogs.ShowErrorAsync(Loc.Format("Run_ReportFailed", exception.Message)).ConfigureAwait(true);
+        }
     }
 
     /// <summary>Stops a running run.</summary>

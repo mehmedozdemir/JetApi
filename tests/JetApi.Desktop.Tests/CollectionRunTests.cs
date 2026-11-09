@@ -1,6 +1,9 @@
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using JetApi.Core.Model;
 using JetApi.Desktop.Localization;
 using JetApi.Desktop.Services;
@@ -37,7 +40,7 @@ public sealed class CollectionRunTests(EchoServer server) : IClassFixture<EchoSe
     [Fact]
     public async Task Running_ShowsEachRequest_GroupedByIteration_AndStopsAtTheFirstFailure()
     {
-        var (workspace, vm, _) = await OpenAsync();
+        var (workspace, vm, dialogs) = await OpenAsync();
         using (workspace)
         using (vm)
         {
@@ -45,6 +48,7 @@ public sealed class CollectionRunTests(EchoServer server) : IClassFixture<EchoSe
             var run = vm.CollectionRun.ShouldNotBeNull();
             run.Requests.Select(r => r.Name).ShouldBe(["Get example", "Post JSON"]);
             run.Iterations = 3;
+            run.CanSaveReport.ShouldBeFalse();
 
             await run.RunCommand.ExecuteAsync(null);
 
@@ -61,6 +65,16 @@ public sealed class CollectionRunTests(EchoServer server) : IClassFixture<EchoSe
             run.Results.Count.ShouldBe(3);
             run.Progress.ShouldBe(1);
             run.ProgressText.ShouldStartWith("Iteration 3 / 3 · 6 requests · 3 checks passed · 3 failed");
+
+            // The finished run saves as HTML or JUnit XML.
+            run.CanSaveReport.ShouldBeTrue();
+            dialogs.SaveFileToPick = Path.Combine(workspace.Root, "report.html");
+            await run.SaveHtmlReportCommand.ExecuteAsync(null);
+            dialogs.SuggestedSaveName.ShouldEndWith(".html");
+            (await File.ReadAllTextAsync(dialogs.SaveFileToPick, TestContext.Current.CancellationToken)).ShouldContain("Post JSON");
+            dialogs.SaveFileToPick = Path.Combine(workspace.Root, "junit.xml");
+            await run.SaveJUnitReportCommand.ExecuteAsync(null);
+            System.Xml.Linq.XDocument.Load(dialogs.SaveFileToPick).Root!.Attribute("failures")!.Value.ShouldBe("3");
         }
     }
 
@@ -136,6 +150,15 @@ public sealed class CollectionRunTests(EchoServer server) : IClassFixture<EchoSe
             await run.RunCommand.ExecuteAsync(null);
             Settle();
             ScreenTests.Capture(window, "ux-44-runner-results");
+
+            // The report menu of a finished run.
+            var report = window.GetVisualDescendants().OfType<Button>().Single(b => AutomationProperties.GetName(b) == Loc.Get("Run_Report"));
+            report.IsEffectivelyVisible.ShouldBeTrue();
+            report.Flyout!.ShowAt(report);
+            Settle();
+            ScreenTests.Capture(window, "ux-46-runner-report-menu");
+            report.Flyout.Hide();
+            Settle();
 
             ((App)Application.Current!).ApplyTheme(AppTheme.Dark);
             Loc.Instance.SetLanguage("tr");

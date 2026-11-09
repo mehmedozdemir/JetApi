@@ -51,7 +51,7 @@ Amaç: Ekip günlük REST ve unary gRPC testlerini JetApi ile yapabilsin.
 - [ ] Kodsuz assertion'lar ve yanıttan değişken çıkarma (ADR-0005)
 - [ ] Koleksiyon/klasör çalıştırıcı (sıra, gecikme, tekrar, hata durumunda durma)
 - [ ] CSV/JSON veri dosyasıyla veri odaklı çalıştırma
-- [ ] `jetapi` CLI (dotnet tool + bağımsız ikili), JUnit XML ve HTML raporları, CI örnekleri (GitHub Actions, GitLab, Azure DevOps, Jenkins)
+- [x] `jetapi` CLI (her platform için tek dosya; `dotnet tool` paketi sonraya), JUnit XML ve HTML raporları, CI örnekleri (GitHub Actions, GitLab, Azure DevOps, Jenkins)
 
 ## M4 — İleri gRPC → `v0.4.0`
 

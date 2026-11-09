@@ -298,7 +298,12 @@
   <data name="Run_PersistHint" xml:space="preserve"><value>For rules whose "Store in" is not Runtime. Otherwise values extracted during the run live only until it ends.</value></data>
   <data name="Run_PickData" xml:space="preserve"><value>Choose a data file</value></data>
   <data name="Run_Progress" xml:space="preserve"><value>Iteration {0} / {1} · {2} requests · {3} checks passed · {4} failed · {5}</value></data>
+  <data name="Run_Report" xml:space="preserve"><value>Report</value></data>
+  <data name="Run_ReportFailed" xml:space="preserve"><value>The report could not be saved: {0}</value></data>
+  <data name="Run_ReportHtml" xml:space="preserve"><value>HTML report…</value></data>
+  <data name="Run_ReportJUnit" xml:space="preserve"><value>JUnit XML (for CI)…</value></data>
   <data name="Run_Requests" xml:space="preserve"><value>Requests (in order)</value></data>
+  <data name="Run_SaveReport" xml:space="preserve"><value>Save the run report</value></data>
   <data name="Run_Start" xml:space="preserve"><value>Run</value></data>
   <data name="Run_Stop" xml:space="preserve"><value>Stop</value></data>
   <data name="Run_StopOnFailure" xml:space="preserve"><value>Stop at the first failure</value></data>

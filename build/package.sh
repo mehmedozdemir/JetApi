@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Builds the JetApi desktop package for one platform.
+# Builds the JetApi desktop package and the jetapi command-line tool for one platform.
 #
 #   build/package.sh <rid> [version]
 #
 #   win-x64, win-arm64      -> dist/JetApi-<version>-<rid>.zip
 #   osx-x64, osx-arm64      -> dist/JetApi-<version>-<rid>.dmg      (macOS only: needs hdiutil)
 #   linux-x64, linux-arm64  -> dist/JetApi-<version>-<rid>.tar.gz and .AppImage
+#   every platform          -> dist/jetapi-cli-<version>-<rid>.zip (Windows) or .tar.gz (docs/cli.md)
 #
-# The app is published self-contained as a single file with ReadyToRun code (see JetApi.Desktop.csproj).
+# Both are published self-contained as a single file with ReadyToRun code (see the .csproj files).
 # Packages are not signed yet; macOS bundles get an ad-hoc signature so they start on Apple silicon.
 set -euo pipefail
 
@@ -34,6 +35,17 @@ dotnet publish "$root/src/JetApi.Desktop/JetApi.Desktop.csproj" \
 # Debug symbols and XML docs are not needed by users; the single-file app carries everything else.
 find "$publish" -maxdepth 1 \( -name '*.pdb' -o -name '*.xml' \) -delete
 
+# The command-line tool: one executable in an archive of its own.
+cli_publish="$root/artifacts/publish-cli/$rid"
+cli_name="jetapi-cli-$version-$rid"
+rm -rf "$cli_publish"
+dotnet publish "$root/src/JetApi.Cli/JetApi.Cli.csproj" \
+  --configuration Release \
+  --runtime "$rid" \
+  --output "$cli_publish" \
+  -p:Version="$version"
+find "$cli_publish" -maxdepth 1 \( -name '*.pdb' -o -name '*.xml' \) -delete
+
 case "$rid" in
   win-*)
     rm -f "$dist/$name.zip"
@@ -41,8 +53,12 @@ case "$rid" in
       # Git Bash paths (/c/...) mean nothing to PowerShell; convert them on Windows.
       to_native() { if command -v cygpath >/dev/null 2>&1; then cygpath -w "$1"; else echo "$1"; fi; }
       pwsh -NoProfile -Command "Compress-Archive -Path '$(to_native "$publish")\*' -DestinationPath '$(to_native "$dist/$name.zip")'"
+      rm -f "$dist/$cli_name.zip"
+      pwsh -NoProfile -Command "Compress-Archive -Path '$(to_native "$cli_publish")\*' -DestinationPath '$(to_native "$dist/$cli_name.zip")'"
     else
       (cd "$publish" && zip -qr "$dist/$name.zip" .)
+      rm -f "$dist/$cli_name.zip"
+      (cd "$cli_publish" && zip -qr "$dist/$cli_name.zip" .)
     fi
     ;;
 
@@ -116,6 +132,14 @@ APPRUN
   *)
     echo "Unsupported runtime identifier: $rid" >&2
     exit 1
+    ;;
+esac
+
+case "$rid" in
+  win-*) ;;
+  *)
+    chmod +x "$cli_publish/jetapi"
+    tar -C "$cli_publish" -czf "$dist/$cli_name.tar.gz" .
     ;;
 esac
 

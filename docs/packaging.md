@@ -10,6 +10,7 @@ Kod ReadyToRun ile önceden derlenir; bu açılış süresini yaklaşık %40 kı
 | Windows x64 / arm64 | `win-x64`, `win-arm64` | `JetApi-<sürüm>-<rid>.zip` |
 | macOS Apple silicon / Intel | `osx-arm64`, `osx-x64` | `JetApi-<sürüm>-<rid>.dmg` (`JetApi.app`) |
 | Linux x64 / arm64 | `linux-x64`, `linux-arm64` | `JetApi-<sürüm>-<rid>.AppImage` ve `.tar.gz` |
+| Komut satırı (her platform) | yukarıdakiler | `jetapi-cli-<sürüm>-<rid>.zip` (Windows) ya da `.tar.gz`: tek dosya `jetapi` ([CLI](cli.md)) |
 
 Paketler henüz imzalı değildir. Windows SmartScreen ve macOS Gatekeeper ilk açılışta uyarı verir. macOS'ta uygulamaya sağ
 tıklayıp **Aç** demek yeterlidir. MSIX ve imzalı kurulum paketleri sertifika gerektirdiği için v1.0 hedefindedir
@@ -18,7 +19,7 @@ tıklayıp **Aç** demek yeterlidir. MSIX ve imzalı kurulum paketleri sertifika
 ## Yerelde paket üretme
 
 ```bash
-build/package.sh win-x64            # dist/JetApi-<sürüm>-win-x64.zip
+build/package.sh win-x64            # dist/JetApi-<sürüm>-win-x64.zip ve dist/jetapi-cli-<sürüm>-win-x64.zip
 build/package.sh linux-x64 0.1.0    # sürüm verilmezse Directory.Build.props içindeki <Version> kullanılır
 ```
 

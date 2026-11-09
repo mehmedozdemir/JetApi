@@ -11,4 +11,26 @@
   <data name="Data_ReadFailed" xml:space="preserve"><value>Veri dosyası okunamadı: {0}</value></data>
   <data name="Data_RowNotObject" xml:space="preserve"><value>JSON veri dosyasının {0}. öğesi bir nesne değil.</value></data>
   <data name="Data_UnclosedQuote" xml:space="preserve"><value>CSV dosyasının {0}. satırında açılan tırnak kapanmıyor.</value></data>
+  <data name="Op_Contains" xml:space="preserve"><value>içerir</value></data>
+  <data name="Op_Equals" xml:space="preserve"><value>eşittir</value></data>
+  <data name="Op_Exists" xml:space="preserve"><value>var</value></data>
+  <data name="Op_GreaterThan" xml:space="preserve"><value>büyüktür</value></data>
+  <data name="Op_LessThan" xml:space="preserve"><value>küçüktür</value></data>
+  <data name="Op_Matches" xml:space="preserve"><value>desene uyar</value></data>
+  <data name="Op_NotContains" xml:space="preserve"><value>içermez</value></data>
+  <data name="Op_NotEquals" xml:space="preserve"><value>eşit değil</value></data>
+  <data name="Op_NotExists" xml:space="preserve"><value>yok</value></data>
+  <data name="Report_Body" xml:space="preserve"><value>Body</value></data>
+  <data name="Report_Cancelled" xml:space="preserve"><value>Bitmeden durduruldu.</value></data>
+  <data name="Report_ChecksFailed" xml:space="preserve"><value>{0} kaldı</value></data>
+  <data name="Report_ChecksPassed" xml:space="preserve"><value>{0} test geçti</value></data>
+  <data name="Report_Failed" xml:space="preserve"><value>Kaldı</value></data>
+  <data name="Report_Iteration" xml:space="preserve"><value>{0} · tekrar {1}</value></data>
+  <data name="Report_NoResponse" xml:space="preserve"><value>{0} istekte yanıt yok</value></data>
+  <data name="Report_Passed" xml:space="preserve"><value>Geçti</value></data>
+  <data name="Report_Requests" xml:space="preserve"><value>{0} istek</value></data>
+  <data name="Report_Schema" xml:space="preserve"><value>JSON Şemaya uyar</value></data>
+  <data name="Report_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Report_Stopped" xml:space="preserve"><value>İlk hatada durduruldu.</value></data>
+  <data name="Report_Time" xml:space="preserve"><value>Süre</value></data>
 </root>

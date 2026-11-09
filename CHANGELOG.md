@@ -7,6 +7,8 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Added
 
+- `jetapi` komut satırı aracı: `jetapi run <workspace> [koleksiyon/klasör] -e <environment>` koleksiyonu uygulamayla aynı kurallarla çalıştırır; veri dosyası, tekrar, bekleme, `--bail`, `--var`, `--persist`, `--lang`. Çıkış kodları: 0 geçti, 1 kaldı, 2 yanlış girdi. `--junit` ve `--html` ile rapor. Her sürümde platform başına tek dosyalık arşiv (`jetapi-cli-<sürüm>-<rid>`). GitHub Actions, GitLab, Azure DevOps ve Jenkins örnekleri: [docs/cli.md](docs/cli.md).
+- Çalıştırıcıda *Rapor* düğmesi: biten koşu HTML ya da JUnit XML olarak kaydedilir.
 - Koleksiyon çalıştırıcı: ağaçta koleksiyon ya da klasöre sağ tık → *Çalıştır…* (ya da komut paleti). İstek seçimi, tekrar, istekler arası bekleme, ilk hatada durma, CSV/JSON veri dosyasıyla her satır için bir tekrar; sonuçlar canlı ve tekrar başına gruplu. Çalıştırma mantığı uygulama ve CLI için ortak `JetApi.Runner` projesinde (ADR-0009).
 - Testler: isteğin *Testler* sekmesinde kodsuz kontroller (status, header, JSON alanı, body, süre, JSON Schema) ve değişken çıkarma kuralları; her gönderimde çalışır, sonuçlar satırların yanında ve yanıttaki *Test sonuçları* sekmesinde. JSON yanıtta bir değere sağ tıklayarak test ya da çıkarma kuralı eklenir. Çıkarılan değerler çalışma anı değişkeni (dosyaya yazılmaz, komut paletinden temizlenir), environment, koleksiyon veya global değişken olur. HTTP ve gRPC isteklerinde.
 - Yanıt kontrolleri ve değişken çıkarma için motor (`JetApi.Testing`) ve dosya biçimi: istek dosyalarında `tests`

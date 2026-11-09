@@ -48,7 +48,9 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y desktop-file-utils
       - name: Restore (locked)
-        run: dotnet restore src/JetApi.Desktop/JetApi.Desktop.csproj --locked-mode
+        run: |
+          dotnet restore src/JetApi.Desktop/JetApi.Desktop.csproj --locked-mode
+          dotnet restore src/JetApi.Cli/JetApi.Cli.csproj --locked-mode
       - name: Package
         shell: bash
         run: build/package.sh ${{ matrix.rid }} ${{ steps.version.outputs.value }}

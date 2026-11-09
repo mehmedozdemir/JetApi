@@ -122,45 +122,16 @@ public sealed class RequestRunner : IDisposable
         var toSend = request.Settings.Timeout is null ? request with { Settings = request.Settings with { Timeout = DefaultHttpTimeout } } : request;
         if (jar is not null)
         {
-            toSend = WithCookies(toSend, jar);
+            toSend = HttpCookies.Apply(toSend, jar);
         }
 
         var result = await _http.ExecuteAsync(toSend, cancellationToken).ConfigureAwait(true);
         if (jar is not null)
         {
-            KeepCookies(result, request.Url, jar);
+            HttpCookies.Keep(result, request.Url, jar);
         }
 
         return result;
-    }
-
-    // A Cookie header written on the request wins over the jar.
-    private static PreparedHttpRequest WithCookies(PreparedHttpRequest request, System.Net.CookieContainer jar)
-    {
-        if (request.Headers.Any(h => h.Key.Equals("Cookie", StringComparison.OrdinalIgnoreCase)))
-        {
-            return request;
-        }
-
-        var header = jar.GetCookieHeader(request.Url);
-        return header.Length == 0 ? request : request with { Headers = [.. request.Headers, new("Cookie", header)] };
-    }
-
-    // Set-Cookie of the final response (redirect hops are followed by the HTTP stack and not seen here).
-    private static void KeepCookies(HttpExecutionResult result, Uri requestUrl, System.Net.CookieContainer jar)
-    {
-        var url = result.FinalUrl ?? requestUrl;
-        foreach (var header in result.Headers.Where(h => h.Key.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase)))
-        {
-            try
-            {
-                jar.SetCookies(url, header.Value);
-            }
-            catch (System.Net.CookieException)
-            {
-                // A malformed cookie is ignored, as browsers do.
-            }
-        }
     }
 
     /// <summary>Loads the collection's schema, resolves variables and auth and encodes the message.</summary>
@@ -203,46 +174,11 @@ public sealed class RequestRunner : IDisposable
     /// so it is left to "Get new access token".
     /// </summary>
     /// <returns>An error message for the response pane, or <c>null</c>.</returns>
-    public async Task<string?> EnsureOAuthTokenAsync(WorkspaceSession session, OAuth2Auth resolvedAuth, CancellationToken cancellationToken)
+    public Task<string?> EnsureOAuthTokenAsync(WorkspaceSession session, OAuth2Auth resolvedAuth, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(session);
         ArgumentNullException.ThrowIfNull(resolvedAuth);
-
-        var token = session.Tokens.Get(resolvedAuth);
-        if (token is not null && !token.IsExpired(TimeProvider.System))
-        {
-            return null;
-        }
-
-        OAuth2TokenResult? result = null;
-        if (token?.RefreshToken is { Length: > 0 } refreshToken)
-        {
-            result = await _oauth.RefreshAsync(resolvedAuth, refreshToken, cancellationToken).ConfigureAwait(true);
-            if (result.Token is { } refreshed)
-            {
-                // Servers may keep the refresh token and not send it again.
-                Store(session, resolvedAuth, refreshed.RefreshToken is null ? refreshed with { RefreshToken = refreshToken } : refreshed);
-                return null;
-            }
-        }
-
-        if (resolvedAuth.GrantType != OAuth2GrantType.AuthorizationCode)
-        {
-            result = await _oauth.RequestTokenAsync(resolvedAuth, cancellationToken).ConfigureAwait(true);
-        }
-
-        if (result is null)
-        {
-            return null;
-        }
-
-        if (result.Token is { } newToken)
-        {
-            Store(session, resolvedAuth, newToken);
-            return null;
-        }
-
-        return result.ErrorMessage ?? result.Error;
+        return _oauth.EnsureTokenAsync(resolvedAuth, session.Tokens.Get(resolvedAuth), token => Store(session, resolvedAuth, token), cancellationToken);
     }
 
     /// <summary>Gets a new token with the grant of <paramref name="resolvedAuth"/> and caches it.</summary>

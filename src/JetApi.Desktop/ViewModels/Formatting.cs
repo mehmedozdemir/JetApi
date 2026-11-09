@@ -141,22 +141,5 @@ public static class Formatting
     }
 
     /// <summary>Decodes a body using the charset from <paramref name="contentType"/>, defaulting to UTF-8.</summary>
-    public static string DecodeText(ReadOnlySpan<byte> data, string? contentType)
-    {
-        var encoding = Encoding.UTF8;
-        var charset = contentType?.Split(';').Select(p => p.Trim()).FirstOrDefault(p => p.StartsWith("charset=", StringComparison.OrdinalIgnoreCase));
-        if (charset is not null)
-        {
-            try
-            {
-                encoding = Encoding.GetEncoding(charset["charset=".Length..].Trim('"'));
-            }
-            catch (ArgumentException)
-            {
-                encoding = Encoding.UTF8;
-            }
-        }
-
-        return encoding.GetString(data);
-    }
+    public static string DecodeText(ReadOnlySpan<byte> data, string? contentType) => JetApi.Http.ResponseText.Decode(data, contentType);
 }
