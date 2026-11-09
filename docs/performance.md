@@ -26,6 +26,18 @@ başlatıldıktan sonra tek çalıştırma yapılır.
 
 ## Sonuçlar
 
+### 2026-11-09, Windows 11 x64, `0.3.0`, ReadyToRun, yazılımla çizim
+
+| Ölçüm | Medyan (5 çalıştırma) | Hedef | Durum |
+|---|---|---|---|
+| Workspace hazır | 1.202 ms (soğuk ilk çalıştırma 1.624 ms, sıcaklar 1.075–1.317 ms) | < 1.500 ms | ✅ |
+| Pencere açıldı | 421 ms | | |
+| Boşta working set | 161 MB | < 200 MB | ✅ |
+| Boşta private bellek | 78 MB | | |
+
+M3 (testler, çalıştırıcı, script saklama) açılışı yavaşlatmadı. Makine bu ölçümde 0.2.0 ölçümüne göre daha boştu; NFR-1
+iki hedefi de karşıladı.
+
 ### 2026-11-09, Windows 11 x64, `0.2.0` ile `0.1.0-alpha.1` aynı makinede, aynı anda, yazılımla çizim
 
 | Sürüm | Workspace hazır (medyan) | Pencere açıldı | Boşta working set | Boşta private |

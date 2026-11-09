@@ -273,14 +273,14 @@
       "jetapi.runner": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.2.0, )",
-          "JetApi.Testing": "[0.2.0, )"
+          "JetApi.Core": "[0.3.0, )",
+          "JetApi.Testing": "[0.3.0, )"
         }
       },
       "jetapi.testing": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.2.0, )",
+          "JetApi.Core": "[0.3.0, )",
           "LateApexEarlySpeed.Json.Schema": "[4.2.4, )"
         }
       },

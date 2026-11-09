@@ -11,9 +11,10 @@ ettiği, hesap gerektirmeyen bir masaüstü uygulamasıdır. Postman'e hafif ve 
 - **REST ve gRPC eşit:** `.proto` dosyalarından kod üretimi olmadan gRPC çağrısı
 - **Doğru:** Gönderilen istek birebir gösterilir; DNS/bağlantı/ilk bayt/indirme süreleri ayrı ayrı ölçülür
 
-> **Durum:** M1 (masaüstü MVP) büyük ölçüde tamamlandı: REST ve unary gRPC istekleri, environment'lar, geçmiş ve komut
-> paleti kullanılabilir. Kurulum paketleri henüz yok; uygulama kaynak koddan çalıştırılır. Ayrıntılar için
-> [yol haritasına](docs/roadmap.md) bakın.
+> **Durum:** `v0.3.0`. REST ve unary gRPC istekleri, environment'lar, Postman ve OpenAPI içe aktarma, OAuth 2.0,
+> kodsuz testler, koleksiyon çalıştırıcı ve CI için `jetapi` komut satırı aracı ([CLI](docs/cli.md)) kullanılabilir.
+> Paketler [GitHub Releases](https://github.com/mehmedozdemir/JetApi/releases) sayfasındadır (henüz imzasız). Ayrıntılar
+> için [yol haritasına](docs/roadmap.md) bakın.
 
 ![REST istek editörü](docs/images/rest.png)
 

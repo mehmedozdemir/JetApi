@@ -61,9 +61,10 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 
 ## Open work (see docs/roadmap.md)
 
-M1 and M2 are done; `v0.2.0` was tagged on 2026-11-09. Only Windows packages are needed (macOS/Linux optional).
+M1, M2 and M3 are done; `v0.2.0` and `v0.3.0` were tagged on 2026-11-09. Only Windows packages are needed
+(macOS/Linux optional).
 
-M3 (test automation) is done on the branch, not yet released as `v0.3.0`: checks and extractions (ADR-0005, 0008), the
+M3 (test automation, `v0.3.0`): checks and extractions (ADR-0005, 0008), the
 collection runner with data files (ADR-0009), the `jetapi` CLI with JUnit XML and HTML reports (docs/cli.md), and Postman
 `pm.test` import (ADR-0010: common statements become rules, the rest is kept in a `scripts` section and does not run).
 Next is M4 (advanced gRPC).
@@ -71,6 +72,6 @@ Next is M4 (advanced gRPC).
 Notes:
 - CI (`ci.yml`) runs on pushes to every branch (lint, then Windows, Ubuntu and macOS); still run the full test suite
   locally before pushing.
-- NFR-1 (start-up < 1.5 s) is borderline: 1.5-2.0 s on 2026-11-09 depending on machine load, the same for 0.1.0-alpha.1
-  and 0.2.0; idle memory meets NFR-2 (158 MB). Measure with `build/measure.sh win-x64` on an idle machine;
+- NFR-1 (start-up < 1.5 s) depends on machine load: 1.2 s for 0.3.0 on a quiet machine, 1.5-2.0 s for 0.2.0 on a busy
+  one; idle memory meets NFR-2 (161 MB). Measure with `build/measure.sh win-x64` on an idle machine;
   `--measure` ignores the saved rendering setting. See docs/performance.md.

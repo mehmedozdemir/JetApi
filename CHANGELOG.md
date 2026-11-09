@@ -5,6 +5,10 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-09
+
+Test otomasyonu sürümü (M3): kodsuz testler ve değişken çıkarma, koleksiyon çalıştırıcı, `jetapi` komut satırı aracı ve CI raporları, Postman test script'lerinin içe aktarılması.
+
 ### Added
 
 - Postman test script'leri içe aktarılırken yaygın ifadeler (`pm.response.to.have.status`, `pm.expect(json.x).to.eql(…)`, yanıt süresi, header, body, `pm.environment.set(…)` ve benzerleri) testlere ve çıkarma kurallarına çevrilir. Çevrilemeyen script'ler, pre-request script'leri ve klasör/koleksiyon script'leri dosyada yeni `scripts` bölümünde aynen saklanır ama çalışmaz; rapor, isteğin *Testler* sekmesi ve `jetapi` bunu söyler (ADR-0010, [import.md](docs/import.md)).

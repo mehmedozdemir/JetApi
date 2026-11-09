@@ -199,20 +199,20 @@
       "jetapi.http": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.2.0, )"
+          "JetApi.Core": "[0.3.0, )"
         }
       },
       "jetapi.import": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.2.0, )",
+          "JetApi.Core": "[0.3.0, )",
           "YamlDotNet": "[18.1.0, )"
         }
       },
       "jetapi.storage": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.2.0, )",
+          "JetApi.Core": "[0.3.0, )",
           "YamlDotNet": "[18.1.0, )"
         }
       },
