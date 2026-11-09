@@ -90,6 +90,14 @@
                 </Border>
               </StackPanel>
             </RadioButton>
+            <RadioButton Classes="tab" GroupName="req" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Tests_Tab}" />
+                <Border Classes="badge" Classes.fail="{Binding Tests.HasFailures}" IsVisible="{Binding Tests.Badge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding Tests.Badge}" />
+                </Border>
+              </StackPanel>
+            </RadioButton>
             <RadioButton Classes="tab" GroupName="req" Content="{l:Tr Req_Settings}"
                          IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Settings}" />
           </StackPanel>
@@ -171,6 +179,10 @@
             </Panel>
           </Grid>
 
+          <ScrollViewer IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+            <v:TestsEditorView DataContext="{Binding Tests}" />
+          </ScrollViewer>
+
           <StackPanel Margin="16" Spacing="12" MaxWidth="520" HorizontalAlignment="Left"
                       IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Settings}">
             <CheckBox IsChecked="{Binding FollowRedirects}" Content="{l:Tr Req_FollowRedirects}" />
@@ -221,6 +233,16 @@
                          IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Timing}" />
             <RadioButton Classes="tab" GroupName="res" Content="{l:Tr Res_Sent}"
                          IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Sent}" />
+            <RadioButton Classes="tab" GroupName="res" IsVisible="{Binding HasTestRun}"
+                         IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Tests_Results}" />
+                <Border Classes="badge" Classes.fail="{Binding TestRunFailed}" Classes.pass="{Binding TestRunPassed}"
+                        IsVisible="{Binding TestRunBadge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding TestRunBadge}" />
+                </Border>
+              </StackPanel>
+            </RadioButton>
           </StackPanel>
           </ScrollViewer>
         </Border>
@@ -273,7 +295,8 @@
               </Border>
               <Border Grid.Row="2" Classes="code" IsVisible="{Binding Response.HasResponse}">
                 <Panel>
-                  <c:CodeEditor Text="{Binding Response.DisplayedBody, Mode=OneWay}" Language="{Binding Response.BodyLanguage}" IsReadOnly="True" />
+                  <c:CodeEditor Text="{Binding Response.DisplayedBody, Mode=OneWay}" Language="{Binding Response.BodyLanguage}" IsReadOnly="True"
+                              AddCheckCommand="{Binding AddCheckFromResponseCommand}" AddExtractionCommand="{Binding AddExtractionFromResponseCommand}" />
                   <TextBlock Classes="muted" Margin="12" Text="{l:Tr Res_NoBody}" IsVisible="{Binding Response.HasNoBody}" />
                 </Panel>
               </Border>
@@ -318,6 +341,17 @@
                 <SelectableTextBlock Text="{Binding Response.ErrorMessage}" TextWrapping="Wrap" />
               </Border>
             </StackPanel>
+
+            <!-- Test results -->
+            <ScrollViewer IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+              <ContentControl Content="{Binding TestRun}">
+                <ContentControl.DataTemplates>
+                  <DataTemplate x:DataType="vm:TestRunViewModel">
+                    <v:TestResultsView />
+                  </DataTemplate>
+                </ContentControl.DataTemplates>
+              </ContentControl>
+            </ScrollViewer>
 
             <!-- Sent request -->
             <Grid RowDefinitions="Auto,*" Margin="12"

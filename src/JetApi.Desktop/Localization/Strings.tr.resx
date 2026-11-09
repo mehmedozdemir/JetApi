@@ -46,7 +46,14 @@
   <data name="Btn_SaveToFile" xml:space="preserve"><value>Dosyaya kaydet</value></data>
   <data name="Btn_Send" xml:space="preserve"><value>Gönder</value></data>
   <data name="Btn_SendAnyway" xml:space="preserve"><value>Yine de gönder</value></data>
+  <data name="Check_Body" xml:space="preserve"><value>Body</value></data>
+  <data name="Check_Header" xml:space="preserve"><value>Header</value></data>
+  <data name="Check_Json" xml:space="preserve"><value>JSON</value></data>
+  <data name="Check_Schema" xml:space="preserve"><value>Şema</value></data>
+  <data name="Check_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Check_Time" xml:space="preserve"><value>Süre (ms)</value></data>
   <data name="Cmd_ClearCookies" xml:space="preserve"><value>Cookie’leri temizle</value></data>
+  <data name="Cmd_ClearRuntime" xml:space="preserve"><value>Çalışma anı değişkenlerini temizle</value></data>
   <data name="Cmd_CloseWorkspace" xml:space="preserve"><value>Workspace’i kapat</value></data>
   <data name="Cmd_CodeSnippet" xml:space="preserve"><value>Kod örneği…</value></data>
   <data name="Cmd_CopyAsCurl" xml:space="preserve"><value>cURL olarak kopyala</value></data>
@@ -172,6 +179,15 @@
   <data name="OAuth_TokensLocal" xml:space="preserve"><value>Token’lar bu bilgisayarda kalır (.jetapi/tokens.json), Git’e girmez.</value></data>
   <data name="OAuth_UsePkce" xml:space="preserve"><value>PKCE kullan (S256)</value></data>
   <data name="OAuth_WaitingForBrowser" xml:space="preserve"><value>Tarayıcıda oturum açmayı tamamlayın…</value></data>
+  <data name="Op_Contains" xml:space="preserve"><value>içerir</value></data>
+  <data name="Op_Equals" xml:space="preserve"><value>eşittir</value></data>
+  <data name="Op_Exists" xml:space="preserve"><value>var</value></data>
+  <data name="Op_GreaterThan" xml:space="preserve"><value>büyüktür</value></data>
+  <data name="Op_LessThan" xml:space="preserve"><value>küçüktür</value></data>
+  <data name="Op_Matches" xml:space="preserve"><value>desene uyar</value></data>
+  <data name="Op_NotContains" xml:space="preserve"><value>içermez</value></data>
+  <data name="Op_NotEquals" xml:space="preserve"><value>eşit değil</value></data>
+  <data name="Op_NotExists" xml:space="preserve"><value>yok</value></data>
   <data name="Palette_ActiveEnv" xml:space="preserve"><value>aktif</value></data>
   <data name="Palette_Close" xml:space="preserve"><value>kapat</value></data>
   <data name="Palette_Commands" xml:space="preserve"><value>Komutlar</value></data>
@@ -300,9 +316,38 @@
   <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
   <data name="Status_Saved" xml:space="preserve"><value>Tüm değişiklikler kaydedildi</value></data>
   <data name="Status_Unsaved" xml:space="preserve"><value>Kaydedilmemiş: {0}</value></data>
+  <data name="Tests_AddCheck" xml:space="preserve"><value>Kontrol ekle</value></data>
+  <data name="Tests_AddCheckAt" xml:space="preserve"><value>{0} için test ekle</value></data>
+  <data name="Tests_AddCheckHere" xml:space="preserve"><value>Bu alan için test ekle</value></data>
+  <data name="Tests_AddExtraction" xml:space="preserve"><value>Kural ekle</value></data>
+  <data name="Tests_AddExtractionAt" xml:space="preserve"><value>{0} değerini her gönderimde değişkene çıkar</value></data>
+  <data name="Tests_AddExtractionHere" xml:space="preserve"><value>Bu değeri her gönderimde değişkene çıkar</value></data>
+  <data name="Tests_Checks" xml:space="preserve"><value>Kontroller</value></data>
+  <data name="Tests_Empty" xml:space="preserve"><value>Henüz kontrol yok. Buradan ekleyin ya da JSON yanıttaki bir değere sağ tıklayın.</value></data>
+  <data name="Tests_Expected" xml:space="preserve"><value>Beklenen</value></data>
+  <data name="Tests_ExtractedHeader" xml:space="preserve"><value>Çıkarılan değişkenler</value></data>
+  <data name="Tests_Extractions" xml:space="preserve"><value>Değişkene çıkar</value></data>
+  <data name="Tests_From" xml:space="preserve"><value>Kaynak</value></data>
+  <data name="Tests_Hint" xml:space="preserve"><value>Kontroller ve kurallar her yanıtta çalışır ve isteğin dosyasına yazılır, Git'te görünür. Çalışma anı değişkenleri dosyaya yazılmaz; uygulama açıkken geçerlidir ve diğer değişkenleri ezer. Değerlerde {{değişken}} kullanılabilir.</value></data>
+  <data name="Tests_NoEnvironment" xml:space="preserve"><value>Aktif environment yok.</value></data>
+  <data name="Tests_NotChanged" xml:space="preserve"><value>Değişken değiştirilmedi.</value></data>
+  <data name="Tests_Operator" xml:space="preserve"><value>Koşul</value></data>
+  <data name="Tests_PathOrName" xml:space="preserve"><value>Yol / ad</value></data>
+  <data name="Tests_Results" xml:space="preserve"><value>Test sonuçları</value></data>
+  <data name="Tests_SchemaTitle" xml:space="preserve"><value>JSON Şemaya uyar</value></data>
+  <data name="Tests_Summary" xml:space="preserve"><value>{0} geçti · {1} kaldı</value></data>
+  <data name="Tests_Tab" xml:space="preserve"><value>Testler</value></data>
+  <data name="Tests_Target" xml:space="preserve"><value>Hedef</value></data>
+  <data name="Tests_To" xml:space="preserve"><value>Nereye</value></data>
+  <data name="Tests_Variable" xml:space="preserve"><value>Değişken</value></data>
+  <data name="Tests_What" xml:space="preserve"><value>Neyi</value></data>
   <data name="Theme_Dark" xml:space="preserve"><value>Koyu</value></data>
   <data name="Theme_Light" xml:space="preserve"><value>Açık</value></data>
   <data name="Theme_System" xml:space="preserve"><value>Sistem</value></data>
+  <data name="To_Collection" xml:space="preserve"><value>Koleksiyon</value></data>
+  <data name="To_Environment" xml:space="preserve"><value>Environment</value></data>
+  <data name="To_Global" xml:space="preserve"><value>Global</value></data>
+  <data name="To_Runtime" xml:space="preserve"><value>Çalışma anı</value></data>
   <data name="Top_CloseWorkspace" xml:space="preserve"><value>Workspace’i kapat</value></data>
   <data name="Top_Language" xml:space="preserve"><value>Dil</value></data>
   <data name="Top_NoEnvironment" xml:space="preserve"><value>Environment yok</value></data>

@@ -250,7 +250,12 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
         Settings = new GrpcRequestSettings(
             ValidateCertificates,
             int.TryParse(DeadlineText, NumberStyles.None, CultureInfo.InvariantCulture, out var ms) && ms > 0 ? TimeSpan.FromMilliseconds(ms) : null),
+        Checks = Tests?.ToChecks() ?? [],
+        Extractions = Tests?.ToExtractions() ?? [],
     };
+
+    /// <inheritdoc />
+    protected override void ShowTestsSection() => Section = RequestSection.Tests;
 
     /// <inheritdoc />
     public override void OnContextChanged()
@@ -296,8 +301,16 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
 
         Response.IsSending = true;
         var result = await Host.Runner.InvokeGrpcAsync(outcome.Preparation.Call!, outcome.Schema!, new ProtoJsonDecodeOptions(EmitDefaults), cancellationToken).ConfigureAwait(true);
+        var showTests = ResponseSection == ResponseSection.Tests;
         Response.SetResult(result);
         ResponseSection = ResponseSection.Body;
+        await RunTestsAsync(result.Outcome == JetApi.Grpc.GrpcCallOutcome.Completed
+            ? new JetApi.Testing.ResponseSnapshot(result.StatusCode, [.. result.ResponseHeaders, .. result.Trailers], result.ResponseJson, result.Duration)
+            : JetApi.Testing.ResponseSnapshot.None).ConfigureAwait(true);
+        if (showTests && TestRun is not null)
+        {
+            ResponseSection = ResponseSection.Tests;
+        }
 
         Host.AddHistory(new HistoryEntry(
             DateTimeOffset.Now,

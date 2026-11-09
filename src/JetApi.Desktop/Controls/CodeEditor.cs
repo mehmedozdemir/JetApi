@@ -48,6 +48,15 @@ public sealed class CodeEditor : UserControl
     /// </summary>
     public static readonly StyledProperty<ICommand?> PastedTextCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(PastedTextCommand));
 
+    /// <summary>
+    /// Offered on a JSON value in a read-only editor (a response): "Add a check for this value". Gets the
+    /// <see cref="JetApi.Testing.JsonPath.JsonPathHit"/> under the caret or selection.
+    /// </summary>
+    public static readonly StyledProperty<ICommand?> AddCheckCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(AddCheckCommand));
+
+    /// <summary>Offered like <see cref="AddCheckCommandProperty"/>: "Add a rule to save it to a variable".</summary>
+    public static readonly StyledProperty<ICommand?> AddExtractionCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(AddExtractionCommand));
+
     /// <summary>Runs on Enter in single-line mode (e.g. send the request).</summary>
     public static readonly StyledProperty<ICommand?> EnterCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(EnterCommand));
 
@@ -119,6 +128,7 @@ public sealed class CodeEditor : UserControl
         };
         _editor.TextArea.LostFocus += (_, _) => Completion?.OnTextChanged();
         _editor.TextArea.AddHandler(KeyDownEvent, OnEditorKeyDown, RoutingStrategies.Tunnel);
+        _editor.TextArea.AddHandler(PointerPressedEvent, OnTextAreaPointerPressed, RoutingStrategies.Tunnel);
 
         // The frame around the editor shows focus; the default focus rectangle inside it is noise.
         _editor.TextArea.FocusAdorner = null;
@@ -203,6 +213,20 @@ public sealed class CodeEditor : UserControl
     {
         get => GetValue(PlaceholderTextProperty);
         set => SetValue(PlaceholderTextProperty, value);
+    }
+
+    /// <summary>Adds a check for the JSON value under the caret.</summary>
+    public ICommand? AddCheckCommand
+    {
+        get => GetValue(AddCheckCommandProperty);
+        set => SetValue(AddCheckCommandProperty, value);
+    }
+
+    /// <summary>Adds an extraction for the JSON value under the caret.</summary>
+    public ICommand? AddExtractionCommand
+    {
+        get => GetValue(AddExtractionCommandProperty);
+        set => SetValue(AddExtractionCommandProperty, value);
     }
 
     /// <summary>Runs on Enter in single-line mode.</summary>
@@ -376,8 +400,14 @@ public sealed class CodeEditor : UserControl
         var setAsVariable = VariableHints.CreateSetAsVariableItem(SetSelectionAsVariable);
         var assign = new MenuItem { Header = Localization.Loc.Get("Var_AssignToVariable"), Icon = Icon.ForMenu("Icon.Variable") };
         assign.Click += (_, _) => AssignSelectionToVariable();
+        JetApi.Testing.JsonPath.JsonPathHit? hit = null;
+        var testSeparator = new Separator();
+        var addCheck = new MenuItem { Header = Localization.Loc.Get("Tests_AddCheckHere"), Icon = Icon.ForMenu("Icon.Check") };
+        addCheck.Click += (_, _) => AddCheckCommand?.Execute(hit);
+        var addExtraction = new MenuItem { Header = Localization.Loc.Get("Tests_AddExtractionHere"), Icon = Icon.ForMenu("Icon.Variable") };
+        addExtraction.Click += (_, _) => AddExtractionCommand?.Execute(hit);
 
-        var menu = new MenuFlyout { Items = { cut, copy, paste, selectAll, separator, setAsVariable, assign } };
+        var menu = new MenuFlyout { Items = { cut, copy, paste, selectAll, separator, setAsVariable, assign, testSeparator, addCheck, addExtraction } };
         menu.Opening += (_, _) =>
         {
             var hasSelection = !_editor.TextArea.Selection.IsEmpty;
@@ -393,9 +423,50 @@ public sealed class CodeEditor : UserControl
             assign.IsVisible = canAssign;
             assign.IsEnabled = canAssign && VariableHints.CanSetAsVariable(VariableHints.GetContext(this), SelectedText());
             separator.IsVisible = available || canAssign;
+
+            // Responses: a check or extraction for the JSON value under the caret (its path is shown in the menu).
+            hit = IsReadOnly && (AddCheckCommand ?? AddExtractionCommand) is not null ? JsonValueAtCaret() : null;
+            testSeparator.IsVisible = addCheck.IsVisible = hit is not null && AddCheckCommand is not null;
+            addExtraction.IsVisible = hit is not null && AddExtractionCommand is not null;
+            testSeparator.IsVisible |= addExtraction.IsVisible;
+            if (hit is not null)
+            {
+                addCheck.Header = Localization.Loc.Format("Tests_AddCheckAt", hit.Path);
+                addExtraction.Header = Localization.Loc.Format("Tests_AddExtractionAt", hit.Path);
+            }
         };
         return menu;
     }
+
+    // The JSON value at the start of the selection, or at the caret.
+    private JetApi.Testing.JsonPath.JsonPathHit? JsonValueAtCaret()
+    {
+        var offset = _editor.TextArea.Selection.IsEmpty ? _editor.CaretOffset : _editor.TextArea.Selection.SurroundingSegment.Offset;
+        return JetApi.Testing.JsonPath.JsonPathLocator.Find(_editor.Document.Text, offset);
+    }
+
+    // A right click moves the caret there (unless it is inside the selection), so the menu acts on what was clicked.
+    private void OnTextAreaPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!e.GetCurrentPoint(_editor.TextArea).Properties.IsRightButtonPressed || _editor.GetPositionFromPoint(e.GetPosition(_editor)) is not { } position)
+        {
+            return;
+        }
+
+        var offset = _editor.Document.GetOffset(position.Location);
+        var selection = _editor.TextArea.Selection;
+        if (selection.IsEmpty || !selection.Contains(offset))
+        {
+            _editor.TextArea.ClearSelection();
+            _editor.CaretOffset = offset;
+        }
+    }
+
+    /// <summary>Puts the caret at <paramref name="offset"/> (tests).</summary>
+    internal void MoveCaret(int offset) => _editor.CaretOffset = offset;
+
+    /// <summary>The editor's context menu (tests).</summary>
+    internal MenuFlyout? Menu => _editor.ContextFlyout as MenuFlyout;
 
     private string SelectedText() => _editor.TextArea.Selection.IsEmpty ? string.Empty : _editor.TextArea.Selection.GetText();
 

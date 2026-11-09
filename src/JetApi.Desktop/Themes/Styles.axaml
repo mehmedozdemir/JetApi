@@ -82,6 +82,19 @@
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
   </Style>
+  <!-- Test counts: red when a check failed, green when all passed. -->
+  <Style Selector="Border.badge.fail">
+    <Setter Property="Background" Value="{DynamicResource Tone.Danger.Bg}" />
+  </Style>
+  <Style Selector="Border.badge.fail TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource Tone.Danger.Fg}" />
+  </Style>
+  <Style Selector="Border.badge.pass">
+    <Setter Property="Background" Value="{DynamicResource Tone.Success.Bg}" />
+  </Style>
+  <Style Selector="Border.badge.pass TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource Tone.Success.Fg}" />
+  </Style>
   <!-- A metric next to the status ("94 ms", "68 B"). -->
   <Style Selector="Border.chip">
     <Setter Property="Background" Value="{DynamicResource Tone.Neutral.Bg}" />

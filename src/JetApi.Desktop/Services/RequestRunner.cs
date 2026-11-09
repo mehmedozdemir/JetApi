@@ -45,7 +45,11 @@ public sealed class RequestRunner : IDisposable
     {
         ArgumentNullException.ThrowIfNull(session);
         var collection = collectionKey is null ? null : session.Workspace.FindCollection(collectionKey);
-        return VariableResolverFactory.Create(session.Workspace, collection, session.ActiveEnvironment);
+        return VariableResolverFactory.Create(
+            session.Workspace,
+            collection,
+            session.ActiveEnvironment,
+            session.RuntimeVariables.Count == 0 ? null : [.. session.RuntimeVariables.Select(v => new Variable(v.Key, v.Value))]);
     }
 
     /// <summary>The auth that applies to a request at <paramref name="path"/> and where it comes from.</summary>

@@ -27,6 +27,9 @@ public enum RequestSection
 
     /// <summary>Settings.</summary>
     Settings,
+
+    /// <summary>Checks and extractions (M3).</summary>
+    Tests,
 }
 
 /// <summary>Sections of the response panel.</summary>
@@ -43,6 +46,9 @@ public enum ResponseSection
 
     /// <summary>Sent request or metadata.</summary>
     Sent,
+
+    /// <summary>Results of the checks and extractions.</summary>
+    Tests,
 }
 
 /// <summary>A body type pill; selecting it changes the body mode of its tab.</summary>
@@ -357,7 +363,12 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
             FollowRedirects,
             ValidateCertificates,
             int.TryParse(TimeoutText, NumberStyles.None, CultureInfo.InvariantCulture, out var ms) && ms > 0 ? TimeSpan.FromMilliseconds(ms) : null),
+        Checks = Tests?.ToChecks() ?? [],
+        Extractions = Tests?.ToExtractions() ?? [],
     };
+
+    /// <inheritdoc />
+    protected override void ShowTestsSection() => Section = RequestSection.Tests;
 
     /// <inheritdoc />
     public override void OnContextChanged()
@@ -445,8 +456,16 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
 
         Response.IsSending = true;
         var result = await Host.Runner.ExecuteHttpAsync(preparation.Request!, Host.Session.Cookies, cancellationToken).ConfigureAwait(true);
+        var showTests = ResponseSection == ResponseSection.Tests;
         Response.SetResult(result, preparation.Request!.Headers);
         ResponseSection = result.Outcome == HttpExecutionOutcome.Completed ? ResponseSection.Body : ResponseSection.Timing;
+        await RunTestsAsync(result.Outcome == HttpExecutionOutcome.Completed && result.StatusCode is { } status
+            ? new JetApi.Testing.ResponseSnapshot((int)status, result.Headers, Formatting.DecodeText(result.Body.Span, result.ContentType), result.Timings?.Total)
+            : JetApi.Testing.ResponseSnapshot.None).ConfigureAwait(true);
+        if (showTests && TestRun is not null)
+        {
+            ResponseSection = ResponseSection.Tests;
+        }
 
         Host.AddHistory(new HistoryEntry(
             DateTimeOffset.Now,

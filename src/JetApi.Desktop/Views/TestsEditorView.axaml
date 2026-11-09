@@ -1,0 +1,137 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.TestsEditorView"
+             x:DataType="vm:TestsEditorViewModel">
+  <!-- The Tests tab: checks and extractions run on every response (ADR-0005). -->
+  <!-- As wide as the pane, but never narrower than 480 px: then it scrolls sideways instead of squeezing the columns. -->
+  <ScrollViewer x:Name="Scroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+  <StackPanel Margin="12" Spacing="10" MinWidth="480" Width="{Binding #Scroller.Viewport.Width, Converter={x:Static c:SubtractConverter.Instance}, ConverterParameter=24}">
+    <Grid ColumnDefinitions="*,Auto">
+      <TextBlock FontWeight="SemiBold" Text="{l:Tr Tests_Checks}" VerticalAlignment="Center" />
+      <Button Grid.Column="1" Classes="link" Command="{Binding AddCheckCommand}">
+        <c:IconLabel Icon="{StaticResource Icon.Plus}" Text="{l:Tr Tests_AddCheck}" />
+      </Button>
+    </Grid>
+    <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{l:Tr Tests_Empty}" IsVisible="{Binding IsEmpty}" />
+
+    <StackPanel IsVisible="{Binding HasChecks}">
+      <Grid ColumnDefinitions="28,104,1.2*,112,*,22,26" Margin="0,0,0,2">
+        <TextBlock Grid.Column="1" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_What}" />
+        <TextBlock Grid.Column="2" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_Target}" />
+        <TextBlock Grid.Column="3" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_Operator}" />
+        <TextBlock Grid.Column="4" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_Expected}" />
+      </Grid>
+      <ItemsControl ItemsSource="{Binding Checks}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:CheckRowViewModel">
+            <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0">
+              <StackPanel>
+                <Grid ColumnDefinitions="28,104,1.2*,112,*,22,26" MinHeight="32">
+                  <CheckBox IsChecked="{Binding IsEnabled}" HorizontalAlignment="Center" ToolTip.Tip="{l:Tr Req_Enabled}" />
+                  <ComboBox Grid.Column="1" Classes="bare" HorizontalAlignment="Stretch" VerticalAlignment="Center" ItemsSource="{Binding Sources}" SelectedItem="{Binding SelectedSource}"
+                            AutomationProperties.Name="{l:Tr Tests_What}">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ILabeled">
+                        <TextBlock Text="{Binding Label}" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                  <TextBox Grid.Column="2" Classes="cell mono" Text="{Binding Target}" PlaceholderText="{Binding TargetPlaceholder}" IsVisible="{Binding HasTarget}"
+                           AutomationProperties.Name="{l:Tr Tests_Target}" />
+                  <TextBlock Grid.Column="2" Classes="faint" Margin="8,0" Text="—" VerticalAlignment="Center" IsVisible="{Binding ShowNoTarget}" />
+                  <ComboBox Grid.Column="3" Classes="bare" HorizontalAlignment="Stretch" VerticalAlignment="Center" ItemsSource="{Binding Operators}" SelectedItem="{Binding SelectedOperator}"
+                            IsVisible="{Binding HasOperator}" AutomationProperties.Name="{l:Tr Tests_Operator}">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ILabeled">
+                        <TextBlock Text="{Binding Label}" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                  <TextBox Grid.Column="4" Classes="cell mono" Text="{Binding Expected}" PlaceholderText="{Binding ExpectedPlaceholder}" IsVisible="{Binding HasInlineExpected}"
+                           AutomationProperties.Name="{l:Tr Tests_Expected}" />
+                  <TextBlock Grid.Column="4" Classes="faint" Margin="8,0" Text="—" VerticalAlignment="Center" IsVisible="{Binding !HasExpected}" />
+                  <!-- A JSON Schema needs several lines: the box takes the target, condition and expected columns. -->
+                  <TextBox Grid.Column="2" Grid.ColumnSpan="3" Classes="cell mono" Margin="0,4" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="72" MaxHeight="220"
+                           VerticalContentAlignment="Top" Text="{Binding Expected}" PlaceholderText="{Binding ExpectedPlaceholder}" IsVisible="{Binding IsSchema}"
+                           AutomationProperties.Name="{l:Tr Check_Schema}" />
+                  <Panel Grid.Column="5" ToolTip.Tip="{Binding ResultText}">
+                    <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" Foreground="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding IsPassed}" />
+                    <c:Icon Data="{StaticResource Icon.Close}" Width="14" Height="14" Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding IsFailed}" />
+                  </Panel>
+                  <Button Grid.Column="6" Classes="icon" Command="{Binding RemoveCommand}" ToolTip.Tip="{l:Tr Btn_Remove}" AutomationProperties.Name="{l:Tr Btn_Remove}">
+                    <c:Icon Data="{StaticResource Icon.Close}" Width="12" Height="12" />
+                  </Button>
+                </Grid>
+                <SelectableTextBlock Classes="small" Margin="132,0,30,6" TextWrapping="Wrap" Text="{Binding ResultText}" Foreground="{DynamicResource Tone.Danger.Fg}"
+                                     IsVisible="{Binding IsFailed}" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+
+    <Border Classes="divider" Height="1" Margin="0,6" />
+    <Grid ColumnDefinitions="*,Auto">
+      <TextBlock FontWeight="SemiBold" Text="{l:Tr Tests_Extractions}" VerticalAlignment="Center" />
+      <Button Grid.Column="1" Classes="link" Command="{Binding AddExtractionCommand}">
+        <c:IconLabel Icon="{StaticResource Icon.Plus}" Text="{l:Tr Tests_AddExtraction}" />
+      </Button>
+    </Grid>
+    <StackPanel IsVisible="{Binding HasExtractions}">
+      <Grid ColumnDefinitions="28,96,1.2*,*,128,22,26" Margin="0,0,0,2">
+        <TextBlock Grid.Column="1" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_From}" />
+        <TextBlock Grid.Column="2" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_PathOrName}" />
+        <TextBlock Grid.Column="3" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_Variable}" />
+        <TextBlock Grid.Column="4" Classes="muted small" Margin="6,6" Text="{l:Tr Tests_To}" />
+      </Grid>
+      <ItemsControl ItemsSource="{Binding Extractions}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:ExtractionRowViewModel">
+            <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0">
+              <StackPanel>
+                <Grid ColumnDefinitions="28,96,1.2*,*,128,22,26" MinHeight="32">
+                  <CheckBox IsChecked="{Binding IsEnabled}" HorizontalAlignment="Center" ToolTip.Tip="{l:Tr Req_Enabled}" />
+                  <ComboBox Grid.Column="1" Classes="bare" HorizontalAlignment="Stretch" VerticalAlignment="Center" ItemsSource="{Binding Sources}" SelectedItem="{Binding SelectedSource}"
+                            AutomationProperties.Name="{l:Tr Tests_From}">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ILabeled">
+                        <TextBlock Text="{Binding Label}" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                  <TextBox Grid.Column="2" Classes="cell mono" Text="{Binding Target}" PlaceholderText="{Binding TargetPlaceholder}" IsVisible="{Binding HasTarget}"
+                           AutomationProperties.Name="{l:Tr Tests_PathOrName}" />
+                  <TextBlock Grid.Column="2" Classes="faint" Margin="8,0" Text="—" VerticalAlignment="Center" IsVisible="{Binding !HasTarget}" />
+                  <TextBox Grid.Column="3" Classes="cell mono" Text="{Binding Variable}" PlaceholderText="token" AutomationProperties.Name="{l:Tr Tests_Variable}" />
+                  <ComboBox Grid.Column="4" Classes="bare" HorizontalAlignment="Stretch" VerticalAlignment="Center" ItemsSource="{Binding Targets}" SelectedItem="{Binding SelectedTo}"
+                            AutomationProperties.Name="{l:Tr Tests_To}">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ILabeled">
+                        <TextBlock Text="{Binding Label}" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                  <Panel Grid.Column="5" ToolTip.Tip="{Binding ResultText}">
+                    <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" Foreground="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding IsPassed}" />
+                    <c:Icon Data="{StaticResource Icon.Close}" Width="14" Height="14" Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding IsFailed}" />
+                  </Panel>
+                  <Button Grid.Column="6" Classes="icon" Command="{Binding RemoveCommand}" ToolTip.Tip="{l:Tr Btn_Remove}" AutomationProperties.Name="{l:Tr Btn_Remove}">
+                    <c:Icon Data="{StaticResource Icon.Close}" Width="12" Height="12" />
+                  </Button>
+                </Grid>
+                <SelectableTextBlock Classes="small" Margin="132,0,30,6" TextWrapping="Wrap" Text="{Binding ResultText}" Foreground="{DynamicResource Tone.Danger.Fg}"
+                                     IsVisible="{Binding IsFailed}" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+    <TextBlock Classes="muted small" TextWrapping="Wrap" LineHeight="17" Text="{l:Tr Tests_Hint}" />
+  </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -124,6 +124,13 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         RebuildHistory();
         IsDiagnosticsVisible = session.Diagnostics.Count > 0;
         session.Changed += (_, _) => _host.Post(OnSessionChanged);
+        session.RuntimeVariablesChanged += (_, _) => _host.Post(() =>
+        {
+            foreach (var tab in Tabs)
+            {
+                tab.OnContextChanged();
+            }
+        });
         Tabs.CollectionChanged += (_, _) => RememberTabs();
         if (watchFiles)
         {
@@ -1240,6 +1247,15 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             _host.ToggleLanguage();
             return Task.CompletedTask;
         }));
+        if (Session.RuntimeVariables.Count > 0)
+        {
+            items.Add(PaletteItemViewModel.Command(commands, "Icon.Trash", Loc.Get("Cmd_ClearRuntime"), string.Join(", ", Session.RuntimeVariables.Keys.Order(StringComparer.OrdinalIgnoreCase)), string.Empty, () =>
+            {
+                Session.ClearRuntimeVariables();
+                return Task.CompletedTask;
+            }));
+        }
+
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Folder", Loc.Get("Top_OpenWorkspace"), string.Empty, string.Empty, OpenOtherWorkspaceAsync));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Close", Loc.Get("Cmd_CloseWorkspace"), string.Empty, string.Empty, CloseWorkspaceAsync));
         return items;

@@ -107,6 +107,132 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
         Description = request.Description;
         _savedYaml = path is null ? string.Empty : RequestFiles.Serialize(request);
         Variables = CreateVariableContext();
+        Tests = new TestsEditorViewModel(request, () =>
+        {
+            UpdateDirty();
+            OnPropertyChanged(nameof(Tests));
+        });
+    }
+
+    /// <summary>The Tests tab: checks and extractions (ADR-0005).</summary>
+    public TestsEditorViewModel Tests { get; }
+
+    /// <summary>Results of the checks and extractions of the last send; <c>null</c> when none ran.</summary>
+    [ObservableProperty]
+    public partial TestRunViewModel? TestRun { get; private set; }
+
+    /// <summary>A test run is shown (the Test results tab is there).</summary>
+    public bool HasTestRun => TestRun is not null;
+
+    /// <summary>"3/4" on the Test results tab.</summary>
+    public string TestRunBadge => TestRun?.Badge ?? string.Empty;
+
+    /// <summary>A check failed in the last run (the badge is red, otherwise green).</summary>
+    public bool TestRunFailed => TestRun is { AllPassed: false };
+
+    /// <summary>All checks passed in the last run.</summary>
+    public bool TestRunPassed => TestRun is { AllPassed: true, HasChecks: true };
+
+    partial void OnTestRunChanged(TestRunViewModel? value)
+    {
+        OnPropertyChanged(nameof(HasTestRun));
+        OnPropertyChanged(nameof(TestRunBadge));
+        OnPropertyChanged(nameof(TestRunFailed));
+        OnPropertyChanged(nameof(TestRunPassed));
+    }
+
+    /// <summary>Opens the Tests section of the request.</summary>
+    protected abstract void ShowTestsSection();
+
+    /// <summary>Adds a check for a value picked in the response (right-click on a JSON value).</summary>
+    [RelayCommand]
+    private void AddCheckFromResponse(JetApi.Testing.JsonPath.JsonPathHit hit)
+    {
+        ArgumentNullException.ThrowIfNull(hit);
+        Tests.Add(hit.IsContainer
+            ? new ResponseCheck(CheckSource.Json, CheckOperator.Exists, hit.Path)
+            : new ResponseCheck(CheckSource.Json, CheckOperator.Equals, hit.Path, hit.Value!));
+        ShowTestsSection();
+    }
+
+    /// <summary>Adds an extraction for a value picked in the response.</summary>
+    [RelayCommand]
+    private void AddExtractionFromResponse(JetApi.Testing.JsonPath.JsonPathHit hit)
+    {
+        ArgumentNullException.ThrowIfNull(hit);
+        Tests.Add(new Extraction(ExtractionSource.Json, hit.Path, VariableNameFor(hit.Name)));
+        ShowTestsSection();
+    }
+
+    /// <summary>A variable name from a member name: characters a placeholder cannot hold become "_".</summary>
+    internal static string VariableNameFor(string name)
+    {
+        var cleaned = new string([.. name.Select(c => char.IsAsciiLetterOrDigit(c) || c is '_' or '-' or '.' ? c : '_')]).Trim('_');
+        return cleaned.Length == 0 ? "value" : cleaned;
+    }
+
+    /// <summary>
+    /// Runs the checks and extractions of the request on <paramref name="response"/>, stores the extracted values and shows
+    /// the results. Nothing runs when the request has none.
+    /// </summary>
+    protected async Task RunTestsAsync(JetApi.Testing.ResponseSnapshot response)
+    {
+        ArgumentNullException.ThrowIfNull(response);
+        var checks = Tests.ToChecks();
+        var extractions = Tests.ToExtractions();
+        if (!checks.Any(c => c.IsEnabled) && !extractions.Any(e => e.IsEnabled))
+        {
+            return;
+        }
+
+        var resolver = RequestRunner.CreateResolver(Host.Session, CollectionKey);
+        string Resolve(string text) => resolver.Resolve(text).Value;
+        var checkResults = JetApi.Testing.ResponseChecker.Run(response, checks, Resolve);
+        var stored = new List<JetApi.Testing.ExtractionResult>();
+        foreach (var result in JetApi.Testing.ResponseExtractor.Run(response, extractions, Resolve))
+        {
+            var error = result.IsSuccess ? await StoreAsync(result.Extraction, result.Value!).ConfigureAwait(true) : null;
+            stored.Add(error is null ? result : result with { Value = null, Error = error });
+        }
+
+        Tests.ShowResults(checkResults, stored);
+        TestRun = new TestRunViewModel(checkResults, stored);
+    }
+
+    // Puts an extracted value where the extraction says; returns why it could not, or null.
+    private async Task<string?> StoreAsync(Extraction extraction, string value)
+    {
+        if (!VariableResolver.IsValidVariableName(extraction.Variable))
+        {
+            return Loc.Get(extraction.Variable.Length == 0 ? "Var_NameRequired" : "Var_NameInvalid");
+        }
+
+        if (extraction.To == ExtractionTarget.Runtime)
+        {
+            Host.Session.SetRuntimeVariable(extraction.Variable, value);
+            return null;
+        }
+
+        if (extraction.To == ExtractionTarget.Environment && Host.Session.ActiveEnvironment is null)
+        {
+            return Loc.Get("Tests_NoEnvironment");
+        }
+
+        var layer = extraction.To switch
+        {
+            ExtractionTarget.Environment => VariableSource.Environment,
+            ExtractionTarget.Collection => VariableSource.Collection,
+            _ => VariableSource.Global,
+        };
+        try
+        {
+            await VariableWriter.SetAsync(Host.Session, CollectionKey, layer, extraction.Variable, value).ConfigureAwait(true);
+            return null;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or WorkspaceStorageException or InvalidOperationException)
+        {
+            return Loc.Format("Error_Save", exception.Message);
+        }
     }
 
     /// <summary>Variables visible to this tab, for highlighting and hover hints in editors.</summary>
@@ -192,6 +318,10 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
         _sending?.Dispose();
         _sending = new CancellationTokenSource();
         IsBusy = true;
+
+        // Results of an earlier send must not look like this one's.
+        TestRun = null;
+        Tests.ShowResults([], []);
         try
         {
             await SendCoreAsync(_sending.Token).ConfigureAwait(true);

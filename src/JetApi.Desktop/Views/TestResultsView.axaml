@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             xmlns:l="using:JetApi.Desktop.Localization"
+             x:Class="JetApi.Desktop.Views.TestResultsView"
+             x:DataType="vm:TestRunViewModel">
+  <!-- Results of the last send: failures first, then the extracted variables. -->
+  <StackPanel Margin="12" Spacing="12">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" IsVisible="{Binding HasChecks}">
+      <TextBlock FontWeight="SemiBold" Text="{Binding Summary}" VerticalAlignment="Center" />
+      <ProgressBar Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding PassedShare}" Height="6" MinHeight="6" VerticalAlignment="Center"
+                   Foreground="{DynamicResource Tone.Success.Fg}" Background="{DynamicResource Tone.Danger.Bg}" CornerRadius="3" />
+    </Grid>
+    <ItemsControl ItemsSource="{Binding Checks}" IsVisible="{Binding HasChecks}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:TestResultLine">
+          <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="4,8">
+            <Grid ColumnDefinitions="22,*,*" ColumnSpacing="10">
+              <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" Foreground="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding Passed}" />
+              <c:Icon Data="{StaticResource Icon.Close}" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding !Passed}" />
+              <SelectableTextBlock Grid.Column="1" Classes="mono" TextWrapping="Wrap" Text="{Binding Title}" />
+              <SelectableTextBlock Grid.Column="2" TextWrapping="Wrap" Text="{Binding Detail}" Foreground="{DynamicResource App.TextMuted}" IsVisible="{Binding Passed}" />
+              <SelectableTextBlock Grid.Column="2" TextWrapping="Wrap" Text="{Binding Detail}" Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding !Passed}" />
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <TextBlock FontWeight="SemiBold" Text="{l:Tr Tests_ExtractedHeader}" IsVisible="{Binding HasExtractions}" />
+    <ItemsControl ItemsSource="{Binding Extractions}" IsVisible="{Binding HasExtractions}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:TestResultLine">
+          <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="4,8">
+            <Grid ColumnDefinitions="22,*,*" ColumnSpacing="10">
+              <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" Foreground="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding Passed}" />
+              <c:Icon Data="{StaticResource Icon.Close}" Width="14" Height="14" VerticalAlignment="Top" Margin="0,2,0,0" Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding !Passed}" />
+              <SelectableTextBlock Grid.Column="1" Classes="mono" TextWrapping="Wrap" Text="{Binding Title}" />
+              <SelectableTextBlock Grid.Column="2" TextWrapping="Wrap" Text="{Binding Detail}" Foreground="{DynamicResource App.TextMuted}" IsVisible="{Binding Passed}" />
+              <SelectableTextBlock Grid.Column="2" TextWrapping="Wrap" Text="{Binding Detail}" Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding !Passed}" />
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </StackPanel>
+</UserControl>

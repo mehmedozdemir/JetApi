@@ -30,6 +30,33 @@ public sealed class WorkspaceSession
     /// <summary>Raised after the model changed (edit, reload, environment switch).</summary>
     public event EventHandler? Changed;
 
+    /// <summary>Raised when a runtime variable is set or the runtime variables are cleared.</summary>
+    public event EventHandler? RuntimeVariablesChanged;
+
+    private readonly Dictionary<string, string> _runtimeVariables = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Values taken from responses (extractions with <c>to: runtime</c>) while the workspace is open: they override every
+    /// other variable and are never written to a file.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> RuntimeVariables => _runtimeVariables;
+
+    /// <summary>Sets a runtime variable.</summary>
+    public void SetRuntimeVariable(string name, string value)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(value);
+        _runtimeVariables[name] = value;
+        RuntimeVariablesChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Forgets every runtime variable.</summary>
+    public void ClearRuntimeVariables()
+    {
+        _runtimeVariables.Clear();
+        RuntimeVariablesChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     /// <summary>Absolute path of the workspace directory.</summary>
     public string Root { get; }
 

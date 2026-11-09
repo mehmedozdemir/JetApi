@@ -153,6 +153,14 @@
                 <TextBlock Classes="faint small" Text="{Binding AuthBadge}" VerticalAlignment="Center" />
               </StackPanel>
             </RadioButton>
+            <RadioButton Classes="tab" GroupName="greq" IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Tests_Tab}" />
+                <Border Classes="badge" Classes.fail="{Binding Tests.HasFailures}" IsVisible="{Binding Tests.Badge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding Tests.Badge}" />
+                </Border>
+              </StackPanel>
+            </RadioButton>
             <RadioButton Classes="tab" GroupName="greq" Content="{l:Tr Req_Settings}"
                          IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Settings}" />
           </StackPanel>
@@ -208,6 +216,10 @@
             <v:AuthEditorView DataContext="{Binding Auth}" Margin="16" />
           </ScrollViewer>
 
+          <ScrollViewer IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+            <v:TestsEditorView DataContext="{Binding Tests}" />
+          </ScrollViewer>
+
           <StackPanel Margin="16" Spacing="12" MaxWidth="560" HorizontalAlignment="Left"
                       IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Settings}">
             <CheckBox IsChecked="{Binding ValidateCertificates}" Content="{l:Tr Req_ValidateCertificates}" />
@@ -261,6 +273,16 @@
             </RadioButton>
             <RadioButton Classes="tab" GroupName="gres" Content="{l:Tr Grpc_SentMetadata}"
                          IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Sent}" />
+            <RadioButton Classes="tab" GroupName="gres" IsVisible="{Binding HasTestRun}"
+                         IsChecked="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{l:Tr Tests_Results}" />
+                <Border Classes="badge" Classes.fail="{Binding TestRunFailed}" Classes.pass="{Binding TestRunPassed}"
+                        IsVisible="{Binding TestRunBadge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <TextBlock Text="{Binding TestRunBadge}" />
+                </Border>
+              </StackPanel>
+            </RadioButton>
           </StackPanel>
           </ScrollViewer>
         </Border>
@@ -294,7 +316,8 @@
                 </Button>
               </Grid>
               <Border Grid.Row="1" Classes="code" IsVisible="{Binding Response.HasMessage}">
-                <c:CodeEditor Text="{Binding Response.ResponseJson, Mode=OneWay}" Language="json" IsReadOnly="True" />
+                <c:CodeEditor Text="{Binding Response.ResponseJson, Mode=OneWay}" Language="json" IsReadOnly="True"
+                              AddCheckCommand="{Binding AddCheckFromResponseCommand}" AddExtractionCommand="{Binding AddExtractionFromResponseCommand}" />
               </Border>
               <StackPanel Grid.Row="1" Spacing="10" IsVisible="{Binding Response.HasStatusDetail}" VerticalAlignment="Top">
                 <TextBlock Classes="muted small" FontWeight="SemiBold" Text="{l:Tr Grpc_ServerMessage}" />
@@ -328,6 +351,17 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
             </ScrollViewer>
+            <!-- Test results -->
+            <ScrollViewer IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Tests}">
+              <ContentControl Content="{Binding TestRun}">
+                <ContentControl.DataTemplates>
+                  <DataTemplate x:DataType="vm:TestRunViewModel">
+                    <v:TestResultsView />
+                  </DataTemplate>
+                </ContentControl.DataTemplates>
+              </ContentControl>
+            </ScrollViewer>
+
             <ScrollViewer IsVisible="{Binding ResponseSection, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Sent}">
               <ItemsControl ItemsSource="{Binding Response.SentMetadata}" Margin="12">
                 <ItemsControl.ItemTemplate>
