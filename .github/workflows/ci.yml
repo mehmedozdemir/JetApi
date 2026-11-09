@@ -1,9 +1,11 @@
 name: CI
 
 on:
+  # Every branch: this repository's default branch is not `main`, and work is pushed to feature branches too.
   push:
-    branches: [main]
+    branches: ['**']
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
