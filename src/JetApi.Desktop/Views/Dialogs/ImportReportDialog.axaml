@@ -31,7 +31,7 @@
                         Foreground="{DynamicResource Tone.Danger.Fg}" IsVisible="{Binding !Succeeded}" />
                 <StackPanel Grid.Column="1" Spacing="1">
                   <TextBlock FontWeight="SemiBold" Text="{Binding Summary}" TextWrapping="Wrap" />
-                  <TextBlock Classes="mono faint" FontSize="12" Text="{Binding FileName}" />
+                  <TextBlock Classes="mono faint" FontSize="{DynamicResource App.FontSize.Small}" Text="{Binding FileName}" />
                 </StackPanel>
               </Grid>
               <ItemsControl ItemsSource="{Binding Issues}" Margin="22,0,0,0">

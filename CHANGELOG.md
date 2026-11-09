@@ -37,6 +37,7 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Changed
 
+- Arayüz sıkılaştırıldı: yazılar bir kademe küçük (temel 13 pt), düğme ve alanlar daha alçak, ağaçta girinti yarıya indi. Yazı boyutları artık `Tokens.axaml`da tek yerde.
 - Arayüz makyajı: daha az çerçeve, vurgu rengi yalnızca ana eylemde; body türü ve görünüm seçimi segmented control; sekme rozetleri; yanıt süresi ve boyutu chip olarak; istek adı başlık olarak; kopyala ve kaydet ikon butonlar; sade karşılama ekranı; durum çubuğunda kısa yol ve Git dalı. Soluk metnin kontrastı AA seviyesine çıkarıldı. Yanıttaki IPv4 adresleri `[::ffff:…]` biçimi yerine sade gösterilir.
 - Kenar çubuğu ikon şeridiyle Koleksiyonlar, Environments ve Geçmiş arasında geçer; environment listesi kenar çubuğunda, detayı ana alanda açılır. Environment'larda sağ tık menüsü (aktif yap, yeniden adlandır, çoğalt, sil) ve F2 / Ctrl+D / Delete kısayolları; isteklerin menüsüne "Aç" ve Ctrl+D eklendi.
 - Koleksiyon ekranı: koleksiyona tıklayınca açılır; koleksiyon değişkenleri, auth, proto dosyaları ve ad sekmelerde düzenlenir. Koleksiyon değişkenleri environment listesinden buraya taşındı. Ekrandan çıkarken değişiklikler kaydedilir.

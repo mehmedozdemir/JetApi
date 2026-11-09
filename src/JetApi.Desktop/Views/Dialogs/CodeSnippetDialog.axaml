@@ -38,7 +38,7 @@
       <c:CodeEditor Margin="12,4,4,4" IsReadOnly="True" ShowLineNumbers="False" Text="{Binding Code}" Language="{Binding EditorLanguage}"
                     AutomationProperties.Name="{l:Tr Snippet_Title}" />
     </Border>
-    <Button Grid.Row="3" Classes="primary" HorizontalAlignment="Right" Margin="0,16,0,0" Padding="22,0" MinHeight="36"
+    <Button Grid.Row="3" Classes="primary" HorizontalAlignment="Right" Margin="0,16,0,0" Padding="22,0" MinHeight="32"
             Content="{l:Tr Btn_Close}" Click="OnClose" IsDefault="True" IsCancel="True" />
   </Grid>
 </Window>

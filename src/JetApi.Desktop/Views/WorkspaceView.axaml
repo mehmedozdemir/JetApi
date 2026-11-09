@@ -14,9 +14,9 @@
       <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
         <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,12,0">
           <c:Icon Data="{StaticResource Icon.Logo}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" VerticalAlignment="Center" />
-          <TextBlock Text="JetApi" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" />
+          <TextBlock Text="JetApi" FontWeight="Bold" FontSize="{DynamicResource App.FontSize.Heading}" VerticalAlignment="Center" />
         </StackPanel>
-        <Button Grid.Column="1" Classes="flat" MinHeight="32" ToolTip.Tip="{l:Tr Top_Workspace}">
+        <Button Grid.Column="1" Classes="flat" MinHeight="28" ToolTip.Tip="{l:Tr Top_Workspace}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <c:Icon Data="{StaticResource Icon.Folder}" Width="14" Height="14" />
             <TextBlock Text="{Binding WorkspaceName}" MaxWidth="220" TextTrimming="CharacterEllipsis" />
@@ -34,7 +34,7 @@
             </MenuFlyout>
           </Button.Flyout>
         </Button>
-        <Button Grid.Column="2" Classes="secondary" MinHeight="32" MaxWidth="520" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="16,0"
+        <Button Grid.Column="2" Classes="secondary" MinHeight="28" MaxWidth="520" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="16,0"
                 Background="{DynamicResource App.Subtle}" BorderThickness="0" CornerRadius="8" Command="{Binding OpenPaletteCommand}" AutomationProperties.Name="{l:Tr Shortcut_Palette}">
           <Grid ColumnDefinitions="Auto,*,Auto">
             <c:Icon Data="{StaticResource Icon.Search}" Width="14" Height="14" Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Center" />
@@ -56,13 +56,13 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
         <StackPanel Grid.Column="4" Orientation="Horizontal" Margin="8,0,0,0" Spacing="4">
-          <Button Classes="icon" Width="32" Height="32" Command="{Binding OpenSettingsCommand}" ToolTip.Tip="{l:Tr Settings_TitleShortcut}" AutomationProperties.Name="{l:Tr Settings_Title}">
+          <Button Classes="icon" Width="30" Height="30" Command="{Binding OpenSettingsCommand}" ToolTip.Tip="{l:Tr Settings_TitleShortcut}" AutomationProperties.Name="{l:Tr Settings_Title}">
             <c:Icon Data="{StaticResource Icon.Sliders}" />
           </Button>
-          <Button Classes="icon" Width="32" Height="32" Command="{Binding ToggleThemeCommand}" ToolTip.Tip="{l:Tr Cmd_ToggleTheme}" AutomationProperties.Name="{l:Tr Cmd_ToggleTheme}">
+          <Button Classes="icon" Width="30" Height="30" Command="{Binding ToggleThemeCommand}" ToolTip.Tip="{l:Tr Cmd_ToggleTheme}" AutomationProperties.Name="{l:Tr Cmd_ToggleTheme}">
             <c:Icon Data="{StaticResource Icon.Moon}" />
           </Button>
-          <Button Classes="icon" Width="32" Height="32" Command="{Binding ToggleLanguageCommand}" ToolTip.Tip="{l:Tr Cmd_ToggleLanguage}" AutomationProperties.Name="{l:Tr Cmd_ToggleLanguage}">
+          <Button Classes="icon" Width="30" Height="30" Command="{Binding ToggleLanguageCommand}" ToolTip.Tip="{l:Tr Cmd_ToggleLanguage}" AutomationProperties.Name="{l:Tr Cmd_ToggleLanguage}">
             <c:Icon Data="{StaticResource Icon.Globe}" />
           </Button>
         </StackPanel>
@@ -187,7 +187,7 @@
                           <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="vm:ScopeItemViewModel">
                               <Button Classes="flat" Classes.selected="{Binding IsSelected}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                      MinHeight="32" Command="{Binding SelectCommand}">
+                                      MinHeight="28" Command="{Binding SelectCommand}">
                                 <Button.KeyBindings>
                                   <KeyBinding Gesture="F2" Command="{Binding RenameCommand}" />
                                   <KeyBinding Gesture="Ctrl+D" Command="{Binding DuplicateCommand}" />
@@ -219,7 +219,7 @@
                           <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="vm:ScopeItemViewModel">
                               <Button Classes="flat" Classes.selected="{Binding IsSelected}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                      MinHeight="32" Command="{Binding SelectCommand}">
+                                      MinHeight="28" Command="{Binding SelectCommand}">
                                 <Grid ColumnDefinitions="*,Auto">
                                   <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                   <TextBlock Grid.Column="1" Classes="faint small" Text="{Binding Count}" VerticalAlignment="Center" />
@@ -249,8 +249,8 @@
                         <c:MethodBadge Text="{Binding Badge}" VerticalAlignment="Top" Margin="0,2,0,0" />
                         <StackPanel Grid.Column="1" Spacing="1">
                           <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
-                          <TextBlock Classes="mono muted" FontSize="11" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
-                          <TextBlock Classes="faint" FontSize="11" Text="{Binding Meta}" />
+                          <TextBlock Classes="mono muted" FontSize="{DynamicResource App.FontSize.Caption}" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" />
+                          <TextBlock Classes="faint" FontSize="{DynamicResource App.FontSize.Caption}" Text="{Binding Meta}" />
                         </StackPanel>
                       </Grid>
                     </DataTemplate>

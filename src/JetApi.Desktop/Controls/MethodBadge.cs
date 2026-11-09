@@ -13,7 +13,7 @@ public sealed class MethodBadge : TextBlock
     /// <summary>Applies the default look.</summary>
     public MethodBadge()
     {
-        FontSize = 11;
+        FontSize = 10.5;
         FontWeight = FontWeight.SemiBold;
         VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
         this[!FontFamilyProperty] = this.GetResourceObservable("App.MonoFont").ToBinding();

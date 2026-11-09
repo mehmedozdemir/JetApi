@@ -13,7 +13,7 @@
         <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="16,0">
           <Grid ColumnDefinitions="Auto,*,Auto">
             <c:Icon Data="{StaticResource Icon.Search}" Width="18" Height="18" Foreground="{DynamicResource App.TextMuted}" VerticalAlignment="Center" />
-            <TextBox x:Name="QueryBox" Grid.Column="1" Text="{Binding Query}" BorderThickness="0" Background="Transparent" FontSize="15"
+            <TextBox x:Name="QueryBox" Grid.Column="1" Text="{Binding Query}" BorderThickness="0" Background="Transparent" FontSize="{DynamicResource App.FontSize.Heading}"
                      PlaceholderText="{l:Tr Palette_Placeholder}" KeyDown="OnQueryKeyDown" Margin="8,0" />
             <Border Grid.Column="2" Classes="kbd" VerticalAlignment="Center">
               <TextBlock Text="Esc" />
@@ -25,12 +25,12 @@
             <ItemsControl ItemsSource="{Binding Results}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:PaletteItemViewModel">
-                  <Button Classes="flat" HorizontalAlignment="Stretch" MinHeight="44" Padding="10,4"
+                  <Button Classes="flat" HorizontalAlignment="Stretch" MinHeight="40" Padding="10,4"
                           Background="{Binding IsSelected, Converter={x:Static c:BoolToBrushConverter.Selection}}"
                           Command="{Binding RunCommand}">
                     <Grid ColumnDefinitions="56,*,Auto">
                       <c:MethodBadge Text="{Binding Badge}" IsVisible="{Binding IsRequest}" />
-                      <TextBlock Classes="muted" Text="{Binding Badge}" FontSize="15" IsVisible="{Binding !IsRequest}" VerticalAlignment="Center" />
+                      <TextBlock Classes="muted" Text="{Binding Badge}" FontSize="{DynamicResource App.FontSize.Heading}" IsVisible="{Binding !IsRequest}" VerticalAlignment="Center" />
                       <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
                         <TextBlock Classes="muted small" Text="{Binding Detail}" TextTrimming="CharacterEllipsis" IsVisible="{Binding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />

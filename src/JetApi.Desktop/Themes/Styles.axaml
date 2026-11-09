@@ -6,6 +6,7 @@
   <!-- The interface font from the settings, for the main window and every dialog. -->
   <Style Selector=":is(Window)">
     <Setter Property="FontFamily" Value="{DynamicResource App.UiFont}" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Body}" />
   </Style>
   <Style Selector="TextBlock">
     <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
@@ -17,34 +18,34 @@
     <Setter Property="Foreground" Value="{DynamicResource App.TextFaint}" />
   </Style>
   <Style Selector="TextBlock.small">
-    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Small}" />
   </Style>
   <Style Selector="TextBlock.mono, SelectableTextBlock.mono">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
-    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Mono}" />
   </Style>
   <Style Selector="TextBlock.label">
-    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Caption}" />
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="LetterSpacing" Value="0.6" />
     <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
   </Style>
   <Style Selector="TextBlock.field-label">
-    <Setter Property="FontSize" Value="11.5" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Label}" />
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
     <Setter Property="Margin" Value="0,0,0,4" />
   </Style>
   <Style Selector="TextBlock.h1">
-    <Setter Property="FontSize" Value="28" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Display}" />
     <Setter Property="FontWeight" Value="Bold" />
   </Style>
   <Style Selector="TextBlock.h2">
-    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Title}" />
     <Setter Property="FontWeight" Value="Bold" />
   </Style>
   <Style Selector="TextBlock.h3">
-    <Setter Property="FontSize" Value="15" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Heading}" />
     <Setter Property="FontWeight" Value="SemiBold" />
   </Style>
 
@@ -77,7 +78,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
   <Style Selector="Border.badge TextBlock">
-    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Caption}" />
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
   </Style>
@@ -90,7 +91,7 @@
   </Style>
   <Style Selector="Border.chip TextBlock">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
-    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Small}" />
   </Style>
   <!-- Track of a segmented control; holds RadioButton.pill items. -->
   <Style Selector="Border.segment">
@@ -136,14 +137,14 @@
   </Style>
   <Style Selector="Border.kbd TextBlock">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
-    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Caption}" />
     <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
   </Style>
 
   <!-- Buttons -->
   <Style Selector="Button">
     <Setter Property="CornerRadius" Value="6" />
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Control}" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Cursor" Value="Hand" />
   </Style>
@@ -152,7 +153,7 @@
     <Setter Property="Foreground" Value="{DynamicResource App.AccentForeground}" />
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="Padding" Value="16,0" />
-    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="MinHeight" Value="30" />
   </Style>
   <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource App.AccentHover}" />
@@ -176,7 +177,7 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
     <Setter Property="Padding" Value="12,0" />
-    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="MinHeight" Value="30" />
   </Style>
   <Style Selector="Button.secondary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource App.Hover}" />
@@ -188,7 +189,7 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource App.Danger}" />
     <Setter Property="Padding" Value="8,0" />
-    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="MinHeight" Value="28" />
   </Style>
   <Style Selector="Button.danger-link:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource Tone.Danger.Bg}" />
@@ -199,13 +200,13 @@
     <Setter Property="Foreground" Value="{DynamicResource App.Surface}" />
     <Setter Property="FontWeight" Value="SemiBold" />
     <Setter Property="Padding" Value="14,0" />
-    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="MinHeight" Value="30" />
   </Style>
   <Style Selector="Button.link">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource App.Accent}" />
     <Setter Property="Padding" Value="6,2" />
-    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Small}" />
   </Style>
   <Style Selector="Button.link:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource App.AccentSoft}" />
@@ -250,7 +251,7 @@
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Name="root" Background="Transparent" Padding="10,0" Height="40" BorderThickness="0,0,0,2" BorderBrush="Transparent">
+        <Border Name="root" Background="Transparent" Padding="10,0" Height="36" BorderThickness="0,0,0,2" BorderBrush="Transparent">
           <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" VerticalAlignment="Center" />
         </Border>
       </ControlTemplate>
@@ -277,7 +278,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Border Name="root" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" Padding="9,3">
-          <ContentPresenter Content="{TemplateBinding Content}" FontSize="12" VerticalAlignment="Center" />
+          <ContentPresenter Content="{TemplateBinding Content}" FontSize="{DynamicResource App.FontSize.Small}" VerticalAlignment="Center" />
         </Border>
       </ControlTemplate>
     </Setter>
@@ -328,14 +329,14 @@
 
   <!-- Sidebar panel: one-line title, quiet filter, selectable rows. -->
   <Style Selector="TextBlock.panel-title">
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Control}" />
     <Setter Property="FontWeight" Value="SemiBold" />
   </Style>
   <Style Selector="TextBox.filter">
     <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
     <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="MinHeight" Value="30" />
-    <Setter Property="FontSize" Value="13" />
+    <Setter Property="MinHeight" Value="28" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Control}" />
   </Style>
   <Style Selector="TextBox.filter:pointerover /template/ Border#PART_BorderElement">
     <Setter Property="Background" Value="{DynamicResource App.Subtle}" />
@@ -354,7 +355,7 @@
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Name="root" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="6" Padding="10,7">
+        <Border Name="root" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="6" Padding="10,5">
           <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
         </Border>
       </ControlTemplate>
@@ -377,8 +378,8 @@
   <!-- Inputs -->
   <Style Selector="TextBox">
     <Setter Property="CornerRadius" Value="6" />
-    <Setter Property="FontSize" Value="13" />
-    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Control}" />
+    <Setter Property="MinHeight" Value="28" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="Background" Value="{DynamicResource App.Surface}" />
     <Setter Property="BorderBrush" Value="{DynamicResource App.BorderStrong}" />
@@ -386,11 +387,11 @@
   </Style>
   <Style Selector="AutoCompleteBox.mono">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
-    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Mono}" />
   </Style>
   <Style Selector="TextBox.mono">
     <Setter Property="FontFamily" Value="{DynamicResource App.MonoFont}" />
-    <Setter Property="FontSize" Value="12.5" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Mono}" />
     <!-- Hover a {{variable}} to see its value; no-op outside a request tab. -->
     <Setter Property="c:VariableHints.IsEnabled" Value="True" />
   </Style>
@@ -400,7 +401,7 @@
   <Style Selector="TextBox.cell">
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="MinHeight" Value="26" />
     <Setter Property="Padding" Value="6,4" />
   </Style>
   <Style Selector="TextBox.cell:focus /template/ Border#PART_BorderElement">
@@ -409,8 +410,8 @@
   </Style>
   <Style Selector="ComboBox">
     <Setter Property="CornerRadius" Value="6" />
-    <Setter Property="FontSize" Value="13" />
-    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Control}" />
+    <Setter Property="MinHeight" Value="28" />
     <Setter Property="Background" Value="{DynamicResource App.Surface}" />
     <Setter Property="BorderBrush" Value="{DynamicResource App.BorderStrong}" />
   </Style>
@@ -420,7 +421,7 @@
     <Setter Property="BorderBrush" Value="{DynamicResource App.BorderStrong}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="6" />
-    <Setter Property="MinHeight" Value="38" />
+    <Setter Property="MinHeight" Value="34" />
   </Style>
   <Style Selector="Border.field:focus-within">
     <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
@@ -451,12 +452,12 @@
   </Style>
 
   <Style Selector="CheckBox">
-    <Setter Property="MinHeight" Value="28" />
+    <Setter Property="MinHeight" Value="26" />
   </Style>
 
   <!-- Tree -->
   <Style Selector="TreeViewItem">
-    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="MinHeight" Value="26" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="CornerRadius" Value="6" />
   </Style>

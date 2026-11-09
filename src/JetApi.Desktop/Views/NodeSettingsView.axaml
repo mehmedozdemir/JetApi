@@ -12,7 +12,7 @@
       <StackPanel Spacing="2">
         <TextBlock Classes="faint small" Text="{Binding Title}" />
         <TextBlock Classes="h2" FontWeight="SemiBold" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
-        <TextBlock Classes="mono faint" FontSize="12" Text="{Binding Subtitle}" IsVisible="{Binding IsCollection}" />
+        <TextBlock Classes="mono faint" FontSize="{DynamicResource App.FontSize.Small}" Text="{Binding Subtitle}" IsVisible="{Binding IsCollection}" />
       </StackPanel>
       <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
         <Button Classes="secondary" Content="{l:Tr Btn_Close}" Command="{Binding CancelCommand}" />
@@ -53,7 +53,7 @@
               <StackPanel Spacing="14">
                 <StackPanel>
                   <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
-                    <Grid ColumnDefinitions="40,*,*,*,64,36" Height="34">
+                    <Grid ColumnDefinitions="40,*,*,*,64,36" Height="30">
                       <TextBlock Grid.Column="1" Classes="faint small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Env_Name}" />
                       <TextBlock Grid.Column="2" Classes="faint small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Req_Value}" />
                       <TextBlock Grid.Column="3" Classes="faint small" Margin="6,0" VerticalAlignment="Center" Text="{l:Tr Env_Resolved}" />
@@ -64,7 +64,7 @@
                     <ItemsControl.ItemTemplate>
                       <DataTemplate x:DataType="vm:VariableRowViewModel">
                         <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1">
-                          <Grid ColumnDefinitions="40,*,*,*,64,36" MinHeight="38">
+                          <Grid ColumnDefinitions="40,*,*,*,64,36" MinHeight="30">
                             <CheckBox IsChecked="{Binding IsEnabled}" HorizontalAlignment="Center" IsVisible="{Binding !IsPlaceholder}" />
                             <TextBox Grid.Column="1" Classes="cell mono" Text="{Binding Name}" PlaceholderText="{l:Tr Env_AddVariable}" />
                             <Panel Grid.Column="2">

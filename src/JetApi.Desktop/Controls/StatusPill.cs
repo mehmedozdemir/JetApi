@@ -15,7 +15,7 @@ public sealed class StatusPill : Border
     /// <summary>The text.</summary>
     public static readonly StyledProperty<string?> TextProperty = AvaloniaProperty.Register<StatusPill, string?>(nameof(Text));
 
-    private readonly TextBlock _text = new() { FontWeight = FontWeight.SemiBold, FontSize = 12, VerticalAlignment = VerticalAlignment.Center };
+    private readonly TextBlock _text = new() { FontWeight = FontWeight.SemiBold, FontSize = 11.5, VerticalAlignment = VerticalAlignment.Center };
     private IDisposable? _background;
     private IDisposable? _foreground;
 

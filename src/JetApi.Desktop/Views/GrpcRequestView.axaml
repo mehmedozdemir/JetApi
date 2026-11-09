@@ -16,7 +16,7 @@
         <Grid ColumnDefinitions="2*,12,1.4*,12,1.2*,Auto,Auto">
           <StackPanel>
             <TextBlock Classes="field-label" Text="{l:Tr Grpc_Server}" />
-            <Border Classes="field" MinHeight="32">
+            <Border Classes="field" MinHeight="28">
               <Grid ColumnDefinitions="*,Auto">
                 <c:CodeEditor x:Name="UrlBox" IsSingleLine="True" HighlightVariables="True" Text="{Binding ServerUrl}"
                               PlaceholderText="http://localhost:5000" EnterCommand="{Binding SendCommand}" AutomationProperties.Name="{l:Tr Grpc_Server}" />
@@ -31,11 +31,11 @@
           </StackPanel>
           <StackPanel Grid.Column="2">
             <TextBlock Classes="field-label" Text="{l:Tr Grpc_Service}" />
-            <ComboBox ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedService}" HorizontalAlignment="Stretch" FontFamily="{DynamicResource App.MonoFont}" FontSize="12.5" />
+            <ComboBox ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedService}" HorizontalAlignment="Stretch" FontFamily="{DynamicResource App.MonoFont}" FontSize="{DynamicResource App.FontSize.Mono}" />
           </StackPanel>
           <StackPanel Grid.Column="4">
             <TextBlock Classes="field-label" Text="{l:Tr Grpc_Method}" />
-            <ComboBox ItemsSource="{Binding Methods}" SelectedItem="{Binding SelectedMethod}" HorizontalAlignment="Stretch" FontFamily="{DynamicResource App.MonoFont}" FontSize="12.5">
+            <ComboBox ItemsSource="{Binding Methods}" SelectedItem="{Binding SelectedMethod}" HorizontalAlignment="Stretch" FontFamily="{DynamicResource App.MonoFont}" FontSize="{DynamicResource App.FontSize.Mono}">
               <ComboBox.ItemContainerTheme>
                 <ControlTheme TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}" x:DataType="vm:MethodOption">
                   <Setter Property="IsEnabled" Value="{Binding IsUnary}" />
@@ -48,7 +48,7 @@
               </ComboBox.ItemTemplate>
             </ComboBox>
           </StackPanel>
-          <Button Grid.Column="5" Classes="primary" Margin="8,0,0,0" VerticalAlignment="Bottom" MinHeight="34" Padding="22,0" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}"
+          <Button Grid.Column="5" Classes="primary" Margin="8,0,0,0" VerticalAlignment="Bottom" MinHeight="30" Padding="22,0" Command="{Binding SendCommand}" IsVisible="{Binding !IsBusy}"
                   Content="{Binding SendLabel}" ToolTip.Tip="{l:Tr Shortcut_SendTip}" />
           <Button Grid.Column="5" Classes="secondary" Margin="8,0,0,0" VerticalAlignment="Bottom" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" Content="{l:Tr Btn_Cancel_Request}" />
           <Button Grid.Column="6" Classes="secondary" Margin="8,0,0,0" VerticalAlignment="Bottom" Command="{Binding SaveCommand}" Content="{l:Tr Btn_Save}" />
@@ -205,7 +205,7 @@
       <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
 
       <Grid Grid.Column="2" RowDefinitions="Auto,Auto,*">
-        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="12,0" Height="41" IsVisible="{Binding !Response.IsEmpty}">
+        <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Margin="12,0" Height="37" IsVisible="{Binding !Response.IsEmpty}">
           <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
             <c:StatusPill Tone="{Binding Response.Tone}" Text="{Binding Response.StatusText}" />
             <Border Classes="chip" IsVisible="{Binding Response.DurationText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">

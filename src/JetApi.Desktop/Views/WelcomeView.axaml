@@ -11,9 +11,9 @@
       <Grid ColumnDefinitions="Auto,*,Auto">
         <StackPanel Orientation="Horizontal" Spacing="8">
           <c:Icon Data="{StaticResource Icon.Logo}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" VerticalAlignment="Center" />
-          <TextBlock Text="JetApi" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" />
+          <TextBlock Text="JetApi" FontWeight="Bold" FontSize="{DynamicResource App.FontSize.Heading}" VerticalAlignment="Center" />
         </StackPanel>
-        <Button Grid.Column="1" Classes="icon" Width="32" Height="32" HorizontalAlignment="Right" Margin="0,0,8,0" Command="{Binding OpenSettingsCommand}"
+        <Button Grid.Column="1" Classes="icon" Width="30" Height="30" HorizontalAlignment="Right" Margin="0,0,8,0" Command="{Binding OpenSettingsCommand}"
                 ToolTip.Tip="{l:Tr Settings_TitleShortcut}" AutomationProperties.Name="{l:Tr Settings_Title}">
           <c:Icon Data="{StaticResource Icon.Sliders}" />
         </Button>
@@ -31,17 +31,17 @@
       <StackPanel MaxWidth="760" Margin="24,40,24,64" Spacing="32" VerticalAlignment="Center">
         <StackPanel Spacing="10">
           <TextBlock Classes="h1" Text="{l:Tr Welcome_Title}" />
-          <TextBlock Classes="muted" FontSize="14" LineHeight="22" TextWrapping="Wrap" Text="{l:Tr Welcome_Subtitle}" />
+          <TextBlock Classes="muted" FontSize="{DynamicResource App.FontSize.Body}" LineHeight="22" TextWrapping="Wrap" Text="{l:Tr Welcome_Subtitle}" />
         </StackPanel>
 
         <Grid ColumnDefinitions="Auto,Auto,*,Auto">
-          <Button Classes="primary" MinHeight="40" Padding="18,0" Command="{Binding OpenFolderCommand}" ToolTip.Tip="{l:Tr Welcome_OpenHint}">
+          <Button Classes="primary" MinHeight="36" Padding="18,0" Command="{Binding OpenFolderCommand}" ToolTip.Tip="{l:Tr Welcome_OpenHint}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <c:Icon Data="{StaticResource Icon.Folder}" Width="15" Height="15" Foreground="{DynamicResource App.AccentForeground}" />
               <TextBlock Text="{l:Tr Welcome_Open}" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
-          <Button Grid.Column="1" Classes="secondary" MinHeight="40" Padding="16,0" Margin="12,0,0,0" Command="{Binding CreateWorkspaceCommand}" ToolTip.Tip="{l:Tr Welcome_CreateHint}">
+          <Button Grid.Column="1" Classes="secondary" MinHeight="36" Padding="16,0" Margin="12,0,0,0" Command="{Binding CreateWorkspaceCommand}" ToolTip.Tip="{l:Tr Welcome_CreateHint}">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <c:Icon Data="{StaticResource Icon.Plus}" Width="15" Height="15" />
               <TextBlock Text="{l:Tr Welcome_Create}" VerticalAlignment="Center" />
@@ -66,7 +66,7 @@
                             <c:Icon Data="{StaticResource Icon.Folder}" Width="16" Height="16" Foreground="{DynamicResource App.TextFaint}" Margin="0,0,12,0" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
                               <TextBlock FontWeight="Medium" Text="{Binding Name}" />
-                              <TextBlock Classes="mono faint" FontSize="12" Text="{Binding Path}" TextTrimming="CharacterEllipsis" />
+                              <TextBlock Classes="mono faint" FontSize="{DynamicResource App.FontSize.Small}" Text="{Binding Path}" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
                             <TextBlock Grid.Column="2" Classes="faint small" VerticalAlignment="Center" Text="{Binding LastOpened}" />
                           </Grid>
