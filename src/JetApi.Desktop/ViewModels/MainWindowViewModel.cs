@@ -239,6 +239,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
             }
         };
         Content = workspace;
+        workspace.RestoreTabs();
         OnPropertyChanged(nameof(Workspace));
         OnPropertyChanged(nameof(Title));
     }

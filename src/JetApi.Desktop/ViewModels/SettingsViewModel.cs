@@ -74,6 +74,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private decimal _editorFontSize;
 
     [ObservableProperty]
+    private decimal _uiFontSize;
+
+    [ObservableProperty]
     private bool _wrapResponseLines;
 
     [ObservableProperty]
@@ -161,6 +164,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             UiScale = UiScale?.Value ?? current.UiScale,
             EditorFontFamily = EditorFont is null ? current.EditorFontFamily : EditorFont.Value,
             EditorFontSize = (double)Math.Clamp(EditorFontSize, 8, 32),
+            UiFontSize = (double)Math.Clamp(UiFontSize, (decimal)Appearance.MinUiFontSize, (decimal)Appearance.MaxUiFontSize),
             WrapResponseLines = WrapResponseLines,
             Language = Language is null ? current.Language : Language.Value,
             ConfirmUndefinedVariables = ConfirmUndefinedVariables,
@@ -183,6 +187,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         UiScale = UiScaleOptions.MinBy(o => Math.Abs(o.Value - settings.UiScale));
         EditorFont = EditorFontOptions.FirstOrDefault(o => o.Value == settings.EditorFontFamily) ?? AddFont(EditorFontOptions, settings.EditorFontFamily);
         EditorFontSize = (decimal)settings.EditorFontSize;
+        UiFontSize = (decimal)settings.UiFontSize;
         WrapResponseLines = settings.WrapResponseLines;
         Language = LanguageOptions.FirstOrDefault(o => o.Value == settings.Language) ?? LanguageOptions[0];
         ConfirmUndefinedVariables = settings.ConfirmUndefinedVariables;

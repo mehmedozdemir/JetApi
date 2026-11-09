@@ -137,6 +137,45 @@ public sealed partial class WorkspaceView : UserControl
         }
     }
 
+    private void OnWorkspaceButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (ViewModel is { } vm)
+        {
+            BuildWorkspaceMenu(vm).ShowAt(WorkspaceButton);
+        }
+    }
+
+    /// <summary>The workspace menu: saved workspaces (the open one checked, missing ones disabled), then "Open another folder…".</summary>
+    internal static MenuFlyout BuildWorkspaceMenu(WorkspaceViewModel vm)
+    {
+        var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedLeft };
+        foreach (var choice in vm.WorkspaceChoices())
+        {
+            var name = new TextBlock { Text = choice.Name, FontWeight = choice.IsCurrent ? Avalonia.Media.FontWeight.SemiBold : Avalonia.Media.FontWeight.Normal, MaxWidth = 360, TextTrimming = Avalonia.Media.TextTrimming.CharacterEllipsis };
+            var detail = new TextBlock
+            {
+                Text = choice.Exists ? choice.PathDisplay : Loc.Format("Top_WorkspaceMissing", choice.PathDisplay),
+                MaxWidth = 360,
+                TextTrimming = Avalonia.Media.TextTrimming.PathSegmentEllipsis,
+            };
+            detail.Classes.AddRange(["faint", "small"]);
+            var item = new MenuItem
+            {
+                Header = new StackPanel { Spacing = 1, Children = { name, detail } },
+                Icon = choice.IsCurrent ? Controls.Icon.ForMenu("Icon.Check") : null,
+                IsEnabled = choice.Exists,
+                Tag = choice,
+            };
+            var path = choice.Path;
+            item.Click += (_, _) => _ = vm.SwitchWorkspaceAsync(path);
+            menu.Items.Add(item);
+        }
+
+        menu.Items.Add(new Separator());
+        menu.Items.Add(new MenuItem { Header = Loc.Get("Top_OpenWorkspace"), Icon = Controls.Icon.ForMenu("Icon.Folder"), Command = vm.OpenOtherWorkspaceCommand });
+        return menu;
+    }
+
     private void OnTreeContextRequested(object? sender, ContextRequestedEventArgs e)
     {
         if (NodeFrom(e.Source) is not { } node || ViewModel is not { } vm)

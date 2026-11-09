@@ -14,6 +14,8 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 - Kod örneği: istek satırındaki `</>` düğmesi isteği cURL (bash, cmd), PowerShell, C# (HttpClient), JavaScript (fetch) ve Python (requests) olarak gösterir ve kopyalar.
 - Değişken kartı: istek editörlerinde bir `{{değişken}}`in üzerine gelince değeri ve kaynağı düzenlenebilir bir kartta açılır; Kaydet değeri tanımlı olduğu environment, koleksiyon veya global değişkenlere yazar. Tanımsız değişken buradan istenen yere eklenir.
 - *Değişken olarak ayarla…*: editörlerde ve tablo hücrelerinde seçili metin sağ tıkla environment, koleksiyon veya global değişkene çevrilir ve yerine `{{ad}}` yazılır. Editörlerin sağ tık menüsünde kes/kopyala/yapıştır/tümünü seç de var.
+- Workspace değiştirme: üst çubuktaki workspace menüsü yalnızca kayıtlı workspace'leri listeler ve tıklananı aynı pencerede açar; "Başka bir klasör aç…" ile yenisi eklenir. Komut paletinden de geçilir. Her workspace'in açık sekmeleri hatırlanır.
+- Arayüz puntosu ayarı (Ayarlar → Görünüm): yazılar 11–18 punto arasında ayarlanır, başlıklar ve küçük yazılar birlikte değişir.
 - Yanıttan değişkene: yanıt editöründe seçilen değer sağ tık → *Değişkene kaydet…* ile yeni veya mevcut bir değişkene yazılır.
 - `{{` otomatik tamamlama: istek alanlarında `{{` yazınca görünen değişkenler (dinamikler dahil) değer ve kaynaklarıyla listelenir; Enter/Tab adı ve `}}`'yi ekler.
 - Proto dosyası seçme: koleksiyonun gRPC proto bölümünde *Dosya ekle…* ve *Klasör ekle…*; proto'su olmayan gRPC isteğinde *Proto dosyası seç…* dosyayı koleksiyona ekler ve hemen yükler. Import path'ler gerekirse kendiliğinden eklenir; workspace dışındaki dosyalar için uyarı gösterilir.
@@ -46,6 +48,8 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 - Windows'ta arayüz varsayılan olarak yazılımla çizilir; boşta bellek 263 MB'tan 145 MB'a iner. `JETAPI_RENDERING=gpu` ile GPU kullanılır.
 
 ### Fixed
+
+- Workspace kapatılırken, başka workspace açılırken veya uygulamadan çıkılırken kaydedilmemiş istekler sorulmadan atılıyordu; artık kaydetme, atma veya vazgeçme sorulur.
 
 - Dar pencerede veya büyük arayüz boyutunda istek ve yanıt sekmeleri yandaki panele taşıyordu; artık yatayda kaydırılır.
 - Dil değiştirmek environment'ı "kaydedilmemiş" gösteriyordu.

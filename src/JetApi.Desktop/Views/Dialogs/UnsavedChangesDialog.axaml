@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="using:JetApi.Desktop.Controls"
+        xmlns:l="using:JetApi.Desktop.Localization"
+        x:Class="JetApi.Desktop.Views.Dialogs.UnsavedChangesDialog"
+        Width="480" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Title="{l:Tr Unsaved_Title}"
+        Background="{DynamicResource App.Surface}">
+  <StackPanel Margin="24" Spacing="14">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+      <c:Icon Data="{StaticResource Icon.Warning}" Width="18" Height="18" Foreground="{DynamicResource Tone.Warning.Fg}" VerticalAlignment="Center" />
+      <TextBlock Grid.Column="1" Classes="h3" Text="{l:Tr Unsaved_Title}" VerticalAlignment="Center" />
+    </Grid>
+    <TextBlock x:Name="MessageText" TextWrapping="Wrap" Classes="muted" LineHeight="19" />
+    <Border Classes="code" Padding="12,8">
+      <TextBlock x:Name="ItemsText" Classes="mono" TextWrapping="Wrap" LineHeight="19" />
+    </Border>
+    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+      <Button x:Name="DiscardButton" Classes="secondary" Content="{l:Tr Unsaved_Discard}" Click="OnDiscard" />
+      <Button Grid.Column="2" Classes="secondary" Content="{l:Tr Btn_Cancel}" IsCancel="True" Click="OnCancel" />
+      <Button x:Name="SaveButton" Grid.Column="3" Classes="primary" Content="{l:Tr Unsaved_Save}" IsDefault="True" Click="OnSave" />
+    </Grid>
+  </StackPanel>
+</Window>

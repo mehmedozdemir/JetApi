@@ -181,6 +181,8 @@
   <data name="Palette_Select" xml:space="preserve"><value>seç</value></data>
   <data name="Palette_SwitchEnv" xml:space="preserve"><value>Environment: {0}</value></data>
   <data name="Palette_SwitchHint" xml:space="preserve"><value>geçiş yap</value></data>
+  <data name="Palette_SwitchWorkspace" xml:space="preserve"><value>{0} workspace'ine geç</value></data>
+  <data name="Palette_Workspaces" xml:space="preserve"><value>Workspace'ler</value></data>
   <data name="Prompt_Name" xml:space="preserve"><value>Ad</value></data>
   <data name="Prompt_NewCollectionName" xml:space="preserve"><value>Yeni koleksiyon</value></data>
   <data name="Prompt_NewEnvironmentName" xml:space="preserve"><value>Yeni environment</value></data>
@@ -259,6 +261,8 @@
   <data name="Res_Truncated" xml:space="preserve"><value>Gövde {0} sınırını aştığı için kesildi.</value></data>
   <data name="Settings_CookieJar" xml:space="preserve"><value>İstekler arasında cookie’leri sakla</value></data>
   <data name="Settings_CookieJarHint" xml:space="preserve"><value>Sunucuların koyduğu cookie’ler, bir tarayıcıdaki gibi aynı siteye giden sonraki isteklerle gönderilir. Workspace kapanana kadar workspace başına tutulur, diske yazılmaz. İstekteki Cookie header’ı önceliklidir.</value></data>
+  <data name="Settings_UiFontSize" xml:space="preserve"><value>Arayüz puntosu</value></data>
+  <data name="Settings_UiFontSizeHint" xml:space="preserve"><value>Yalnızca yazılar; başlıklar ve küçük yazılar birlikte değişir.</value></data>
   <data name="Shortcut_Close" xml:space="preserve"><value>Sekmeyi kapat</value></data>
   <data name="Shortcut_Env" xml:space="preserve"><value>Environment’lar</value></data>
   <data name="Shortcut_New" xml:space="preserve"><value>Yeni istek</value></data>
@@ -296,11 +300,19 @@
   <data name="Top_CloseWorkspace" xml:space="preserve"><value>Workspace’i kapat</value></data>
   <data name="Top_Language" xml:space="preserve"><value>Dil</value></data>
   <data name="Top_NoEnvironment" xml:space="preserve"><value>Environment yok</value></data>
+  <data name="Top_OpenWorkspace" xml:space="preserve"><value>Başka bir klasör aç…</value></data>
   <data name="Top_Reload" xml:space="preserve"><value>Diskten yeniden yükle</value></data>
   <data name="Top_Search" xml:space="preserve"><value>İstek ara veya komut çalıştır…</value></data>
   <data name="Top_Settings" xml:space="preserve"><value>Ayarlar</value></data>
+  <data name="Top_SwitchWorkspace" xml:space="preserve"><value>Workspace değiştir</value></data>
   <data name="Top_Theme" xml:space="preserve"><value>Tema</value></data>
   <data name="Top_Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Top_WorkspaceMissing" xml:space="preserve"><value>Bulunamadı · {0}</value></data>
+  <data name="Unsaved_Discard" xml:space="preserve"><value>Kaydetme</value></data>
+  <data name="Unsaved_Message" xml:space="preserve"><value>{0} istekte kaydedilmemiş değişiklik var. Çıkmadan önce kaydedilsin mi?</value></data>
+  <data name="Unsaved_More" xml:space="preserve"><value>ve {0} tane daha</value></data>
+  <data name="Unsaved_Save" xml:space="preserve"><value>Kaydet ve devam et</value></data>
+  <data name="Unsaved_Title" xml:space="preserve"><value>Kaydedilmemiş değişiklikler</value></data>
   <data name="Var_AssignTitle" xml:space="preserve"><value>Değişkene kaydet</value></data>
   <data name="Var_AssignToVariable" xml:space="preserve"><value>Değişkene kaydet…</value></data>
   <data name="Var_Create" xml:space="preserve"><value>Oluştur</value></data>

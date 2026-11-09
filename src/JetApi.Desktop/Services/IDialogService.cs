@@ -15,6 +15,19 @@ public enum UndefinedVariablesChoice
     OpenEnvironments,
 }
 
+/// <summary>What the user chose for unsaved requests before leaving a workspace.</summary>
+public enum UnsavedChangesChoice
+{
+    /// <summary>Stay in the workspace.</summary>
+    Cancel,
+
+    /// <summary>Save the requests, then leave.</summary>
+    Save,
+
+    /// <summary>Leave without saving.</summary>
+    Discard,
+}
+
 /// <summary>Dialogs and OS integration, abstracted so view models can be tested without a UI.</summary>
 public interface IDialogService
 {
@@ -50,6 +63,9 @@ public interface IDialogService
 
     /// <summary>Warns about undefined variables before sending.</summary>
     Task<UndefinedVariablesChoice> ConfirmUndefinedVariablesAsync(IReadOnlyList<VariableIssue> issues, string? environmentName);
+
+    /// <summary>Asks what to do with unsaved requests (by name) before leaving the workspace.</summary>
+    Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items);
 
     /// <summary>Shows an error message.</summary>
     Task ShowErrorAsync(string message);

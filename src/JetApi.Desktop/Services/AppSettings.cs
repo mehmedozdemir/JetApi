@@ -53,6 +53,9 @@ public sealed record AppSettings
     /// <summary>Interface font family; <c>null</c> for the built-in Inter.</summary>
     public string? UiFontFamily { get; init; }
 
+    /// <summary>Interface font size in points (body text); headings and small text follow it.</summary>
+    public double UiFontSize { get; init; } = DefaultUiFontSize;
+
     /// <summary>Interface size: 1 is 100%; everything scales (text, spacing, icons).</summary>
     public double UiScale { get; init; } = 1;
 
@@ -76,6 +79,9 @@ public sealed record AppSettings
 
     /// <summary>How the window is drawn; takes effect after a restart.</summary>
     public RenderingPreference Rendering { get; init; } = RenderingPreference.Software;
+
+    /// <summary>Default interface font size.</summary>
+    public const double DefaultUiFontSize = 13;
 
     /// <summary>Default editor font size.</summary>
     public const double DefaultEditorFontSize = 12.5;

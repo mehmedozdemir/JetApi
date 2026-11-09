@@ -42,16 +42,22 @@
         <!-- Appearance -->
         <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Appearance}">
           <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Appearance}" />
-          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="14">
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="14">
             <TextBlock Text="{l:Tr Settings_Theme}" VerticalAlignment="Center" />
             <ComboBox Grid.Column="1" MinWidth="240" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding Theme}" AutomationProperties.Name="{l:Tr Settings_Theme}" />
             <TextBlock Grid.Row="1" Text="{l:Tr Settings_UiFont}" VerticalAlignment="Center" />
             <ComboBox Grid.Row="1" Grid.Column="1" MinWidth="240" MaxDropDownHeight="360" ItemsSource="{Binding UiFontOptions}" SelectedItem="{Binding UiFont}" AutomationProperties.Name="{l:Tr Settings_UiFont}" />
             <StackPanel Grid.Row="2" VerticalAlignment="Center">
+              <TextBlock Text="{l:Tr Settings_UiFontSize}" />
+              <TextBlock Classes="faint small" Text="{l:Tr Settings_UiFontSizeHint}" TextWrapping="Wrap" />
+            </StackPanel>
+            <NumericUpDown Grid.Row="2" Grid.Column="1" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="11" Maximum="18" Increment="0.5" FormatString="0.#"
+                           Value="{Binding UiFontSize}" AutomationProperties.Name="{l:Tr Settings_UiFontSize}" />
+            <StackPanel Grid.Row="3" VerticalAlignment="Center">
               <TextBlock Text="{l:Tr Settings_UiScale}" />
               <TextBlock Classes="faint small" Text="{l:Tr Settings_UiScaleHint}" TextWrapping="Wrap" />
             </StackPanel>
-            <ComboBox Grid.Row="2" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding UiScaleOptions}" SelectedItem="{Binding UiScale}" AutomationProperties.Name="{l:Tr Settings_UiScale}" />
+            <ComboBox Grid.Row="3" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding UiScaleOptions}" SelectedItem="{Binding UiScale}" AutomationProperties.Name="{l:Tr Settings_UiScale}" />
           </Grid>
 
           <Border Classes="divider" Height="1" />

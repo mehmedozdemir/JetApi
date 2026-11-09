@@ -5,7 +5,8 @@ namespace JetApi.Desktop.Services;
 
 /// <summary>
 /// Applies appearance settings to the running application through resources, so every open view follows
-/// immediately: <c>App.UiFont</c>, <c>App.MonoFont</c>, <c>App.EditorFontSize</c> and <c>App.WrapResponses</c>.
+/// immediately: <c>App.UiFont</c>, the <c>App.FontSize.*</c> type scale, <c>App.MonoFont</c>, <c>App.EditorFontSize</c>
+/// and <c>App.WrapResponses</c>.
 /// </summary>
 public static class Appearance
 {
@@ -43,6 +44,34 @@ public static class Appearance
             || name.Contains("Mono", StringComparison.OrdinalIgnoreCase) || name.Contains(" Code", StringComparison.OrdinalIgnoreCase))];
     }
 
+    /// <summary>
+    /// The interface type scale for a body size: every <c>App.FontSize.*</c> token keeps its distance from the body
+    /// size (as in Tokens.axaml at 13), so headings and small text grow and shrink together.
+    /// </summary>
+    public static IReadOnlyList<(string Key, double Size)> TypeScale(double body)
+    {
+        var b = Math.Clamp(body, MinUiFontSize, MaxUiFontSize);
+        return
+        [
+            ("ControlContentThemeFontSize", b),
+            ("App.FontSize.Display", b + 11),
+            ("App.FontSize.Title", b + 5),
+            ("App.FontSize.Heading", b + 1),
+            ("App.FontSize.Body", b),
+            ("App.FontSize.Control", b - 1),
+            ("App.FontSize.Mono", b - 1),
+            ("App.FontSize.Small", b - 1.5),
+            ("App.FontSize.Label", b - 2),
+            ("App.FontSize.Caption", b - 2.5),
+        ];
+    }
+
+    /// <summary>Smallest interface font size offered.</summary>
+    public const double MinUiFontSize = 11;
+
+    /// <summary>Largest interface font size offered.</summary>
+    public const double MaxUiFontSize = 18;
+
     /// <summary>Applies fonts, editor size and wrapping from <paramref name="settings"/>.</summary>
     public static void Apply(Application application, AppSettings settings)
     {
@@ -52,6 +81,11 @@ public static class Appearance
         resources["App.UiFont"] = new FontFamily(string.IsNullOrWhiteSpace(settings.UiFontFamily) ? BuiltInUiFont : settings.UiFontFamily + ", " + BuiltInUiFont);
         resources["App.MonoFont"] = new FontFamily(string.IsNullOrWhiteSpace(settings.EditorFontFamily) ? DefaultMonoFonts : settings.EditorFontFamily + ", " + DefaultMonoFonts);
         resources["App.EditorFontSize"] = Math.Clamp(settings.EditorFontSize, 8, 32);
+        foreach (var (key, size) in TypeScale(settings.UiFontSize))
+        {
+            resources[key] = size;
+        }
+
         resources["App.WrapResponses"] = settings.WrapResponseLines;
     }
 }

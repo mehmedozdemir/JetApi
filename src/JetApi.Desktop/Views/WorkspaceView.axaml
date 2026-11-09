@@ -16,25 +16,13 @@
           <c:Icon Data="{StaticResource Icon.Logo}" Width="22" Height="22" Foreground="{DynamicResource App.Accent}" VerticalAlignment="Center" />
           <TextBlock Text="JetApi" FontWeight="Bold" FontSize="{DynamicResource App.FontSize.Heading}" VerticalAlignment="Center" />
         </StackPanel>
-        <Button Grid.Column="1" Classes="flat" MinHeight="28" ToolTip.Tip="{l:Tr Top_Workspace}">
+        <Button x:Name="WorkspaceButton" Grid.Column="1" Classes="flat" MinHeight="28" ToolTip.Tip="{l:Tr Top_SwitchWorkspace}"
+                AutomationProperties.Name="{l:Tr Top_SwitchWorkspace}" Click="OnWorkspaceButtonClick">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <c:Icon Data="{StaticResource Icon.Folder}" Width="14" Height="14" />
             <TextBlock Text="{Binding WorkspaceName}" MaxWidth="220" TextTrimming="CharacterEllipsis" />
             <c:Icon Data="{StaticResource Icon.ChevronDown}" Width="12" Height="12" />
           </StackPanel>
-          <Button.Flyout>
-            <MenuFlyout Placement="BottomEdgeAlignedLeft">
-              <MenuItem Header="{l:Tr Cmd_Environments}" Command="{Binding ShowEnvironmentsCommand}" InputGesture="Ctrl+E" />
-              <MenuItem Header="{l:Tr Top_Reload}" Command="{Binding ReloadCommand}">
-<MenuItem.Icon><c:Icon Data="{StaticResource Icon.Refresh}" Width="14" Height="14" /></MenuItem.Icon>
-</MenuItem>
-              <Separator />
-              <MenuItem Header="{l:Tr Cmd_ToggleTheme}" Command="{Binding ToggleThemeCommand}" />
-              <MenuItem Header="{l:Tr Cmd_ToggleLanguage}" Command="{Binding ToggleLanguageCommand}" />
-              <Separator />
-              <MenuItem Header="{l:Tr Top_CloseWorkspace}" Command="{Binding CloseWorkspaceCommand}" />
-            </MenuFlyout>
-          </Button.Flyout>
         </Button>
         <Button Grid.Column="2" Classes="secondary" MinHeight="28" MaxWidth="520" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="16,0"
                 Background="{DynamicResource App.Subtle}" BorderThickness="0" CornerRadius="8" Command="{Binding OpenPaletteCommand}" AutomationProperties.Name="{l:Tr Shortcut_Palette}">

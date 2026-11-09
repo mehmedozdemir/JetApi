@@ -16,7 +16,32 @@ public sealed partial class MainWindow : Window
         AddHandler(KeyDownEvent, OnShortcut, Avalonia.Interactivity.RoutingStrategies.Tunnel);
     }
 
+    private bool _closeConfirmed;
+
     private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
+
+    /// <summary>Asks about unsaved requests before the window closes.</summary>
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+        base.OnClosing(e);
+        if (e.Cancel || _closeConfirmed || ViewModel?.Workspace is not { HasUnsavedChanges: true } workspace)
+        {
+            return;
+        }
+
+        e.Cancel = true;
+        _ = ConfirmCloseAsync(workspace);
+    }
+
+    private async Task ConfirmCloseAsync(WorkspaceViewModel workspace)
+    {
+        if (await workspace.PrepareToLeaveAsync().ConfigureAwait(true))
+        {
+            _closeConfirmed = true;
+            Avalonia.Threading.Dispatcher.UIThread.Post(Close);
+        }
+    }
 
     private void OnShortcut(object? sender, KeyEventArgs e)
     {

@@ -51,7 +51,18 @@ public interface IWorkspaceHost
 
     /// <summary>Runs <paramref name="action"/> on the UI thread.</summary>
     void Post(Action action);
+
+    /// <summary>Opens another workspace in place of this one; offers to create one when the folder is not a workspace.</summary>
+    Task OpenWorkspaceAsync(string path, bool offerCreate);
 }
+
+/// <summary>A saved workspace in the workspace menu.</summary>
+/// <param name="Name">Workspace name.</param>
+/// <param name="Path">Full path.</param>
+/// <param name="PathDisplay">The path with the home directory shortened to "~".</param>
+/// <param name="IsCurrent">The open workspace.</param>
+/// <param name="Exists">The folder is still a workspace.</param>
+public sealed record WorkspaceChoice(string Name, string Path, string PathDisplay, bool IsCurrent, bool Exists);
 
 /// <summary>An open workspace: sidebar tree, tabs, environments and overlays.</summary>
 public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, IDisposable
@@ -60,6 +71,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     private readonly HashSet<string> _expanded = new(StringComparer.Ordinal);
     private WorkspaceWatcher? _watcher;
     private bool _updatingEnvironment;
+    private bool _restoringTabs;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasTabs))]
@@ -109,6 +121,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         RebuildHistory();
         IsDiagnosticsVisible = session.Diagnostics.Count > 0;
         session.Changed += (_, _) => _host.Post(OnSessionChanged);
+        Tabs.CollectionChanged += (_, _) => RememberTabs();
         if (watchFiles)
         {
             _watcher = new WorkspaceWatcher(session.Root, () => _host.Post(() => _ = ReloadAsync()));
@@ -634,9 +647,146 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     [RelayCommand]
     private void DismissDiagnostics() => IsDiagnosticsVisible = false;
 
-    /// <summary>Closes the workspace.</summary>
+    /// <summary>Closes the workspace (asking about unsaved requests first).</summary>
     [RelayCommand]
-    private void CloseWorkspace() => _host.CloseWorkspace();
+    private async Task CloseWorkspaceAsync()
+    {
+        if (await PrepareToLeaveAsync().ConfigureAwait(true))
+        {
+            _host.CloseWorkspace();
+        }
+    }
+
+    /// <summary>The saved workspaces for the workspace menu, most recently opened first.</summary>
+    public IReadOnlyList<WorkspaceChoice> WorkspaceChoices()
+    {
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        return
+        [
+            .. _host.Settings.RecentWorkspaces.Select(r => new WorkspaceChoice(
+                r.Name,
+                r.Path,
+                ShortenHome(r.Path, home),
+                IsSameFolder(r.Path, Session.Root),
+                WorkspaceStore.IsWorkspace(r.Path))),
+        ];
+    }
+
+    /// <summary>Opens another saved workspace; asks about unsaved requests first. The open one is left as is.</summary>
+    [RelayCommand]
+    public async Task SwitchWorkspaceAsync(string path)
+    {
+        if (string.IsNullOrEmpty(path) || IsSameFolder(path, Session.Root) || !await PrepareToLeaveAsync().ConfigureAwait(true))
+        {
+            return;
+        }
+
+        await _host.OpenWorkspaceAsync(path, offerCreate: false).ConfigureAwait(true);
+    }
+
+    /// <summary>Picks a folder and opens it as a workspace (or creates one there).</summary>
+    [RelayCommand]
+    private async Task OpenOtherWorkspaceAsync()
+    {
+        var folder = await Dialogs.PickFolderAsync(Loc.Get("Top_OpenWorkspace")).ConfigureAwait(true);
+        if (folder is null || IsSameFolder(folder, Session.Root) || !await PrepareToLeaveAsync().ConfigureAwait(true))
+        {
+            return;
+        }
+
+        await _host.OpenWorkspaceAsync(folder, offerCreate: true).ConfigureAwait(true);
+    }
+
+    /// <summary>Anything unsaved: request tabs, the collection screen or the environment editor.</summary>
+    public bool HasUnsavedChanges => Tabs.Any(t => t.IsDirty) || (NodeSettings?.HasChanges ?? false) || (Environments?.IsDirty ?? false);
+
+    /// <summary>
+    /// Gets ready to leave the workspace: the collection screen and environment editor save their edits (as they do when
+    /// left inside the workspace); unsaved requests are saved or discarded as the user chooses.
+    /// </summary>
+    /// <returns><c>false</c> when the user wants to stay or saving failed.</returns>
+    public async Task<bool> PrepareToLeaveAsync()
+    {
+        if (NodeSettings is { HasChanges: true } screen)
+        {
+            await screen.SaveCommand.ExecuteAsync(null).ConfigureAwait(true);
+            if (NodeSettings is not null)
+            {
+                return false;
+            }
+        }
+
+        if (Environments is { IsDirty: true } environments)
+        {
+            await environments.SaveAsync().ConfigureAwait(true);
+            if (environments.IsDirty)
+            {
+                return false;
+            }
+        }
+
+        var dirty = Tabs.Where(t => t.IsDirty).ToList();
+        if (dirty.Count == 0)
+        {
+            return true;
+        }
+
+        switch (await Dialogs.ConfirmUnsavedChangesAsync([.. dirty.Select(t => t.Breadcrumb)]).ConfigureAwait(true))
+        {
+            case UnsavedChangesChoice.Discard:
+                return true;
+            case UnsavedChangesChoice.Save:
+                foreach (var tab in dirty)
+                {
+                    await tab.SaveAsync().ConfigureAwait(true);
+                    if (tab.IsDirty)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /// <summary>Opens the request tabs that were open when this workspace was last used here.</summary>
+    public void RestoreTabs()
+    {
+        var (tabs, selected) = Session.ReadOpenTabs();
+        _restoringTabs = true;
+        try
+        {
+            var opened = tabs.Select(t => OpenRequest(t.Collection, t.Path)).ToList();
+            if (selected >= 0 && selected < opened.Count && opened[selected] is { } tab)
+            {
+                SelectedTab = tab;
+            }
+        }
+        finally
+        {
+            _restoringTabs = false;
+        }
+
+        RememberTabs();
+    }
+
+    // Saved request tabs, in order, so the workspace reopens where it was left.
+    private void RememberTabs()
+    {
+        if (_restoringTabs)
+        {
+            return;
+        }
+
+        var saved = Tabs.Where(t => t.Path is not null).ToList();
+        Session.WriteOpenTabs([.. saved.Select(t => new OpenTab(t.CollectionKey, t.Path!))], SelectedTab is null ? -1 : saved.IndexOf(SelectedTab));
+    }
+
+    private static bool IsSameFolder(string a, string b) =>
+        string.Equals(Path.TrimEndingDirectorySeparator(Path.GetFullPath(a)), Path.TrimEndingDirectorySeparator(Path.GetFullPath(b)),
+            OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
 
     /// <summary>Cycles the theme.</summary>
     [RelayCommand]
@@ -712,6 +862,9 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
                     collection.ApplyFilter(FilterText.Trim());
                 }
 
+                break;
+            case nameof(SelectedTab):
+                RememberTabs();
                 break;
         }
     }
@@ -1008,6 +1161,13 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
                 }));
         }
 
+        var workspaces = Loc.Get("Palette_Workspaces");
+        foreach (var choice in WorkspaceChoices().Where(c => !c.IsCurrent && c.Exists))
+        {
+            var path = choice.Path;
+            items.Add(PaletteItemViewModel.Command(workspaces, "Icon.Folder", Loc.Format("Palette_SwitchWorkspace", choice.Name), choice.PathDisplay, string.Empty, () => SwitchWorkspaceAsync(path)));
+        }
+
         var commands = Loc.Get("Palette_Commands");
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Plus", Loc.Get("Cmd_NewHttp"), string.Empty, "Ctrl N", () => NewHttpRequestAsync(null)));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Server", Loc.Get("Cmd_NewGrpc"), string.Empty, string.Empty, () => NewGrpcRequestAsync(null)));
@@ -1055,11 +1215,8 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             _host.ToggleLanguage();
             return Task.CompletedTask;
         }));
-        items.Add(PaletteItemViewModel.Command(commands, "Icon.Close", Loc.Get("Cmd_CloseWorkspace"), string.Empty, string.Empty, () =>
-        {
-            _host.CloseWorkspace();
-            return Task.CompletedTask;
-        }));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Folder", Loc.Get("Top_OpenWorkspace"), string.Empty, string.Empty, OpenOtherWorkspaceAsync));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Close", Loc.Get("Cmd_CloseWorkspace"), string.Empty, string.Empty, CloseWorkspaceAsync));
         return items;
     }
 }

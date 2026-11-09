@@ -135,7 +135,7 @@ public sealed class WorkspaceSession
         }
 
         ActiveEnvironmentKey = key;
-        WriteLocalState(new LocalState(key));
+        WriteLocalState((ReadLocalState() ?? new LocalState(null)) with { ActiveEnvironment = key });
         OnChanged();
     }
 
@@ -265,7 +265,7 @@ public sealed class WorkspaceSession
         if (ActiveEnvironmentKey == key)
         {
             ActiveEnvironmentKey = null;
-            WriteLocalState(new LocalState(null));
+            WriteLocalState((ReadLocalState() ?? new LocalState(null)) with { ActiveEnvironment = null });
         }
 
         OnChanged();
@@ -296,6 +296,14 @@ public sealed class WorkspaceSession
         Workspace.FindCollection(key) ?? throw new ArgumentException($"Unknown collection '{key}'.", nameof(key));
 
     private void OnChanged() => Changed?.Invoke(this, EventArgs.Empty);
+
+    /// <summary>The request tabs that were open when this workspace was last used on this machine.</summary>
+    public (IReadOnlyList<OpenTab> Tabs, int Selected) ReadOpenTabs() =>
+        ReadLocalState() is { OpenTabs: { } tabs } state ? (tabs, state.SelectedTab) : ([], -1);
+
+    /// <summary>Remembers the open request tabs (in <c>.jetapi/state.json</c>, not in Git).</summary>
+    public void WriteOpenTabs(IReadOnlyList<OpenTab> tabs, int selected) =>
+        WriteLocalState((ReadLocalState() ?? new LocalState(ActiveEnvironmentKey)) with { OpenTabs = tabs, SelectedTab = selected });
 
     private LocalState? ReadLocalState()
     {
@@ -339,5 +347,10 @@ public sealed class WorkspaceSession
         }
     }
 
-    private sealed record LocalState(string? ActiveEnvironment);
+    private sealed record LocalState(string? ActiveEnvironment, IReadOnlyList<OpenTab>? OpenTabs = null, int SelectedTab = -1);
 }
+
+/// <summary>A saved request that was open in a tab.</summary>
+/// <param name="Collection">Collection key.</param>
+/// <param name="Path">Node keys from the collection to the request.</param>
+public sealed record OpenTab(string Collection, IReadOnlyList<string> Path);

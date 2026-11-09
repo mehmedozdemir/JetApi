@@ -73,6 +73,16 @@ internal sealed class FakeDialogs : IDialogService
 
     public Task<bool> ConfirmAsync(string title, string message, string confirmText, bool isDestructive) => Task.FromResult(ConfirmResult);
 
+    public UnsavedChangesChoice UnsavedChoice { get; set; } = UnsavedChangesChoice.Discard;
+
+    public List<IReadOnlyList<string>> UnsavedAsked { get; } = [];
+
+    public Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items)
+    {
+        UnsavedAsked.Add(items);
+        return Task.FromResult(UnsavedChoice);
+    }
+
     public Task<UndefinedVariablesChoice> ConfirmUndefinedVariablesAsync(IReadOnlyList<VariableIssue> issues, string? environmentName)
     {
         UndefinedPrompts.Add(issues);
@@ -113,6 +123,14 @@ internal sealed class FakeWorkspaceHost : IWorkspaceHost
     }
 
     public void Post(Action action) => action();
+
+    public List<(string Path, bool OfferCreate)> Opened { get; } = [];
+
+    public Task OpenWorkspaceAsync(string path, bool offerCreate)
+    {
+        Opened.Add((path, offerCreate));
+        return Task.CompletedTask;
+    }
 }
 
 internal sealed class TempWorkspace : IDisposable
