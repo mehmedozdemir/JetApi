@@ -164,6 +164,8 @@ internal static class DtoMapper
         Auth = ToDto(request.Auth, AuthConfig.Inherit),
         Body = ToDto(request.Body),
         Settings = ToDto(request.Settings),
+        Tests = ToDto(request.Checks),
+        Extract = ToDto(request.Extractions),
     };
 
     public static HttpRequestDefinition FromDto(HttpRequestFile file, string key) => new()
@@ -178,6 +180,8 @@ internal static class DtoMapper
         Auth = FromDto(file.Auth, AuthConfig.Inherit),
         Body = FromDto(file.Body),
         Settings = FromDto(file.Settings),
+        Checks = FromDto(file.Tests),
+        Extractions = FromDto(file.Extract),
     };
 
     private static BodyDto? ToDto(HttpBody body) => body.Mode switch
@@ -278,6 +282,8 @@ internal static class DtoMapper
                 ValidateCertificates = request.Settings.ValidateCertificates ? null : false,
                 DeadlineMs = ToMilliseconds(request.Settings.Deadline),
             },
+        Tests = ToDto(request.Checks),
+        Extract = ToDto(request.Extractions),
     };
 
     public static GrpcRequestDefinition FromDto(GrpcRequestFile file, string key) => new()
@@ -296,7 +302,97 @@ internal static class DtoMapper
             : new GrpcRequestSettings(
                 file.Settings.ValidateCertificates ?? true,
                 FromMilliseconds(file.Settings.DeadlineMs, "settings.deadlineMs")),
+        Checks = FromDto(file.Tests),
+        Extractions = FromDto(file.Extract),
     };
+
+    // ---- Tests and extractions (ADR-0005) ------------------------------------------------
+
+    private static readonly (CheckSource Source, string Name)[] CheckNames =
+        [(CheckSource.Status, "status"), (CheckSource.Header, "header"), (CheckSource.Json, "json"), (CheckSource.Body, "body"), (CheckSource.Time, "time"), (CheckSource.Schema, "schema")];
+
+    private static readonly (CheckOperator Operator, string Name)[] OperatorNames =
+    [
+        (CheckOperator.Equals, "equals"), (CheckOperator.NotEquals, "notEquals"), (CheckOperator.GreaterThan, "greaterThan"),
+        (CheckOperator.LessThan, "lessThan"), (CheckOperator.Contains, "contains"), (CheckOperator.NotContains, "notContains"),
+        (CheckOperator.Matches, "matches"), (CheckOperator.Exists, "exists"), (CheckOperator.NotExists, "notExists"),
+    ];
+
+    private static readonly (ExtractionSource Source, string Name)[] ExtractSourceNames =
+        [(ExtractionSource.Json, "json"), (ExtractionSource.Header, "header"), (ExtractionSource.Status, "status"), (ExtractionSource.Body, "body")];
+
+    private static readonly (ExtractionTarget Target, string Name)[] ExtractTargetNames =
+        [(ExtractionTarget.Runtime, "runtime"), (ExtractionTarget.Environment, "environment"), (ExtractionTarget.Collection, "collection"), (ExtractionTarget.Global, "global")];
+
+    private static List<TestDto>? ToDto(IReadOnlyList<ResponseCheck> checks) =>
+        checks.Count == 0
+            ? null
+            : [.. checks.Select(check => new TestDto
+            {
+                Check = CheckNames.First(n => n.Source == check.Source).Name,
+                Name = check.Source == CheckSource.Header ? check.Target : null,
+                Path = check.Source == CheckSource.Json ? check.Target : null,
+                Op = check.Source == CheckSource.Schema ? null : OperatorNames.First(n => n.Operator == check.Operator).Name,
+                Value = check.Expected.Length == 0 ? null : NormalizeNewLines(check.Expected),
+                Enabled = check.IsEnabled ? null : false,
+            })];
+
+    private static IReadOnlyList<ResponseCheck> FromDto(List<TestDto>? tests) =>
+        tests is null ? [] : [.. tests.Select((test, index) =>
+        {
+            var field = $"tests[{index}]";
+            var checkName = Required(test.Check, field + ".check");
+            var source = CheckNames.FirstOrDefault(n => n.Name == checkName) is { Name: not null } match
+                ? match.Source
+                : throw Invalid(Messages.Format("Storage_UnknownCheck", checkName, field));
+            var op = source == CheckSource.Schema
+                ? CheckOperator.Equals
+                : OperatorNames.FirstOrDefault(n => n.Name == Required(test.Op, field + ".op")) is { Name: not null } named
+                    ? named.Operator
+                    : throw Invalid(Messages.Format("Storage_UnknownOperator", test.Op, field));
+            var target = source switch
+            {
+                CheckSource.Header => Required(test.Name, field + ".name"),
+                CheckSource.Json => Required(test.Path, field + ".path"),
+                _ => string.Empty,
+            };
+            return new ResponseCheck(source, op, target, test.Value ?? string.Empty, test.Enabled ?? true);
+        })];
+
+    private static List<ExtractDto>? ToDto(IReadOnlyList<Extraction> extractions) =>
+        extractions.Count == 0
+            ? null
+            : [.. extractions.Select(extraction => new ExtractDto
+            {
+                From = ExtractSourceNames.First(n => n.Source == extraction.Source).Name,
+                Name = extraction.Source == ExtractionSource.Header ? extraction.Target : null,
+                Path = extraction.Source == ExtractionSource.Json ? extraction.Target : null,
+                Variable = extraction.Variable,
+                To = extraction.To == ExtractionTarget.Runtime ? null : ExtractTargetNames.First(n => n.Target == extraction.To).Name,
+                Enabled = extraction.IsEnabled ? null : false,
+            })];
+
+    private static IReadOnlyList<Extraction> FromDto(List<ExtractDto>? extractions) =>
+        extractions is null ? [] : [.. extractions.Select((extract, index) =>
+        {
+            var field = $"extract[{index}]";
+            var fromName = Required(extract.From, field + ".from");
+            var source = ExtractSourceNames.FirstOrDefault(n => n.Name == fromName) is { Name: not null } match
+                ? match.Source
+                : throw Invalid(Messages.Format("Storage_UnknownExtractSource", fromName, field));
+            var to = extract.To is null
+                ? ExtractionTarget.Runtime
+                : ExtractTargetNames.FirstOrDefault(n => n.Name == extract.To) is { Name: not null } named
+                    ? named.Target
+                    : throw Invalid(Messages.Format("Storage_UnknownExtractTarget", extract.To, field));
+            var target = source switch
+            {
+                ExtractionSource.Header => Required(extract.Name, field + ".name"),
+                ExtractionSource.Json => Required(extract.Path, field + ".path"),
+                _ => string.Empty,
+            };
+            return new Extraction(source, target, Required(extract.Variable, field + ".variable"), to, extract.Enabled ?? true);
+        })];
 
     // ---- Proto settings ------------------------------------------------------------------
 

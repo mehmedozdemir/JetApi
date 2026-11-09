@@ -28,4 +28,10 @@ public abstract record RequestNode : CollectionNode
 {
     /// <summary>Request authentication.</summary>
     public AuthConfig Auth { get; init; } = AuthConfig.Inherit;
+
+    /// <summary>Assertions run on every response (the <c>tests</c> section of the file).</summary>
+    public IReadOnlyList<ResponseCheck> Checks { get; init; } = [];
+
+    /// <summary>Values taken from every response into variables (the <c>extract</c> section of the file).</summary>
+    public IReadOnlyList<Extraction> Extractions { get; init; } = [];
 }

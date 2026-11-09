@@ -52,6 +52,8 @@ internal sealed class HttpRequestFile
     public AuthDto? Auth { get; set; }
     public BodyDto? Body { get; set; }
     public HttpSettingsDto? Settings { get; set; }
+    public List<TestDto>? Tests { get; set; }
+    public List<ExtractDto>? Extract { get; set; }
 }
 
 internal sealed class GrpcRequestFile
@@ -66,6 +68,30 @@ internal sealed class GrpcRequestFile
     public AuthDto? Auth { get; set; }
     public string? Message { get; set; }
     public GrpcSettingsDto? Settings { get; set; }
+    public List<TestDto>? Tests { get; set; }
+    public List<ExtractDto>? Extract { get; set; }
+}
+
+// One entry of "tests": check is status | header | json | body | time | schema.
+internal sealed class TestDto
+{
+    public string? Check { get; set; }
+    public string? Name { get; set; }
+    public string? Path { get; set; }
+    public string? Op { get; set; }
+    public string? Value { get; set; }
+    public bool? Enabled { get; set; }
+}
+
+// One entry of "extract": from is json | header | status | body; to is runtime (default) | environment | collection | global.
+internal sealed class ExtractDto
+{
+    public string? From { get; set; }
+    public string? Name { get; set; }
+    public string? Path { get; set; }
+    public string? Variable { get; set; }
+    public string? To { get; set; }
+    public bool? Enabled { get; set; }
 }
 
 internal sealed class VariableDto

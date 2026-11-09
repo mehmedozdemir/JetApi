@@ -28,5 +28,9 @@
   <data name="Storage_SchemaVersionTooNew" xml:space="preserve"><value>schemaVersion {0} daha yeni bir JetApi sürümüyle yazılmış; bu sürüm en fazla {1} değerini destekliyor. Lütfen JetApi’yi güncelleyin.</value></data>
   <data name="Storage_UnknownAuthType" xml:space="preserve"><value>Bilinmeyen auth.type '{0}'. Geçerli değerler: inherit, none, bearer, basic, apikey veya oauth2.</value></data>
   <data name="Storage_UnknownBodyType" xml:space="preserve"><value>Bilinmeyen body.type '{0}'. Geçerli değerler: none, json, xml, text, form, multipart veya file.</value></data>
+  <data name="Storage_UnknownCheck" xml:space="preserve"><value>{1} içinde bilinmeyen check '{0}'. Geçerli değerler: status, header, json, body, time veya schema.</value></data>
+  <data name="Storage_UnknownExtractSource" xml:space="preserve"><value>{1} içinde bilinmeyen from '{0}'. Geçerli değerler: json, header, status veya body.</value></data>
+  <data name="Storage_UnknownExtractTarget" xml:space="preserve"><value>{1} içinde bilinmeyen to '{0}'. Geçerli değerler: runtime, environment, collection veya global.</value></data>
+  <data name="Storage_UnknownOperator" xml:space="preserve"><value>{1} içinde bilinmeyen op '{0}'. Geçerli değerler: equals, notEquals, greaterThan, lessThan, contains, notContains, matches, exists veya notExists.</value></data>
   <data name="Storage_UnsafeKey" xml:space="preserve"><value>'{1}' {0} anahtarı her işletim sisteminde geçerli bir dosya adı değil.</value></data>
 </root>

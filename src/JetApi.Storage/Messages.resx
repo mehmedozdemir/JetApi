@@ -28,5 +28,9 @@
   <data name="Storage_SchemaVersionTooNew" xml:space="preserve"><value>schemaVersion {0} was written by a newer JetApi; this version supports up to {1}. Please update JetApi.</value></data>
   <data name="Storage_UnknownAuthType" xml:space="preserve"><value>Unknown auth.type '{0}'. Expected inherit, none, bearer, basic, apikey or oauth2.</value></data>
   <data name="Storage_UnknownBodyType" xml:space="preserve"><value>Unknown body.type '{0}'. Expected none, json, xml, text, form, multipart or file.</value></data>
+  <data name="Storage_UnknownCheck" xml:space="preserve"><value>Unknown check '{0}' in {1}. Expected status, header, json, body, time or schema.</value></data>
+  <data name="Storage_UnknownExtractSource" xml:space="preserve"><value>Unknown from '{0}' in {1}. Expected json, header, status or body.</value></data>
+  <data name="Storage_UnknownExtractTarget" xml:space="preserve"><value>Unknown to '{0}' in {1}. Expected runtime, environment, collection or global.</value></data>
+  <data name="Storage_UnknownOperator" xml:space="preserve"><value>Unknown op '{0}' in {1}. Expected equals, notEquals, greaterThan, lessThan, contains, notContains, matches, exists or notExists.</value></data>
   <data name="Storage_UnsafeKey" xml:space="preserve"><value>The {0} key '{1}' cannot be used as a file name on every operating system.</value></data>
 </root>
