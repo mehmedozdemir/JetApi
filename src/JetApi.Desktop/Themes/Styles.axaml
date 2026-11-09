@@ -457,7 +457,7 @@
 
   <!-- Tree -->
   <Style Selector="TreeViewItem">
-    <Setter Property="MinHeight" Value="26" />
+    <Setter Property="MinHeight" Value="24" />
     <Setter Property="Padding" Value="0" />
     <Setter Property="CornerRadius" Value="6" />
   </Style>

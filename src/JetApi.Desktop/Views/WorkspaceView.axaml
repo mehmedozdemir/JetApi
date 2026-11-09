@@ -141,7 +141,7 @@
                   </TreeView.Styles>
                   <TreeView.ItemTemplate>
                     <TreeDataTemplate x:DataType="vm:TreeNodeViewModel" ItemsSource="{Binding Children}">
-                      <Grid ColumnDefinitions="Auto,*" Background="Transparent" Height="30" Tag="{Binding}">
+                      <Grid ColumnDefinitions="Auto,*" Background="Transparent" Height="24" Tag="{Binding}">
                         <Panel Width="44" IsVisible="{Binding IsRequest}">
                           <c:MethodBadge Text="{Binding Badge}" />
                         </Panel>
