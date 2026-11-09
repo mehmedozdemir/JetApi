@@ -162,7 +162,7 @@ public sealed class UxWalkthroughTests
         ((App)Application.Current!).ApplyTheme(AppTheme.Light);
 
         // 10. Settings: Ctrl+, opens them; every section renders; fonts, size and scale apply to the open window at once.
-        window.KeyPressQwerty(PhysicalKey.Comma, RawInputModifiers.Control);
+        window.KeyPressQwerty(PhysicalKey.Comma, Shortcut.Command);
         var settings = dialogs.SettingsShown.ShouldHaveSingleItem();
         var settingsWindow = new JetApi.Desktop.Views.SettingsWindow { DataContext = settings, Width = 860, Height = 600 };
         settingsWindow.Show();
@@ -275,12 +275,15 @@ public sealed class UxWalkthroughTests
     // Like a person, scrolls the row into view before clicking it.
     private static TextBlock TreeRow(Window window, string name)
     {
-        var row = window.GetVisualDescendants().OfType<TreeViewItem>()
+        FindRow().BringIntoView();
+        Settle();
+
+        // Scrolling can recycle the row's container, so look it up again.
+        return FindRow();
+
+        TextBlock FindRow() => window.GetVisualDescendants().OfType<TreeViewItem>()
             .Select(item => item.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault(t => t.Text == name && t.IsEffectivelyVisible))
             .First(text => text is not null)!;
-        row.BringIntoView();
-        Settle();
-        return row;
     }
 
     private static RadioButton Rail(Window window, int index) =>

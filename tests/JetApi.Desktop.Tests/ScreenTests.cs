@@ -135,12 +135,12 @@ public sealed class ScreenTests
         await vm.OpenWorkspaceAsync(workspace.Root, offerCreate: false);
         Dispatcher.UIThread.RunJobs();
 
-        window.KeyPressQwerty(Avalonia.Input.PhysicalKey.K, Avalonia.Input.RawInputModifiers.Control);
+        window.KeyPressQwerty(Avalonia.Input.PhysicalKey.K, Shortcut.Command);
         vm.Workspace!.Palette.ShouldNotBeNull();
         window.KeyPressQwerty(Avalonia.Input.PhysicalKey.Escape, Avalonia.Input.RawInputModifiers.None);
         vm.Workspace.Palette.ShouldBeNull();
 
-        window.KeyPressQwerty(Avalonia.Input.PhysicalKey.E, Avalonia.Input.RawInputModifiers.Control);
+        window.KeyPressQwerty(Avalonia.Input.PhysicalKey.E, Shortcut.Command);
         vm.Workspace.Environments.ShouldNotBeNull();
         window.Close();
         return true;

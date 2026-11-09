@@ -78,3 +78,10 @@ public sealed class CollectingLogSink : ILogSink
         }
     }
 }
+
+/// <summary>The modifier of the app's shortcuts: Cmd on macOS, Ctrl elsewhere (as in MainWindow).</summary>
+internal static class Shortcut
+{
+    public static Avalonia.Input.RawInputModifiers Command =>
+        OperatingSystem.IsMacOS() ? Avalonia.Input.RawInputModifiers.Meta : Avalonia.Input.RawInputModifiers.Control;
+}

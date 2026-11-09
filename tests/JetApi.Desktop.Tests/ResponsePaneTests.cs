@@ -51,7 +51,7 @@ public sealed class ResponsePaneTests
         split.ColumnDefinitions.Count.ShouldBe(3);
 
         // 1. Ctrl+Alt+V puts the response below; the setting is saved.
-        window.KeyPressQwerty(PhysicalKey.V, RawInputModifiers.Control | RawInputModifiers.Alt);
+        window.KeyPressQwerty(PhysicalKey.V, Shortcut.Command | RawInputModifiers.Alt);
         Settle();
         vm.Settings.ResponsePane.ShouldBe(ResponsePanePosition.Bottom);
         new AppSettingsStore(settingsFile).Load().ResponsePane.ShouldBe(ResponsePanePosition.Bottom);
