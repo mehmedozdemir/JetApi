@@ -5,6 +5,11 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+### Fixed
+
+- Environment olarak "Yok" seçimi hatırlanmıyordu; workspace yeniden açılınca ilk environment seçili geliyordu.
+- Ölçüm modu (`--measure`) ayarlarda GPU çizimi seçiliyse onunla ölçüyordu; artık her zaman yazılım çizimiyle ölçer.
+
 ## [0.2.0] - 2026-11-09
 
 Postman'den geçiş sürümü (M2). İlk ön sürüm `0.1.0-alpha.1` (2026-11-08) ayrı bir bölüm olarak yazılmadığı için

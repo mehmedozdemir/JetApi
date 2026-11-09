@@ -9,7 +9,8 @@ build/measure.sh win-x64 5      # 5 çalıştırma, medyan
 
 `build/measure.sh` önce 500 istekli bir workspace üretir (`build/perf/generate-workspace.cs`: 5 koleksiyon × 10 klasör × 10
 istek, iki environment). Ardından uygulamayı `JetApi --measure <workspace> <rapor.json>` ile başlatır. Bu modda uygulama
-kullanıcı ayarlarına dokunmaz, verilen workspace'i açar ve şunları JSON olarak yazıp kapanır:
+kullanıcı ayarlarına dokunmaz (çizim modu dahil: ayarlarda GPU seçili olsa da yazılımla çizer; GPU'yu ölçmek için
+`JETAPI_RENDERING=gpu`), verilen workspace'i açar ve şunları JSON olarak yazıp kapanır:
 
 | Alan | Anlamı |
 |---|---|
@@ -24,6 +25,19 @@ kullanıcı ayarlarına dokunmaz, verilen workspace'i açar ve şunları JSON ol
 başlatıldıktan sonra tek çalıştırma yapılır.
 
 ## Sonuçlar
+
+### 2026-11-09, Windows 11 x64, `0.2.0` ile `0.1.0-alpha.1` aynı makinede, aynı anda, yazılımla çizim
+
+| Sürüm | Workspace hazır (medyan) | Pencere açıldı | Boşta working set | Boşta private |
+|---|---|---|---|---|
+| `0.1.0-alpha.1` | 1.898 ms | 729 ms | 155,8 MB | 77,2 MB |
+| `0.2.0` | 1.981 ms | 681 ms | 158,3 MB | 77,8 MB |
+
+M2 belirgin bir gerileme getirmedi (fark ölçüm oynaması içinde). İki sürüm de bu ölçümde NFR-1'i (< 1.500 ms) aştı; makine
+8 Kasım'daki ölçüme göre daha yüklüydü (açık uygulamalar, yeni koşmuş testler). NFR-1 boş bir makinede yeniden ölçülmeli.
+Bu ölçüm sırasında `--measure` modunun ayarlardaki GPU seçimini kullandığı fark edildi (266 MB); düzeltildi. Düzeltmeden
+sonra, makine biraz daha boşken ve ayarlarda GPU seçiliyken `0.2.0`: workspace hazır 1.511 ms, pencere 562 ms, working set
+158 MB, private 77,5 MB. NFR-1 sınırda; makine yüküne göre 1,5–2,0 sn arasında oynuyor.
 
 ### 2026-11-08, Windows 11 x64, `0.1.0-alpha.1`, ReadyToRun, yazılımla çizim (güncel varsayılan)
 

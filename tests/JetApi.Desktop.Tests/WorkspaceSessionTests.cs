@@ -32,6 +32,18 @@ public sealed class WorkspaceSessionTests
     }
 
     [Fact]
+    public async Task NoEnvironment_IsRemembered_WhileANewWorkspaceStartsWithTheFirst()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        (await WorkspaceSession.OpenAsync(workspace.Root, TestContext.Current.CancellationToken)).ActiveEnvironmentKey.ShouldBe("dev");
+
+        workspace.Session.SetActiveEnvironment(null);
+        var reopened = await WorkspaceSession.OpenAsync(workspace.Root, TestContext.Current.CancellationToken);
+
+        reopened.ActiveEnvironmentKey.ShouldBeNull();
+    }
+
+    [Fact]
     public async Task NodeOperations_AreWrittenToDisk()
     {
         using var workspace = await TempWorkspace.CreateAsync();

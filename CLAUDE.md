@@ -54,12 +54,14 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 
 ## Open work (see docs/roadmap.md)
 
-M1 leftovers:
-- Start-up and idle memory meet NFR-1/NFR-2 on Windows (software rendering by default, `JETAPI_RENDERING=gpu` to override);
-  macOS and Linux are not measured yet. See docs/performance.md.
-- The release workflow and the macOS/Linux packages have not run on CI yet; only win-x64 was packaged locally.
+M1 and M2 are done; `v0.2.0` was tagged on 2026-11-09. Only Windows packages are needed (macOS/Linux optional).
 
-M2:
-- Postman Collection v2.1 and environment import, OpenAPI import.
-- cURL import/export, code snippets.
-- OAuth 2.0.
+Next, M3 (test automation): no-code assertions and extracting variables from responses (ADR-0005), a collection/folder
+runner, data-driven runs (CSV/JSON), the `jetapi` CLI with JUnit XML and HTML reports, importing Postman `pm.test`.
+
+Notes:
+- CI (`ci.yml`) runs only on pushes to `main`, but this repo has no `main` (the default branch is
+  `ccr-2a71755b-czvby1`), so CI does not run on pushes; run the full test suite locally before pushing.
+- NFR-1 (start-up < 1.5 s) is borderline: 1.5-2.0 s on 2026-11-09 depending on machine load, the same for 0.1.0-alpha.1
+  and 0.2.0; idle memory meets NFR-2 (158 MB). Measure with `build/measure.sh win-x64` on an idle machine;
+  `--measure` ignores the saved rendering setting. See docs/performance.md.

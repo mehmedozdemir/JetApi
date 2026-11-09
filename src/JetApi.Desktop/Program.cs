@@ -5,13 +5,20 @@ namespace JetApi.Desktop;
 internal static class Program
 {
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        // Measurements (build/measure.sh) must not depend on this machine's settings, rendering included.
+        s_measuring = args.Contains("--measure", StringComparer.Ordinal);
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
+
+    private static bool s_measuring;
 
     // Also used by the visual designer.
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .With(new Win32PlatformOptions { RenderingMode = WindowsRenderingModes(Environment.GetEnvironmentVariable("JETAPI_RENDERING") ?? SavedRendering()) })
+            .With(new Win32PlatformOptions { RenderingMode = WindowsRenderingModes(Environment.GetEnvironmentVariable("JETAPI_RENDERING") ?? (s_measuring ? "software" : SavedRendering())) })
             .WithInterFont()
             .LogToTrace();
 

@@ -14,6 +14,9 @@ public sealed class WorkspaceSession
 {
     private const string LocalStateFileName = "state.json";
 
+    // Written for "no environment" so it is told apart from "never chosen" (which opens the first environment).
+    private const string NoEnvironment = "";
+
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
     private WorkspaceSession(string root, Workspace workspace, IReadOnlyList<StorageDiagnostic> diagnostics)
@@ -60,9 +63,13 @@ public sealed class WorkspaceSession
         var fullRoot = Path.GetFullPath(root);
         var result = await WorkspaceStore.LoadAsync(fullRoot, cancellationToken).ConfigureAwait(false);
         var session = new WorkspaceSession(fullRoot, result.Workspace, result.Diagnostics);
-        session.ActiveEnvironmentKey = session.ReadLocalState()?.ActiveEnvironment is { } key && result.Workspace.FindEnvironment(key) is not null
-            ? key
-            : (result.Workspace.Environments.Count > 0 ? result.Workspace.Environments[0].Key : null);
+        session.ActiveEnvironmentKey = session.ReadLocalState()?.ActiveEnvironment switch
+        {
+            // "No environment" was chosen on purpose.
+            NoEnvironment => null,
+            { } key when result.Workspace.FindEnvironment(key) is not null => key,
+            _ => result.Workspace.Environments.Count > 0 ? result.Workspace.Environments[0].Key : null,
+        };
         return session;
     }
 
@@ -135,7 +142,7 @@ public sealed class WorkspaceSession
         }
 
         ActiveEnvironmentKey = key;
-        WriteLocalState((ReadLocalState() ?? new LocalState(null)) with { ActiveEnvironment = key });
+        WriteLocalState((ReadLocalState() ?? new LocalState(null)) with { ActiveEnvironment = key ?? NoEnvironment });
         OnChanged();
     }
 
