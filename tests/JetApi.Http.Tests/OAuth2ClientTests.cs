@@ -8,7 +8,9 @@ public sealed class OAuth2ClientTests(TestServer server) : IClassFixture<TestSer
 {
     private static readonly DateTimeOffset Now = new(2026, 11, 9, 12, 0, 0, TimeSpan.Zero);
 
-    private readonly OAuth2Client _client = new(timeProvider: new FixedTime(Now), timeout: TimeSpan.FromMilliseconds(500));
+    // Generous: the whole solution's tests run in parallel, and a first request can be slow under that load.
+    // SlowServer_TimesOut uses its own short timeout.
+    private readonly OAuth2Client _client = new(timeProvider: new FixedTime(Now), timeout: TimeSpan.FromSeconds(10));
 
     public void Dispose() => _client.Dispose();
 
@@ -149,7 +151,9 @@ public sealed class OAuth2ClientTests(TestServer server) : IClassFixture<TestSer
     [Fact]
     public async Task SlowServer_TimesOut()
     {
-        var result = await _client.RequestTokenAsync(Auth(path: "/oauth/slow"), Token);
+        using var client = new OAuth2Client(timeout: TimeSpan.FromMilliseconds(500));
+
+        var result = await client.RequestTokenAsync(Auth(path: "/oauth/slow"), Token);
 
         result.ErrorMessage.ShouldBe("The token endpoint did not answer within 500 ms.");
     }
