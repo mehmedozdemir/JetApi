@@ -93,7 +93,7 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
     private string _method;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(UrlHints))]
+    [NotifyPropertyChangedFor(nameof(UrlPreview))]
     private string _url;
 
     [ObservableProperty]
@@ -194,8 +194,18 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
     /// <summary>The response panel.</summary>
     public HttpResponseViewModel Response { get; } = new();
 
-    /// <summary>Variables used in the URL with their values.</summary>
-    public IReadOnlyList<VariableHint> UrlHints => BuildHints(Url);
+    /// <summary>The URL with the enabled query parameters, variables filled in.</summary>
+    public AddressPreview UrlPreview => BuildPreview(AddressWithQuery());
+
+    // The URL as it is sent: enabled query parameters from the Params table appended (they are not in the URL field).
+    private string AddressWithQuery()
+    {
+        var query = QueryParameters?.ToEntries()
+            .Where(e => e.IsEnabled && e.Key.Length > 0)
+            .Select(e => e.Value.Length == 0 ? e.Key : e.Key + "=" + e.Value)
+            .ToList();
+        return query is not { Count: > 0 } ? Url : Url + (Url.Contains('?', StringComparison.Ordinal) ? "&" : "?") + string.Join('&', query);
+    }
 
     /// <summary>Raw text body (JSON, XML, text).</summary>
     public bool IsRawBody => SelectedBodyMode.Value is HttpBodyMode.Json or HttpBodyMode.Xml or HttpBodyMode.Text;
@@ -353,7 +363,7 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
     public override void OnContextChanged()
     {
         base.OnContextChanged();
-        OnPropertyChanged(nameof(UrlHints));
+        OnPropertyChanged(nameof(UrlPreview));
         OnPropertyChanged(nameof(AutoHeaders));
         Auth.RefreshInherited();
     }
@@ -477,6 +487,11 @@ public sealed partial class HttpRequestTabViewModel : RequestTabViewModel
     private void OnEdited(string section)
     {
         OnPropertyChanged(section);
+        if (section is nameof(QueryParameters))
+        {
+            OnPropertyChanged(nameof(UrlPreview));
+        }
+
         if (section is nameof(Headers) or nameof(Auth))
         {
             OnPropertyChanged(nameof(AutoHeaders));

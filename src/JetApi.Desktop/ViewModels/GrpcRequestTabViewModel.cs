@@ -31,7 +31,7 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
     private IReadOnlyList<string> _protoErrors = [];
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(UrlHints), nameof(IsPlaintext))]
+    [NotifyPropertyChangedFor(nameof(UrlPreview), nameof(IsPlaintext))]
     private string _serverUrl;
 
     [ObservableProperty]
@@ -120,8 +120,8 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
     /// <summary>True when the server URL is plaintext (h2c).</summary>
     public bool IsPlaintext => RequestRunner.CreateResolver(Host.Session, CollectionKey).Resolve(ServerUrl).Value.TrimStart().StartsWith("http://", StringComparison.OrdinalIgnoreCase);
 
-    /// <summary>Variables in the server URL.</summary>
-    public IReadOnlyList<VariableHint> UrlHints => BuildHints(ServerUrl);
+    /// <summary>The server address with its variables filled in.</summary>
+    public AddressPreview UrlPreview => BuildPreview(ServerUrl);
 
     /// <summary>Proto loaded without errors.</summary>
     public bool IsProtoLoaded => _schema is not null;

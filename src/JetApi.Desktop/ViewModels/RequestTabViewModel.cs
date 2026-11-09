@@ -63,6 +63,21 @@ public sealed record VariableHint(string Placeholder, string Value, string Descr
     public bool IsSecret { get; init; }
 }
 
+/// <summary>The address with its variables filled in, shown under the address field.</summary>
+/// <param name="Text">The resolved address; empty when it has no variables.</param>
+/// <param name="Issue">"1 undefined variable", or empty.</param>
+public sealed record AddressPreview(string Text, string Issue)
+{
+    /// <summary>No variables, nothing to show.</summary>
+    public static AddressPreview None { get; } = new(string.Empty, string.Empty);
+
+    /// <summary>Show the line.</summary>
+    public bool IsVisible => Text.Length > 0;
+
+    /// <summary>Some variables are undefined.</summary>
+    public bool HasIssue => Issue.Length > 0;
+}
+
 /// <summary>An open request tab (HTTP or gRPC).</summary>
 public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
 {
@@ -286,9 +301,38 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
         return choice == UndefinedVariablesChoice.SendAnyway;
     }
 
-    /// <summary>Hints for every variable referenced in <paramref name="templates"/>.</summary>
-    protected IReadOnlyList<VariableHint> BuildHints(params string[] templates) =>
-        [.. templates.SelectMany(VariableResolver.FindReferences).Distinct(StringComparer.Ordinal).Select(Variables.Describe)];
+    /// <summary>
+    /// Where an address with variables really goes: defined variables are replaced by their values (secrets stay
+    /// masked); dynamic variables (new on every send) and undefined ones stay as written.
+    /// </summary>
+    /// <returns>The preview, or an empty one when <paramref name="template"/> has no variables.</returns>
+    protected AddressPreview BuildPreview(string? template)
+    {
+        var placeholders = VariableResolver.FindPlaceholders(template);
+        if (placeholders.Count == 0)
+        {
+            return AddressPreview.None;
+        }
+
+        var text = new System.Text.StringBuilder();
+        var undefined = 0;
+        var at = 0;
+        foreach (var placeholder in placeholders)
+        {
+            text.Append(template, at, placeholder.Start - at);
+            var hint = Variables.Describe(placeholder.Name);
+            if (!hint.IsDefined)
+            {
+                undefined++;
+            }
+
+            text.Append(hint.IsDefined && hint.Source is not null ? hint.Value : template!.Substring(placeholder.Start, placeholder.Length));
+            at = placeholder.End;
+        }
+
+        text.Append(template, at, template!.Length - at);
+        return new AddressPreview(text.ToString(), undefined == 0 ? string.Empty : Loc.Format("Req_UndefinedCount", undefined));
+    }
 
     private VariableContext CreateVariableContext()
     {

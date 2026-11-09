@@ -40,6 +40,7 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ### Changed
 
+- Adres altındaki değişken etiketleri kaldırıldı; yerine isteğin gerçekte gideceği adres (değişkenler çözülmüş, gizliler maskeli, sorgu parametreleri eklenmiş) gösterilir. Adreste değişken yoksa satır görünmez.
 - Arayüz sıkılaştırıldı: yazılar bir kademe küçük (temel 13 pt), düğme ve alanlar daha alçak, ağaçta girinti yarıya indi. Yazı boyutları artık `Tokens.axaml`da tek yerde.
 - İkonlar: sağ tık menüleri, komut paleti, Ayarlar bölümleri, Gönder/Kaydet düğmeleri, Biçimlendir ve proto bağlantıları ile bilgi/uyarı notları ikon aldı.
 - Arayüz makyajı: daha az çerçeve, vurgu rengi yalnızca ana eylemde; body türü ve görünüm seçimi segmented control; sekme rozetleri; yanıt süresi ve boyutu chip olarak; istek adı başlık olarak; kopyala ve kaydet ikon butonlar; sade karşılama ekranı; durum çubuğunda kısa yol ve Git dalı. Soluk metnin kontrastı AA seviyesine çıkarıldı. Yanıttaki IPv4 adresleri `[::ffff:…]` biçimi yerine sade gösterilir.

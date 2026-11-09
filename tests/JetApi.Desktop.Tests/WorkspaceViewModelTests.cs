@@ -167,12 +167,12 @@ public sealed class WorkspaceViewModelTests
         vm.OpenNode(vm.Collections[0].Children[0]);
         var tab = (HttpRequestTabViewModel)vm.SelectedTab!;
 
-        tab.UrlHints.ShouldHaveSingleItem().ShouldBe(new VariableHint("{{baseUrl}}", "https://httpbin.org", "Development", true) { Source = JetApi.Core.Variables.VariableSource.Environment });
+        tab.UrlPreview.ShouldBe(new AddressPreview("https://httpbin.org/get?hello=world", string.Empty));
 
         vm.SelectedEnvironment = vm.EnvironmentOptions[0];
 
         workspace.Session.ActiveEnvironmentKey.ShouldBeNull();
-        tab.UrlHints.ShouldHaveSingleItem().IsDefined.ShouldBeFalse();
+        tab.UrlPreview.ShouldBe(new AddressPreview("{{baseUrl}}/get?hello=world", "1 undefined"));
     }
 
     [Fact]

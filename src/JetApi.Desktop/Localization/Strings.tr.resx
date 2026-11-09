@@ -230,6 +230,7 @@
   <data name="Req_SourceRuntime" xml:space="preserve"><value>çalışma anı değeri</value></data>
   <data name="Req_Timeout" xml:space="preserve"><value>Zaman aşımı (ms)</value></data>
   <data name="Req_TimeoutHint" xml:space="preserve"><value>Boş bırakılırsa varsayılan (30 000 ms) kullanılır.</value></data>
+  <data name="Req_UndefinedCount" xml:space="preserve"><value>{0} tanımsız</value></data>
   <data name="Req_Unsaved" xml:space="preserve"><value>Kaydedilmemiş değişiklik</value></data>
   <data name="Req_Url" xml:space="preserve"><value>URL</value></data>
   <data name="Req_UrlPlaceholder" xml:space="preserve"><value>{{baseUrl}}/yol, https://… veya bir cURL komutu yapıştırın</value></data>

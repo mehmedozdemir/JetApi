@@ -51,7 +51,30 @@ public sealed class VariableEditingTests(EchoServer server) : IClassFixture<Echo
             workspace.Session.ActiveEnvironment!.Variables.Single(v => v.Name == "baseUrl").Value.ShouldBe("http://localhost:8080");
             workspace.Read("environments/dev.yaml").ShouldContain("http://localhost:8080");
             tab.Variables.Describe("baseUrl").Value.ShouldBe("http://localhost:8080");
-            tab.UrlHints.ShouldHaveSingleItem().Value.ShouldBe("http://localhost:8080");
+            tab.UrlPreview.Text.ShouldBe("http://localhost:8080/get?hello=world");
+        }
+    }
+
+    [Fact]
+    public async Task AddressPreview_FillsValues_MasksSecrets_AndKeepsDynamicAndUndefined()
+    {
+        var (workspace, vm, tab) = await OpenAsync();
+        using (workspace)
+        using (vm)
+        {
+            var environment = workspace.Session.ActiveEnvironment!;
+            await workspace.Session.SaveEnvironmentAsync(environment with
+            {
+                Variables = [.. environment.Variables, new Variable("apiKey", "s3cret", IsSecret: true), new Variable("api", "{{baseUrl}}/v2")],
+            }, TestContext.Current.CancellationToken);
+
+            tab.Url = "{{api}}/users/{{userId}}?key={{apiKey}}&id={{$guid}}";
+            tab.UrlPreview.Text.ShouldBe("https://httpbin.org/v2/users/{{userId}}?key=••••••••&id={{$guid}}&hello=world");
+            tab.UrlPreview.Issue.ShouldBe("1 undefined");
+            tab.UrlPreview.IsVisible.ShouldBeTrue();
+
+            tab.Url = "https://example.com/plain";
+            tab.UrlPreview.IsVisible.ShouldBeFalse();
         }
     }
 
