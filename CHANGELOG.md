@@ -5,6 +5,10 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-10
+
+Uygulama içi güncelleme sürümü: Hakkında, sürüm notları, güncelleme denetimi ve Windows paketinde tek tıkla kurulum. Ayrıca renk paletleri ve koleksiyon ağacında sürükle-bırak. Bu sürüm bir kez elle kurulur; sonraki sürümler uygulamanın içinden gelir.
+
 ### Added
 
 - Renk paletleri: Ayarlar → Görünüm'de açık ve koyu tema için ayrı ayrı seçilir; yalnızca kullanılan temanın
@@ -17,7 +21,6 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
   içine koyar; nereye düşeceği çizgi ya da çerçeveyle gösterilir. Klasör ve istekler başka koleksiyona taşınabilir,
   koleksiyonlar kendi aralarında sıralanabilir. Kapalı klasörün üzerinde beklenince açılır, kenarlara yaklaşınca liste
   kayar. Klavyeyle Alt+↑ / Alt+↓ (ve sağ tık → *Yukarı taşı* / *Aşağı taşı*) aynı düzeyde bir sıra taşır.
-
 - Hakkında, sürüm notları ve güncellemeler ([ADR-0011](docs/adr/0011-in-app-updates.md)):
   - **Hakkında:** Ayarlar → *Hakkında* bölümü sürümü ve commit'i, çalışma ortamını ve işletim sistemini gösterir.
     *Hata bildirimi için bilgileri kopyala* düğmesi bu bilgileri panoya alır. Sürüm notları, GitHub sayfası, sorun

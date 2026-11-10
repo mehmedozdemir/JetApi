@@ -271,7 +271,7 @@
         "dependencies": {
           "Google.Protobuf": "[3.36.2, )",
           "Grpc.Net.Client": "[2.85.0, )",
-          "JetApi.Core": "[0.3.0, )",
+          "JetApi.Core": "[0.3.1, )",
           "protobuf-net.Reflection": "[3.4.40, )"
         }
       },

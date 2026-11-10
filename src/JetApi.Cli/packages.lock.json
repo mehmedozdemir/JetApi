@@ -106,34 +106,34 @@
         "dependencies": {
           "Google.Protobuf": "[3.36.2, )",
           "Grpc.Net.Client": "[2.85.0, )",
-          "JetApi.Core": "[0.3.0, )",
+          "JetApi.Core": "[0.3.1, )",
           "protobuf-net.Reflection": "[3.4.40, )"
         }
       },
       "jetapi.http": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.3.0, )"
+          "JetApi.Core": "[0.3.1, )"
         }
       },
       "jetapi.runner": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.3.0, )",
-          "JetApi.Testing": "[0.3.0, )"
+          "JetApi.Core": "[0.3.1, )",
+          "JetApi.Testing": "[0.3.1, )"
         }
       },
       "jetapi.storage": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.3.0, )",
+          "JetApi.Core": "[0.3.1, )",
           "YamlDotNet": "[18.1.0, )"
         }
       },
       "jetapi.testing": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.3.0, )",
+          "JetApi.Core": "[0.3.1, )",
           "LateApexEarlySpeed.Json.Schema": "[4.2.4, )"
         }
       },

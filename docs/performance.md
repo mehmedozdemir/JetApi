@@ -26,6 +26,19 @@ başlatıldıktan sonra tek çalıştırma yapılır.
 
 ## Sonuçlar
 
+### 2026-11-10, Windows 11 x64, `0.3.1` ile `0.3.0` aynı makinede, sırayla, yazılımla çizim
+
+Makine meşguldü (IDE, açık bir JetApi, önceki derleme). Paketler arka arkaya ve iki tur halinde sırayla ölçüldü.
+
+| Sürüm | Workspace hazır (medyanlar) | Boşta working set | Boşta private |
+|---|---|---|---|
+| `0.3.0` | 1.509 / 1.465 / 1.631 / 1.904 ms | 155–182 MB | 74–93 MB |
+| `0.3.1` | 1.636 / 1.792 / 1.353 / 1.909 ms | 156–167 MB | 80–86 MB |
+
+İlk iki karşılaştırmada 0.3.1 yaklaşık 150 ms yavaş göründü, sonraki iki turda fark gürültünün içinde kaldı. Ölçüm
+modunda güncelleme denetimi yapılmaz ve varsayılan palette `Palettes.axaml` yüklenmez. NFR-1 bu makinede iki sürümde de
+sınırda; sakin bir makinede yeniden ölçülmeli. NFR-2 karşılanıyor.
+
 ### 2026-11-09, Windows 11 x64, `0.3.0`, ReadyToRun, yazılımla çizim
 
 | Ölçüm | Medyan (5 çalıştırma) | Hedef | Durum |

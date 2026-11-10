@@ -62,7 +62,7 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 
 ## Open work (see docs/roadmap.md)
 
-M1, M2 and M3 are done; `v0.2.0` and `v0.3.0` were tagged on 2026-11-09. Only Windows packages are needed
+M1, M2 and M3 are done; `v0.2.0` and `v0.3.0` were tagged on 2026-11-09, `v0.3.1` (in-app updates) on 2026-11-10. Only Windows packages are needed
 (macOS/Linux optional).
 
 M3 (test automation, `v0.3.0`): checks and extractions (ADR-0005, 0008), the
