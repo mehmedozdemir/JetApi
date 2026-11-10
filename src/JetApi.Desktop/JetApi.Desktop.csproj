@@ -25,6 +25,8 @@
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets/jetapi.ico" />
+    <!-- Release notes are read from the app's own copy of the changelog, so they need no network. -->
+    <EmbeddedResource Include="..\..\CHANGELOG.md" LogicalName="CHANGELOG.md" Link="CHANGELOG.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JetApi.Core\JetApi.Core.csproj" />

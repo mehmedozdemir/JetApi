@@ -29,8 +29,14 @@ public interface IMainHost
     /// <summary>Imports Postman exports into the open workspace; does nothing when none is open.</summary>
     Task ImportIntoWorkspaceAsync(IReadOnlyList<string> files);
 
-    /// <summary>Opens the settings window.</summary>
-    void OpenSettings();
+    /// <summary>Opens the settings window at <paramref name="section"/>.</summary>
+    void OpenSettings(SettingsSection section = SettingsSection.Appearance);
+
+    /// <summary>Update checks; <c>null</c> when the app runs without them (tests).</summary>
+    UpdatesViewModel? Updates { get; }
+
+    /// <summary>Opens the release notes.</summary>
+    Task ShowReleaseNotesAsync();
 }
 
 /// <summary>The main window: either the welcome screen or an open workspace.</summary>
@@ -84,7 +90,25 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
     }
 
     /// <inheritdoc cref="IMainHost.OpenSettings" />
-    public void OpenSettings() => _ = Dialogs.ShowSettingsAsync(new SettingsViewModel(this, Appearance.InstalledFonts(), Appearance.IsSystemDark()));
+    public void OpenSettings(SettingsSection section = SettingsSection.Appearance) =>
+        _ = Dialogs.ShowSettingsAsync(new SettingsViewModel(this, Appearance.InstalledFonts(), Appearance.IsSystemDark())
+        {
+            Section = section,
+            About = new AboutViewModel(AppInfo.Current, Dialogs, Updates, ShowReleaseNotesAsync),
+        });
+
+    /// <inheritdoc cref="IMainHost.Updates" />
+    public UpdatesViewModel? Updates { get; set; }
+
+    /// <inheritdoc cref="IMainHost.ShowReleaseNotesAsync" />
+    public Task ShowReleaseNotesAsync() => Dialogs.ShowReleaseNotesAsync(new ReleaseNotesViewModel(Changelog.Current, AppInfo.Current.Version));
+
+    /// <summary>After an update: shows what changed since <paramref name="previous"/>.</summary>
+    public Task ShowUpdatedNotesAsync(ReleaseVersion previous) =>
+        Dialogs.ShowReleaseNotesAsync(new ReleaseNotesViewModel(Changelog.Current, AppInfo.Current.Version, previous));
+
+    /// <summary>Asks about unsaved requests before the app restarts; <c>false</c> when the user cancels.</summary>
+    public Task<bool> PrepareToLeaveAsync() => Workspace?.PrepareToLeaveAsync() ?? Task.FromResult(true);
 
     // Theme, fonts, interface size and request defaults; all apply to the running app at once.
     private void Apply(AppSettings settings)

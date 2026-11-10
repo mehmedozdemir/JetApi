@@ -105,6 +105,22 @@ internal sealed class FakeDialogs : IDialogService
         return Task.CompletedTask;
     }
 
+    public List<ReleaseNotesViewModel> ReleaseNotesShown { get; } = [];
+
+    public Task ShowReleaseNotesAsync(ReleaseNotesViewModel notes)
+    {
+        ReleaseNotesShown.Add(notes);
+        return Task.CompletedTask;
+    }
+
+    public List<UpdateDialogViewModel> UpdatesShown { get; } = [];
+
+    public Task ShowUpdateAsync(UpdateDialogViewModel update)
+    {
+        UpdatesShown.Add(update);
+        return Task.CompletedTask;
+    }
+
     public Task CopyToClipboardAsync(string text)
     {
         Clipboard = text;
@@ -122,7 +138,23 @@ internal sealed class FakeWorkspaceHost : IWorkspaceHost
 
     public int SettingsOpened { get; private set; }
 
-    public void OpenSettings() => SettingsOpened++;
+    public SettingsSection? LastSettingsSection { get; private set; }
+
+    public void OpenSettings(SettingsSection section = SettingsSection.Appearance)
+    {
+        SettingsOpened++;
+        LastSettingsSection = section;
+    }
+
+    public UpdatesViewModel? Updates { get; set; }
+
+    public int ReleaseNotesOpened { get; private set; }
+
+    public Task ShowReleaseNotesAsync()
+    {
+        ReleaseNotesOpened++;
+        return Task.CompletedTask;
+    }
 
     public void ToggleTheme()
     {

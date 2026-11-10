@@ -109,6 +109,9 @@
 | UI-3 | Açık/koyu tema, sistem temasını izleme | M1 | ✅ Açık ve koyu tema için ayrı renk paleti (5 açık, 7 koyu; WCAG AA), editör sözdizimi renkleri palete uyar |
 | UI-4 | JSON/XML sözdizimi vurgulama, katlama, arama | M1 | 🟡 vurgulama ve arama (Ctrl+F) hazır; katlama sonraki adım |
 | I18N-1 | Türkçe ve İngilizce arayüz; varsayılan işletim sistemi dili, ayarlardan değiştirilebilir | M1 | ✅ |
+| APP-1 | Hakkında: sürüm, commit, çalışma ortamı ve işletim sistemi; hata bildirimi için bilgileri kopyalama; GitHub, lisans ve sorun bildirme bağlantıları | M3 | ✅ Ayarlar → Hakkında, komut paleti, karşılama ekranının alt satırı |
+| APP-2 | Sürüm notları: her sürümde neyin değiştiği, ağ olmadan | M3 | ✅ Uygulamadaki `CHANGELOG.md` kopyasından; güncellemeden sonraki ilk açılışta yalnızca yeni sürümlerin notları |
+| APP-3 | Güncelleme denetimi ve kurulumu | M3 | ✅ GitHub Releases'tan; elle ya da isteğe bağlı açılışta (varsayılan kapalı, NFR-6); Windows paketi `SHA256SUMS.txt` ile doğrular, yeniden başlayarak kurar, başarısızlıkta eski sürüm kalır ([ADR-0011](adr/0011-in-app-updates.md)). macOS/Linux ve kaynak koddan çalışan kopyalar indirme sayfasını açar |
 
 ### Sırlar (secrets)
 
@@ -127,7 +130,7 @@
 | NFR-3 | 50 MB yanıt | Arayüz donmaz; görüntüleme sanallaştırılmış |
 | NFR-4 | İstek başına uygulama ek yükü (hazırlama + kayıt) | < 5 ms |
 | NFR-5 | Platformlar | Windows 10+, macOS 13+, Linux x64 (Ubuntu 22.04+), arm64 dahil |
-| NFR-6 | Gizlilik | Telemetri yok; kullanıcının açıkça tetiklemediği hiçbir ağ isteği yok |
+| NFR-6 | Gizlilik | Telemetri yok; kullanıcının açıkça tetiklemediği hiçbir ağ isteği yok (açılışta güncelleme denetimi yalnızca kullanıcı açarsa, ADR-0011) |
 | NFR-7 | Dayanıklılık | Bozuk bir dosya workspace'in geri kalanının yüklenmesini engellemez; dosyaya yazma atomiktir |
 | NFR-8 | Uyumluluk | Dosya formatı `schemaVersion` ile sürümlenir; eski sürümler yeni formatı bozmaz, uyarır |
 | NFR-9 | Kalite | CI'da üç işletim sisteminde derleme ve test; format ve analizör ihlali yok; bilinen açığı olan paket yok |

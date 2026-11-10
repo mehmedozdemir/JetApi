@@ -36,9 +36,28 @@ build/package.sh linux-x64 0.1.0    # sürüm verilmezse Directory.Build.props i
    değerini güncelleyin.
 2. `vX.Y.Z` etiketini atıp gönderin: `git tag v0.1.0 && git push origin v0.1.0`.
 3. [Release iş akışı](../.github/workflows/release.yml) altı paketi kendi işletim sisteminde üretir, `SHA256SUMS.txt`
-   ekler ve **taslak** bir GitHub Release oluşturur. Windows paketleri zorunludur; macOS ve Linux paketleri isteğe
+   ekler ve **taslak** bir GitHub Release oluşturur. Sürüm açıklaması `CHANGELOG.md` içindeki o sürümün bölümüdür;
+   uygulamanın güncelleme penceresi bu metni gösterir. Windows paketleri zorunludur; macOS ve Linux paketleri isteğe
    bağlıdır, biri başarısız olursa release onsuz oluşturulur. `-` içeren etiketler (`v0.1.0-beta.1`) ön sürüm olarak işaretlenir.
 4. Taslağı kontrol edip yayınlayın.
+
+## Uygulama içi güncelleme
+
+Ayrıntılar ve gerekçe: [ADR-0011](adr/0011-in-app-updates.md).
+
+- Uygulama yayınlanmış sürümleri `https://api.github.com/repos/mehmedozdemir/JetApi/releases` adresinden okur.
+  **Taslaklar görünmez**: kullanıcılar bir sürümü ancak taslak yayınlandıktan sonra görür. Bunun için depo herkese açık
+  olmalıdır.
+- Denetim yalnızca kullanıcı isteyince yapılır (Ayarlar → Hakkında, komut paleti). Ayarlardaki *Açılışta güncellemeleri
+  denetle* seçeneği varsayılan olarak kapalıdır.
+- Windows paketi kendini günceller: `JetApi-<sürüm>-win-<arch>.zip` indirilir, `SHA256SUMS.txt` ile doğrulanır,
+  `%LOCALAPPDATA%\JetApi\updates` klasörüne açılır ve yeniden başlatılınca kurulur. Değiştirilen dosyalar
+  `*.jetapi-old` adını alır ve sonraki açılışta silinir. Kurulum yarıda kalırsa eski dosyalar geri konur.
+- **Sözleşme:** Paket adları ve `SHA256SUMS.txt` (biçim: `sha256sum` çıktısı) eski sürümlerin güncellenebilmesi için
+  değiştirilmemelidir.
+- macOS ve Linux paketleri, kaynak koddan çalışan kopyalar ve klasörüne yazamayan kopyalar (ör. `Program Files`) yeni
+  sürümü gösterir ve indirme sayfasını açar.
+- Sürüm notları penceresi uygulamaya gömülü `CHANGELOG.md` kopyasını okur (`EmbeddedResource`), ağ gerekmez.
 
 ## Uygulama ikonu
 

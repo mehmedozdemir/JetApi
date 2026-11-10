@@ -46,6 +46,14 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
         <StackPanel Grid.Column="4" Orientation="Horizontal" Margin="8,0,0,0" Spacing="4">
+          <!-- Shown only after a check found a newer release (nothing when the app runs without update checks). -->
+          <ContentControl Content="{Binding Updates}" VerticalAlignment="Center">
+            <ContentControl.ContentTemplate>
+              <DataTemplate x:DataType="vm:UpdatesViewModel">
+                <v:UpdateButton />
+              </DataTemplate>
+            </ContentControl.ContentTemplate>
+          </ContentControl>
           <Button Classes="icon" Width="30" Height="30" Command="{Binding OpenSettingsCommand}" ToolTip.Tip="{l:Tr Settings_TitleShortcut}" AutomationProperties.Name="{l:Tr Settings_Title}">
             <c:Icon Data="{StaticResource Icon.Sliders}" />
           </Button>

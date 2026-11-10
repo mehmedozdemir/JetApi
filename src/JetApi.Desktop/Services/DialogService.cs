@@ -128,6 +128,12 @@ public sealed class DialogService : IDialogService
         _owner()?.Clipboard is { } clipboard ? await clipboard.TryGetTextAsync().ConfigureAwait(true) : null;
 
     /// <inheritdoc />
+    public Task ShowReleaseNotesAsync(ViewModels.ReleaseNotesViewModel notes) => ShowAsync(new ReleaseNotesDialog { DataContext = notes }, false);
+
+    /// <inheritdoc />
+    public Task ShowUpdateAsync(ViewModels.UpdateDialogViewModel update) => ShowAsync(new UpdateDialog { DataContext = update }, false);
+
+    /// <inheritdoc />
     public Task ShowCodeSnippetAsync(ViewModels.CodeSnippetViewModel snippet) => ShowAsync(new CodeSnippetDialog { DataContext = snippet }, false);
 
     /// <inheritdoc />

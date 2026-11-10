@@ -511,4 +511,65 @@
   <data name="Palette_Dracula" xml:space="preserve"><value>Dracula</value></data>
   <data name="Palette_Monokai" xml:space="preserve"><value>Monokai</value></data>
   <data name="Palette_SolarizedDark" xml:space="preserve"><value>Solarized Dark</value></data>
+  <data name="Settings_About" xml:space="preserve"><value>About</value></data>
+  <data name="Settings_CheckForUpdates" xml:space="preserve"><value>Check for updates at start-up</value></data>
+  <data name="Settings_CheckForUpdatesHint" xml:space="preserve"><value>When on, JetApi asks GitHub for the list of releases a few seconds after it starts; nothing else is sent. Off by default.</value></data>
+  <data name="About_Version" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Fast, local-first, Git-friendly REST and gRPC client. Open source (MIT).</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>Release notes</value></data>
+  <data name="About_Repository" xml:space="preserve"><value>GitHub page</value></data>
+  <data name="About_ReportIssue" xml:space="preserve"><value>Report a problem</value></data>
+  <data name="About_License" xml:space="preserve"><value>License (MIT)</value></data>
+  <data name="About_Updates" xml:space="preserve"><value>Updates</value></data>
+  <data name="About_UpdateStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="About_CheckNow" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="About_ShowUpdate" xml:space="preserve"><value>See what's new and install</value></data>
+  <data name="About_System" xml:space="preserve"><value>System</value></data>
+  <data name="About_Runtime" xml:space="preserve"><value>Runtime</value></data>
+  <data name="About_Os" xml:space="preserve"><value>Operating system</value></data>
+  <data name="About_CopyInfo" xml:space="preserve"><value>Copy details for a bug report</value></data>
+  <data name="Cmd_CheckUpdates" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="Cmd_InstallUpdate" xml:space="preserve"><value>Install update: JetApi {0}</value></data>
+  <data name="Cmd_ReleaseNotes" xml:space="preserve"><value>Release notes</value></data>
+  <data name="Cmd_About" xml:space="preserve"><value>About JetApi</value></data>
+  <data name="Notes_Title" xml:space="preserve"><value>Release notes</value></data>
+  <data name="Notes_Subtitle" xml:space="preserve"><value>You are using JetApi {0}.</value></data>
+  <data name="Notes_UpdatedTitle" xml:space="preserve"><value>JetApi is now {0}</value></data>
+  <data name="Notes_UpdatedSubtitle" xml:space="preserve"><value>What changed since {0}.</value></data>
+  <data name="Notes_Unreleased" xml:space="preserve"><value>Unreleased</value></data>
+  <data name="Notes_LanguageNote" xml:space="preserve"><value>Release notes are written in Turkish.</value></data>
+  <data name="Notes_Empty" xml:space="preserve"><value>No release notes found.</value></data>
+  <data name="Notes_AllReleases" xml:space="preserve"><value>All releases on GitHub</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>JetApi {0} is available</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>You have {0}.</value></data>
+  <data name="Update_SubtitleSize" xml:space="preserve"><value>You have {0} · {1} download</value></data>
+  <data name="Update_WhatsNew" xml:space="preserve"><value>What's new</value></data>
+  <data name="Update_Downloaded" xml:space="preserve"><value>Downloaded and verified. JetApi restarts to install it; you are asked about unsaved requests first.</value></data>
+  <data name="Update_ReleasePage" xml:space="preserve"><value>Open on GitHub</value></data>
+  <data name="Update_Downloading" xml:space="preserve"><value>Downloading</value></data>
+  <data name="Update_Later" xml:space="preserve"><value>Later</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Download and install</value></data>
+  <data name="Update_Restart" xml:space="preserve"><value>Restart and install</value></data>
+  <data name="Update_OpenDownloadPage" xml:space="preserve"><value>Open download page</value></data>
+  <data name="Update_Starting" xml:space="preserve"><value>Starting…</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>{0} of {1}</value></data>
+  <data name="Update_NoNotes" xml:space="preserve"><value>No notes for this release.</value></data>
+  <data name="Update_Checking" xml:space="preserve"><value>Checking…</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>JetApi {0} is the latest version.</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>JetApi {0} is available.</value></data>
+  <data name="Update_AvailableTip" xml:space="preserve"><value>New version: JetApi {0}</value></data>
+  <data name="Update_ErrorRateLimit" xml:space="preserve"><value>GitHub refused the check (too many requests). Try again later.</value></data>
+  <data name="Update_ErrorStatus" xml:space="preserve"><value>Could not check for updates: GitHub answered {0}.</value></data>
+  <data name="Update_ErrorNetwork" xml:space="preserve"><value>Could not reach GitHub: {0}</value></data>
+  <data name="Update_ErrorTimeout" xml:space="preserve"><value>GitHub did not answer in time.</value></data>
+  <data name="Update_ErrorResponse" xml:space="preserve"><value>GitHub's answer could not be read.</value></data>
+  <data name="Update_ManualPlatform" xml:space="preserve"><value>On this platform JetApi does not install updates itself. Download the new package from the release page.</value></data>
+  <data name="Update_ManualDevelopment" xml:space="preserve"><value>This copy was not installed from a release package (for example, it runs from source), so it cannot update itself.</value></data>
+  <data name="Update_ManualReadOnly" xml:space="preserve"><value>JetApi cannot write to its folder ({0}), so it cannot update itself. Download the new package from the release page.</value></data>
+  <data name="Update_ErrorNoPackage" xml:space="preserve"><value>The release has no package named {0}.</value></data>
+  <data name="Update_ErrorNoChecksum" xml:space="preserve"><value>SHA256SUMS.txt has no entry for {0}. The download cannot be verified, so it is not installed.</value></data>
+  <data name="Update_ErrorChecksum" xml:space="preserve"><value>The downloaded file does not match its SHA-256 checksum, so it was deleted. Try again.</value></data>
+  <data name="Update_ErrorFiles" xml:space="preserve"><value>The update could not be prepared: {0}</value></data>
+  <data name="Update_ErrorInstall" xml:space="preserve"><value>The update could not be installed; the current version is unchanged. {0}</value></data>
+  <data name="Update_ErrorRestart" xml:space="preserve"><value>The update is installed but JetApi could not restart ({0}). Close and reopen JetApi.</value></data>
 </root>

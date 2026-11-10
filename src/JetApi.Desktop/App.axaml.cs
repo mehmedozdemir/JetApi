@@ -31,15 +31,58 @@ public sealed partial class App : Application
                 ApplyTheme,
                 action => Dispatcher.UIThread.Post(action),
                 ApplyAppearance);
+            if (measurement is null)
+            {
+                viewModel.Updates = CreateUpdates(viewModel, window);
+            }
+
             window.DataContext = viewModel;
             desktop.MainWindow = window;
             desktop.ShutdownRequested += (_, _) => viewModel.Dispose();
             window.Opened += measurement is null
-                ? async (_, _) => await viewModel.OpenLastWorkspaceAsync().ConfigureAwait(true)
+                ? async (_, _) => await StartAsync(viewModel, desktop.Args ?? []).ConfigureAwait(true)
                 : async (_, _) => await MeasureAsync(measurement, window, viewModel, desktop).ConfigureAwait(true);
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    // Update checks talk to GitHub only when asked (or when the user turned on checking at start-up). ADR-0011.
+    private static UpdatesViewModel CreateUpdates(MainWindowViewModel viewModel, MainWindow window)
+    {
+        var version = AppInfo.Current.Version;
+        var api = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+        var downloads = new HttpClient { Timeout = TimeSpan.FromMinutes(30) };
+        downloads.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("JetApi", version.ToString()));
+        return new UpdatesViewModel(new GitHubReleases(api), new UpdateInstaller(downloads), viewModel.Dialogs, version, viewModel.PrepareToLeaveAsync, window.CloseWithoutAsking);
+    }
+
+    // Reopens the last workspace; after an update, tidies up and shows what is new; checks for updates if the user asked to.
+    private static async Task StartAsync(MainWindowViewModel viewModel, IReadOnlyList<string> args)
+    {
+        await viewModel.OpenLastWorkspaceAsync().ConfigureAwait(true);
+        var updatedFrom = UpdateInstaller.UpdatedFrom(args);
+        if (updatedFrom is not null || Directory.Exists(UpdateInstaller.DefaultWorkRoot))
+        {
+            var installDirectory = Path.GetDirectoryName(Environment.ProcessPath);
+            _ = Task.Run(async () =>
+            {
+                // The previous process may still be closing; give it a moment to release its files.
+                await Task.Delay(TimeSpan.FromSeconds(3)).ConfigureAwait(false);
+                UpdateInstaller.CleanUp(updatedFrom is null ? null : installDirectory, UpdateInstaller.DefaultWorkRoot);
+            });
+        }
+
+        if (updatedFrom is not null)
+        {
+            await viewModel.ShowUpdatedNotesAsync(updatedFrom).ConfigureAwait(true);
+        }
+        else if (viewModel.Settings.CheckForUpdates && viewModel.Updates is { } updates)
+        {
+            // After start-up work, so the check never competes with opening the workspace (NFR-1).
+            await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(true);
+            await updates.CheckQuietlyAsync().ConfigureAwait(true);
+        }
     }
 
     // Opens the workspace, waits for its first rendered frame, idles, then reports and exits (NFR-1, NFR-2).

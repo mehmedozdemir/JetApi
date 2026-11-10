@@ -78,4 +78,10 @@ public interface IDialogService
 
     /// <summary>Copies text to the clipboard.</summary>
     Task CopyToClipboardAsync(string text);
+
+    /// <summary>Shows the release notes.</summary>
+    Task ShowReleaseNotesAsync(ViewModels.ReleaseNotesViewModel notes);
+
+    /// <summary>Shows what a newer release brings and offers to install it.</summary>
+    Task ShowUpdateAsync(ViewModels.UpdateDialogViewModel update);
 }

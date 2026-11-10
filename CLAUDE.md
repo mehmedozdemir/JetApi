@@ -71,6 +71,9 @@ collection runner with data files (ADR-0009), the `jetapi` CLI with JUnit XML an
 Next is M4 (advanced gRPC).
 
 Notes:
+- In-app updates read published GitHub releases (ADR-0011): package names `JetApi-<version>-<rid>.zip` and
+  `SHA256SUMS.txt` are a contract with installed copies; the release body and the in-app release notes both come from
+  `CHANGELOG.md`, so write each version's section with care.
 - CI (`ci.yml`) runs on pushes to every branch (lint, then Windows, Ubuntu and macOS); still run the full test suite
   locally before pushing.
 - NFR-1 (start-up < 1.5 s) depends on machine load: 1.2 s for 0.3.0 on a quiet machine, 1.5-2.0 s for 0.2.0 on a busy

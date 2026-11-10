@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
+             x:Class="JetApi.Desktop.Views.UpdateButton"
+             x:DataType="vm:UpdatesViewModel">
+  <!-- Top bar button; shown only after a check found a newer release. -->
+  <Button x:Name="UpdatePill" Classes="update" Command="{Binding ShowCommand}" IsVisible="{Binding IsAvailable}"
+          ToolTip.Tip="{Binding AvailableTip}" AutomationProperties.Name="{Binding AvailableTip}">
+    <StackPanel Orientation="Horizontal" Spacing="6">
+      <c:Icon Data="{StaticResource Icon.Download}" Width="13" Height="13" Foreground="{DynamicResource App.Accent}" />
+      <TextBlock Text="{Binding LatestVersion}" Foreground="{DynamicResource App.Accent}" FontWeight="SemiBold" />
+    </StackPanel>
+  </Button>
+</UserControl>

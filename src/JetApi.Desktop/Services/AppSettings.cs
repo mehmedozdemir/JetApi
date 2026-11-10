@@ -105,6 +105,9 @@ public sealed record AppSettings
     /// <summary>How the window is drawn; takes effect after a restart.</summary>
     public RenderingPreference Rendering { get; init; } = RenderingPreference.Software;
 
+    /// <summary>Check for a newer release at start-up. Off by default: no network request the user did not ask for (NFR-6).</summary>
+    public bool CheckForUpdates { get; init; }
+
     /// <summary>Default interface font size.</summary>
     public const double DefaultUiFontSize = 13;
 

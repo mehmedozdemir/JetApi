@@ -23,6 +23,9 @@ public enum SettingsSection
 
     /// <summary>Rendering and other rarely changed options.</summary>
     Advanced,
+
+    /// <summary>Version, release notes and updates.</summary>
+    About,
 }
 
 /// <summary>Who owns the settings: saves them and applies them to the running app.</summary>
@@ -107,6 +110,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     private SettingsOption<RenderingPreference>? _rendering;
 
+    [ObservableProperty]
+    private bool _checkForUpdates;
+
     private readonly bool _systemIsDark;
 
     /// <summary>Creates the view model; <paramref name="installedFonts"/> come from the platform (empty in tests is fine).</summary>
@@ -172,6 +178,15 @@ public sealed partial class SettingsViewModel : ViewModelBase
     /// <summary>Rendering modes.</summary>
     public IReadOnlyList<SettingsOption<RenderingPreference>> RenderingOptions { get; }
 
+    /// <summary>The About section (version, release notes, updates); set by the main window.</summary>
+    public AboutViewModel? About { get; init; }
+
+    /// <summary>Update checks shown in the About section, if any.</summary>
+    public UpdatesViewModel? Updates => About?.Updates;
+
+    /// <summary>The About section can check for updates.</summary>
+    public bool HasUpdateChecks => Updates is not null;
+
     /// <summary>Sample shown under the editor font settings.</summary>
     public string EditorSample { get; } = "{\n  \"id\": 42,\n  \"name\": \"Ayşe Yılmaz\",\n  \"url\": \"{{baseUrl}}/users/42\"\n}";
 
@@ -218,6 +233,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
             SaveHistory = SaveHistory,
             UseCookieJar = UseCookieJar,
             Rendering = Rendering?.Value ?? current.Rendering,
+            CheckForUpdates = CheckForUpdates,
         });
         if (e.PropertyName == nameof(Rendering))
         {
@@ -244,6 +260,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         SaveHistory = settings.SaveHistory;
         UseCookieJar = settings.UseCookieJar;
         Rendering = RenderingOptions.First(o => o.Value == settings.Rendering);
+        CheckForUpdates = settings.CheckForUpdates;
         _loading = false;
         OnPropertyChanged(nameof(RenderingNeedsRestart));
     }

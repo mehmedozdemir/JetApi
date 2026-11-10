@@ -137,9 +137,12 @@ public sealed partial class CommandPaletteViewModel : ViewModelBase
 
         var terms = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         var commandsGroup = Loc.Get("Palette_Commands");
+
+        // Case rules of the interface language, not of the machine: "install" finds "Install" on a Turkish Windows too.
+        var compare = Loc.Instance.Culture.CompareInfo;
         Results.Clear();
         foreach (var item in _all.Where(i => (!commandsOnly || i.Group == commandsGroup)
-            && terms.All(t => (i.Label + " " + i.Detail + " " + i.Badge).Contains(t, StringComparison.CurrentCultureIgnoreCase))).Take(MaxResults))
+            && terms.All(t => compare.IndexOf(i.Label + " " + i.Detail + " " + i.Badge, t, System.Globalization.CompareOptions.IgnoreCase) >= 0)).Take(MaxResults))
         {
             item.IsSelected = false;
             Results.Add(item);

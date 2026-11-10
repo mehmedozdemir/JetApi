@@ -18,8 +18,25 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
   koleksiyonlar kendi aralarında sıralanabilir. Kapalı klasörün üzerinde beklenince açılır, kenarlara yaklaşınca liste
   kayar. Klavyeyle Alt+↑ / Alt+↓ (ve sağ tık → *Yukarı taşı* / *Aşağı taşı*) aynı düzeyde bir sıra taşır.
 
+- Hakkında, sürüm notları ve güncellemeler ([ADR-0011](docs/adr/0011-in-app-updates.md)):
+  - **Hakkında:** Ayarlar → *Hakkında* bölümü sürümü ve commit'i, çalışma ortamını ve işletim sistemini gösterir.
+    *Hata bildirimi için bilgileri kopyala* düğmesi bu bilgileri panoya alır. Sürüm notları, GitHub sayfası, sorun
+    bildirme ve lisans bağlantıları da buradadır.
+  - **Sürüm notları:** Her sürümde neyin değiştiği uygulamanın kendi CHANGELOG kopyasından, ağ olmadan gösterilir.
+    Komut paletinden ve karşılama ekranının alt satırından açılır.
+  - **Güncelleme denetimi:** Ayarlar → Hakkında'dan ya da komut paletinden *Güncellemeleri denetle*. İstenirse açılışta
+    da yapılır (*Açılışta güncellemeleri denetle*, varsayılan kapalı). Yeni sürüm bulunduğunda üst çubukta bir düğme
+    belirir. Güncelleme penceresi yeni sürümlerin notlarını gösterir.
+  - **Kurulum (Windows paketi):** Paket indirilir, `SHA256SUMS.txt` ile doğrulanır ve JetApi yeniden başlatılarak
+    kurulur. Önce kaydedilmemiş istekler sorulur. Bir dosya değiştirilemezse eski sürüm olduğu gibi kalır. Güncellemeden
+    sonraki ilk açılışta yalnızca yeni sürümlerin notları gösterilir. macOS ve Linux paketleri ile kaynak koddan
+    çalışan kopyalar indirme sayfasını açar.
+  - GitHub sürüm açıklaması artık CHANGELOG'daki ilgili bölümdür.
+
 ### Fixed
 
+- Komut paleti İngilizce arayüzde Türkçe Windows'ta büyük `I` içeren komutları bulamıyordu (ör. "install" yazınca
+  "Install…"). Artık arama arayüz dilinin harf kurallarını kullanır.
 - Kaydedilmemiş değişikliği olan bir istek (ya da içinde bulunduğu klasör) taşınınca sekmesi eski yolda kalıyordu;
   kaydedince isteğin bir kopyası koleksiyon köküne ekleniyordu. Artık sekmeler taşınan istekleri değişiklikleriyle
   birlikte izler.

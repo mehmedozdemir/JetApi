@@ -34,6 +34,10 @@
                      IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Advanced}">
           <c:IconLabel Icon="{StaticResource Icon.Monitor}" Text="{l:Tr Settings_Advanced}" Spacing="8" />
         </RadioButton>
+        <RadioButton Classes="navitem" GroupName="settings"
+                     IsChecked="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=About}">
+          <c:IconLabel Icon="{StaticResource Icon.Info}" Text="{l:Tr Settings_About}" Spacing="8" />
+        </RadioButton>
       </StackPanel>
     </Border>
 
@@ -158,6 +162,99 @@
           <Border Classes="note" IsVisible="{Binding RenderingNeedsRestart}">
             <TextBlock TextWrapping="Wrap" Text="{l:Tr Settings_RestartNeeded}" />
           </Border>
+        </StackPanel>
+
+        <!-- About: version, links, updates, platform details. -->
+        <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=About}">
+          <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_About}" />
+          <ContentControl Content="{Binding About}">
+            <ContentControl.ContentTemplate>
+              <DataTemplate x:DataType="vm:AboutViewModel">
+                <StackPanel Spacing="18">
+                  <Grid ColumnDefinitions="Auto,*">
+                    <Border Width="56" Height="56" CornerRadius="14" Background="{DynamicResource App.AccentSoft}" VerticalAlignment="Top">
+                      <c:Icon Data="{StaticResource Icon.Logo}" Width="30" Height="30" Foreground="{DynamicResource App.Accent}" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="3" Margin="16,2,0,0" VerticalAlignment="Center">
+                      <TextBlock Text="JetApi" FontWeight="Bold" FontSize="{DynamicResource App.FontSize.Title}" />
+                      <SelectableTextBlock Foreground="{DynamicResource App.TextMuted}" Text="{Binding VersionText}" />
+                      <TextBlock Classes="faint small" TextWrapping="Wrap" Text="{l:Tr About_Tagline}" />
+                    </StackPanel>
+                  </Grid>
+                  <WrapPanel ItemSpacing="18" LineSpacing="6">
+                    <Button Classes="link" Command="{Binding ShowReleaseNotesCommand}">
+                      <c:IconLabel Icon="{StaticResource Icon.Sparkle}" Text="{l:Tr About_ReleaseNotes}" Spacing="6" />
+                    </Button>
+                    <Button Classes="link" Command="{Binding OpenRepositoryCommand}">
+                      <c:IconLabel Icon="{StaticResource Icon.Branch}" Text="{l:Tr About_Repository}" Spacing="6" />
+                    </Button>
+                    <Button Classes="link" Command="{Binding ReportIssueCommand}">
+                      <c:IconLabel Icon="{StaticResource Icon.Warning}" Text="{l:Tr About_ReportIssue}" Spacing="6" />
+                    </Button>
+                    <Button Classes="link" Command="{Binding OpenLicenseCommand}">
+                      <c:IconLabel Icon="{StaticResource Icon.Info}" Text="{l:Tr About_License}" Spacing="6" />
+                    </Button>
+                  </WrapPanel>
+                </StackPanel>
+              </DataTemplate>
+            </ContentControl.ContentTemplate>
+          </ContentControl>
+
+          <Border Classes="divider" Height="1" />
+          <TextBlock Classes="h3" Text="{l:Tr About_Updates}" />
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto" RowSpacing="16">
+            <TextBlock Text="{l:Tr About_UpdateStatus}" VerticalAlignment="Top" IsVisible="{Binding HasUpdateChecks}" />
+            <ContentControl Grid.Column="1" Content="{Binding Updates}">
+              <ContentControl.ContentTemplate>
+                <DataTemplate x:DataType="vm:UpdatesViewModel">
+                  <StackPanel Spacing="10">
+                    <TextBlock x:Name="UpdateStatus" TextWrapping="Wrap" Text="{Binding StatusText}"
+                               IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <Button Classes="secondary" MinHeight="30" Command="{Binding CheckCommand}" IsVisible="{Binding !IsAvailable}">
+                        <c:IconLabel Icon="{StaticResource Icon.Refresh}" Text="{l:Tr About_CheckNow}" Spacing="8" />
+                      </Button>
+                      <Button Classes="primary" MinHeight="30" Padding="16,0" Command="{Binding ShowCommand}" IsVisible="{Binding IsAvailable}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <c:Icon Data="{StaticResource Icon.Download}" Width="14" Height="14" Foreground="{DynamicResource App.AccentForeground}" />
+                          <TextBlock Text="{l:Tr About_ShowUpdate}" />
+                        </StackPanel>
+                      </Button>
+                    </StackPanel>
+                  </StackPanel>
+                </DataTemplate>
+              </ContentControl.ContentTemplate>
+            </ContentControl>
+            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="4">
+              <CheckBox IsChecked="{Binding CheckForUpdates}" Content="{l:Tr Settings_CheckForUpdates}" />
+              <TextBlock Classes="faint small" Margin="28,0,0,0" TextWrapping="Wrap" Text="{l:Tr Settings_CheckForUpdatesHint}" />
+            </StackPanel>
+          </Grid>
+
+          <ContentControl Content="{Binding About}">
+            <ContentControl.ContentTemplate>
+              <DataTemplate x:DataType="vm:AboutViewModel">
+                <StackPanel Spacing="18">
+                  <Border Classes="divider" Height="1" />
+                  <TextBlock Classes="h3" Text="{l:Tr About_System}" />
+                  <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                    <TextBlock Text="{l:Tr About_Runtime}" />
+                    <SelectableTextBlock Grid.Column="1" Foreground="{DynamicResource App.TextMuted}" TextWrapping="Wrap" Text="{Binding RuntimeText}" />
+                    <TextBlock Grid.Row="1" Text="{l:Tr About_Os}" />
+                    <SelectableTextBlock Grid.Row="1" Grid.Column="1" Foreground="{DynamicResource App.TextMuted}" TextWrapping="Wrap" Text="{Binding OsText}" />
+                    <Button Grid.Row="2" Grid.Column="1" Classes="secondary" MinHeight="30" HorizontalAlignment="Left" Command="{Binding CopyInfoCommand}">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <c:Icon Data="{StaticResource Icon.Copy}" Width="14" Height="14" IsVisible="{Binding !Copied}" />
+                        <c:Icon Data="{StaticResource Icon.Check}" Width="14" Height="14" Foreground="{DynamicResource Tone.Success.Fg}" IsVisible="{Binding Copied}" />
+                        <TextBlock Text="{l:Tr About_CopyInfo}" IsVisible="{Binding !Copied}" />
+                        <TextBlock Text="{l:Tr Snippet_Copied}" IsVisible="{Binding Copied}" />
+                      </StackPanel>
+                    </Button>
+                  </Grid>
+                </StackPanel>
+              </DataTemplate>
+            </ContentControl.ContentTemplate>
+          </ContentControl>
         </StackPanel>
       </Panel>
     </ScrollViewer>

@@ -34,8 +34,14 @@ public enum SidebarMode
 /// <summary>What the main window needs from its host (theme, language, closing).</summary>
 public interface IWorkspaceHost
 {
-    /// <summary>Opens the settings window.</summary>
-    void OpenSettings();
+    /// <summary>Opens the settings window at <paramref name="section"/>.</summary>
+    void OpenSettings(SettingsSection section = SettingsSection.Appearance);
+
+    /// <summary>Update checks; <c>null</c> when the app runs without them (tests).</summary>
+    UpdatesViewModel? Updates { get; }
+
+    /// <summary>Opens the release notes.</summary>
+    Task ShowReleaseNotesAsync();
 
     /// <summary>Per-user settings.</summary>
     AppSettings Settings { get; }
@@ -597,6 +603,9 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <summary>Opens the settings window.</summary>
     [RelayCommand]
     private void OpenSettings() => _host.OpenSettings();
+
+    /// <summary>Update checks, for the top bar button; <c>null</c> without them.</summary>
+    public UpdatesViewModel? Updates => _host.Updates;
 
     /// <summary>Asks for Postman exports and imports them (collections and environments).</summary>
     [RelayCommand]
@@ -1363,6 +1372,19 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
 
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Folder", Loc.Get("Top_OpenWorkspace"), string.Empty, string.Empty, OpenOtherWorkspaceAsync));
+        if (_host.Updates is { } updates)
+        {
+            items.Add(updates.IsAvailable
+                ? PaletteItemViewModel.Command(commands, "Icon.Download", Loc.Format("Cmd_InstallUpdate", updates.LatestVersion), string.Empty, string.Empty, () => updates.ShowCommand.ExecuteAsync(null))
+                : PaletteItemViewModel.Command(commands, "Icon.Download", Loc.Get("Cmd_CheckUpdates"), Loc.Format("About_Version", updates.Current), string.Empty, () => updates.CheckCommand.ExecuteAsync(null)));
+        }
+
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Sparkle", Loc.Get("Cmd_ReleaseNotes"), string.Empty, string.Empty, _host.ShowReleaseNotesAsync));
+        items.Add(PaletteItemViewModel.Command(commands, "Icon.Info", Loc.Get("Cmd_About"), string.Empty, string.Empty, () =>
+        {
+            _host.OpenSettings(SettingsSection.About);
+            return Task.CompletedTask;
+        }));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Close", Loc.Get("Cmd_CloseWorkspace"), string.Empty, string.Empty, CloseWorkspaceAsync));
         return items;
     }

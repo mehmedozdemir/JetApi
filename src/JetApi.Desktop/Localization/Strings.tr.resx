@@ -511,4 +511,65 @@
   <data name="Palette_Dracula" xml:space="preserve"><value>Dracula</value></data>
   <data name="Palette_Monokai" xml:space="preserve"><value>Monokai</value></data>
   <data name="Palette_SolarizedDark" xml:space="preserve"><value>Solarized Dark</value></data>
+  <data name="Settings_About" xml:space="preserve"><value>Hakkında</value></data>
+  <data name="Settings_CheckForUpdates" xml:space="preserve"><value>Açılışta güncellemeleri denetle</value></data>
+  <data name="Settings_CheckForUpdatesHint" xml:space="preserve"><value>Açıksa JetApi açıldıktan birkaç saniye sonra GitHub'dan yalnızca sürüm listesini ister; başka hiçbir veri gönderilmez. Varsayılan olarak kapalıdır.</value></data>
+  <data name="About_Version" xml:space="preserve"><value>Sürüm {0}</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Hızlı, yerel öncelikli, Git dostu REST ve gRPC istemcisi. Açık kaynak (MIT).</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>Sürüm notları</value></data>
+  <data name="About_Repository" xml:space="preserve"><value>GitHub sayfası</value></data>
+  <data name="About_ReportIssue" xml:space="preserve"><value>Sorun bildir</value></data>
+  <data name="About_License" xml:space="preserve"><value>Lisans (MIT)</value></data>
+  <data name="About_Updates" xml:space="preserve"><value>Güncellemeler</value></data>
+  <data name="About_UpdateStatus" xml:space="preserve"><value>Durum</value></data>
+  <data name="About_CheckNow" xml:space="preserve"><value>Güncellemeleri denetle</value></data>
+  <data name="About_ShowUpdate" xml:space="preserve"><value>Yenilikleri gör ve kur</value></data>
+  <data name="About_System" xml:space="preserve"><value>Sistem</value></data>
+  <data name="About_Runtime" xml:space="preserve"><value>Çalışma ortamı</value></data>
+  <data name="About_Os" xml:space="preserve"><value>İşletim sistemi</value></data>
+  <data name="About_CopyInfo" xml:space="preserve"><value>Hata bildirimi için bilgileri kopyala</value></data>
+  <data name="Cmd_CheckUpdates" xml:space="preserve"><value>Güncellemeleri denetle</value></data>
+  <data name="Cmd_InstallUpdate" xml:space="preserve"><value>Güncellemeyi kur: JetApi {0}</value></data>
+  <data name="Cmd_ReleaseNotes" xml:space="preserve"><value>Sürüm notları</value></data>
+  <data name="Cmd_About" xml:space="preserve"><value>JetApi hakkında</value></data>
+  <data name="Notes_Title" xml:space="preserve"><value>Sürüm notları</value></data>
+  <data name="Notes_Subtitle" xml:space="preserve"><value>Kullandığınız sürüm: JetApi {0}</value></data>
+  <data name="Notes_UpdatedTitle" xml:space="preserve"><value>JetApi {0} sürümüne güncellendi</value></data>
+  <data name="Notes_UpdatedSubtitle" xml:space="preserve"><value>{0} sürümünden bu yana değişenler.</value></data>
+  <data name="Notes_Unreleased" xml:space="preserve"><value>Yayınlanmamış</value></data>
+  <data name="Notes_LanguageNote" xml:space="preserve"><value>Sürüm notları Türkçe yazılır.</value></data>
+  <data name="Notes_Empty" xml:space="preserve"><value>Sürüm notu bulunamadı.</value></data>
+  <data name="Notes_AllReleases" xml:space="preserve"><value>GitHub'daki tüm sürümler</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>JetApi {0} yayınlandı</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>Kullandığınız sürüm: {0}</value></data>
+  <data name="Update_SubtitleSize" xml:space="preserve"><value>Kullandığınız sürüm: {0} · İndirme boyutu: {1}</value></data>
+  <data name="Update_WhatsNew" xml:space="preserve"><value>Yenilikler</value></data>
+  <data name="Update_Downloaded" xml:space="preserve"><value>İndirildi ve doğrulandı. Kurmak için JetApi yeniden başlatılır; önce kaydedilmemiş istekler sorulur.</value></data>
+  <data name="Update_ReleasePage" xml:space="preserve"><value>GitHub'da aç</value></data>
+  <data name="Update_Downloading" xml:space="preserve"><value>İndiriliyor</value></data>
+  <data name="Update_Later" xml:space="preserve"><value>Daha sonra</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>İndir ve kur</value></data>
+  <data name="Update_Restart" xml:space="preserve"><value>Yeniden başlat ve kur</value></data>
+  <data name="Update_OpenDownloadPage" xml:space="preserve"><value>İndirme sayfasını aç</value></data>
+  <data name="Update_Starting" xml:space="preserve"><value>Başlıyor…</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>{0} / {1}</value></data>
+  <data name="Update_NoNotes" xml:space="preserve"><value>Bu sürüm için not yok.</value></data>
+  <data name="Update_Checking" xml:space="preserve"><value>Denetleniyor…</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>JetApi {0} en güncel sürüm.</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>JetApi {0} yayınlandı.</value></data>
+  <data name="Update_AvailableTip" xml:space="preserve"><value>Yeni sürüm: JetApi {0}</value></data>
+  <data name="Update_ErrorRateLimit" xml:space="preserve"><value>GitHub denetimi reddetti (çok fazla istek). Bir süre sonra yeniden deneyin.</value></data>
+  <data name="Update_ErrorStatus" xml:space="preserve"><value>Güncellemeler denetlenemedi: GitHub {0} yanıtını verdi.</value></data>
+  <data name="Update_ErrorNetwork" xml:space="preserve"><value>GitHub'a ulaşılamadı: {0}</value></data>
+  <data name="Update_ErrorTimeout" xml:space="preserve"><value>GitHub zamanında yanıt vermedi.</value></data>
+  <data name="Update_ErrorResponse" xml:space="preserve"><value>GitHub'ın yanıtı okunamadı.</value></data>
+  <data name="Update_ManualPlatform" xml:space="preserve"><value>Bu platformda JetApi güncellemeleri kendisi kurmaz. Yeni paketi sürüm sayfasından indirin.</value></data>
+  <data name="Update_ManualDevelopment" xml:space="preserve"><value>Bu kopya bir sürüm paketinden kurulmadığı için (örneğin kaynak koddan çalışıyor) kendini güncelleyemez.</value></data>
+  <data name="Update_ManualReadOnly" xml:space="preserve"><value>JetApi kendi klasörüne ({0}) yazamadığı için kendini güncelleyemez. Yeni paketi sürüm sayfasından indirin.</value></data>
+  <data name="Update_ErrorNoPackage" xml:space="preserve"><value>Sürümde {0} adlı paket yok.</value></data>
+  <data name="Update_ErrorNoChecksum" xml:space="preserve"><value>SHA256SUMS.txt içinde {0} için kayıt yok. İndirme doğrulanamadığı için kurulmaz.</value></data>
+  <data name="Update_ErrorChecksum" xml:space="preserve"><value>İndirilen dosya SHA-256 özetiyle eşleşmiyor, bu yüzden silindi. Yeniden deneyin.</value></data>
+  <data name="Update_ErrorFiles" xml:space="preserve"><value>Güncelleme hazırlanamadı: {0}</value></data>
+  <data name="Update_ErrorInstall" xml:space="preserve"><value>Güncelleme kurulamadı; mevcut sürüm değişmedi. {0}</value></data>
+  <data name="Update_ErrorRestart" xml:space="preserve"><value>Güncelleme kuruldu ama JetApi yeniden başlatılamadı ({0}). JetApi'yi kapatıp yeniden açın.</value></data>
 </root>

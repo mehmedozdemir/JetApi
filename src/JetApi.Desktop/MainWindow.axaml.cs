@@ -35,6 +35,13 @@ public sealed partial class MainWindow : Window
         _ = ConfirmCloseAsync(workspace);
     }
 
+    /// <summary>Closes without asking about unsaved requests (the caller already asked, e.g. before an update restart).</summary>
+    public void CloseWithoutAsking()
+    {
+        _closeConfirmed = true;
+        Close();
+    }
+
     private async Task ConfirmCloseAsync(WorkspaceViewModel workspace)
     {
         if (await workspace.PrepareToLeaveAsync().ConfigureAwait(true))

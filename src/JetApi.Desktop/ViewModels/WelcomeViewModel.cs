@@ -87,6 +87,20 @@ public sealed partial class WelcomeViewModel : ViewModelBase
     [RelayCommand]
     private void OpenSettings() => _host.OpenSettings();
 
+    /// <summary>Opens the About section.</summary>
+    [RelayCommand]
+    private void OpenAbout() => _host.OpenSettings(SettingsSection.About);
+
+    /// <summary>Opens the release notes.</summary>
+    [RelayCommand]
+    private Task ShowReleaseNotesAsync() => _host.ShowReleaseNotesAsync();
+
+    /// <summary>Update checks, for the top bar button; <c>null</c> without them.</summary>
+    public UpdatesViewModel? Updates => _host.Updates;
+
+    /// <summary>"JetApi 0.3.0" for the footer.</summary>
+    public string VersionText => "JetApi " + AppInfo.Current.Version;
+
     /// <summary>Moves from Postman: choose the exports, then the folder of the (new or existing) workspace.</summary>
     [RelayCommand]
     private async Task ImportFromPostmanAsync()

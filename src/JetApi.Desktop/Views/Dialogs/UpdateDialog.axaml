@@ -1,0 +1,87 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:JetApi.Desktop.Localization"
+        xmlns:c="using:JetApi.Desktop.Controls"
+        xmlns:vm="using:JetApi.Desktop.ViewModels"
+        x:Class="JetApi.Desktop.Views.Dialogs.UpdateDialog"
+        x:DataType="vm:UpdateDialogViewModel"
+        Width="720" Height="640" MinWidth="540" MinHeight="420"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        Title="{Binding Title}"
+        Background="{DynamicResource App.Surface}">
+  <!-- What is new, then download (verified against SHA256SUMS.txt) and restart to install. ADR-0011. -->
+  <Grid RowDefinitions="Auto,*,Auto,Auto">
+    <Border BorderBrush="{DynamicResource App.Border}" BorderThickness="0,0,0,1" Padding="28,24,28,18">
+      <Grid ColumnDefinitions="Auto,*">
+        <Border Width="40" Height="40" CornerRadius="10" Background="{DynamicResource App.AccentSoft}" VerticalAlignment="Top" Margin="0,0,14,0">
+          <c:Icon Data="{StaticResource Icon.Download}" Width="20" Height="20" Foreground="{DynamicResource App.Accent}" />
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="4">
+          <TextBlock Classes="h2" FontWeight="SemiBold" Text="{Binding Title}" TextWrapping="Wrap" />
+          <TextBlock Classes="muted" Text="{Binding Subtitle}" TextWrapping="Wrap" />
+          <TextBlock Classes="faint small" Text="{l:Tr Notes_LanguageNote}" TextWrapping="Wrap" IsVisible="{Binding ShowsLanguageNote}" Margin="0,2,0,0" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="1">
+      <ItemsControl Margin="28,22,28,4" ItemsSource="{Binding Sections}" AutomationProperties.Name="{l:Tr Update_WhatsNew}" />
+    </ScrollViewer>
+
+    <!-- Messages: why this copy cannot install, the downloaded state, or an error. -->
+    <StackPanel Grid.Row="2" Spacing="8" Margin="28,0,28,12">
+      <Border Classes="note" IsVisible="{Binding !CanInstall}">
+        <Grid ColumnDefinitions="Auto,*">
+          <c:Icon Data="{StaticResource Icon.Info}" Width="15" Height="15" Foreground="{DynamicResource Tone.Info.Fg}" VerticalAlignment="Top" Margin="0,2,10,0" />
+          <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{Binding ManualReason}" />
+        </Grid>
+      </Border>
+      <Border Classes="note" IsVisible="{Binding IsDownloaded}">
+        <Grid ColumnDefinitions="Auto,*">
+          <c:Icon Data="{StaticResource Icon.Check}" Width="15" Height="15" Foreground="{DynamicResource Tone.Info.Fg}" VerticalAlignment="Top" Margin="0,2,10,0" />
+          <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{l:Tr Update_Downloaded}" />
+        </Grid>
+      </Border>
+      <Border Classes="danger" IsVisible="{Binding HasError}">
+        <SelectableTextBlock TextWrapping="Wrap" Text="{Binding Error}" />
+      </Border>
+    </StackPanel>
+
+    <Border Grid.Row="3" BorderBrush="{DynamicResource App.Border}" BorderThickness="0,1,0,0" Padding="28,12">
+      <Grid ColumnDefinitions="*,Auto">
+        <!-- Progress replaces the release page link while downloading. -->
+        <Button Classes="link" Content="{l:Tr Update_ReleasePage}" Command="{Binding OpenReleasePageCommand}" VerticalAlignment="Center"
+                IsVisible="{Binding ShowsReleaseLink}" />
+        <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding IsBusy}" Margin="0,0,16,0" VerticalAlignment="Center">
+          <ProgressBar Value="{Binding Progress}" IsIndeterminate="{Binding !IsProgressKnown}" MinWidth="120" VerticalAlignment="Center"
+                       AutomationProperties.Name="{l:Tr Update_Downloading}" />
+          <TextBlock Grid.Column="1" Classes="muted small" Text="{Binding ProgressText}" Margin="12,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+          <Button Classes="secondary" MinHeight="32" Content="{l:Tr Btn_Cancel}" Command="{Binding CancelDownloadCommand}" IsVisible="{Binding IsDownloading}" />
+          <Button Classes="secondary" MinHeight="32" Content="{l:Tr Update_Later}" Click="OnLater" IsCancel="True" IsVisible="{Binding !IsBusy}" />
+          <Button Classes="primary" MinHeight="32" Padding="18,0" Command="{Binding OpenReleasePageCommand}" IsDefault="True"
+                  IsVisible="{Binding !CanInstall}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <c:Icon Data="{StaticResource Icon.Open}" Width="14" Height="14" Foreground="{DynamicResource App.AccentForeground}" />
+              <TextBlock Text="{l:Tr Update_OpenDownloadPage}" />
+            </StackPanel>
+          </Button>
+          <Button Classes="primary" MinHeight="32" Padding="18,0" Command="{Binding DownloadCommand}" IsDefault="True"
+                  IsVisible="{Binding ShowsDownload}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <c:Icon Data="{StaticResource Icon.Download}" Width="14" Height="14" Foreground="{DynamicResource App.AccentForeground}" />
+              <TextBlock Text="{l:Tr Update_Download}" />
+            </StackPanel>
+          </Button>
+          <Button Classes="primary" MinHeight="32" Padding="18,0" Command="{Binding RestartCommand}" IsVisible="{Binding IsDownloaded}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <c:Icon Data="{StaticResource Icon.Refresh}" Width="14" Height="14" Foreground="{DynamicResource App.AccentForeground}" />
+              <TextBlock Text="{l:Tr Update_Restart}" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

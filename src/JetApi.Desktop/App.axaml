@@ -1,5 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:JetApi.Desktop.ViewModels"
+             xmlns:c="using:JetApi.Desktop.Controls"
              x:Class="JetApi.Desktop.App"
              RequestedThemeVariant="Default">
   <Application.Resources>
@@ -12,6 +14,20 @@
       <Color x:Key="SystemAccentColorLight1">#7C93F5</Color>
     </ResourceDictionary>
   </Application.Resources>
+  <Application.DataTemplates>
+    <!-- One version in the release notes and update dialogs. -->
+    <DataTemplate x:DataType="vm:ReleaseNotesSection">
+      <StackPanel Spacing="10" Margin="0,0,0,26">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Border Background="{DynamicResource App.AccentSoft}" CornerRadius="6" Padding="9,3" VerticalAlignment="Center">
+            <TextBlock Text="{Binding Heading}" FontWeight="SemiBold" Foreground="{DynamicResource App.Accent}" />
+          </Border>
+          <TextBlock Classes="faint" Text="{Binding Date}" IsVisible="{Binding HasDate}" VerticalAlignment="Center" />
+        </StackPanel>
+        <c:MarkdownView Blocks="{Binding Blocks}" />
+      </StackPanel>
+    </DataTemplate>
+  </Application.DataTemplates>
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
