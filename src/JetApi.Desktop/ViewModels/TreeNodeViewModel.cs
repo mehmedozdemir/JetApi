@@ -29,6 +29,15 @@ public sealed partial class TreeNodeViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isVisible = true;
 
+    /// <summary>Selected in the tree (bound two-way to the tree item).</summary>
+    [ObservableProperty]
+    private bool _isSelected;
+
+    /// <summary>Where a node being dragged over this row would land; drawn as a line or an outline.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsDropBefore), nameof(IsDropInside), nameof(IsDropAfter))]
+    private DropPosition _dropHint;
+
     /// <summary>Creates a node.</summary>
     public TreeNodeViewModel(TreeNodeKind kind, string collectionKey, IReadOnlyList<string> path, string name, string badge = "")
     {
@@ -68,6 +77,15 @@ public sealed partial class TreeNodeViewModel : ViewModelBase
 
     /// <summary>Is a folder.</summary>
     public bool IsFolder => Kind == TreeNodeKind.Folder;
+
+    /// <summary>A dragged node would land above this row.</summary>
+    public bool IsDropBefore => DropHint == DropPosition.Before;
+
+    /// <summary>A dragged node would land inside this folder or collection.</summary>
+    public bool IsDropInside => DropHint == DropPosition.Inside;
+
+    /// <summary>A dragged node would land below this row.</summary>
+    public bool IsDropAfter => DropHint == DropPosition.After;
 
     /// <summary>Identity used to keep expansion state across rebuilds.</summary>
     public string Identity => $"{CollectionKey}/{string.Join('/', Path)}";

@@ -211,7 +211,7 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     protected IRequestHost Host { get; }
 
     /// <summary>Owning collection.</summary>
-    public string CollectionKey { get; }
+    public string CollectionKey { get; private set; }
 
     /// <summary>Path in the collection; <c>null</c> when the request is not saved (e.g. opened from history).</summary>
     public IReadOnlyList<string>? Path { get; private set; }
@@ -339,6 +339,17 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
         Name = saved.Name;
         _savedYaml = RequestFiles.Serialize(saved);
         UpdateDirty();
+    }
+
+    /// <summary>Follows the saved request after it was moved in the tree; unsaved edits stay in the tab.</summary>
+    public void Relocate(string collectionKey, IReadOnlyList<string> path)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        CollectionKey = collectionKey;
+        Path = path;
+        Key = path[^1];
+        OnPropertyChanged(nameof(Identity));
+        OnContextChanged();
     }
 
     /// <summary>Cancels a running request and releases resources when the tab closes.</summary>

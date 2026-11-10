@@ -84,7 +84,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
     }
 
     /// <inheritdoc cref="IMainHost.OpenSettings" />
-    public void OpenSettings() => _ = Dialogs.ShowSettingsAsync(new SettingsViewModel(this, Appearance.InstalledFonts()));
+    public void OpenSettings() => _ = Dialogs.ShowSettingsAsync(new SettingsViewModel(this, Appearance.InstalledFonts(), Appearance.IsSystemDark()));
 
     // Theme, fonts, interface size and request defaults; all apply to the running app at once.
     private void Apply(AppSettings settings)

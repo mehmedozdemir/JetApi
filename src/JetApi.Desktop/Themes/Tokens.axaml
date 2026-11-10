@@ -1,8 +1,11 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <!-- Design tokens from docs/ui-design.md. Every color used by the views comes from here. -->
+  <!-- Design tokens from docs/ui-design.md: the default palettes. Every color used by the views comes from here or from
+       another palette in Palettes.axaml, which overrides the same keys. -->
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
+      <!-- TextMate theme of the code editor; each palette names its own. -->
+      <x:String x:Key="App.SyntaxTheme">LightPlus</x:String>
       <SolidColorBrush x:Key="App.Background" Color="#F6F7F9" />
       <SolidColorBrush x:Key="App.Surface" Color="#FFFFFF" />
       <SolidColorBrush x:Key="App.Sidebar" Color="#F6F7F9" />
@@ -63,6 +66,7 @@
       <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundCheckedPressed" Color="#FFFFFF" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
+      <x:String x:Key="App.SyntaxTheme">DarkPlus</x:String>
       <SolidColorBrush x:Key="App.Background" Color="#13151A" />
       <SolidColorBrush x:Key="App.Surface" Color="#181B21" />
       <SolidColorBrush x:Key="App.Sidebar" Color="#13151A" />
@@ -164,6 +168,8 @@
   <StreamGeometry x:Key="Icon.LayoutColumns">M3 5h18v14H3z M12 5v14</StreamGeometry>
   <StreamGeometry x:Key="Icon.LayoutRows">M3 5h18v14H3z M3 12h18</StreamGeometry>
   <StreamGeometry x:Key="Icon.Play">M7 5l12 7-12 7z</StreamGeometry>
+  <StreamGeometry x:Key="Icon.ArrowUp">M12 19V5 M6 11l6-6 6 6</StreamGeometry>
+  <StreamGeometry x:Key="Icon.ArrowDown">M12 5v14 M6 13l6 6 6-6</StreamGeometry>
   <StreamGeometry x:Key="Icon.MoveUp">M9 14L4 9l5-5 M4 9h11a5 5 0 0 1 0 10h-3</StreamGeometry>
 
   <FontFamily x:Key="App.MonoFont">Cascadia Mono, JetBrains Mono, SF Mono, Menlo, Consolas, DejaVu Sans Mono, monospace</FontFamily>

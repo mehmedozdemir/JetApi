@@ -86,6 +86,9 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     [ObservableProperty]
     private string _filterText = string.Empty;
 
+    // The selected tree node, kept across tree rebuilds like the expanded folders.
+    private string? _selectedIdentity;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsHistoryVisible), nameof(IsCollectionsMode), nameof(IsEnvironmentsMode))]
     private SidebarMode _sidebarMode;
@@ -452,39 +455,69 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <summary>Moves a node to the top level of its collection.</summary>
     [RelayCommand]
     private Task MoveToRootAsync(TreeNodeViewModel node) =>
-        node.Path.Count <= 1 ? Task.CompletedTask : MoveAsync(node, null);
+        node.Path.Count <= 1 ? Task.CompletedTask : MoveToAsync(node, new DropPlan(node.CollectionKey, [], null));
 
-    /// <summary>Moves <paramref name="node"/> into <paramref name="target"/> (a folder or collection) or next to it (a request).</summary>
-    public async Task MoveAsync(TreeNodeViewModel node, TreeNodeViewModel? target)
+    /// <summary>Moves a node one place up among its siblings (Alt+Up).</summary>
+    [RelayCommand]
+    private Task MoveUpAsync(TreeNodeViewModel node) =>
+        TreeDrop.Step(Session.Workspace, node, down: false) is { } plan ? MoveToAsync(node, plan) : Task.CompletedTask;
+
+    /// <summary>Moves a node one place down among its siblings (Alt+Down).</summary>
+    [RelayCommand]
+    private Task MoveDownAsync(TreeNodeViewModel node) =>
+        TreeDrop.Step(Session.Workspace, node, down: true) is { } plan ? MoveToAsync(node, plan) : Task.CompletedTask;
+
+    /// <summary>Drops a dragged node at <paramref name="position"/> of <paramref name="target"/> (see <see cref="TreeDrop"/>).</summary>
+    public Task DropAsync(TreeNodeViewModel source, TreeNodeViewModel target, DropPosition position) =>
+        TreeDrop.Plan(Session.Workspace, source, target, position) is { } plan ? MoveToAsync(source, plan) : Task.CompletedTask;
+
+    // Moves the node, keeps its folders' expansion, shows where it went and lets open tabs follow it.
+    private async Task MoveToAsync(TreeNodeViewModel node, DropPlan plan)
     {
         ArgumentNullException.ThrowIfNull(node);
-        if (node.IsCollection || (target is not null && target.CollectionKey != node.CollectionKey))
-        {
-            return;
-        }
-
-        var newParent = target switch
-        {
-            null => [],
-            { IsContainer: true } => target.Path,
-            _ => target.Path.SkipLast(1).ToList(),
-        };
-
         await RunSavingAsync(async () =>
         {
-            var collection = Session.Workspace.FindCollection(node.CollectionKey)!;
-            int? index = target is { IsRequest: true }
-                ? CollectionTree.ChildrenOf(collection, newParent).ToList().FindIndex(c => c.Key == target.Path[^1])
-                : null;
-            var oldIdentity = $"{node.CollectionKey}/{string.Join('/', node.Path)}";
-            var newPath = await Session.MoveNodeAsync(node.CollectionKey, node.Path, newParent, index).ConfigureAwait(true);
-            if (node.IsRequest && Tabs.FirstOrDefault(t => t.Identity == oldIdentity) is { } tab && !tab.IsDirty)
+            if (node.IsCollection)
             {
-                var replacement = CreateTab(node.CollectionKey, newPath, (RequestNode)CollectionTree.Find(Session.Workspace.FindCollection(node.CollectionKey)!, newPath)!);
-                ReplaceTab(tab, replacement);
+                await Session.MoveCollectionAsync(node.CollectionKey, plan.BeforeKey).ConfigureAwait(true);
+                Select(node.Identity);
+                return;
             }
+
+            var oldPrefix = node.Identity;
+            var expanded = Collections.SelectMany(Flatten).Where(n => n.IsExpanded && IsUnder(n.Identity, oldPrefix)).Select(n => n.Identity).ToList();
+            var newPath = await Session.MoveNodeAsync(node.CollectionKey, node.Path, plan.CollectionKey, plan.ParentPath, plan.BeforeKey).ConfigureAwait(true);
+            if (newPath is null)
+            {
+                return;
+            }
+
+            // The tree was rebuilt by the move: reopen the moved folders and the new parent with its ancestors.
+            var newPrefix = $"{plan.CollectionKey}/{string.Join('/', newPath)}";
+            var open = expanded.Select(identity => newPrefix + identity[oldPrefix.Length..]).ToHashSet(StringComparer.Ordinal);
+            open.Add(plan.CollectionKey + "/");
+            for (var length = 1; length <= plan.ParentPath.Count; length++)
+            {
+                open.Add($"{plan.CollectionKey}/{string.Join('/', plan.ParentPath.Take(length))}");
+            }
+
+            foreach (var tree in Collections.SelectMany(Flatten).Where(n => open.Contains(n.Identity)))
+            {
+                tree.IsExpanded = true;
+            }
+
+            foreach (var tab in Tabs.Where(t => t.Path is not null && IsUnder(t.Identity, oldPrefix)).ToList())
+            {
+                tab.Relocate(plan.CollectionKey, [.. newPath, .. tab.Path!.Skip(node.Path.Count)]);
+            }
+
+            Select(newPrefix);
+            RememberTabs();
         }).ConfigureAwait(true);
     }
+
+    private static bool IsUnder(string identity, string prefix) =>
+        identity == prefix || identity.StartsWith(prefix + "/", StringComparison.Ordinal);
 
     /// <summary>Opens collection or folder settings.</summary>
     [RelayCommand]
@@ -1138,8 +1171,19 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
     }
 
+    // Selects the tree node with this identity (after a move it is a new node).
+    private void Select(string identity)
+    {
+        _selectedIdentity = identity;
+        foreach (var node in Collections.SelectMany(Flatten))
+        {
+            node.IsSelected = node.Identity == identity;
+        }
+    }
+
     private void RebuildTree()
     {
+        _selectedIdentity = Collections.SelectMany(Flatten).FirstOrDefault(n => n.IsSelected)?.Identity ?? _selectedIdentity;
         foreach (var node in Collections.SelectMany(Flatten))
         {
             if (node.IsExpanded)
@@ -1162,6 +1206,11 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             }
 
             Collections.Add(root);
+        }
+
+        if (_selectedIdentity is not null && Collections.SelectMany(Flatten).FirstOrDefault(n => n.Identity == _selectedIdentity) is { } selected)
+        {
+            selected.IsSelected = true;
         }
 
         OnPropertyChanged(nameof(HasNoCollections));

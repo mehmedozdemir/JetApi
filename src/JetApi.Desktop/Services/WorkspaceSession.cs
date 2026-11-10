@@ -220,6 +220,84 @@ public sealed class WorkspaceSession
         return [.. newParentPath, key];
     }
 
+    /// <summary>
+    /// Moves a folder or request to <paramref name="newParentPath"/> of <paramref name="targetCollectionKey"/> (the same or
+    /// another collection), before the sibling <paramref name="beforeKey"/> or at the end when it is <c>null</c>. The node
+    /// keeps its key unless the new folder already has one like it. The new place is written before the old one is removed.
+    /// </summary>
+    /// <returns>The node's new path, or <c>null</c> when it was already there (nothing is written).</returns>
+    public async Task<IReadOnlyList<string>?> MoveNodeAsync(
+        string collectionKey, IReadOnlyList<string> path, string targetCollectionKey, IReadOnlyList<string> newParentPath, string? beforeKey, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentNullException.ThrowIfNull(newParentPath);
+        var source = RequireCollection(collectionKey);
+        var node = CollectionTree.Find(source, path) ?? throw new ArgumentException("Node not found.", nameof(path));
+        var sameCollection = collectionKey == targetCollectionKey;
+        if (sameCollection && newParentPath.Count >= path.Count && newParentPath.Take(path.Count).SequenceEqual(path))
+        {
+            throw new ArgumentException("A folder cannot be moved into itself.", nameof(newParentPath));
+        }
+
+        var sameParent = sameCollection && path.SkipLast(1).SequenceEqual(newParentPath);
+        var removed = CollectionTree.Remove(source, path);
+        var target = sameCollection ? removed : RequireCollection(targetCollectionKey);
+        var siblings = CollectionTree.ChildrenOf(target, newParentPath).ToList();
+        var index = beforeKey is null ? siblings.Count : siblings.FindIndex(c => c.Key == beforeKey);
+        if (index < 0)
+        {
+            throw new ArgumentException($"'{beforeKey}' is not in the target folder.", nameof(beforeKey));
+        }
+
+        if (sameParent && CollectionTree.ChildrenOf(source, newParentPath).ToList().FindIndex(c => c.Key == node.Key) == index)
+        {
+            return null;
+        }
+
+        var key = sameParent ? node.Key : NodeKey.CreateUnique(node.Name, siblings.Select(c => c.Key));
+        var moved = CollectionTree.Add(target, newParentPath, node with { Key = key }, index);
+        await WorkspaceStore.SaveCollectionAsync(Root, moved, cancellationToken).ConfigureAwait(false);
+        if (!sameParent)
+        {
+            await WorkspaceStore.DeleteNodeAsync(Root, collectionKey, path).ConfigureAwait(false);
+        }
+
+        var workspace = Workspace.WithCollection(moved);
+        if (!sameCollection)
+        {
+            await WorkspaceStore.SaveCollectionAsync(Root, removed, cancellationToken).ConfigureAwait(false);
+            workspace = workspace.WithCollection(removed);
+        }
+
+        Workspace = workspace;
+        OnChanged();
+        return [.. newParentPath, key];
+    }
+
+    /// <summary>Moves a collection before <paramref name="beforeKey"/>, or to the end when it is <c>null</c>.</summary>
+    /// <returns><c>false</c> when it was already there (nothing is written).</returns>
+    public async Task<bool> MoveCollectionAsync(string collectionKey, string? beforeKey, CancellationToken cancellationToken = default)
+    {
+        var collection = RequireCollection(collectionKey);
+        var others = Workspace.Collections.Where(c => c.Key != collectionKey).ToList();
+        var index = beforeKey is null ? others.Count : others.FindIndex(c => c.Key == beforeKey);
+        if (index < 0)
+        {
+            throw new ArgumentException($"Unknown collection '{beforeKey}'.", nameof(beforeKey));
+        }
+
+        others.Insert(index, collection);
+        if (others.Select(c => c.Key).SequenceEqual(Workspace.Collections.Select(c => c.Key)))
+        {
+            return false;
+        }
+
+        Workspace = Workspace with { Collections = others };
+        await SaveManifestAsync(cancellationToken).ConfigureAwait(false);
+        OnChanged();
+        return true;
+    }
+
     /// <summary>Creates a collection with a key derived from <paramref name="name"/>.</summary>
     public async Task<string> AddCollectionAsync(string name, CancellationToken cancellationToken = default)
     {

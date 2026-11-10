@@ -59,7 +59,14 @@ public sealed partial class SettingsViewModel : ViewModelBase
     private SettingsSection _section;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowsDarkPalette), nameof(ShowsLightPalette), nameof(FollowsSystem))]
     private SettingsOption<AppTheme>? _theme;
+
+    [ObservableProperty]
+    private SettingsOption<string>? _lightPalette;
+
+    [ObservableProperty]
+    private SettingsOption<string>? _darkPalette;
 
     [ObservableProperty]
     private SettingsOption<ResponsePanePosition>? _responsePane;
@@ -100,13 +107,21 @@ public sealed partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     private SettingsOption<RenderingPreference>? _rendering;
 
+    private readonly bool _systemIsDark;
+
     /// <summary>Creates the view model; <paramref name="installedFonts"/> come from the platform (empty in tests is fine).</summary>
-    public SettingsViewModel(ISettingsHost host, IReadOnlyList<string> installedFonts)
+    /// <param name="host">Owns and applies the settings.</param>
+    /// <param name="installedFonts">Installed font families.</param>
+    /// <param name="systemIsDark">The operating system uses a dark theme (decides the palette shown for "Follow the system").</param>
+    public SettingsViewModel(ISettingsHost host, IReadOnlyList<string> installedFonts, bool systemIsDark = false)
     {
+        _systemIsDark = systemIsDark;
         ArgumentNullException.ThrowIfNull(host);
         ArgumentNullException.ThrowIfNull(installedFonts);
         _host = host;
         ThemeOptions = [new(AppTheme.System, Loc.Get("Settings_ThemeSystem")), new(AppTheme.Light, Loc.Get("Settings_ThemeLight")), new(AppTheme.Dark, Loc.Get("Settings_ThemeDark"))];
+        LightPaletteOptions = [.. ThemePalettes.Of(dark: false).Select(p => new SettingsOption<string>(p.Id, Loc.Get(p.NameKey)))];
+        DarkPaletteOptions = [.. ThemePalettes.Of(dark: true).Select(p => new SettingsOption<string>(p.Id, Loc.Get(p.NameKey)))];
         ResponsePaneOptions = [new(ResponsePanePosition.Right, Loc.Get("Settings_ResponseRight")), new(ResponsePanePosition.Bottom, Loc.Get("Settings_ResponseBottom"))];
         UiFontOptions = [new(null, Loc.Get("Settings_FontBuiltIn")), .. installedFonts.Select(f => new SettingsOption<string?>(f, f))];
         UiScaleOptions = [.. Scales.Select(s => new SettingsOption<double>(s, s.ToString("P0", Loc.Instance.Culture)))];
@@ -121,6 +136,26 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
     /// <summary>Theme choices.</summary>
     public IReadOnlyList<SettingsOption<AppTheme>> ThemeOptions { get; }
+
+    /// <summary>The theme in use is dark, so the dark palettes are offered (only the active theme's palettes show).</summary>
+    public bool ShowsDarkPalette => Theme?.Value switch
+    {
+        AppTheme.Dark => true,
+        AppTheme.Light => false,
+        _ => _systemIsDark,
+    };
+
+    /// <summary>The theme in use is light, so the light palettes are offered.</summary>
+    public bool ShowsLightPalette => !ShowsDarkPalette;
+
+    /// <summary>The theme follows the system, so the other theme's palette applies when the system switches.</summary>
+    public bool FollowsSystem => Theme?.Value == AppTheme.System;
+
+    /// <summary>Palettes of the light theme.</summary>
+    public IReadOnlyList<SettingsOption<string>> LightPaletteOptions { get; }
+
+    /// <summary>Palettes of the dark theme.</summary>
+    public IReadOnlyList<SettingsOption<string>> DarkPaletteOptions { get; }
 
     /// <summary>Interface fonts: built-in Inter, then installed fonts.</summary>
     public IReadOnlyList<SettingsOption<string?>> UiFontOptions { get; }
@@ -158,7 +193,8 @@ public sealed partial class SettingsViewModel : ViewModelBase
     protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
     {
         base.OnPropertyChanged(e);
-        if (_loading || e.PropertyName is nameof(Section) or nameof(RenderingNeedsRestart) or null or "")
+        if (_loading || e.PropertyName is nameof(Section) or nameof(RenderingNeedsRestart) or nameof(ShowsDarkPalette) or nameof(ShowsLightPalette)
+            or nameof(FollowsSystem) or null or "")
         {
             return;
         }
@@ -167,6 +203,8 @@ public sealed partial class SettingsViewModel : ViewModelBase
         _host.ApplySettings(current with
         {
             Theme = Theme?.Value ?? current.Theme,
+            LightPalette = LightPalette?.Value ?? current.LightPalette,
+            DarkPalette = DarkPalette?.Value ?? current.DarkPalette,
             ResponsePane = ResponsePane?.Value ?? current.ResponsePane,
             UiFontFamily = UiFont is null ? current.UiFontFamily : UiFont.Value,
             UiScale = UiScale?.Value ?? current.UiScale,
@@ -191,6 +229,8 @@ public sealed partial class SettingsViewModel : ViewModelBase
     {
         _loading = true;
         Theme = ThemeOptions.First(o => o.Value == settings.Theme);
+        LightPalette = LightPaletteOptions.First(o => o.Value == ThemePalettes.Normalize(settings.LightPalette, dark: false));
+        DarkPalette = DarkPaletteOptions.First(o => o.Value == ThemePalettes.Normalize(settings.DarkPalette, dark: true));
         ResponsePane = ResponsePaneOptions.First(o => o.Value == settings.ResponsePane);
         UiFont = UiFontOptions.FirstOrDefault(o => o.Value == settings.UiFontFamily) ?? AddFont(UiFontOptions, settings.UiFontFamily);
         UiScale = UiScaleOptions.MinBy(o => Math.Abs(o.Value - settings.UiScale));

@@ -69,6 +69,7 @@ macOS'ta Ctrl yerine Cmd kullanılır.
 | Ctrl+L | URL'ye odaklan |
 | Ctrl+F | Editörde ara |
 | F2 / Delete | Ağaçta seçili öğeyi yeniden adlandır / sil |
+| Alt+↑ / Alt+↓ | Ağaçta seçili öğeyi bir sıra yukarı / aşağı taşı (sürükle-bırak da olur) |
 
 ## Yapılandırma
 

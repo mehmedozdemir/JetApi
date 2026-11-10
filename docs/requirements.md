@@ -13,7 +13,7 @@
 | WS-2 | Son açılan workspace'ler listesi, workspace'ler arası hızlı geçiş | M1 | ✅ |
 | WS-3 | Diskteki değişiklikleri izleme (ör. `git pull` sonrası) ve arayüzü yenileme | M1 | ✅ |
 | COL-1 | Koleksiyon, iç içe klasör ve istek oluşturma, yeniden adlandırma, silme | M1 | ✅ |
-| COL-2 | Sürükle-bırak ile sıralama ve taşıma | M1 | ✅ |
+| COL-2 | Sürükle-bırak ile sıralama ve taşıma | M1 | ✅ Öne/arkaya/içine (çizgi ya da çerçeveyle gösterilir), koleksiyonlar arası taşıma, koleksiyon sıralama; klavyeyle Alt+↑/↓ |
 | COL-3 | İsteği çoğaltma (duplicate) | M1 | ✅ |
 | COL-4 | Koleksiyon ve klasör düzeyinde auth tanımlama, alt öğelerin miras alması | M1 | ✅ |
 | COL-5 | Koleksiyon/klasör/istek açıklaması (Markdown) | M1 | ✅ |
@@ -106,7 +106,7 @@
 | HIS-1 | İstek geçmişi (yerel, Git'e girmez), geçmişten tekrar gönderme/kaydetme | M1 | ✅ |
 | UI-1 | Sekmeli istek editörü, kaydedilmemiş değişiklik göstergesi | M1 | ✅ |
 | UI-2 | Komut paleti (Ctrl/Cmd+K), klavye kısayolları (Ctrl/Cmd+Enter: gönder, Ctrl/Cmd+S: kaydet) | M1 | ✅ |
-| UI-3 | Açık/koyu tema, sistem temasını izleme | M1 | ✅ |
+| UI-3 | Açık/koyu tema, sistem temasını izleme | M1 | ✅ Açık ve koyu tema için ayrı renk paleti (5 açık, 7 koyu; WCAG AA), editör sözdizimi renkleri palete uyar |
 | UI-4 | JSON/XML sözdizimi vurgulama, katlama, arama | M1 | 🟡 vurgulama ve arama (Ctrl+F) hazır; katlama sonraki adım |
 | I18N-1 | Türkçe ve İngilizce arayüz; varsayılan işletim sistemi dili, ayarlardan değiştirilebilir | M1 | ✅ |
 

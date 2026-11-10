@@ -144,7 +144,9 @@
   <data name="Menu_Delete" xml:space="preserve"><value>Sil</value></data>
   <data name="Menu_Duplicate" xml:space="preserve"><value>Çoğalt</value></data>
   <data name="Menu_FolderSettings" xml:space="preserve"><value>Klasör ayarları</value></data>
+  <data name="Menu_MoveDown" xml:space="preserve"><value>Aşağı taşı</value></data>
   <data name="Menu_MoveToRoot" xml:space="preserve"><value>Koleksiyon köküne taşı</value></data>
+  <data name="Menu_MoveUp" xml:space="preserve"><value>Yukarı taşı</value></data>
   <data name="Menu_NewFolder" xml:space="preserve"><value>Yeni klasör</value></data>
   <data name="Menu_NewGrpc" xml:space="preserve"><value>Yeni gRPC isteği</value></data>
   <data name="Menu_NewHttp" xml:space="preserve"><value>Yeni HTTP isteği</value></data>
@@ -494,4 +496,19 @@
   <data name="Settings_RenderingHint" xml:space="preserve"><value>Yazılımla çizim yaklaşık 110 MB daha az bellek kullanır; ekran kartı 4K ekranlarda daha akıcı kaydırabilir. Yalnızca Windows.</value></data>
   <data name="Settings_RestartNeeded" xml:space="preserve"><value>Yeni çizim modu için JetApi’yi yeniden başlatın.</value></data>
   <data name="Settings_Reset" xml:space="preserve"><value>Varsayılanlara dön</value></data>
+  <data name="Settings_LightPalette" xml:space="preserve"><value>Açık tema renkleri</value></data>
+  <data name="Settings_DarkPalette" xml:space="preserve"><value>Koyu tema renkleri</value></data>
+  <data name="Settings_PaletteHintDark" xml:space="preserve"><value>Sistem açık temaya geçince açık tema renkleri kullanılır.</value></data>
+  <data name="Settings_PaletteHintLight" xml:space="preserve"><value>Sistem koyu temaya geçince koyu tema renkleri kullanılır.</value></data>
+  <data name="Settings_Interface" xml:space="preserve"><value>Arayüz</value></data>
+  <data name="Palette_JetApi" xml:space="preserve"><value>JetApi (varsayılan)</value></data>
+  <data name="Palette_OneLight" xml:space="preserve"><value>One Light</value></data>
+  <data name="Palette_SolarizedLight" xml:space="preserve"><value>Solarized Light</value></data>
+  <data name="Palette_QuietLight" xml:space="preserve"><value>Quiet Light</value></data>
+  <data name="Palette_HighContrast" xml:space="preserve"><value>Yüksek kontrast</value></data>
+  <data name="Palette_OneDark" xml:space="preserve"><value>One Dark</value></data>
+  <data name="Palette_Nord" xml:space="preserve"><value>Nord</value></data>
+  <data name="Palette_Dracula" xml:space="preserve"><value>Dracula</value></data>
+  <data name="Palette_Monokai" xml:space="preserve"><value>Monokai</value></data>
+  <data name="Palette_SolarizedDark" xml:space="preserve"><value>Solarized Dark</value></data>
 </root>

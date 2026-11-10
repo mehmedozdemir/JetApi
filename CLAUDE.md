@@ -40,7 +40,8 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 - `src/JetApi.Testing`: response checks and extractions (`tests`/`extract` in request files), our own RFC 9535 JSONPath,
   JSON Schema via LateApexEarlySpeed (ADR-0008; the json-everything packages need a maintenance fee, do not add them).
 - `src/JetApi.Desktop`: Avalonia 12 + CommunityToolkit.Mvvm. `Services/`, `ViewModels/` (UI-free, unit tested), `Views/`,
-  `Themes/Tokens.axaml` (all colors and icons, light and dark), `Themes/Styles.axaml`, `Localization/Strings*.resx`.
+  `Themes/Tokens.axaml` (all colors and icons, light and dark), `Themes/Palettes.axaml` (other color palettes, same keys;
+  `ThemePalettes`, `Appearance.ApplyPalette`), `Themes/Styles.axaml`, `Localization/Strings*.resx`.
 - `tests/*`: one test project per source project. The gRPC codec is cross-checked against Google's generated code.
 
 ## Rules

@@ -42,24 +42,56 @@
         <!-- Appearance -->
         <StackPanel Spacing="18" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Appearance}">
           <TextBlock Classes="h2" FontWeight="SemiBold" Text="{l:Tr Settings_Appearance}" />
-          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="14">
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto" RowSpacing="14">
             <TextBlock Text="{l:Tr Settings_Theme}" VerticalAlignment="Center" />
             <ComboBox Grid.Column="1" MinWidth="240" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding Theme}" AutomationProperties.Name="{l:Tr Settings_Theme}" />
-            <TextBlock Grid.Row="1" Text="{l:Tr Settings_UiFont}" VerticalAlignment="Center" />
-            <ComboBox Grid.Row="1" Grid.Column="1" MinWidth="240" MaxDropDownHeight="360" ItemsSource="{Binding UiFontOptions}" SelectedItem="{Binding UiFont}" AutomationProperties.Name="{l:Tr Settings_UiFont}" />
-            <StackPanel Grid.Row="2" VerticalAlignment="Center">
+            <!-- Each theme has its own palette; only the palettes of the theme in use are offered. -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" IsVisible="{Binding ShowsLightPalette}">
+              <TextBlock Text="{l:Tr Settings_LightPalette}" />
+              <TextBlock Classes="faint small" Text="{l:Tr Settings_PaletteHintLight}" TextWrapping="Wrap" IsVisible="{Binding FollowsSystem}" />
+            </StackPanel>
+            <ComboBox x:Name="LightPaletteBox" Grid.Row="1" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding LightPaletteOptions}"
+                      IsVisible="{Binding ShowsLightPalette}"
+                      SelectedItem="{Binding LightPalette}" AutomationProperties.Name="{l:Tr Settings_LightPalette}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <c:PaletteChip />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" IsVisible="{Binding ShowsDarkPalette}">
+              <TextBlock Text="{l:Tr Settings_DarkPalette}" />
+              <TextBlock Classes="faint small" Text="{l:Tr Settings_PaletteHintDark}" TextWrapping="Wrap" IsVisible="{Binding FollowsSystem}" />
+            </StackPanel>
+            <ComboBox x:Name="DarkPaletteBox" Grid.Row="1" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding DarkPaletteOptions}"
+                      IsVisible="{Binding ShowsDarkPalette}"
+                      SelectedItem="{Binding DarkPalette}" AutomationProperties.Name="{l:Tr Settings_DarkPalette}">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <c:PaletteChip />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </Grid>
+
+          <Border Classes="divider" Height="1" />
+          <TextBlock Classes="h3" Text="{l:Tr Settings_Interface}" />
+          <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="14">
+            <TextBlock Grid.Row="0" Text="{l:Tr Settings_UiFont}" VerticalAlignment="Center" />
+            <ComboBox Grid.Row="0" Grid.Column="1" MinWidth="240" MaxDropDownHeight="360" ItemsSource="{Binding UiFontOptions}" SelectedItem="{Binding UiFont}" AutomationProperties.Name="{l:Tr Settings_UiFont}" />
+            <StackPanel Grid.Row="1" VerticalAlignment="Center">
               <TextBlock Text="{l:Tr Settings_UiFontSize}" />
               <TextBlock Classes="faint small" Text="{l:Tr Settings_UiFontSizeHint}" TextWrapping="Wrap" />
             </StackPanel>
-            <NumericUpDown Grid.Row="2" Grid.Column="1" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="11" Maximum="18" Increment="0.5" FormatString="0.#"
+            <NumericUpDown Grid.Row="1" Grid.Column="1" Width="140" HorizontalAlignment="Left" VerticalAlignment="Center" Minimum="11" Maximum="18" Increment="0.5" FormatString="0.#"
                            Value="{Binding UiFontSize}" AutomationProperties.Name="{l:Tr Settings_UiFontSize}" />
-            <StackPanel Grid.Row="3" VerticalAlignment="Center">
+            <StackPanel Grid.Row="2" VerticalAlignment="Center">
               <TextBlock Text="{l:Tr Settings_UiScale}" />
               <TextBlock Classes="faint small" Text="{l:Tr Settings_UiScaleHint}" TextWrapping="Wrap" />
             </StackPanel>
-            <TextBlock Grid.Row="4" Text="{l:Tr Settings_ResponsePane}" VerticalAlignment="Center" />
-            <ComboBox Grid.Row="4" Grid.Column="1" MinWidth="240" ItemsSource="{Binding ResponsePaneOptions}" SelectedItem="{Binding ResponsePane}" AutomationProperties.Name="{l:Tr Settings_ResponsePane}" />
-            <ComboBox Grid.Row="3" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding UiScaleOptions}" SelectedItem="{Binding UiScale}" AutomationProperties.Name="{l:Tr Settings_UiScale}" />
+            <ComboBox Grid.Row="2" Grid.Column="1" MinWidth="240" VerticalAlignment="Center" ItemsSource="{Binding UiScaleOptions}" SelectedItem="{Binding UiScale}" AutomationProperties.Name="{l:Tr Settings_UiScale}" />
+            <TextBlock Grid.Row="3" Text="{l:Tr Settings_ResponsePane}" VerticalAlignment="Center" />
+            <ComboBox Grid.Row="3" Grid.Column="1" MinWidth="240" ItemsSource="{Binding ResponsePaneOptions}" SelectedItem="{Binding ResponsePane}" AutomationProperties.Name="{l:Tr Settings_ResponsePane}" />
           </Grid>
 
           <Border Classes="divider" Height="1" />

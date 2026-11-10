@@ -5,6 +5,27 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+### Added
+
+- Renk paletleri: Ayarlar → Görünüm'de açık ve koyu tema için ayrı ayrı seçilir; yalnızca kullanılan temanın
+  paletleri listelenir. Açık: JetApi, One Light, Solarized Light,
+  Quiet Light, Yüksek kontrast. Koyu: JetApi, One Dark, Nord, Dracula, Monokai, Solarized Dark, Yüksek kontrast. Seçim
+  yeniden başlatmadan uygulanır; kod editörünün sözdizimi renkleri de palete uyar. *Sistemle aynı* tema seçiliyken sistem
+  açık/koyu değiştikçe seçilen iki paletten uygun olanı kullanılır. Tüm paletlerde metin kontrastı WCAG AA'yı karşılar
+  (testle denetlenir).
+- Koleksiyon ağacında sürükle-bırak tamamlandı: satırın üst/alt kısmına bırakmak öne/arkaya, klasörün ortasına bırakmak
+  içine koyar; nereye düşeceği çizgi ya da çerçeveyle gösterilir. Klasör ve istekler başka koleksiyona taşınabilir,
+  koleksiyonlar kendi aralarında sıralanabilir. Kapalı klasörün üzerinde beklenince açılır, kenarlara yaklaşınca liste
+  kayar. Klavyeyle Alt+↑ / Alt+↓ (ve sağ tık → *Yukarı taşı* / *Aşağı taşı*) aynı düzeyde bir sıra taşır.
+
+### Fixed
+
+- Kaydedilmemiş değişikliği olan bir istek (ya da içinde bulunduğu klasör) taşınınca sekmesi eski yolda kalıyordu;
+  kaydedince isteğin bir kopyası koleksiyon köküne ekleniyordu. Artık sekmeler taşınan istekleri değişiklikleriyle
+  birlikte izler.
+- Bir klasör, adı onunla başlayan kardeş klasörün içine sürüklenemiyordu (ör. `api` → `api-v2`).
+- Sekmeyi farenin orta tuşuyla kapatmak yalnızca sekme yazısının üstünde çalışıyordu; artık sekmenin her yerinde çalışır.
+
 ## [0.3.0] - 2026-11-09
 
 Test otomasyonu sürümü (M3): kodsuz testler ve değişken çıkarma, koleksiyon çalıştırıcı, `jetapi` komut satırı aracı ve CI raporları, Postman test script'lerinin içe aktarılması.

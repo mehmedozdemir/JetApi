@@ -60,7 +60,12 @@ public sealed class CodeEditor : UserControl
     /// <summary>Runs on Enter in single-line mode (e.g. send the request).</summary>
     public static readonly StyledProperty<ICommand?> EnterCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(EnterCommand));
 
+    // The palette's TextMate theme (App.SyntaxTheme) and a variable color, bound to resources so changes reach ApplyTheme.
+    private static readonly StyledProperty<object?> SyntaxThemeProperty = AvaloniaProperty.Register<CodeEditor, object?>("SyntaxTheme");
+    private static readonly StyledProperty<object?> VariableBrushProperty = AvaloniaProperty.Register<CodeEditor, object?>("VariableBrush");
+
     private readonly TextEditor _editor;
+    private ThemeName? _syntaxTheme;
     private int _lastInsertionLength;
     private readonly TextBlock _placeholder;
     private readonly SearchPanel _search;
@@ -157,6 +162,10 @@ public sealed class CodeEditor : UserControl
         StyleGutter();
         ApplyLanguage();
         ActualThemeVariantChanged += (_, _) => ApplyTheme();
+
+        // A palette change keeps the theme variant, so the syntax theme and variable colors follow the resources too.
+        this[!SyntaxThemeProperty] = this.GetResourceObservable("App.SyntaxTheme").ToBinding();
+        this[!VariableBrushProperty] = this.GetResourceObservable("Tone.Success.Fg").ToBinding();
     }
 
     /// <summary>Highlight <c>{{variables}}</c> and show their values on hover.</summary>
@@ -286,6 +295,10 @@ public sealed class CodeEditor : UserControl
         else if (change.Property == HighlightVariablesProperty || change.Property == VariableHints.ContextProperty)
         {
             ApplyVariables();
+        }
+        else if (change.Property == SyntaxThemeProperty || change.Property == VariableBrushProperty)
+        {
+            ApplyTheme();
         }
         else if (change.Property == IsSingleLineProperty)
         {
@@ -591,7 +604,15 @@ public sealed class CodeEditor : UserControl
 
     private void ApplyTheme()
     {
-        _textMate.SetTheme(_registry.LoadTheme(ActualThemeVariant == ThemeVariant.Dark ? ThemeName.DarkPlus : ThemeName.LightPlus));
+        var theme = GetValue(SyntaxThemeProperty) is string name && Enum.TryParse<ThemeName>(name, out var parsed)
+            ? parsed
+            : ActualThemeVariant == ThemeVariant.Dark ? ThemeName.DarkPlus : ThemeName.LightPlus;
+        if (theme != _syntaxTheme)
+        {
+            _syntaxTheme = theme;
+            _textMate.SetTheme(_registry.LoadTheme(theme));
+        }
+
         ApplyVariables();
     }
 }

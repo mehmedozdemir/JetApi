@@ -54,6 +54,12 @@ public sealed record AppSettings
     /// <summary>Color theme.</summary>
     public AppTheme Theme { get; init; } = AppTheme.System;
 
+    /// <summary>Color palette of the light theme (<see cref="ThemePalettes"/>).</summary>
+    public string LightPalette { get; init; } = ThemePalettes.DefaultLight;
+
+    /// <summary>Color palette of the dark theme (<see cref="ThemePalettes"/>).</summary>
+    public string DarkPalette { get; init; } = ThemePalettes.DefaultDark;
+
     /// <summary>Recently opened workspaces, most recent first.</summary>
     public IReadOnlyList<RecentWorkspace> RecentWorkspaces { get; init; } = [];
 

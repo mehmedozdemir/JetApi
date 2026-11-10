@@ -17,9 +17,18 @@ public sealed partial class WorkspaceView : UserControl
 
     private static readonly DataFormat<string> NodeFormat = DataFormat.CreateStringApplicationFormat("jetapi-tree-node");
 
+    // Edge band of the tree that scrolls while dragging, and how long to hover a closed folder before it opens.
+    private const double ScrollBand = 28;
+    private static readonly TimeSpan ExpandDelay = TimeSpan.FromMilliseconds(700);
+
     private TreeNodeViewModel? _pressedNode;
     private Point _pressedAt;
     private PointerPressedEventArgs? _pressedArgs;
+    private RequestTabViewModel? _middlePressedTab;
+    private TreeNodeViewModel? _dragSource;
+    private TreeNodeViewModel? _hintNode;
+    private TreeNodeViewModel? _expandCandidate;
+    private DateTime _expandSince;
 
     /// <summary>Creates the view.</summary>
     public WorkspaceView()
@@ -33,6 +42,13 @@ public sealed partial class WorkspaceView : UserControl
         DragDrop.SetAllowDrop(Tree, true);
         Tree.AddHandler(DragDrop.DragOverEvent, OnTreeDragOver);
         Tree.AddHandler(DragDrop.DropEvent, OnTreeDrop);
+        Tree.AddHandler(DragDrop.DragLeaveEvent, (_, _) => SetHint(null, DropPosition.None));
+        TabStrip.AddHandler(PointerPressedEvent, OnTabPointerPressed, RoutingStrategies.Tunnel);
+        TabStrip.AddHandler(PointerReleasedEvent, OnTabPointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
+
+        // A node selected from code (e.g. after a move) scrolls into view once its row exists.
+        Tree.SelectionChanged += (_, _) => Avalonia.Threading.Dispatcher.UIThread.Post(
+            () => (Tree.SelectedItem is { } item ? Tree.TreeContainerFromItem(item) : null)?.BringIntoView(), Avalonia.Threading.DispatcherPriority.Loaded);
     }
 
     private WorkspaceViewModel? ViewModel => DataContext as WorkspaceViewModel;
@@ -72,7 +88,7 @@ public sealed partial class WorkspaceView : UserControl
 
     private async void OnTreePointerMoved(object? sender, PointerEventArgs e)
     {
-        if (_pressedNode is not { IsCollection: false } node || _pressedArgs is null)
+        if (_pressedNode is not { } node || _pressedArgs is null)
         {
             return;
         }
@@ -88,7 +104,16 @@ public sealed partial class WorkspaceView : UserControl
         _pressedArgs = null;
         var transfer = new DataTransfer();
         transfer.Add(DataTransferItem.Create(NodeFormat, node.Identity));
-        await DragDrop.DoDragDropAsync(args, transfer, DragDropEffects.Move).ConfigureAwait(true);
+        _dragSource = node;
+        try
+        {
+            await DragDrop.DoDragDropAsync(args, transfer, DragDropEffects.Move).ConfigureAwait(true);
+        }
+        finally
+        {
+            _dragSource = null;
+            SetHint(null, DropPosition.None);
+        }
     }
 
     private void OnTreePointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -132,6 +157,14 @@ public sealed partial class WorkspaceView : UserControl
                 break;
             case Key.Delete:
                 vm.DeleteCommand.Execute(node);
+                e.Handled = true;
+                break;
+            case Key.Up when e.KeyModifiers == KeyModifiers.Alt:
+                vm.MoveUpCommand.Execute(node);
+                e.Handled = true;
+                break;
+            case Key.Down when e.KeyModifiers == KeyModifiers.Alt:
+                vm.MoveDownCommand.Execute(node);
                 e.Handled = true;
                 break;
         }
@@ -206,10 +239,28 @@ public sealed partial class WorkspaceView : UserControl
         if (!node.IsCollection)
         {
             items.Add(Item("Menu_Duplicate", vm.DuplicateCommand, node, OperatingSystem.IsMacOS() ? "Meta+D" : "Ctrl+D"));
-            if (node.Path.Count > 1)
-            {
-                items.Add(Item("Menu_MoveToRoot", vm.MoveToRootCommand, node));
-            }
+        }
+
+        var moves = new List<MenuItem>();
+        if (TreeDrop.Step(vm.Session.Workspace, node, down: false) is not null)
+        {
+            moves.Add(Item("Menu_MoveUp", vm.MoveUpCommand, node, "Alt+Up"));
+        }
+
+        if (TreeDrop.Step(vm.Session.Workspace, node, down: true) is not null)
+        {
+            moves.Add(Item("Menu_MoveDown", vm.MoveDownCommand, node, "Alt+Down"));
+        }
+
+        if (node.Path.Count > 1)
+        {
+            moves.Add(Item("Menu_MoveToRoot", vm.MoveToRootCommand, node));
+        }
+
+        if (moves.Count > 0)
+        {
+            items.Add(new Separator());
+            items.AddRange(moves);
         }
 
         items.Add(new Separator());
@@ -232,6 +283,8 @@ public sealed partial class WorkspaceView : UserControl
         "Menu_Run" => Controls.Icon.ForMenu("Icon.Play"),
         "Menu_Duplicate" => Controls.Icon.ForMenu("Icon.Copy"),
         "Menu_MoveToRoot" => Controls.Icon.ForMenu("Icon.MoveUp"),
+        "Menu_MoveUp" => Controls.Icon.ForMenu("Icon.ArrowUp"),
+        "Menu_MoveDown" => Controls.Icon.ForMenu("Icon.ArrowDown"),
         "Menu_Delete" => Controls.Icon.ForMenu("Icon.Trash"),
         _ => null,
     };
@@ -249,27 +302,106 @@ public sealed partial class WorkspaceView : UserControl
 
     private void OnTreeDragOver(object? sender, DragEventArgs e)
     {
-        var source = FindNode(e.DataTransfer.TryGetValue(NodeFormat));
-        var target = NodeFrom(e.Source);
-        e.DragEffects = source is not null && (target is null || (target.CollectionKey == source.CollectionKey && !target.Identity.StartsWith(source.Identity, StringComparison.Ordinal)))
-            ? DragDropEffects.Move
-            : DragDropEffects.None;
+        AutoScroll(e);
+        var (target, position) = DropTargetAt(e);
+        SetHint(target, position);
+        e.DragEffects = position == DropPosition.None ? DragDropEffects.None : DragDropEffects.Move;
+
+        // Hovering a closed folder for a moment opens it, so the node can go deeper.
+        if (position == DropPosition.Inside && target is { IsExpanded: false, Children.Count: > 0 })
+        {
+            if (_expandCandidate != target)
+            {
+                _expandCandidate = target;
+                _expandSince = DateTime.UtcNow;
+            }
+            else if (DateTime.UtcNow - _expandSince >= ExpandDelay)
+            {
+                target.IsExpanded = true;
+                _expandCandidate = null;
+            }
+        }
+        else
+        {
+            _expandCandidate = null;
+        }
+
+        e.Handled = true;
     }
 
     private async void OnTreeDrop(object? sender, DragEventArgs e)
     {
-        if (ViewModel is not { } vm || FindNode(e.DataTransfer.TryGetValue(NodeFormat)) is not { } source)
+        var (target, position) = DropTargetAt(e);
+        var source = DraggedNode(e);
+        SetHint(null, DropPosition.None);
+        if (ViewModel is not { } vm || source is null || target is null || position == DropPosition.None)
         {
             return;
         }
 
-        var target = NodeFrom(e.Source);
-        if (target is not null && target.Identity.StartsWith(source.Identity, StringComparison.Ordinal))
+        e.Handled = true;
+        await vm.DropAsync(source, target, position).ConfigureAwait(true);
+    }
+
+    private TreeNodeViewModel? DraggedNode(DragEventArgs e) => FindNode(e.DataTransfer.TryGetValue(NodeFormat)) ?? _dragSource;
+
+    /// <summary>The row under the pointer and where a dragged node would land there (see <see cref="TreeDrop"/>).</summary>
+    internal (TreeNodeViewModel? Target, DropPosition Position) DropTargetAt(DragEventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+        if (DraggedNode(e) is not { } source || ViewModel is not { } vm)
+        {
+            return (null, DropPosition.None);
+        }
+
+        var item = (e.Source as Visual)?.GetSelfAndVisualAncestors().OfType<TreeViewItem>().FirstOrDefault();
+        if (item?.DataContext is not TreeNodeViewModel target)
+        {
+            // Empty space below the rows: the end of the last collection.
+            return vm.Collections.LastOrDefault(c => c.IsVisible) is { } last
+                ? (last, Checked(source, last, source.IsCollection ? DropPosition.After : DropPosition.Inside))
+                : (null, DropPosition.None);
+        }
+
+        var header = item.GetVisualDescendants().OfType<Border>().FirstOrDefault(b => b.Name == "PART_LayoutRoot");
+        var height = header?.Bounds.Height is > 0 and var h ? h : item.Bounds.Height;
+        var fraction = Math.Clamp(e.GetPosition(item).Y / Math.Max(height, 1), 0, 1);
+        return (target, TreeDrop.PositionAt(source, target, fraction));
+    }
+
+    private static DropPosition Checked(TreeNodeViewModel source, TreeNodeViewModel target, DropPosition position) =>
+        TreeDrop.CanDrop(source, target, position) ? position : DropPosition.None;
+
+    private void SetHint(TreeNodeViewModel? target, DropPosition position)
+    {
+        if (_hintNode is not null && (_hintNode != target || position == DropPosition.None))
+        {
+            _hintNode.DropHint = DropPosition.None;
+        }
+
+        _hintNode = position == DropPosition.None ? null : target;
+        if (_hintNode is not null)
+        {
+            _hintNode.DropHint = position;
+        }
+    }
+
+    // Scrolls the tree while the pointer is near its top or bottom edge.
+    private void AutoScroll(DragEventArgs e)
+    {
+        if (Tree.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault() is not { } scroller)
         {
             return;
         }
 
-        await vm.MoveAsync(source, target ?? vm.Collections.FirstOrDefault(c => c.CollectionKey == source.CollectionKey)).ConfigureAwait(true);
+        var y = e.GetPosition(scroller).Y;
+        var bottom = scroller.Bounds.Height - ScrollBand;
+        var step = y < ScrollBand ? -(ScrollBand - y) / 2 : y > bottom ? (y - bottom) / 2 : 0;
+        if (step != 0)
+        {
+            var max = Math.Max(0, scroller.Extent.Height - scroller.Viewport.Height);
+            scroller.Offset = scroller.Offset.WithY(Math.Clamp(scroller.Offset.Y + step, 0, max));
+        }
     }
 
     private TreeNodeViewModel? FindNode(string? identity)
@@ -283,14 +415,29 @@ public sealed partial class WorkspaceView : UserControl
         return ViewModel.Collections.SelectMany(Flatten).FirstOrDefault(n => n.Identity == identity);
     }
 
+    // A middle click anywhere on a tab closes it (also on its padding, and although the list item handles the press).
+    private void OnTabPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _middlePressedTab = e.GetCurrentPoint(TabStrip).Properties.IsMiddleButtonPressed ? TabFrom(e.Source) : null;
+        if (_middlePressedTab is not null)
+        {
+            e.Handled = true;
+        }
+    }
+
     private void OnTabPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (e.InitialPressMouseButton == MouseButton.Middle && (sender as Control)?.DataContext is RequestTabViewModel tab)
+        if (e.InitialPressMouseButton == MouseButton.Middle && _middlePressedTab is { } tab && TabFrom(e.Source) == tab)
         {
             ViewModel?.CloseTabCommand.Execute(tab);
             e.Handled = true;
         }
+
+        _middlePressedTab = null;
     }
+
+    private static RequestTabViewModel? TabFrom(object? source) =>
+        (source as Visual)?.GetSelfAndVisualAncestors().OfType<ListBoxItem>().FirstOrDefault()?.DataContext as RequestTabViewModel;
 
     private void OnHistoryDoubleTapped(object? sender, TappedEventArgs e)
     {
