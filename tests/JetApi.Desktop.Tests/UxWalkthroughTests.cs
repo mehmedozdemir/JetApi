@@ -61,15 +61,13 @@ public sealed class UxWalkthroughTests
         var urlEditor = url.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single();
         url.FocusEditor();
         urlEditor.Document.Text = "{{baseUrl}}/users\r\n?page=2";
-        await Task.Delay(20);
-        Settle();
+        await UntilAsync(() => !urlEditor.Document.Text.Contains('\n', StringComparison.Ordinal));
         urlEditor.Document.Text.ShouldNotContain("\n");
         ws.SelectedTab.ShouldBeOfType<HttpRequestTabViewModel>().Url.ShouldBe("{{baseUrl}}/users ?page=2");
         urlEditor.Document.Text = "http://127.0.0.1:1/users";
         Settle();
         window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
-        await Task.Delay(50);
-        Settle();
+        await UntilAsync(() => !((HttpRequestTabViewModel)ws.SelectedTab!).Response.IsEmpty);
         ((HttpRequestTabViewModel)ws.SelectedTab!).Response.IsEmpty.ShouldBeFalse();
         url.FocusEditor();
         window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
@@ -99,8 +97,7 @@ public sealed class UxWalkthroughTests
         dialogs.Prompts.Enqueue("Prod");
         SidebarButton(window, "Production").Focus();
         window.KeyPressQwerty(PhysicalKey.F2, RawInputModifiers.None);
-        await Task.Delay(50);
-        Settle();
+        await UntilAsync(() => ws.Environments!.Environments.Any(e => e.Name == "Prod"));
         ws.Environments!.Environments.Select(e => e.Name).ShouldContain("Prod");
 
         // 6b. Import from Postman: the new collection opens in the tree; the report lists what needs attention.
@@ -228,8 +225,7 @@ public sealed class UxWalkthroughTests
         var pasteEditor = pasteBox.GetVisualDescendants().OfType<AvaloniaEdit.TextEditor>().Single();
         pasteBox.FocusEditor();
         pasteEditor.Document.Text = "curl 'https://api.example.com/users?page=2' \\\n  -H 'Content-Type: application/json' \\\n  --data-raw '{\"name\":\"Ayşe\"}'";
-        await Task.Delay(20);
-        Settle();
+        await UntilAsync(() => ws.SelectedTab is HttpRequestTabViewModel tab && tab.Url.Contains("api.example.com", StringComparison.Ordinal));
         var pasted = ws.SelectedTab.ShouldBeOfType<HttpRequestTabViewModel>();
         pasted.Name.ShouldBe("Create user");
         pasted.Method.ShouldBe("POST");
@@ -263,6 +259,18 @@ public sealed class UxWalkthroughTests
             : Path.Combine(AppContext.BaseDirectory, "screenshots");
         Directory.CreateDirectory(directory);
         return directory;
+    }
+
+    // Waits for work that finishes asynchronously (saving, sending, a posted edit), up to five seconds; a fixed delay
+    // was too short on slow CI machines. The assertion after it reports what did not happen.
+    private static async Task UntilAsync(Func<bool> condition)
+    {
+        Settle();
+        for (var i = 0; i < 250 && !condition(); i++)
+        {
+            await Task.Delay(20);
+            Settle();
+        }
     }
 
     private static void Settle()
