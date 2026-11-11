@@ -49,6 +49,8 @@ The UI screen tests save screenshots when `JETAPI_SCREENSHOTS=<folder>` is set. 
 - Warnings are errors; .NET analyzers are at `latest-recommended`. Suppress a rule only with `SuppressMessage` and a justification.
 - Package versions live only in `Directory.Packages.props`. Lock files are committed, and CI restores in locked mode.
   Target runtimes are listed in `src/Directory.Build.props`, so publishing with `-r <rid>` does not change lock files.
+  The SDK is pinned exactly in `global.json` (CI installs the same one); the lock files depend on it (ILLink), so an SDK
+  upgrade means: bump `global.json`, `dotnet restore JetApi.slnx --force-evaluate`, commit the lock files with it.
   `nuget.config` restores only from nuget.org.
 - Every UI string goes in both `Strings.resx` (EN) and `Strings.tr.resx` (TR). A test checks parity and that every used key exists.
   Use `{l:Tr Key}` in XAML and `Loc.Get` / `Loc.Format` in code. Engine projects (`Http`, `Grpc`, `Storage`, `Import`, `Testing`, `Runner`) and `Cli` have their own

@@ -29,6 +29,10 @@ build/package.sh linux-x64 0.1.0    # sürüm verilmezse Directory.Build.props i
 - Hedef RID'ler `src/Directory.Build.props` içinde listelenir. Bu sayede `dotnet publish -r <rid>` locked mode'da çalışır ve
   lock dosyalarını değiştirmez. Yeni bir platform eklenirse listeye eklenip `dotnet restore` çalıştırılır ve lock dosyaları
   commit'lenir.
+- .NET SDK sürümü `global.json` içinde tam olarak sabitlenir; CI da aynı SDK'yı kurar. Kendi içinde çalışan paketler
+  SDK'nın getirdiği .NET çalışma zamanını taşır ve lock dosyalarındaki `Microsoft.NET.ILLink.Tasks` sürümü de SDK'ya
+  bağlıdır. Bu yüzden SDK yükseltmesi (örneğin bir güvenlik yaması) bilinçli bir adımdır: yeni SDK kurulur, `global.json`
+  güncellenir, `dotnet restore JetApi.slnx --force-evaluate` çalıştırılır ve lock dosyaları aynı commit'te gönderilir.
 
 ## Sürüm çıkarma
 
