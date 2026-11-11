@@ -4,7 +4,7 @@ using JetApi.Desktop.ViewModels;
 
 namespace JetApi.Desktop.Views;
 
-/// <summary>The list of variables offered after typing <c>{{</c>.</summary>
+/// <summary>The list of variables offered after typing <c>{{</c>, or of message fields (<see cref="FieldSuggestion"/>).</summary>
 public partial class VariableCompletionView : UserControl
 {
     /// <summary>Creates the view.</summary>
@@ -13,20 +13,20 @@ public partial class VariableCompletionView : UserControl
         InitializeComponent();
         List.Tapped += (_, _) =>
         {
-            if (List.SelectedItem is VariableSuggestion suggestion)
+            if (List.SelectedItem is { } item)
             {
-                Chosen?.Invoke(this, suggestion);
+                Chosen?.Invoke(this, item);
             }
         };
     }
 
     /// <summary>Raised when an item is clicked.</summary>
-    public event EventHandler<VariableSuggestion>? Chosen;
+    public event EventHandler<object>? Chosen;
 
-    /// <summary>The offered variables.</summary>
-    public IReadOnlyList<VariableSuggestion> Items
+    /// <summary>The offered variables or fields.</summary>
+    public IReadOnlyList<object> Items
     {
-        get => List.ItemsSource as IReadOnlyList<VariableSuggestion> ?? [];
+        get => List.ItemsSource as IReadOnlyList<object> ?? [];
         set
         {
             List.ItemsSource = value;
@@ -34,8 +34,8 @@ public partial class VariableCompletionView : UserControl
         }
     }
 
-    /// <summary>The highlighted variable.</summary>
-    public VariableSuggestion? Selected => List.SelectedItem as VariableSuggestion;
+    /// <summary>The highlighted item.</summary>
+    public object? Selected => List.SelectedItem;
 
     /// <summary>Moves the highlight by <paramref name="delta"/> items (wrapping).</summary>
     public void Move(int delta)

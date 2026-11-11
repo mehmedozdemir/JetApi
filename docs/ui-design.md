@@ -10,7 +10,7 @@ stilleri `Themes/Styles.axaml` dosyasındadır. `tests/JetApi.Desktop.Tests/Scre
 
 1. **Karşılama:** Klasör aç, yeni workspace, Postman'den taşı, son açılanlar, TR/EN dil seçimi.
 2. **REST istek editörü:** Sol panelde koleksiyon ağacı, üstte sekmeler, istek ve yanıt panelleri yan yana (dar pencerede alt alta).
-3. **gRPC istek editörü:** Sunucu URL'si ve TLS/plaintext göstergesi, servis ve metot seçimi, proto durumu (proto yoksa *Proto dosyası seç…*), mesaj editörü ve alan listesi.
+3. **gRPC istek editörü:** Sunucu URL'si ve TLS/plaintext göstergesi, servis ve metot seçimi, proto durumu (proto yoksa *Proto dosyası seç…*) ve tüm genişliği kullanan mesaj editörü. Mesajın alanları editörde önerilir: alan adının yazılacağı yerde `"` ya da harf yazınca veya Ctrl+Space ile o seviyedeki mesajın (iç içe mesajlar, repeated mesaj elemanları ve map değerleri dahil) henüz yazılmamış alanları türleriyle listelenir; oneof'un bir üyesi yazılmışsa diğerleri önerilmez. Seçilen alan türüne uygun bir değerle eklenir; değer seçili gelir, yazınca yerine geçer; gerekirse virgül eklenir. Araç çubuğundaki *Alanlar (n)* düğmesi alan listesini ve proto3 JSON notunu açılır pencerede gösterir (2026-11: yan panel yer kapladığı için kaldırıldı).
 4. **Environment'lar:** Kapsamlar, öncelik sırası, çözümlenmiş değer sütunu, gizli değer maskeleme, prod uyarısı.
 5. **Hata ve uyarı durumları:** Tanımsız değişken, bağlantı reddi, zaman aşımı, gRPC status, JSON hatası, proto hatası, okunamayan dosyalar.
 6. **Komut paleti (Ctrl+K)** ve temel kısayollar.

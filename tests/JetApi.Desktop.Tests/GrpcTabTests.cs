@@ -43,7 +43,7 @@ public sealed class GrpcTabTests
             tab.Methods.Select(m => m.Label).ShouldBe(["GetUser · unary", "WatchUsers · streaming (v0.4)"]);
             tab.SelectedMethod!.Name.ShouldBe("GetUser");
             tab.InputTypeText.ShouldBe("Request message: users.v1.GetUserRequest");
-            tab.Fields.Select(f => $"{f.Name}:{f.Type}").ShouldBe(["id:string", "include_roles:bool", "fields:repeated string", "counts:map<string, int32>"]);
+            tab.Fields.Select(f => $"{f.Name}:{f.Type}").ShouldBe(["id:string", "includeRoles:bool", "fields:repeated string", "counts:map<string, int32>"]);
             tab.IsPlaintext.ShouldBeTrue();
             tab.ProtoSummary.ShouldStartWith("1 services · 2 messages");
         }

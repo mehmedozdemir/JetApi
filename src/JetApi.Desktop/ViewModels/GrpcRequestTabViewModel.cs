@@ -19,11 +19,6 @@ public sealed record MethodOption(string Name, bool IsUnary)
     public string Label => IsUnary ? $"{Name} · unary" : $"{Name} · {Loc.Get("Grpc_StreamingLater")}";
 }
 
-/// <summary>A field of the request message, for the field list next to the editor.</summary>
-/// <param name="Name">JSON name.</param>
-/// <param name="Type">Type description.</param>
-public sealed record FieldInfo(string Name, string Type);
-
 /// <summary>An open gRPC request.</summary>
 public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
 {
@@ -39,7 +34,7 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
     private string? _selectedService;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(InputTypeText), nameof(OutputTypeText), nameof(Fields))]
+    [NotifyPropertyChangedFor(nameof(InputTypeText), nameof(OutputTypeText), nameof(Fields), nameof(RequestType), nameof(HasFields), nameof(FieldsBadge))]
     private MethodOption? _selectedMethod;
 
     [ObservableProperty]
@@ -149,10 +144,17 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
     /// <summary>"Response message: users.v1.User".</summary>
     public string OutputTypeText => FindMethod()?.OutputType.FullName is { } name ? Loc.Format("Grpc_ResponseType", name) : string.Empty;
 
-    /// <summary>Fields of the request message.</summary>
-    public IReadOnlyList<FieldInfo> Fields => FindMethod()?.InputType is { } type
-        ? [.. type.Fields.Select(f => new FieldInfo(f.Name, DescribeType(f)))]
-        : [];
+    /// <summary>The request message type; the message editor suggests its fields.</summary>
+    public ProtoMessageType? RequestType => FindMethod()?.InputType;
+
+    /// <summary>Fields of the request message, for the field list.</summary>
+    public IReadOnlyList<FieldSuggestion> Fields => RequestType is { } type ? [.. type.Fields.Select(FieldSuggestion.From)] : [];
+
+    /// <summary>A request message is known, so its fields can be listed.</summary>
+    public bool HasFields => RequestType is not null;
+
+    /// <summary>The number of fields, on the "Fields" button.</summary>
+    public string FieldsBadge => (RequestType?.Fields.Count ?? 0).ToString(CultureInfo.InvariantCulture);
 
     /// <summary>Metadata tab badge.</summary>
     public string MetadataBadge => Metadata.Badge;
@@ -397,23 +399,4 @@ public sealed partial class GrpcRequestTabViewModel : RequestTabViewModel
 
     private ProtoMethod? FindMethod() =>
         _schema is null || SelectedService is null || SelectedMethod is null ? null : _schema.FindMethod(SelectedService, SelectedMethod.Name);
-
-    private static string DescribeType(ProtoField field)
-    {
-        var type = field.Type switch
-        {
-            ProtoFieldType.Message => field.MessageType!.FullName.StartsWith("google.protobuf.", StringComparison.Ordinal)
-                ? field.MessageType.FullName["google.protobuf.".Length..]
-                : field.MessageType.FullName[(field.MessageType.FullName.LastIndexOf('.') + 1)..],
-            ProtoFieldType.Enum => field.EnumType!.FullName[(field.EnumType.FullName.LastIndexOf('.') + 1)..] + " (enum)",
-            _ => field.Type.ToString().ToLowerInvariant(),
-        };
-        if (field.IsMap)
-        {
-            var entry = field.MessageType!;
-            return $"map<{entry.FindField(1)!.Type.ToString().ToLowerInvariant()}, {DescribeType(entry.FindField(2)!)}>";
-        }
-
-        return field.IsRepeated ? $"repeated {type}" : type;
-    }
 }

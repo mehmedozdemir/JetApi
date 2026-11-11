@@ -11,8 +11,9 @@ internal sealed record CompletionPrefix(int Start, string Prefix);
 /// <param name="Start">Where the replaced text starts.</param>
 /// <param name="Length">How many characters to replace.</param>
 /// <param name="Insert">The text to insert.</param>
-/// <param name="Caret">Where the caret goes afterwards (after the closing braces).</param>
-internal sealed record CompletionEdit(int Start, int Length, string Insert, int Caret);
+/// <param name="Caret">Where the caret goes afterwards (after the closing braces), or where the selection starts.</param>
+/// <param name="SelectionLength">Characters to select from <see cref="Caret"/>, e.g. a placeholder value to type over.</param>
+internal sealed record CompletionEdit(int Start, int Length, string Insert, int Caret, int SelectionLength = 0);
 
 /// <summary>The text rules of <c>{{</c> completion, kept apart from the UI so they can be tested.</summary>
 internal static class VariableCompletionText

@@ -3,7 +3,7 @@
              xmlns:vm="using:JetApi.Desktop.ViewModels"
              x:Class="JetApi.Desktop.Views.VariableCompletionView"
              Width="400">
-  <!-- The variables offered after "{{": name, value and where it comes from. -->
+  <!-- The variables offered after "{{" (name, value, where it comes from), or the fields of a gRPC message. -->
   <ListBox x:Name="List" MaxHeight="264" Margin="4" Background="Transparent" Focusable="False"
            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
     <ListBox.Styles>
@@ -12,7 +12,7 @@
         <Setter Property="Focusable" Value="False" />
       </Style>
     </ListBox.Styles>
-    <ListBox.ItemTemplate>
+    <ListBox.DataTemplates>
       <DataTemplate x:DataType="vm:VariableSuggestion">
         <Grid ColumnDefinitions="Auto,*,Auto" Margin="8,5" ColumnSpacing="10">
           <TextBlock Classes="mono" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
@@ -20,6 +20,14 @@
           <TextBlock Grid.Column="2" Classes="faint small" Text="{Binding Source}" MaxWidth="140" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
         </Grid>
       </DataTemplate>
-    </ListBox.ItemTemplate>
+      <!-- A message field: JSON name, type and its oneof. -->
+      <DataTemplate x:DataType="vm:FieldSuggestion">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="8,5" ColumnSpacing="10">
+          <TextBlock Classes="mono" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Classes="faint small" Text="{Binding Note}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="2" Classes="mono muted" Text="{Binding Type}" MaxWidth="200" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+        </Grid>
+      </DataTemplate>
+    </ListBox.DataTemplates>
   </ListBox>
 </UserControl>

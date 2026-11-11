@@ -115,6 +115,9 @@
   <data name="Grpc_ErrorStatusHint" xml:space="preserve"><value>gRPC error statuses are completed calls, like HTTP 4xx/5xx; not network errors.</value></data>
   <data name="Grpc_Fields" xml:space="preserve"><value>Fields</value></data>
   <data name="Grpc_ImportPaths" xml:space="preserve"><value>Import paths (one per line, relative to the workspace)</value></data>
+  <data name="Grpc_FieldOneof" xml:space="preserve"><value>oneof {0}</value></data>
+  <data name="Grpc_FieldsTip" xml:space="preserve"><value>Fields of the request message</value></data>
+  <data name="Grpc_FieldsCompletionHint" xml:space="preserve"><value>Fields are suggested in the editor when you start typing a name (") or press Ctrl+Space. Fields already in the message are not offered.</value></data>
   <data name="Grpc_JsonHint" xml:space="preserve"><value>int64 values are strings and enums are names (proto3 JSON). Both camelCase and snake_case names are accepted.</value></data>
   <data name="Grpc_Message" xml:space="preserve"><value>Message</value></data>
   <data name="Grpc_Metadata" xml:space="preserve"><value>Metadata</value></data>

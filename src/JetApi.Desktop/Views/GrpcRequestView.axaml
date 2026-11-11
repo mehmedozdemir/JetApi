@@ -167,41 +167,55 @@
           </ScrollViewer>
         </Border>
         <Panel Grid.Row="1">
-          <Grid ColumnDefinitions="3*,12,2*" Margin="12" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}">
-            <Grid RowDefinitions="Auto,*,Auto">
-              <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,8">
-                <TextBlock Classes="muted small" Text="{Binding InputTypeText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                <Button Grid.Column="1" Classes="link" Command="{Binding FormatMessageCommand}">
+          <Grid RowDefinitions="Auto,*,Auto" Margin="12" IsVisible="{Binding Section, Converter={x:Static c:EnumEqualsConverter.Instance}, ConverterParameter=Body}">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" Margin="0,0,0,8">
+              <TextBlock Classes="muted small" Text="{Binding InputTypeText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                         ToolTip.Tip="{Binding InputTypeText}" />
+              <!-- The request message's fields on demand; the editor suggests them while typing (Ctrl+Space). -->
+              <Button x:Name="FieldsButton" Grid.Column="1" Classes="link" IsVisible="{Binding HasFields}"
+                      ToolTip.Tip="{l:Tr Grpc_FieldsTip}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <c:IconLabel Icon="{StaticResource Icon.List}" Text="{l:Tr Grpc_Fields}" />
+                  <Border Classes="badge">
+                    <TextBlock Text="{Binding FieldsBadge}" />
+                  </Border>
+                </StackPanel>
+                <Button.Flyout>
+                  <Flyout Placement="BottomEdgeAlignedRight" FlyoutPresenterClasses="card">
+                    <StackPanel Width="380" Spacing="8" Margin="14,12">
+                      <TextBlock Classes="muted small" FontWeight="SemiBold" Text="{Binding InputTypeText}" TextTrimming="CharacterEllipsis" />
+                      <ScrollViewer MaxHeight="320">
+                        <ItemsControl ItemsSource="{Binding Fields}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:FieldSuggestion">
+                              <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="0,3">
+                                <TextBlock Classes="mono" Text="{Binding Name}" />
+                                <TextBlock Grid.Column="1" Classes="faint small" Text="{Binding Note}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Classes="mono muted" Text="{Binding Type}" MaxWidth="200" TextTrimming="CharacterEllipsis" />
+                              </Grid>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </ScrollViewer>
+                      <Border Classes="divider" Height="1" />
+                      <TextBlock Classes="muted small" TextWrapping="Wrap" LineHeight="17" Text="{l:Tr Grpc_FieldsCompletionHint}" />
+                      <TextBlock Classes="faint small" TextWrapping="Wrap" LineHeight="17" Text="{l:Tr Grpc_JsonHint}" />
+                    </StackPanel>
+                  </Flyout>
+                </Button.Flyout>
+              </Button>
+              <Button Grid.Column="2" Classes="link" Command="{Binding FormatMessageCommand}">
 <c:IconLabel Icon="{StaticResource Icon.Format}" Text="{l:Tr Btn_Format}" />
 </Button>
-                <Button Grid.Column="2" Classes="link" Command="{Binding FillTemplateCommand}">
+              <Button Grid.Column="3" Classes="link" Command="{Binding FillTemplateCommand}">
 <c:IconLabel Icon="{StaticResource Icon.Sparkle}" Text="{l:Tr Btn_FillTemplate}" />
 </Button>
-              </Grid>
-              <Border Grid.Row="1" Classes="code">
-                <c:CodeEditor Text="{Binding Message}" Language="json" HighlightVariables="True" />
-              </Border>
-              <Border Grid.Row="2" Classes="danger" Margin="0,8,0,0" IsVisible="{Binding MessageError, Converter={x:Static ObjectConverters.IsNotNull}}">
-                <SelectableTextBlock Classes="mono" Text="{Binding MessageError}" TextWrapping="Wrap" />
-              </Border>
             </Grid>
-            <Border Grid.Column="2" Classes="code" Padding="14,12" VerticalAlignment="Top">
-              <ScrollViewer>
-                <StackPanel Spacing="6">
-                  <TextBlock Classes="muted small" FontWeight="SemiBold" Text="{l:Tr Grpc_Fields}" />
-                  <ItemsControl ItemsSource="{Binding Fields}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate x:DataType="vm:FieldInfo">
-                        <Grid ColumnDefinitions="*,Auto" Margin="0,2">
-                          <TextBlock Classes="mono" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
-                          <TextBlock Grid.Column="1" Classes="mono muted" Margin="8,0,0,0" Text="{Binding Type}" />
-                        </Grid>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                  <TextBlock Classes="muted small" Margin="0,6,0,0" TextWrapping="Wrap" LineHeight="17" Text="{l:Tr Grpc_JsonHint}" />
-                </StackPanel>
-              </ScrollViewer>
+            <Border Grid.Row="1" Classes="code">
+              <c:CodeEditor Text="{Binding Message}" Language="json" HighlightVariables="True" MessageType="{Binding RequestType}" />
+            </Border>
+            <Border Grid.Row="2" Classes="danger" Margin="0,8,0,0" IsVisible="{Binding MessageError, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <SelectableTextBlock Classes="mono" Text="{Binding MessageError}" TextWrapping="Wrap" />
             </Border>
           </Grid>
 

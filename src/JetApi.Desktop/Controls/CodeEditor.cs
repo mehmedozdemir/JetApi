@@ -57,6 +57,13 @@ public sealed class CodeEditor : UserControl
     /// <summary>Offered like <see cref="AddCheckCommandProperty"/>: "Add a rule to save it to a variable".</summary>
     public static readonly StyledProperty<ICommand?> AddExtractionCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(AddExtractionCommand));
 
+    /// <summary>
+    /// The gRPC message the text is the JSON of: its fields are suggested while a property name is typed, or with
+    /// Ctrl+Space.
+    /// </summary>
+    public static readonly StyledProperty<JetApi.Grpc.Schema.ProtoMessageType?> MessageTypeProperty =
+        AvaloniaProperty.Register<CodeEditor, JetApi.Grpc.Schema.ProtoMessageType?>(nameof(MessageType));
+
     /// <summary>Runs on Enter in single-line mode (e.g. send the request).</summary>
     public static readonly StyledProperty<ICommand?> EnterCommandProperty = AvaloniaProperty.Register<CodeEditor, ICommand?>(nameof(EnterCommand));
 
@@ -238,6 +245,13 @@ public sealed class CodeEditor : UserControl
         set => SetValue(AddExtractionCommandProperty, value);
     }
 
+    /// <summary>The gRPC message whose fields are suggested.</summary>
+    public JetApi.Grpc.Schema.ProtoMessageType? MessageType
+    {
+        get => GetValue(MessageTypeProperty);
+        set => SetValue(MessageTypeProperty, value);
+    }
+
     /// <summary>Runs on Enter in single-line mode.</summary>
     public ICommand? EnterCommand
     {
@@ -353,6 +367,14 @@ public sealed class CodeEditor : UserControl
         if (Completion?.HandleKey(e.Key) == true)
         {
             e.Handled = true;
+            return;
+        }
+
+        if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.Control && MessageType is not null && Completion is { } completion)
+        {
+            // Ctrl+Space: the fields that can be written here.
+            e.Handled = true;
+            completion.Request();
             return;
         }
 
@@ -534,11 +556,11 @@ public sealed class CodeEditor : UserControl
         return textView.TranslatePoint(point, _editor) ?? default;
     }
 
-    // "{{" completion in request editors that can be typed in.
+    // "{{" completion in request editors that can be typed in, and field completion in message editors.
     private VariableCompletion? Completion =>
-        HighlightVariables && !IsReadOnly ? VariableCompletion.Attach(new EditorCompletionHost(this)) : null;
+        (HighlightVariables || MessageType is not null) && !IsReadOnly ? VariableCompletion.Attach(new EditorCompletionHost(this)) : null;
 
-    /// <summary>The "{{" completion list of this editor (tests).</summary>
+    /// <summary>The completion list of this editor (tests).</summary>
     internal VariableCompletion? CompletionList => VariableCompletion.Find(_editor);
 
     private sealed class EditorCompletionHost(CodeEditor owner) : ICompletionHost
@@ -553,12 +575,24 @@ public sealed class CodeEditor : UserControl
 
         public VariableContext? Context => owner.ActiveVariables;
 
+        public JetApi.Grpc.Schema.ProtoMessageType? MessageType => owner.MessageType;
+
         public Point CaretBottom() => owner.SelectionBottomLeft(owner._editor.CaretOffset);
 
         public void Apply(CompletionEdit edit)
         {
             owner._editor.Document.Replace(edit.Start, edit.Length, edit.Insert);
-            owner._editor.CaretOffset = Math.Min(edit.Caret, owner._editor.Document.TextLength);
+            var caret = Math.Min(edit.Caret, owner._editor.Document.TextLength);
+            if (edit.SelectionLength > 0 && caret + edit.SelectionLength <= owner._editor.Document.TextLength)
+            {
+                // A placeholder value to type over.
+                owner._editor.Select(caret, edit.SelectionLength);
+            }
+            else
+            {
+                owner._editor.CaretOffset = caret;
+            }
+
             owner._editor.TextArea.Focus();
         }
     }

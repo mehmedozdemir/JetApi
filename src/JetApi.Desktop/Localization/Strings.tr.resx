@@ -115,6 +115,9 @@
   <data name="Grpc_ErrorStatusHint" xml:space="preserve"><value>gRPC hata status’ları HTTP’deki 4xx/5xx gibi tamamlanmış çağrılardır; ağ hatası değildir.</value></data>
   <data name="Grpc_Fields" xml:space="preserve"><value>Alanlar</value></data>
   <data name="Grpc_ImportPaths" xml:space="preserve"><value>Import path’leri (her satıra bir tane, workspace’e göre)</value></data>
+  <data name="Grpc_FieldOneof" xml:space="preserve"><value>oneof {0}</value></data>
+  <data name="Grpc_FieldsTip" xml:space="preserve"><value>İstek mesajının alanları</value></data>
+  <data name="Grpc_FieldsCompletionHint" xml:space="preserve"><value>Editörde bir alan adı yazmaya başlayınca (") ya da Ctrl+Space’e basınca alanlar önerilir. Mesajda zaten olan alanlar önerilmez.</value></data>
   <data name="Grpc_JsonHint" xml:space="preserve"><value>int64 değerleri string, enum’lar isimle yazılır (proto3 JSON). camelCase ve snake_case adlar kabul edilir.</value></data>
   <data name="Grpc_Message" xml:space="preserve"><value>Mesaj</value></data>
   <data name="Grpc_Metadata" xml:space="preserve"><value>Metadata</value></data>

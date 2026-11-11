@@ -67,6 +67,7 @@
 | GRPC-9 | Server reflection ile şema keşfi | M4 | 🔜 |
 | GRPC-10 | Server, client ve bidirectional streaming | M4 | 🔜 |
 | GRPC-11 | `google.rpc.Status` detaylarının (error details) çözülmesi | M4 | 🔜 |
+| GRPC-12 | Mesaj editöründe alan önerisi (iç içe mesajlar dahil, yazılmış alanlar hariç) | M4 | ✅ Alan adı yazılırken ya da Ctrl+Space ile; türüne uygun değerle ekler, değeri seçer, eksik virgülü tamamlar. Alan listesi *Alanlar (n)* düğmesinde |
 
 ### Kimlik doğrulama
 

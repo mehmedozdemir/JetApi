@@ -5,6 +5,18 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+### Changed
+
+- gRPC mesaj editörü artık tüm genişliği kullanır; yanındaki *Alanlar* paneli kaldırıldı. Alan listesi araç çubuğundaki
+  *Alanlar (n)* düğmesiyle açılır pencerede görünür.
+
+### Added
+
+- gRPC mesaj editöründe alan önerisi: alan adı yazılacak yerde `"` ya da harf yazınca veya Ctrl+Space ile, imlecin
+  bulunduğu mesajın (iç içe mesajlar, repeated mesaj elemanları ve map değerleri dahil) henüz yazılmamış alanları
+  türleriyle listelenir. Yazdıkça süzülür, Enter/Tab alanı türüne uygun bir değerle ekler ve değeri seçer, eksik virgülü
+  tamamlar. Oneof'un bir üyesi yazılmışsa diğerleri önerilmez.
+
 ## [0.3.1] - 2026-11-10
 
 Uygulama içi güncelleme sürümü: Hakkında, sürüm notları, güncelleme denetimi ve Windows paketinde tek tıkla kurulum. Ayrıca renk paletleri ve koleksiyon ağacında sürükle-bırak. Bu sürüm bir kez elle kurulur; sonraki sürümler uygulamanın içinden gelir.
