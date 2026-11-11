@@ -5,10 +5,16 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-11-11
+
+gRPC mesaj editöründe alan önerisi ve sekme sabitleme ile sekme menüsü. Paketler güncel .NET çalışma zamanıyla gelir.
+
 ### Changed
 
 - gRPC mesaj editörü artık tüm genişliği kullanır; yanındaki *Alanlar* paneli kaldırıldı. Alan listesi araç çubuğundaki
   *Alanlar (n)* düğmesiyle açılır pencerede görünür.
+- Paketler .NET 10.0.15 çalışma zamanını taşır (SDK 10.0.404). SDK sürümü artık `global.json` içinde tam olarak
+  sabitlenir.
 
 ### Added
 

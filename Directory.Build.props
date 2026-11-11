@@ -14,7 +14,7 @@
     <RestoreLockedMode Condition="'$(CI)' == 'true'">true</RestoreLockedMode>
     <Deterministic>true</Deterministic>
 
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <Authors>JetApi contributors</Authors>
     <Product>JetApi</Product>
     <Copyright>Copyright (c) JetApi contributors</Copyright>

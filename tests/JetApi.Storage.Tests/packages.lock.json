@@ -199,7 +199,7 @@
       "jetapi.storage": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.3.1, )",
+          "JetApi.Core": "[0.3.2, )",
           "YamlDotNet": "[18.1.0, )"
         }
       },

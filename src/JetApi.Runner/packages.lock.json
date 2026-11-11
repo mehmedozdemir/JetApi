@@ -82,7 +82,7 @@
       "jetapi.testing": {
         "type": "Project",
         "dependencies": {
-          "JetApi.Core": "[0.3.1, )",
+          "JetApi.Core": "[0.3.2, )",
           "LateApexEarlySpeed.Json.Schema": "[4.2.4, )"
         }
       },
