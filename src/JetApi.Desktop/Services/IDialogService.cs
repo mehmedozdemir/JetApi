@@ -64,8 +64,8 @@ public interface IDialogService
     /// <summary>Warns about undefined variables before sending.</summary>
     Task<UndefinedVariablesChoice> ConfirmUndefinedVariablesAsync(IReadOnlyList<VariableIssue> issues, string? environmentName);
 
-    /// <summary>Asks what to do with unsaved requests (by name) before leaving the workspace.</summary>
-    Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items);
+    /// <summary>Asks what to do with unsaved requests (by name) before leaving the workspace, or before closing their tabs.</summary>
+    Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items, bool closingTabs = false);
 
     /// <summary>Shows an error message.</summary>
     Task ShowErrorAsync(string message);

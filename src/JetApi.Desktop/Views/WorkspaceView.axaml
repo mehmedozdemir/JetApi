@@ -339,9 +339,14 @@
                     <TextBlock Classes="tab-title" Text="{Binding Name}" VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis" />
                     <Ellipse Width="6" Height="6" Fill="{DynamicResource App.Accent}" IsVisible="{Binding IsDirty}" VerticalAlignment="Center"
                              ToolTip.Tip="{l:Tr Req_Unsaved}" />
-                    <Button Classes="icon tab-close" Width="22" Height="22" Command="{Binding CloseCommand}"
+                    <Button Classes="icon tab-close" Width="22" Height="22" Command="{Binding CloseCommand}" IsVisible="{Binding !IsPinned}"
                             AutomationProperties.Name="{l:Tr Btn_Close}" ToolTip.Tip="{l:Tr Shortcut_Close}">
                       <c:Icon Data="{StaticResource Icon.Close}" Width="10" Height="10" />
+                    </Button>
+                    <!-- A pinned tab shows its pin instead of the close button; clicking it unpins. -->
+                    <Button Classes="icon tab-pin" Width="22" Height="22" Command="{Binding TogglePinCommand}" IsVisible="{Binding IsPinned}"
+                            AutomationProperties.Name="{l:Tr Tab_Unpin}" ToolTip.Tip="{l:Tr Tab_PinnedTip}">
+                      <c:Icon Data="{StaticResource Icon.Pin}" Width="12" Height="12" />
                     </Button>
                   </StackPanel>
                 </DataTemplate>

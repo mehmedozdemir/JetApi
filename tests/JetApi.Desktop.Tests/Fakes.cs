@@ -87,7 +87,7 @@ internal sealed class FakeDialogs : IDialogService
 
     public List<IReadOnlyList<string>> UnsavedAsked { get; } = [];
 
-    public Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items)
+    public Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items, bool closingTabs = false)
     {
         UnsavedAsked.Add(items);
         return Task.FromResult(UnsavedChoice);

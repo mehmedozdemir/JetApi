@@ -465,4 +465,5 @@ public sealed class WorkspaceSession
 /// <summary>A saved request that was open in a tab.</summary>
 /// <param name="Collection">Collection key.</param>
 /// <param name="Path">Node keys from the collection to the request.</param>
-public sealed record OpenTab(string Collection, IReadOnlyList<string> Path);
+/// <param name="Pinned">The tab was pinned (kept first, not closed by "close others" or "close all").</param>
+public sealed record OpenTab(string Collection, IReadOnlyList<string> Path, bool Pinned = false);

@@ -116,8 +116,8 @@ public sealed class DialogService : IDialogService
         ShowAsync(new UndefinedVariablesDialog(issues, environmentName), UndefinedVariablesChoice.Cancel);
 
     /// <inheritdoc />
-    public Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items) =>
-        ShowAsync(new UnsavedChangesDialog(items), UnsavedChangesChoice.Cancel);
+    public Task<UnsavedChangesChoice> ConfirmUnsavedChangesAsync(IReadOnlyList<string> items, bool closingTabs = false) =>
+        ShowAsync(new UnsavedChangesDialog(items, closingTabs), UnsavedChangesChoice.Cancel);
 
     /// <inheritdoc />
     public Task ShowErrorAsync(string message) =>

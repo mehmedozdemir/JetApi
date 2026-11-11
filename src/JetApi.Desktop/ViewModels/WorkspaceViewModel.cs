@@ -555,6 +555,89 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         RemoveTab(tab);
     }
 
+    /// <summary>Closes every tab except <paramref name="tab"/> and the pinned ones; <paramref name="tab"/> becomes the active tab.</summary>
+    [RelayCommand]
+    private Task CloseOtherTabsAsync(RequestTabViewModel tab) =>
+        CloseTabsAsync([.. Tabs.Where(t => t != tab && !t.IsPinned)], keep: tab);
+
+    /// <summary>Closes the tabs to the right of <paramref name="tab"/> (pinned ones stay).</summary>
+    [RelayCommand]
+    private Task CloseTabsToRightAsync(RequestTabViewModel tab) =>
+        CloseTabsAsync([.. Tabs.Skip(Tabs.IndexOf(tab) + 1).Where(t => !t.IsPinned)], keep: tab);
+
+    /// <summary>Closes the tabs without unsaved changes (pinned ones stay).</summary>
+    [RelayCommand]
+    private Task CloseSavedTabsAsync() => CloseTabsAsync([.. Tabs.Where(t => !t.IsDirty && !t.IsPinned)], keep: null);
+
+    /// <summary>Closes every tab that is not pinned.</summary>
+    [RelayCommand]
+    private Task CloseAllTabsAsync() => CloseTabsAsync([.. Tabs.Where(t => !t.IsPinned)], keep: null);
+
+    /// <inheritdoc />
+    public void SetTabPinned(RequestTabViewModel tab, bool pinned)
+    {
+        ArgumentNullException.ThrowIfNull(tab);
+        if (!Tabs.Contains(tab) || tab.IsPinned == pinned)
+        {
+            return;
+        }
+
+        // Pinned tabs come first: a pinned tab goes after the other pinned ones, an unpinned one right after them.
+        var selected = SelectedTab;
+        tab.IsPinned = pinned;
+        var target = Tabs.Count(t => t.IsPinned && t != tab);
+        var index = Tabs.IndexOf(tab);
+        if (index != target)
+        {
+            Tabs.Move(index, target);
+        }
+
+        SelectedTab = selected;
+        RememberTabs();
+    }
+
+    // Closes several tabs; unsaved changes are asked about once, for all of them (save all, discard all or keep the tabs).
+    private async Task CloseTabsAsync(IReadOnlyList<RequestTabViewModel> tabs, RequestTabViewModel? keep)
+    {
+        if (tabs.Count == 0)
+        {
+            return;
+        }
+
+        var dirty = tabs.Where(t => t.IsDirty && t.Path is not null).ToList();
+        if (dirty.Count > 0)
+        {
+            switch (await Dialogs.ConfirmUnsavedChangesAsync([.. dirty.Select(t => t.Breadcrumb)], closingTabs: true).ConfigureAwait(true))
+            {
+                case UnsavedChangesChoice.Discard:
+                    break;
+                case UnsavedChangesChoice.Save:
+                    foreach (var tab in dirty)
+                    {
+                        await tab.SaveAsync().ConfigureAwait(true);
+                        if (tab.IsDirty)
+                        {
+                            return;
+                        }
+                    }
+
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        foreach (var tab in tabs.Where(Tabs.Contains))
+        {
+            RemoveTab(tab);
+        }
+
+        if (keep is not null && Tabs.Contains(keep))
+        {
+            SelectedTab = keep;
+        }
+    }
+
     /// <summary>Saves the selected tab.</summary>
     [RelayCommand]
     private Task SaveSelectedAsync() => SelectedTab?.SaveAsync() ?? Task.CompletedTask;
@@ -856,6 +939,14 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         try
         {
             var opened = tabs.Select(t => OpenRequest(t.Collection, t.Path)).ToList();
+            foreach (var (open, pinned) in opened.Zip(tabs, (open, saved) => (open, saved.Pinned)))
+            {
+                if (pinned && open is not null)
+                {
+                    SetTabPinned(open, true);
+                }
+            }
+
             if (selected >= 0 && selected < opened.Count && opened[selected] is { } tab)
             {
                 SelectedTab = tab;
@@ -878,7 +969,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
 
         var saved = Tabs.Where(t => t.Path is not null).ToList();
-        Session.WriteOpenTabs([.. saved.Select(t => new OpenTab(t.CollectionKey, t.Path!))], SelectedTab is null ? -1 : saved.IndexOf(SelectedTab));
+        Session.WriteOpenTabs([.. saved.Select(t => new OpenTab(t.CollectionKey, t.Path!, t.IsPinned))], SelectedTab is null ? -1 : saved.IndexOf(SelectedTab));
     }
 
     private static bool IsSameFolder(string a, string b) =>

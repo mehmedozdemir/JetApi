@@ -105,7 +105,7 @@
 | ID | Gereksinim | Öncelik | Durum |
 |---|---|---|---|
 | HIS-1 | İstek geçmişi (yerel, Git'e girmez), geçmişten tekrar gönderme/kaydetme | M1 | ✅ |
-| UI-1 | Sekmeli istek editörü, kaydedilmemiş değişiklik göstergesi | M1 | ✅ |
+| UI-1 | Sekmeli istek editörü, kaydedilmemiş değişiklik göstergesi | M1 | ✅ Sekme sabitleme ve sekme menüsü (diğerlerini / sağdakileri / değişmeyenleri / tümünü kapat) |
 | UI-2 | Komut paleti (Ctrl/Cmd+K), klavye kısayolları (Ctrl/Cmd+Enter: gönder, Ctrl/Cmd+S: kaydet) | M1 | ✅ |
 | UI-3 | Açık/koyu tema, sistem temasını izleme | M1 | ✅ Açık ve koyu tema için ayrı renk paleti (5 açık, 7 koyu; WCAG AA), editör sözdizimi renkleri palete uyar |
 | UI-4 | JSON/XML sözdizimi vurgulama, katlama, arama | M1 | 🟡 vurgulama ve arama (Ctrl+F) hazır; katlama sonraki adım |

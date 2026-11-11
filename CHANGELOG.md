@@ -16,6 +16,11 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
   bulunduğu mesajın (iç içe mesajlar, repeated mesaj elemanları ve map değerleri dahil) henüz yazılmamış alanları
   türleriyle listelenir. Yazdıkça süzülür, Enter/Tab alanı türüne uygun bir değerle ekler ve değeri seçer, eksik virgülü
   tamamlar. Oneof'un bir üyesi yazılmışsa diğerleri önerilmez.
+- Sekme sabitleme ve sekme menüsü: sekmeye sağ tıklayınca *Kapat*, *Diğerlerini kapat*, *Sağdakileri kapat*,
+  *Değişiklik olmayanları kapat*, *Tümünü kapat* ve *Sekmeyi sabitle / Sabitlemeyi kaldır*. Sabitlenen sekmeler başa
+  geçer, kapatma düğmesi yerine raptiye gösterir (tıklayınca sabitleme kalkar), toplu kapatmada ve orta tıkla kapanmaz,
+  workspace yeniden açılınca sabit olarak geri gelir. Toplu kapatmada kaydedilmemiş istekler için tek seferde sorulur
+  (kaydet ve kapat, kaydetmeden kapat, vazgeç).
 
 ## [0.3.1] - 2026-11-10
 

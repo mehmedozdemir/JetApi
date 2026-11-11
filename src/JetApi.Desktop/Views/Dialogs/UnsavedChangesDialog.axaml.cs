@@ -5,7 +5,7 @@ using JetApi.Desktop.Services;
 
 namespace JetApi.Desktop.Views.Dialogs;
 
-/// <summary>Asks what to do with unsaved requests before leaving the workspace: save, discard or stay.</summary>
+/// <summary>Asks what to do with unsaved requests before leaving the workspace or closing their tabs: save, discard or stay.</summary>
 public sealed partial class UnsavedChangesDialog : Window
 {
     private const int MaxListed = 6;
@@ -17,11 +17,16 @@ public sealed partial class UnsavedChangesDialog : Window
     }
 
     /// <summary>Creates the dialog for the given request names.</summary>
-    public UnsavedChangesDialog(IReadOnlyList<string> items)
+    public UnsavedChangesDialog(IReadOnlyList<string> items, bool closingTabs = false)
         : this()
     {
         ArgumentNullException.ThrowIfNull(items);
-        MessageText.Text = Loc.Format("Unsaved_Message", items.Count);
+        MessageText.Text = Loc.Format(closingTabs ? "Unsaved_MessageClose" : "Unsaved_Message", items.Count);
+        if (closingTabs)
+        {
+            SaveButton.Content = Loc.Get("Unsaved_SaveClose");
+        }
+
         var listed = items.Take(MaxListed).Select(i => "• " + i).ToList();
         if (items.Count > MaxListed)
         {

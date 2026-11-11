@@ -44,6 +44,9 @@ public interface IRequestHost
 
     /// <summary>Closes a tab (asking first when it has unsaved changes).</summary>
     Task CloseTabAsync(RequestTabViewModel? tab);
+
+    /// <summary>Pins or unpins a tab: pinned tabs come first and stay open when others are closed in bulk.</summary>
+    void SetTabPinned(RequestTabViewModel tab, bool pinned);
 }
 
 /// <summary>A variable used in the URL or message, with its value for the hint line.</summary>
@@ -274,6 +277,7 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     internal void ContinueFrom(RequestTabViewModel previous)
     {
         _savedYaml = previous._savedYaml;
+        IsPinned = previous.IsPinned;
         UpdateDirty();
     }
 
@@ -310,6 +314,14 @@ public abstract partial class RequestTabViewModel : ViewModelBase, IDisposable
     /// <summary>Closes this tab.</summary>
     [RelayCommand]
     private Task CloseAsync() => Host.CloseTabAsync(this);
+
+    /// <summary>The tab is pinned: it comes first, shows a pin instead of the close button and stays open when others are closed.</summary>
+    [ObservableProperty]
+    public partial bool IsPinned { get; internal set; }
+
+    /// <summary>Pins or unpins this tab (the pin on a pinned tab unpins it).</summary>
+    [RelayCommand]
+    private void TogglePin() => Host.SetTabPinned(this, !IsPinned);
 
     /// <summary>Saves the request to its file.</summary>
     [RelayCommand]

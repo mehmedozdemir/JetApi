@@ -45,6 +45,7 @@ public sealed partial class WorkspaceView : UserControl
         Tree.AddHandler(DragDrop.DragLeaveEvent, (_, _) => SetHint(null, DropPosition.None));
         TabStrip.AddHandler(PointerPressedEvent, OnTabPointerPressed, RoutingStrategies.Tunnel);
         TabStrip.AddHandler(PointerReleasedEvent, OnTabPointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
+        TabStrip.ContextRequested += OnTabContextRequested;
 
         // A node selected from code (e.g. after a move) scrolls into view once its row exists.
         Tree.SelectionChanged += (_, _) => Avalonia.Threading.Dispatcher.UIThread.Post(
@@ -415,7 +416,52 @@ public sealed partial class WorkspaceView : UserControl
         return ViewModel.Collections.SelectMany(Flatten).FirstOrDefault(n => n.Identity == identity);
     }
 
-    // A middle click anywhere on a tab closes it (also on its padding, and although the list item handles the press).
+    private void OnTabContextRequested(object? sender, ContextRequestedEventArgs e)
+    {
+        if (TabFrom(e.Source) is not { } tab || ViewModel is not { } vm)
+        {
+            return;
+        }
+
+        BuildTabMenu(vm, tab).Open(e.Source as Control ?? TabStrip);
+        e.Handled = true;
+    }
+
+    /// <summary>
+    /// The tab menu: close, close others, close to the right, close saved, close all (the bulk ones leave pinned tabs open),
+    /// then pin or unpin. Items that would close nothing are disabled.
+    /// </summary>
+    internal static ContextMenu BuildTabMenu(WorkspaceViewModel vm, RequestTabViewModel tab)
+    {
+        ArgumentNullException.ThrowIfNull(vm);
+        ArgumentNullException.ThrowIfNull(tab);
+        var index = vm.Tabs.IndexOf(tab);
+        var close = TabItem("Tab_Close", vm.CloseTabCommand, tab, "Icon.Close", OperatingSystem.IsMacOS() ? "Meta+W" : "Ctrl+W");
+        var others = TabItem("Tab_CloseOthers", vm.CloseOtherTabsCommand, tab, "Icon.CloseOthers");
+        others.IsEnabled = vm.Tabs.Any(t => t != tab && !t.IsPinned);
+        var right = TabItem("Tab_CloseRight", vm.CloseTabsToRightCommand, tab, "Icon.CloseRight");
+        right.IsEnabled = vm.Tabs.Skip(index + 1).Any(t => !t.IsPinned);
+        var saved = TabItem("Tab_CloseSaved", vm.CloseSavedTabsCommand, null, "Icon.Check");
+        saved.IsEnabled = vm.Tabs.Any(t => !t.IsDirty && !t.IsPinned);
+        var all = TabItem("Tab_CloseAll", vm.CloseAllTabsCommand, null, "Icon.CloseAll");
+        all.IsEnabled = vm.Tabs.Any(t => !t.IsPinned);
+        var pin = TabItem(tab.IsPinned ? "Tab_Unpin" : "Tab_Pin", tab.TogglePinCommand, null, tab.IsPinned ? "Icon.Unpin" : "Icon.Pin");
+        return new ContextMenu { ItemsSource = new List<Control> { close, others, right, saved, all, new Separator(), pin } };
+    }
+
+    private static MenuItem TabItem(string key, System.Windows.Input.ICommand command, object? parameter, string? icon = null, string? gesture = null)
+    {
+        var item = new MenuItem { Header = Loc.Get(key), Command = command, CommandParameter = parameter, Icon = icon is null ? null : Controls.Icon.ForMenu(icon) };
+        if (gesture is not null)
+        {
+            item.InputGesture = KeyGesture.Parse(gesture);
+        }
+
+        return item;
+    }
+
+    // A middle click anywhere on a tab closes it (also on its padding, and although the list item handles the press);
+    // pinned tabs stay, as they do for "close all".
     private void OnTabPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         _middlePressedTab = e.GetCurrentPoint(TabStrip).Properties.IsMiddleButtonPressed ? TabFrom(e.Source) : null;
@@ -427,7 +473,7 @@ public sealed partial class WorkspaceView : UserControl
 
     private void OnTabPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (e.InitialPressMouseButton == MouseButton.Middle && _middlePressedTab is { } tab && TabFrom(e.Source) == tab)
+        if (e.InitialPressMouseButton == MouseButton.Middle && _middlePressedTab is { IsPinned: false } tab && TabFrom(e.Source) == tab)
         {
             ViewModel?.CloseTabCommand.Execute(tab);
             e.Handled = true;

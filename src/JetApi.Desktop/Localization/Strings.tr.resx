@@ -352,6 +352,14 @@
   <data name="Status_Git" xml:space="preserve"><value>git: {0}</value></data>
   <data name="Status_Saved" xml:space="preserve"><value>Tüm değişiklikler kaydedildi</value></data>
   <data name="Status_Unsaved" xml:space="preserve"><value>Kaydedilmemiş: {0}</value></data>
+  <data name="Tab_Close" xml:space="preserve"><value>Kapat</value></data>
+  <data name="Tab_CloseAll" xml:space="preserve"><value>Tümünü kapat</value></data>
+  <data name="Tab_CloseOthers" xml:space="preserve"><value>Diğerlerini kapat</value></data>
+  <data name="Tab_CloseRight" xml:space="preserve"><value>Sağdakileri kapat</value></data>
+  <data name="Tab_CloseSaved" xml:space="preserve"><value>Değişiklik olmayanları kapat</value></data>
+  <data name="Tab_Pin" xml:space="preserve"><value>Sekmeyi sabitle</value></data>
+  <data name="Tab_PinnedTip" xml:space="preserve"><value>Sabitlendi: diğer sekmeler kapatılınca açık kalır. Kaldırmak için tıklayın.</value></data>
+  <data name="Tab_Unpin" xml:space="preserve"><value>Sabitlemeyi kaldır</value></data>
   <data name="Tests_AddCheck" xml:space="preserve"><value>Kontrol ekle</value></data>
   <data name="Tests_AddCheckAt" xml:space="preserve"><value>{0} için test ekle</value></data>
   <data name="Tests_AddCheckHere" xml:space="preserve"><value>Bu alan için test ekle</value></data>
@@ -402,8 +410,10 @@
   <data name="Top_WorkspaceMissing" xml:space="preserve"><value>Bulunamadı · {0}</value></data>
   <data name="Unsaved_Discard" xml:space="preserve"><value>Kaydetme</value></data>
   <data name="Unsaved_Message" xml:space="preserve"><value>{0} istekte kaydedilmemiş değişiklik var. Çıkmadan önce kaydedilsin mi?</value></data>
+  <data name="Unsaved_MessageClose" xml:space="preserve"><value>{0} istekte kaydedilmemiş değişiklik var. Kapatmadan önce kaydedilsin mi?</value></data>
   <data name="Unsaved_More" xml:space="preserve"><value>ve {0} tane daha</value></data>
   <data name="Unsaved_Save" xml:space="preserve"><value>Kaydet ve devam et</value></data>
+  <data name="Unsaved_SaveClose" xml:space="preserve"><value>Kaydet ve kapat</value></data>
   <data name="Unsaved_Title" xml:space="preserve"><value>Kaydedilmemiş değişiklikler</value></data>
   <data name="Var_AssignTitle" xml:space="preserve"><value>Değişkene kaydet</value></data>
   <data name="Var_AssignToVariable" xml:space="preserve"><value>Değişkene kaydet…</value></data>
