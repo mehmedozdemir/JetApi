@@ -77,13 +77,21 @@ public sealed class UxWalkthroughTests
         Settle();
         ScreenTests.Capture(window, "ux-03b-url-editor");
 
-        // 4. Environments on the rail, then the other environment in the list.
-        Click(window, Rail(window, 1));
-        ws.IsEnvironmentsMode.ShouldBeTrue();
-        ScreenTests.Capture(window, "ux-04-rail-environments");
+        // 4. The environment list sits under the collections; clicking one opens it in the main area.
+        ws.IsCollectionsExpanded.ShouldBeTrue();
+        ws.IsEnvironmentsExpanded.ShouldBeTrue();
+        ws.Environments.ShouldBeNull();
+        ScreenTests.Capture(window, "ux-04-sidebar-sections");
         Click(window, SidebarButton(window, "Production"));
         ws.Environments!.SelectedScope!.Name.ShouldBe("Production");
         ScreenTests.Capture(window, "ux-05-select-production");
+
+        // 4b. Opening a request closes the editor; the list stays.
+        Click(window, TreeRow(window, "Create user"));
+        ws.Environments.ShouldBeNull();
+        ws.EnvironmentList.Environments.ShouldAllBe(e => !e.IsSelected);
+        Click(window, SidebarButton(window, "Production"));
+        ws.Environments.ShouldNotBeNull();
 
         // 5. Right-click Production: its menu offers the environment actions.
         RightClick(window, SidebarButton(window, "Production"));
@@ -102,7 +110,6 @@ public sealed class UxWalkthroughTests
 
         // 6b. Import from Postman: the new collection opens in the tree; the report lists what needs attention.
         dialogs.FilesToPick.AddRange([ImportTests.Sample("shop.postman_collection.json"), ImportTests.Sample("dev.postman_environment.json")]);
-        Click(window, Rail(window, 0));
         await ws.ImportFromPostmanCommand.ExecuteAsync(null);
         Settle();
         ws.Collections.ShouldContain(c => c.Name == "Shop API");
@@ -112,15 +119,22 @@ public sealed class UxWalkthroughTests
         Settle();
         ScreenTests.Capture(reportWindow, "ux-06c-import-report");
         reportWindow.Close();
-        Click(window, Rail(window, 1));
 
-        // 7. History, then back to collections.
-        Click(window, Rail(window, 2));
-        ws.IsHistoryVisible.ShouldBeTrue();
-        ws.Environments.ShouldBeNull();
-        ScreenTests.Capture(window, "ux-07-rail-history");
-        Click(window, Rail(window, 0));
-        ws.IsCollectionsMode.ShouldBeTrue();
+        // 7. Section headers open and close the history and environments; the filter narrows every section.
+        Click(window, SectionHeader(window, 2));
+        ws.IsHistoryExpanded.ShouldBeTrue();
+        ScreenTests.Capture(window, "ux-07-history-section");
+        Click(window, SectionHeader(window, 1));
+        ws.IsEnvironmentsExpanded.ShouldBeFalse();
+        ScreenTests.Capture(window, "ux-07b-environments-closed");
+        Click(window, SectionHeader(window, 1));
+        Click(window, SectionHeader(window, 2));
+        ws.IsHistoryExpanded.ShouldBeFalse();
+        ws.FilterText = "prod";
+        Settle();
+        ws.EnvironmentList.Environments.Where(e => e.IsVisible).Select(e => e.Name).ShouldBe(["Prod"]);
+        ScreenTests.Capture(window, "ux-07c-filter");
+        ws.FilterText = string.Empty;
 
         // 8. Keyboard only: Tab moves focus through the window; record what gets focus.
         var focused = new List<string>();
@@ -148,7 +162,7 @@ public sealed class UxWalkthroughTests
         window.Height = 800;
         Settle();
         ScreenTests.Capture(window, "ux-11-dark-collection");
-        Click(window, Rail(window, 1));
+        Click(window, SidebarButton(window, "Prod"));
         ScreenTests.Capture(window, "ux-12-dark-environments");
         ws.Environments!.IsDirty.ShouldBeFalse();
         Loc.Instance.SetLanguage("tr");
@@ -177,7 +191,6 @@ public sealed class UxWalkthroughTests
         Settle();
         ScreenTests.Capture(settingsWindow, "ux-15-settings-changed");
         settingsWindow.Close();
-        Click(window, Rail(window, 0));
         Click(window, TreeRow(window, "Create user"));
         ScreenTests.Capture(window, "ux-16-after-settings");
         vm.UiScale.ShouldBe(1.1);
@@ -294,8 +307,8 @@ public sealed class UxWalkthroughTests
             .First(text => text is not null)!;
     }
 
-    private static RadioButton Rail(Window window, int index) =>
-        window.GetVisualDescendants().OfType<RadioButton>().Where(r => r.Classes.Contains("rail")).ElementAt(index);
+    private static Button SectionHeader(Window window, int index) =>
+        window.GetVisualDescendants().OfType<Button>().Where(b => b.Classes.Contains("section-toggle")).ElementAt(index);
 
     private static Button SidebarButton(Window window, string name) =>
         window.GetVisualDescendants().OfType<Button>().First(b => b.IsEffectivelyVisible && b.GetVisualDescendants().OfType<TextBlock>().Any(t => t.Text == name));

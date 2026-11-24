@@ -28,6 +28,10 @@ public sealed partial class ScopeItemViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
 
+    /// <summary>Matches the sidebar filter.</summary>
+    [ObservableProperty]
+    public partial bool IsVisible { get; set; } = true;
+
     /// <summary>Creates the entry.</summary>
     public ScopeItemViewModel(ScopeKind kind, string key, string name, bool isActive, int count)
     {
@@ -45,13 +49,18 @@ public sealed partial class ScopeItemViewModel : ViewModelBase
     public string Key { get; }
 
     /// <summary>Display name.</summary>
-    public string Name { get; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsProduction))]
+    public partial string Name { get; internal set; }
 
     /// <summary>The active environment.</summary>
-    public bool IsActive { get; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanMakeActive))]
+    public partial bool IsActive { get; internal set; }
 
     /// <summary>Number of variables.</summary>
-    public int Count { get; }
+    [ObservableProperty]
+    public partial int Count { get; internal set; }
 
     /// <summary>Is an environment.</summary>
     public bool IsEnvironment => Kind == ScopeKind.Environment;
@@ -137,6 +146,8 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
     private readonly Action _close;
     private readonly string? _collectionKey;
     private bool _loading;
+    private bool _keepRows;
+    private string _filter = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Title), nameof(FileName), nameof(ShowProductionWarning), nameof(CanMakeActive), nameof(IsEnvironmentScope))]
@@ -148,6 +159,16 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isDirty;
+
+    /// <summary>
+    /// The selected scope is shown in the main area. The sidebar keeps the list visible while the editor is closed,
+    /// and marks the selected entry only while it is open.
+    /// </summary>
+    [ObservableProperty]
+    private bool _isOpen;
+
+    /// <summary>Raised when the user picks a scope (or creates or copies an environment) to edit it.</summary>
+    public event EventHandler? OpenRequested;
 
     /// <summary>Creates the editor.</summary>
     public EnvironmentsViewModel(WorkspaceSession session, IDialogService dialogs, Action close)
@@ -204,7 +225,13 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
     /// <summary>No environments exist.</summary>
     public bool HasNoEnvironments => Environments.Count == 0;
 
-    /// <summary>Selects a scope.</summary>
+    /// <summary>Environments exist but none matches the filter.</summary>
+    public bool HasNoMatches => Environments.Count > 0 && !Environments.Any(e => e.IsVisible);
+
+    /// <summary>Globals (or the collection) match the filter; the divider above them shows only then.</summary>
+    public bool HasVisibleOtherScopes => OtherScopes.Any(s => s.IsVisible);
+
+    /// <summary>Selects a scope and asks for the editor to open.</summary>
     [RelayCommand]
     private async Task SelectAsync(ScopeItemViewModel scope)
     {
@@ -213,7 +240,58 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
             await SaveAsync().ConfigureAwait(true);
         }
 
-        SelectedScope = scope;
+        // Saving rebuilt the list; select the same scope in the new one.
+        SelectedScope = Environments.Concat(OtherScopes).FirstOrDefault(s => s.Kind == scope.Kind && s.Key == scope.Key) ?? scope;
+        OpenRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Selects the environment <paramref name="key"/> without opening the editor; unsaved edits keep their scope.</summary>
+    public void SelectEnvironment(string? key)
+    {
+        if (!IsDirty && key is not null && Environments.FirstOrDefault(e => e.Key == key) is { } scope)
+        {
+            SelectedScope = scope;
+        }
+    }
+
+    /// <summary>
+    /// Rebuilds the list after the workspace changed (a file on disk, the active environment); the selection stays.
+    /// Unsaved edits are kept; otherwise the selected scope shows its current variables.
+    /// </summary>
+    public void Sync()
+    {
+        // Unsaved rows stay only while their scope still exists.
+        _keepRows = IsDirty && SelectedScope is { } current && (current.Kind != ScopeKind.Environment || _session.Workspace.FindEnvironment(current.Key) is not null);
+        try
+        {
+            Refresh(SelectedScope is { } selected ? (selected.Kind, selected.Key) : null);
+        }
+        finally
+        {
+            _keepRows = false;
+        }
+    }
+
+    /// <inheritdoc />
+    public override void OnLanguageChanged()
+    {
+        // "Global" is a localized name; the list lives as long as the workspace.
+        Sync();
+        base.OnLanguageChanged();
+    }
+
+    /// <summary>Shows only the scopes whose name contains <paramref name="text"/>.</summary>
+    public void ApplyFilter(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        _filter = text.Trim();
+        foreach (var scope in Environments.Concat(OtherScopes))
+        {
+            scope.IsVisible = _filter.Length == 0 || scope.Name.Contains(_filter, StringComparison.OrdinalIgnoreCase);
+        }
+
+        OnPropertyChanged(nameof(HasNoMatches));
+        OnPropertyChanged(nameof(HasVisibleOtherScopes));
     }
 
     /// <summary>Closes the editor (saving pending edits).</summary>
@@ -271,7 +349,7 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         if ((target ?? SelectedScope) is { IsEnvironment: true } scope)
         {
             _session.SetActiveEnvironment(scope.Key);
-            Refresh((SelectedScope?.Kind ?? scope.Kind, SelectedScope?.Key ?? scope.Key));
+            Sync();
         }
     }
 
@@ -307,8 +385,14 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         var name = await _dialogs.PromptTextAsync(Loc.Get("Env_New"), Loc.Get("Env_Name"), Loc.Get("Prompt_NewEnvironmentName")).ConfigureAwait(true);
         if (!string.IsNullOrWhiteSpace(name))
         {
+            if (IsDirty)
+            {
+                await SaveAsync().ConfigureAwait(true);
+            }
+
             var key = await _session.AddEnvironmentAsync(name.Trim()).ConfigureAwait(true);
             Refresh((ScopeKind.Environment, key));
+            OpenRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -329,6 +413,7 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
 
         var key = await _session.AddEnvironmentAsync(Loc.Format("Copy_Suffix", source.Name), source.Variables).ConfigureAwait(true);
         Refresh((ScopeKind.Environment, key));
+        OpenRequested?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>Deletes the given (or selected) environment after confirmation.</summary>
@@ -371,12 +456,15 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         base.OnPropertyChanged(e);
         if (e.PropertyName == nameof(SelectedScope))
         {
-            foreach (var scope in Environments.Concat(OtherScopes))
+            MarkSelected();
+            if (!_keepRows)
             {
-                scope.IsSelected = ReferenceEquals(scope, SelectedScope);
+                LoadRows();
             }
-
-            LoadRows();
+        }
+        else if (e.PropertyName == nameof(IsOpen))
+        {
+            MarkSelected();
         }
         else if (e.PropertyName == nameof(RevealSecrets))
         {
@@ -389,33 +477,81 @@ public sealed partial class EnvironmentsViewModel : ViewModelBase
         }
     }
 
+    // The list marks the scope being edited; the collection screen always shows its one scope.
+    private void MarkSelected()
+    {
+        foreach (var scope in Environments.Concat(OtherScopes))
+        {
+            scope.IsSelected = ReferenceEquals(scope, SelectedScope) && (IsOpen || _collectionKey is not null);
+        }
+    }
+
     private void Refresh((ScopeKind Kind, string Key)? select)
     {
         var workspace = _session.Workspace;
-        Environments.Clear();
-        foreach (var environment in workspace.Environments)
-        {
-            Environments.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Environment, environment.Key, environment.Name, environment.Key == _session.ActiveEnvironmentKey, environment.Variables.Count)));
-        }
-
-        OtherScopes.Clear();
+        var environments = new List<ScopeItemViewModel>();
+        var others = new List<ScopeItemViewModel>();
         if (_collectionKey is null)
         {
-            OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Global, string.Empty, Loc.Get("Env_Global"), false, workspace.GlobalVariables.Count)));
+            environments.AddRange(workspace.Environments.Select(e =>
+                new ScopeItemViewModel(ScopeKind.Environment, e.Key, e.Name, e.Key == _session.ActiveEnvironmentKey, e.Variables.Count)));
+            others.Add(new ScopeItemViewModel(ScopeKind.Global, string.Empty, Loc.Get("Env_Global"), false, workspace.GlobalVariables.Count));
         }
         else
         {
             // Collection variables are edited on the collection screen, one collection at a time.
-            Environments.Clear();
             var collection = workspace.FindCollection(_collectionKey) ?? throw new ArgumentException("Unknown collection.", nameof(select));
-            OtherScopes.Add(WithSelect(new ScopeItemViewModel(ScopeKind.Collection, collection.Key, collection.Name, false, collection.Variables.Count)));
+            others.Add(new ScopeItemViewModel(ScopeKind.Collection, collection.Key, collection.Name, false, collection.Variables.Count));
             select = (ScopeKind.Collection, collection.Key);
         }
 
+        Merge(Environments, environments);
+        Merge(OtherScopes, others);
+
         var all = Environments.Concat(OtherScopes).ToList();
-        SelectedScope = (select is { } target ? all.FirstOrDefault(s => s.Kind == target.Kind && s.Key == target.Key) : null)
+        var target = (select is { } wanted ? all.FirstOrDefault(s => s.Kind == wanted.Kind && s.Key == wanted.Key) : null)
             ?? (Environments.Count > 0 ? Environments[0] : OtherScopes[0]);
+        if (ReferenceEquals(target, SelectedScope))
+        {
+            // The same entry, possibly renamed or with other variables: show what is on disk now.
+            OnPropertyChanged(nameof(Title));
+            OnPropertyChanged(nameof(ShowProductionWarning));
+            OnPropertyChanged(nameof(CanMakeActive));
+            if (!_keepRows)
+            {
+                LoadRows();
+            }
+        }
+        else
+        {
+            SelectedScope = target;
+        }
+
         OnPropertyChanged(nameof(HasNoEnvironments));
+        ApplyFilter(_filter);
+    }
+
+    // Keeps the entries (and so the sidebar rows, their focus and hover) when the same scopes are listed again;
+    // only a different set of scopes rebuilds the list.
+    private void Merge(ObservableCollection<ScopeItemViewModel> list, List<ScopeItemViewModel> fresh)
+    {
+        if (list.Count == fresh.Count && list.Zip(fresh).All(p => p.First.Kind == p.Second.Kind && p.First.Key == p.Second.Key))
+        {
+            foreach (var (current, next) in list.Zip(fresh))
+            {
+                current.Name = next.Name;
+                current.IsActive = next.IsActive;
+                current.Count = next.Count;
+            }
+
+            return;
+        }
+
+        list.Clear();
+        foreach (var scope in fresh)
+        {
+            list.Add(WithSelect(scope));
+        }
     }
 
     private ScopeItemViewModel WithSelect(ScopeItemViewModel scope)

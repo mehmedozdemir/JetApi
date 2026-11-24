@@ -335,30 +335,58 @@
     <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
   </Style>
 
-  <!-- Icon rail of the sidebar (collections, environments, history). -->
-  <Style Selector="RadioButton.rail">
-    <Setter Property="Cursor" Value="Hand" />
+  <!-- Sidebar sections: a header (chevron, caps title, actions) that opens and closes the section below it. -->
+  <Style Selector="Border.section-header">
+    <Setter Property="Height" Value="32" />
+    <Setter Property="Padding" Value="4,0,8,0" />
+  </Style>
+  <Style Selector="Border.section-header.separated">
+    <Setter Property="BorderBrush" Value="{DynamicResource App.Border}" />
+    <Setter Property="BorderThickness" Value="0,1,0,0" />
+  </Style>
+  <Style Selector="Button.section-toggle">
+    <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource App.TextMuted}" />
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Border Name="root" Width="36" Height="36" CornerRadius="8" Background="Transparent" BorderBrush="Transparent" BorderThickness="1">
-          <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
-      </ControlTemplate>
-    </Setter>
+    <Setter Property="Padding" Value="6,0" />
+    <Setter Property="Height" Value="26" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Cursor" Value="Hand" />
   </Style>
-  <Style Selector="RadioButton.rail:pointerover /template/ Border#root">
-    <Setter Property="Background" Value="{DynamicResource App.Hover}" />
-  </Style>
-  <Style Selector="RadioButton.rail:checked">
+  <Style Selector="Button.section-toggle:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource App.Text}" />
   </Style>
-  <Style Selector="RadioButton.rail:checked /template/ Border#root">
-    <Setter Property="Background" Value="{DynamicResource App.SegmentSelected}" />
-    <Setter Property="BoxShadow" Value="0 1 2 0 #1A1A1D23" />
+  <Style Selector="Button.section-toggle:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Transparent" />
   </Style>
-  <Style Selector="RadioButton.rail:focus-visible /template/ Border#root">
+  <Style Selector="Button.section-toggle:focus-visible /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="BorderBrush" Value="{DynamicResource App.Accent}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="TextBlock.section-title">
+    <Setter Property="FontSize" Value="{DynamicResource App.FontSize.Caption}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="LetterSpacing" Value="0.6" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}" />
+  </Style>
+  <!-- "Make active" check on environment rows: only while hovered, so it is not mistaken for the active one's check
+       (from the keyboard, the row's context menu has "Make active"). -->
+  <Style Selector="Button.env-activate">
+    <Setter Property="Opacity" Value="0" />
+    <Setter Property="Foreground" Value="{DynamicResource App.TextFaint}" />
+  </Style>
+  <Style Selector="Button.env-row:pointerover Button.env-activate">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+  <!-- Splitter between two open sidebar sections: a thin band over their border. -->
+  <Style Selector="GridSplitter.rows">
+    <Setter Property="Width" Value="NaN" />
+    <Setter Property="MinWidth" Value="0" />
+    <Setter Property="Height" Value="6" />
+    <Setter Property="Margin" Value="0,-3" />
   </Style>
 
   <!-- Sidebar panel: one-line title, quiet filter, selectable rows. -->

@@ -42,6 +42,21 @@ public enum RenderingPreference
 /// <param name="LastOpened">When it was last opened.</param>
 public sealed record RecentWorkspace(string Path, string Name, DateTimeOffset LastOpened);
 
+/// <summary>Sections of the sidebar: which are open and how the height is shared between the open ones.</summary>
+/// <param name="CollectionsExpanded">The collection tree is open.</param>
+/// <param name="EnvironmentsExpanded">The environment list is open.</param>
+/// <param name="HistoryExpanded">The history list is open.</param>
+/// <param name="CollectionsWeight">Relative height of the collection tree while open.</param>
+/// <param name="EnvironmentsWeight">Relative height of the environment list while open.</param>
+/// <param name="HistoryWeight">Relative height of the history list while open.</param>
+public sealed record SidebarLayout(
+    bool CollectionsExpanded = true,
+    bool EnvironmentsExpanded = true,
+    bool HistoryExpanded = false,
+    double CollectionsWeight = 3,
+    double EnvironmentsWeight = 1.5,
+    double HistoryWeight = 1.5);
+
 /// <summary>Per-user application settings (not per workspace).</summary>
 public sealed record AppSettings
 {
@@ -108,6 +123,9 @@ public sealed record AppSettings
     /// <summary>Check for a newer release at start-up. Off by default: no network request the user did not ask for (NFR-6).</summary>
     public bool CheckForUpdates { get; init; }
 
+    /// <summary>Open sidebar sections and their heights.</summary>
+    public SidebarLayout Sidebar { get; init; } = new();
+
     /// <summary>Default interface font size.</summary>
     public const double DefaultUiFontSize = 13;
 
@@ -117,8 +135,8 @@ public sealed record AppSettings
     /// <summary>Default request timeout.</summary>
     public const int DefaultRequestTimeoutSeconds = 30;
 
-    /// <summary>Every preference back to its default; the recent list and language stay.</summary>
-    public AppSettings WithDefaultPreferences() => new() { RecentWorkspaces = RecentWorkspaces, Language = Language };
+    /// <summary>Every preference back to its default; the recent list, language and sidebar layout stay.</summary>
+    public AppSettings WithDefaultPreferences() => new() { RecentWorkspaces = RecentWorkspaces, Language = Language, Sidebar = Sidebar };
 
     /// <summary>Returns settings with <paramref name="path"/> moved to the top of the recent list.</summary>
     public AppSettings WithRecent(string path, string name, DateTimeOffset now)

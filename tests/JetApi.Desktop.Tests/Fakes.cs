@@ -173,6 +173,8 @@ internal sealed class FakeWorkspaceHost : IWorkspaceHost
         ResponsePane = Settings.ResponsePane == ResponsePanePosition.Right ? ResponsePanePosition.Bottom : ResponsePanePosition.Right,
     };
 
+    public void SaveSidebar(SidebarLayout layout) => Settings = Settings with { Sidebar = layout };
+
     public Task OpenWorkspaceAsync(string path, bool offerCreate)
     {
         Opened.Add((path, offerCreate));

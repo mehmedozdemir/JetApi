@@ -80,7 +80,6 @@
   <data name="Curl_ImportFailed" xml:space="preserve"><value>cURL komutu içe aktarılamadı: {0}</value></data>
   <data name="Curl_Imported" xml:space="preserve"><value>cURL komutu içe aktarıldı</value></data>
   <data name="Diag_Skipped" xml:space="preserve"><value>{0} dosya atlandı, workspace’in geri kalanı yüklendi</value></data>
-  <data name="Env_Active" xml:space="preserve"><value>Aktif</value></data>
   <data name="Env_AddVariable" xml:space="preserve"><value>Değişken ekle</value></data>
   <data name="Env_Back" xml:space="preserve"><value>İsteklere dön</value></data>
   <data name="Env_Delete" xml:space="preserve"><value>Environment’ı sil</value></data>
@@ -335,6 +334,12 @@
   <data name="Side_EmptyCollections" xml:space="preserve"><value>Henüz koleksiyon yok. İstek eklemek için bir koleksiyon oluşturun.</value></data>
   <data name="Side_EmptyHistory" xml:space="preserve"><value>Gönderdiğiniz istekler burada görünür.</value></data>
   <data name="Side_Environments" xml:space="preserve"><value>Environment’lar</value></data>
+  <data name="Side_New" xml:space="preserve"><value>Yeni…</value></data>
+  <data name="Side_NoMatches" xml:space="preserve"><value>Eşleşen yok.</value></data>
+  <data name="Side_SectionCollections" xml:space="preserve"><value>KOLEKSİYONLAR</value></data>
+  <data name="Side_SectionEnvironments" xml:space="preserve"><value>ENVIRONMENT’LAR</value></data>
+  <data name="Side_SectionHistory" xml:space="preserve"><value>GEÇMİŞ</value></data>
+  <data name="Env_ActiveTip" xml:space="preserve"><value>Aktif environment</value></data>
   <data name="Side_Filter" xml:space="preserve"><value>Filtrele</value></data>
   <data name="Side_History" xml:space="preserve"><value>Geçmiş</value></data>
   <data name="Side_NewCollection" xml:space="preserve"><value>Yeni koleksiyon</value></data>

@@ -252,6 +252,9 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IMainHost, IWor
     }
 
     /// <inheritdoc />
+    public void SaveSidebar(SidebarLayout layout) => UpdateSettings(Settings with { Sidebar = layout });
+
+    /// <inheritdoc />
     public void ToggleLanguage() => SetLanguage(Loc.Instance.IsTurkish ? "en" : "tr");
 
     /// <inheritdoc />

@@ -101,7 +101,6 @@ public sealed class ScreenTests
         Capture(window, "10-environments");
         ws.Environments!.SelectCommand.Execute(ws.Environments.Environments.Single(e => e.Name == "Production"));
         Capture(window, "11-environments-prod");
-        ws.Environments = null;
 
         ws.OpenNodeSettingsCommand.Execute(ws.Collections[0]);
         Capture(window, "12-collection-settings");

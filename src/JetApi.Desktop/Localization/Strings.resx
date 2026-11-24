@@ -80,7 +80,6 @@
   <data name="Curl_ImportFailed" xml:space="preserve"><value>The cURL command could not be imported: {0}</value></data>
   <data name="Curl_Imported" xml:space="preserve"><value>cURL command imported</value></data>
   <data name="Diag_Skipped" xml:space="preserve"><value>{0} files were skipped; the rest of the workspace loaded</value></data>
-  <data name="Env_Active" xml:space="preserve"><value>Active</value></data>
   <data name="Env_AddVariable" xml:space="preserve"><value>Add variable</value></data>
   <data name="Env_Back" xml:space="preserve"><value>Back to requests</value></data>
   <data name="Env_Delete" xml:space="preserve"><value>Delete environment</value></data>
@@ -335,6 +334,12 @@
   <data name="Side_EmptyCollections" xml:space="preserve"><value>No collections yet. Create one to add requests.</value></data>
   <data name="Side_EmptyHistory" xml:space="preserve"><value>Requests you send appear here.</value></data>
   <data name="Side_Environments" xml:space="preserve"><value>Environments</value></data>
+  <data name="Side_New" xml:space="preserve"><value>New…</value></data>
+  <data name="Side_NoMatches" xml:space="preserve"><value>No matches.</value></data>
+  <data name="Side_SectionCollections" xml:space="preserve"><value>COLLECTIONS</value></data>
+  <data name="Side_SectionEnvironments" xml:space="preserve"><value>ENVIRONMENTS</value></data>
+  <data name="Side_SectionHistory" xml:space="preserve"><value>HISTORY</value></data>
+  <data name="Env_ActiveTip" xml:space="preserve"><value>Active environment</value></data>
   <data name="Side_Filter" xml:space="preserve"><value>Filter</value></data>
   <data name="Side_History" xml:space="preserve"><value>History</value></data>
   <data name="Side_NewCollection" xml:space="preserve"><value>New collection</value></data>

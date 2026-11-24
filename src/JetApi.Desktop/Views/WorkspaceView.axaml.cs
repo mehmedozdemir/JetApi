@@ -47,12 +47,71 @@ public sealed partial class WorkspaceView : UserControl
         TabStrip.AddHandler(PointerReleasedEvent, OnTabPointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
         TabStrip.ContextRequested += OnTabContextRequested;
 
+        CollectionsSplitter.DragCompleted += (_, _) => SaveSectionWeights();
+        HistorySplitter.DragCompleted += (_, _) => SaveSectionWeights();
+
         // A node selected from code (e.g. after a move) scrolls into view once its row exists.
         Tree.SelectionChanged += (_, _) => Avalonia.Threading.Dispatcher.UIThread.Post(
             () => (Tree.SelectedItem is { } item ? Tree.TreeContainerFromItem(item) : null)?.BringIntoView(), Avalonia.Threading.DispatcherPriority.Loaded);
     }
 
     private WorkspaceViewModel? ViewModel => DataContext as WorkspaceViewModel;
+
+    private WorkspaceViewModel? _observed;
+
+    /// <inheritdoc />
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (_observed is not null)
+        {
+            _observed.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+
+        _observed = ViewModel;
+        if (_observed is not null)
+        {
+            _observed.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        UpdateSectionRows();
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(WorkspaceViewModel.IsCollectionsExpanded) or nameof(WorkspaceViewModel.IsEnvironmentsExpanded)
+            or nameof(WorkspaceViewModel.IsHistoryExpanded))
+        {
+            UpdateSectionRows();
+        }
+    }
+
+    // An open section shares the height by its saved weight; a closed one is only its header.
+    // A splitter shows only between two open neighbours.
+    private void UpdateSectionRows()
+    {
+        if (ViewModel is not { } vm)
+        {
+            return;
+        }
+
+        var layout = vm.Sidebar;
+        var rows = Sections.RowDefinitions;
+        rows[0].Height = vm.IsCollectionsExpanded ? new GridLength(layout.CollectionsWeight, GridUnitType.Star) : GridLength.Auto;
+        rows[2].Height = vm.IsEnvironmentsExpanded ? new GridLength(layout.EnvironmentsWeight, GridUnitType.Star) : GridLength.Auto;
+        rows[4].Height = vm.IsHistoryExpanded ? new GridLength(layout.HistoryWeight, GridUnitType.Star) : GridLength.Auto;
+        CollectionsSplitter.IsVisible = vm.IsCollectionsExpanded && vm.IsEnvironmentsExpanded;
+        HistorySplitter.IsVisible = vm.IsEnvironmentsExpanded && vm.IsHistoryExpanded;
+    }
+
+    private void SaveSectionWeights()
+    {
+        var rows = Sections.RowDefinitions;
+        ViewModel?.SetSectionWeights(Weight(rows[0]), Weight(rows[2]), Weight(rows[4]));
+
+        // The splitter turns star heights into pixel-sized stars; the ratio is what is kept.
+        static double? Weight(RowDefinition row) => row.Height.IsStar ? row.Height.Value : null;
+    }
 
     /// <summary>Focuses the URL box of the current editor (Ctrl+L).</summary>
     public void FocusUrl()

@@ -35,11 +35,29 @@ public sealed class EnvironmentsViewModelTests
     }
 
     [Fact]
+    public async Task Sync_KeepsTheEntries_AndUpdatesTheActiveMark()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        await workspace.Session.AddEnvironmentAsync("Staging", cancellationToken: TestContext.Current.CancellationToken);
+        var vm = new EnvironmentsViewModel(workspace.Session, new FakeDialogs(), () => { });
+        var staging = vm.Environments.Single(e => e.Name == "Staging");
+        staging.CanMakeActive.ShouldBeTrue();
+
+        // A file change or another active environment updates the rows in place, so the sidebar keeps them.
+        workspace.Session.SetActiveEnvironment(staging.Key);
+        vm.Sync();
+
+        vm.Environments.Single(e => e.Name == "Staging").ShouldBeSameAs(staging);
+        staging.IsActive.ShouldBeTrue();
+        staging.CanMakeActive.ShouldBeFalse();
+    }
+
+    [Fact]
     public async Task ItemCommands_ActOnTheirOwnEnvironment()
     {
         using var workspace = await TempWorkspace.CreateAsync();
         var dialogs = new FakeDialogs();
-        var vm = new EnvironmentsViewModel(workspace.Session, dialogs, () => { });
+        var vm = new EnvironmentsViewModel(workspace.Session, dialogs, () => { }) { IsOpen = true };
         dialogs.Prompts.Enqueue("Staging");
         await vm.AddEnvironmentCommand.ExecuteAsync(null);
         vm.SelectCommand.Execute(vm.Environments.Single(e => e.Name == "Development"));

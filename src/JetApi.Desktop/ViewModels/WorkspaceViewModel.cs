@@ -18,19 +18,6 @@ public sealed record EnvironmentOption(string? Key, string Name)
     public override string ToString() => Name;
 }
 
-/// <summary>What the sidebar lists; chosen with the icon rail.</summary>
-public enum SidebarMode
-{
-    /// <summary>The collection tree.</summary>
-    Collections,
-
-    /// <summary>Environments and global variables; the selected one opens in the main area.</summary>
-    Environments,
-
-    /// <summary>Request history of this machine.</summary>
-    History,
-}
-
 /// <summary>What the main window needs from its host (theme, language, closing).</summary>
 public interface IWorkspaceHost
 {
@@ -63,6 +50,9 @@ public interface IWorkspaceHost
 
     /// <summary>Opens another workspace in place of this one; offers to create one when the folder is not a workspace.</summary>
     Task OpenWorkspaceAsync(string path, bool offerCreate);
+
+    /// <summary>Remembers which sidebar sections are open and their heights.</summary>
+    void SaveSidebar(SidebarLayout layout);
 }
 
 /// <summary>A saved workspace in the workspace menu.</summary>
@@ -81,6 +71,8 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     private WorkspaceWatcher? _watcher;
     private bool _updatingEnvironment;
     private bool _restoringTabs;
+    // Null until the constructor restored the open sections, so restoring them does not save the layout.
+    private SidebarLayout? _sidebar;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasTabs))]
@@ -95,10 +87,19 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     // The selected tree node, kept across tree rebuilds like the expanded folders.
     private string? _selectedIdentity;
 
+    /// <summary>The collections section of the sidebar is open.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsHistoryVisible), nameof(IsCollectionsMode), nameof(IsEnvironmentsMode))]
-    private SidebarMode _sidebarMode;
+    private bool _isCollectionsExpanded;
 
+    /// <summary>The environments section of the sidebar is open.</summary>
+    [ObservableProperty]
+    private bool _isEnvironmentsExpanded;
+
+    /// <summary>The history section of the sidebar is open.</summary>
+    [ObservableProperty]
+    private bool _isHistoryExpanded;
+
+    /// <summary>The environment editor in the main area; <c>null</c> while it is closed (the list stays in the sidebar).</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasOverlay))]
     private EnvironmentsViewModel? _environments;
@@ -126,6 +127,13 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         _host = host;
         History = new HistoryStore(session.Root);
         GitBranch = GitInfo.TryGetBranch(session.Root);
+        var layout = host.Settings.Sidebar;
+        IsCollectionsExpanded = layout.CollectionsExpanded;
+        IsEnvironmentsExpanded = layout.EnvironmentsExpanded;
+        IsHistoryExpanded = layout.HistoryExpanded;
+        _sidebar = layout;
+        EnvironmentList = new EnvironmentsViewModel(session, dialogs, CloseEnvironmentEditor);
+        EnvironmentList.OpenRequested += (_, _) => OpenEnvironmentEditor();
 
         foreach (var collection in session.Workspace.Collections)
         {
@@ -211,8 +219,14 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <summary>Environment picker entries.</summary>
     public ObservableCollection<EnvironmentOption> EnvironmentOptions { get; } = [];
 
-    /// <summary>History list.</summary>
+    /// <summary>History list (entries matching the filter).</summary>
     public ObservableCollection<HistoryItemViewModel> HistoryItems { get; } = [];
+
+    /// <summary>The environment list of the sidebar; its selected scope opens in <see cref="Environments"/>.</summary>
+    public EnvironmentsViewModel EnvironmentList { get; }
+
+    /// <summary>Open sidebar sections and their relative heights, as last saved.</summary>
+    public SidebarLayout Sidebar => _sidebar ?? _host.Settings.Sidebar;
 
     /// <summary>Files skipped while loading.</summary>
     public IReadOnlyList<StorageDiagnostic> Diagnostics => Session.Diagnostics;
@@ -226,11 +240,20 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <summary>The workspace has no collections.</summary>
     public bool HasNoCollections => Collections.Count == 0;
 
+    /// <summary>The filter hides every collection.</summary>
+    public bool HasNoCollectionMatches => FilterText.Trim().Length > 0 && Collections.Count > 0 && !Collections.Any(c => c.IsVisible);
+
     /// <summary>An overlay page (environments, settings) covers the editor.</summary>
     public bool HasOverlay => Environments is not null || NodeSettings is not null || CollectionRun is not null;
 
-    /// <summary>The history list is empty.</summary>
+    /// <summary>The history list shows nothing (no entries, or none matches the filter).</summary>
     public bool HasNoHistory => HistoryItems.Count == 0;
+
+    /// <summary>Any request was recorded.</summary>
+    public bool HasHistory => History.Entries.Count > 0;
+
+    /// <summary>What the empty history list says.</summary>
+    public string HistoryEmptyText => Loc.Get(HasHistory ? "Side_NoMatches" : "Side_EmptyHistory");
 
     /// <summary>Unsaved tabs, for the status bar.</summary>
     public string UnsavedText
@@ -280,9 +303,8 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             return;
         }
 
-        LeaveNodeSettings();
+        LeaveScreens();
         CloseRunner();
-        SidebarMode = SidebarMode.Collections;
         CollectionRunViewModel? screen = null;
         screen = new CollectionRunViewModel(Session, Runner, Dialogs, collectionKey, path, () =>
         {
@@ -307,7 +329,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     /// <summary>Opens the request at <paramref name="path"/> or focuses its tab.</summary>
     public RequestTabViewModel? OpenRequest(string collectionKey, IReadOnlyList<string> path)
     {
-        LeaveNodeSettings();
+        LeaveScreens();
         CloseRunner();
         var identity = $"{collectionKey}/{string.Join('/', path)}";
         if (Tabs.FirstOrDefault(t => t.Identity == identity) is { } existing)
@@ -531,7 +553,6 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     {
         if (node.IsContainer)
         {
-            SidebarMode = SidebarMode.Collections;
             ShowNodeSettings(node.CollectionKey, node.Path);
         }
     }
@@ -649,6 +670,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     // Opens the collection screen or folder settings; a screen already open for the same node stays as it is.
     private void ShowNodeSettings(string collectionKey, IReadOnlyList<string> path)
     {
+        LeaveEnvironmentEditor();
         if (NodeSettings is { } open && open.CollectionKey == collectionKey && open.Path.SequenceEqual(path))
         {
             return;
@@ -666,6 +688,13 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         },
         new OAuthTokenService(Session, Runner, () => collectionKey, Dialogs.OpenBrowserAsync));
         NodeSettings = screen;
+    }
+
+    // Leaves the collection screen and the environment editor (opening a request or the runner).
+    private void LeaveScreens()
+    {
+        LeaveNodeSettings();
+        LeaveEnvironmentEditor();
     }
 
     // Leaves the collection screen, writing its edits if there are any (opening a request or another screen).
@@ -714,62 +743,108 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             node.IsExpanded = true;
         }
 
-        SidebarMode = SidebarMode.Collections;
+        IsCollectionsExpanded = true;
         await Dialogs.ShowImportReportAsync(report).ConfigureAwait(true);
         return report;
     }
 
-    /// <summary>The sidebar shows the history list.</summary>
-    public bool IsHistoryVisible
-    {
-        get => SidebarMode == SidebarMode.History;
-        set => SidebarMode = value ? SidebarMode.History : SidebarMode.Collections;
-    }
-
-    /// <summary>The sidebar shows the collection tree.</summary>
-    public bool IsCollectionsMode => SidebarMode == SidebarMode.Collections;
-
-    /// <summary>The sidebar lists environments and the main area edits the selected one.</summary>
-    public bool IsEnvironmentsMode => SidebarMode == SidebarMode.Environments;
-
-    /// <summary>Opens the environment editor: the sidebar lists environments, the main area shows the selected one.</summary>
+    /// <summary>Opens the environment editor at the active environment (Ctrl+E); the environments section opens too.</summary>
     [RelayCommand]
     public void ShowEnvironments()
     {
-        LeaveNodeSettings();
-        Environments ??= new EnvironmentsViewModel(Session, Dialogs, () =>
+        IsEnvironmentsExpanded = true;
+        if (Environments is null)
         {
-            Environments = null;
-            if (SidebarMode == SidebarMode.Environments)
-            {
-                SidebarMode = SidebarMode.Collections;
-            }
-        });
-        SidebarMode = SidebarMode.Environments;
+            EnvironmentList.SelectEnvironment(Session.ActiveEnvironmentKey);
+        }
+
+        OpenEnvironmentEditor();
     }
 
-    /// <summary>Shows or hides the history list in the sidebar.</summary>
+    /// <summary>Opens or closes a sidebar section (its header).</summary>
     [RelayCommand]
-    private void ToggleHistory() => IsHistoryVisible = !IsHistoryVisible;
-
-    // Leaving the environments list closes the editor (saving pending edits); entering it opens the editor.
-    partial void OnSidebarModeChanged(SidebarMode value)
+    private void ToggleSection(string section)
     {
-        if (value == SidebarMode.Environments)
+        switch (section)
         {
-            if (Environments is null)
-            {
-                ShowEnvironments();
-            }
+            case "Collections":
+                IsCollectionsExpanded = !IsCollectionsExpanded;
+                break;
+            case "Environments":
+                IsEnvironmentsExpanded = !IsEnvironmentsExpanded;
+                break;
+            case "History":
+                IsHistoryExpanded = !IsHistoryExpanded;
+                break;
         }
-        else if (Environments is { } environments)
+    }
+
+    /// <summary>
+    /// Remembers how the user shared the sidebar height between the open sections (<c>null</c> for a closed one).
+    /// The new values are scaled to the old total, so a section opened later keeps a sensible share.
+    /// </summary>
+    public void SetSectionWeights(double? collections, double? environments, double? history)
+    {
+        var current = Sidebar;
+        var pairs = new[] { (collections, current.CollectionsWeight), (environments, current.EnvironmentsWeight), (history, current.HistoryWeight) };
+        var valid = pairs.Where(p => p.Item1 is { } v && v > 0 && double.IsFinite(v)).ToList();
+        if (valid.Count == 0)
         {
-            // Close at once so the main area switches immediately; pending edits are still written.
-            Environments = null;
-            if (environments.IsDirty)
-            {
-                environments.SaveCommand.Execute(null);
-            }
+            return;
+        }
+
+        var scale = valid.Sum(p => p.Item2) / valid.Sum(p => p.Item1!.Value);
+        double Weight(int index) => pairs[index].Item1 is { } v && v > 0 && double.IsFinite(v) ? Math.Round(v * scale, 3) : pairs[index].Item2;
+        _sidebar = current with { CollectionsWeight = Weight(0), EnvironmentsWeight = Weight(1), HistoryWeight = Weight(2) };
+        _host.SaveSidebar(_sidebar);
+    }
+
+    partial void OnIsCollectionsExpandedChanged(bool value) => SaveLayout();
+
+    partial void OnIsEnvironmentsExpandedChanged(bool value) => SaveLayout();
+
+    partial void OnIsHistoryExpandedChanged(bool value) => SaveLayout();
+
+    private void SaveLayout()
+    {
+        if (_sidebar is null)
+        {
+            return;
+        }
+
+        _sidebar = _sidebar with { CollectionsExpanded = IsCollectionsExpanded, EnvironmentsExpanded = IsEnvironmentsExpanded, HistoryExpanded = IsHistoryExpanded };
+        _host.SaveSidebar(Sidebar);
+    }
+
+    // Shows the scope selected in the sidebar list in the main area.
+    private void OpenEnvironmentEditor()
+    {
+        LeaveNodeSettings();
+        EnvironmentList.IsOpen = true;
+        Environments = EnvironmentList;
+    }
+
+    // The editor closed itself (its edits are saved).
+    private void CloseEnvironmentEditor()
+    {
+        Environments = null;
+        EnvironmentList.IsOpen = false;
+    }
+
+    // Leaves the environment editor; pending edits are written, the list stays in the sidebar.
+    private void LeaveEnvironmentEditor()
+    {
+        if (Environments is not { } editor)
+        {
+            return;
+        }
+
+        // Close at once so the main area switches immediately; pending edits are still written.
+        Environments = null;
+        editor.IsOpen = false;
+        if (editor.IsDirty)
+        {
+            editor.SaveCommand.Execute(null);
         }
     }
 
@@ -785,6 +860,8 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
                 : (Session.Workspace.Collections.Count > 0 ? Session.Workspace.Collections[0].Key : null);
             if (collectionKey is not null)
             {
+                LeaveScreens();
+                CloseRunner();
                 AddTab(CreateTab(collectionKey, null, request));
             }
         }
@@ -878,7 +955,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     }
 
     /// <summary>Anything unsaved: request tabs, the collection screen or the environment editor.</summary>
-    public bool HasUnsavedChanges => Tabs.Any(t => t.IsDirty) || (NodeSettings?.HasChanges ?? false) || (Environments?.IsDirty ?? false);
+    public bool HasUnsavedChanges => Tabs.Any(t => t.IsDirty) || (NodeSettings?.HasChanges ?? false) || EnvironmentList.IsDirty;
 
     /// <summary>
     /// Gets ready to leave the workspace: the collection screen and environment editor save their edits (as they do when
@@ -896,7 +973,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
             }
         }
 
-        if (Environments is { IsDirty: true } environments)
+        if (EnvironmentList is { IsDirty: true } environments)
         {
             await environments.SaveAsync().ConfigureAwait(true);
             if (environments.IsDirty)
@@ -1032,7 +1109,6 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     {
         if (Session.Workspace.FindCollection(collectionKey) is not null)
         {
-            SidebarMode = SidebarMode.Collections;
             ShowNodeSettings(collectionKey, []);
         }
     }
@@ -1069,6 +1145,9 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
                     collection.ApplyFilter(FilterText.Trim());
                 }
 
+                EnvironmentList.ApplyFilter(FilterText);
+                RebuildHistory();
+                OnPropertyChanged(nameof(HasNoCollectionMatches));
                 break;
             case nameof(SelectedTab):
                 RememberTabs();
@@ -1240,6 +1319,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     {
         RebuildTree();
         RebuildEnvironments();
+        EnvironmentList.Sync();
         RefreshTabsFromDisk();
         foreach (var tab in Tabs)
         {
@@ -1314,6 +1394,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }
 
         OnPropertyChanged(nameof(HasNoCollections));
+        OnPropertyChanged(nameof(HasNoCollectionMatches));
     }
 
     private static IEnumerable<TreeNodeViewModel> Flatten(TreeNodeViewModel node) =>
@@ -1336,12 +1417,18 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
     private void RebuildHistory()
     {
         HistoryItems.Clear();
-        foreach (var entry in History.Entries)
+        var filter = FilterText.Trim();
+        foreach (var item in History.Entries.Select(e => new HistoryItemViewModel(e)))
         {
-            HistoryItems.Add(new HistoryItemViewModel(entry));
+            if (filter.Length == 0 || item.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) || item.Detail.Contains(filter, StringComparison.OrdinalIgnoreCase))
+            {
+                HistoryItems.Add(item);
+            }
         }
 
         OnPropertyChanged(nameof(HasNoHistory));
+        OnPropertyChanged(nameof(HasHistory));
+        OnPropertyChanged(nameof(HistoryEmptyText));
     }
 
     private List<PaletteItemViewModel> BuildPaletteItems()
@@ -1434,7 +1521,7 @@ public sealed partial class WorkspaceViewModel : ViewModelBase, IRequestHost, ID
         }));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Clock", Loc.Get("Cmd_History"), string.Empty, string.Empty, () =>
         {
-            IsHistoryVisible = true;
+            IsHistoryExpanded = true;
             return Task.CompletedTask;
         }));
         items.Add(PaletteItemViewModel.Command(commands, "Icon.Refresh", Loc.Get("Cmd_Reload"), string.Empty, string.Empty, ReloadAsync));

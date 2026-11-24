@@ -1,4 +1,5 @@
 using JetApi.Core.Model;
+using JetApi.Desktop.Localization;
 using JetApi.Desktop.Services;
 using JetApi.Desktop.ViewModels;
 
@@ -195,7 +196,7 @@ public sealed class WorkspaceViewModelTests
         vm.Palette.Results.ShouldHaveSingleItem().Label.ShouldBe("Edit environments");
         await vm.Palette.ExecuteSelectedCommand.ExecuteAsync(null);
         vm.Environments.ShouldNotBeNull();
-        vm.SidebarMode.ShouldBe(SidebarMode.Environments);
+        vm.IsEnvironmentsExpanded.ShouldBeTrue();
     }
 
     [Fact]
@@ -248,31 +249,88 @@ public sealed class WorkspaceViewModelTests
     }
 
     [Fact]
-    public async Task SidebarModes_OpenAndCloseTheEnvironmentEditor()
+    public async Task EnvironmentList_StaysInTheSidebar_AndTheEditorClosesWhenLeft()
     {
         using var workspace = await TempWorkspace.CreateAsync();
         using var vm = workspace.CreateViewModel(new FakeDialogs());
 
-        vm.IsCollectionsMode.ShouldBeTrue();
-        vm.SidebarMode = SidebarMode.Environments;
+        vm.Environments.ShouldBeNull();
+        vm.EnvironmentList.Environments.ShouldNotBeEmpty();
+        vm.EnvironmentList.Environments.ShouldAllBe(e => !e.IsSelected);
+
+        await vm.EnvironmentList.SelectCommand.ExecuteAsync(vm.EnvironmentList.Environments[0]);
         var editor = vm.Environments.ShouldNotBeNull();
-        vm.IsEnvironmentsMode.ShouldBeTrue();
+        editor.IsOpen.ShouldBeTrue();
+        vm.EnvironmentList.Environments[0].IsSelected.ShouldBeTrue();
 
         editor.Rows[^1].Name = "host";
         editor.Rows[^2].Value = "api.test";
-        vm.SidebarMode = SidebarMode.History;
+        vm.OpenNode(vm.Collections[0].Children.First(c => c.IsRequest));
 
-        vm.IsHistoryVisible.ShouldBeTrue();
         vm.Environments.ShouldBeNull();
+        vm.EnvironmentList.Environments.ShouldAllBe(e => !e.IsSelected);
         await (editor.SaveCommand.ExecutionTask ?? Task.CompletedTask);
         workspace.Read("environments/dev.yaml").ShouldContain("api.test");
 
         vm.ShowEnvironments();
-        vm.IsEnvironmentsMode.ShouldBeTrue();
+        vm.Environments.ShouldNotBeNull();
         vm.OpenCollectionSettings(vm.Collections[0].CollectionKey);
-        vm.IsCollectionsMode.ShouldBeTrue();
         vm.Environments.ShouldBeNull();
         vm.NodeSettings.ShouldNotBeNull();
+
+        await vm.EnvironmentList.SelectCommand.ExecuteAsync(vm.EnvironmentList.Environments[0]);
+        vm.NodeSettings.ShouldBeNull();
+        vm.Environments.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task SidebarSections_OpenAndClose_AndAreRemembered()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        var host = new FakeWorkspaceHost();
+        host.Settings = host.Settings with { Sidebar = new SidebarLayout(HistoryExpanded: true, EnvironmentsWeight: 2) };
+        using var vm = workspace.CreateViewModel(new FakeDialogs(), host: host);
+
+        vm.IsCollectionsExpanded.ShouldBeTrue();
+        vm.IsEnvironmentsExpanded.ShouldBeTrue();
+        vm.IsHistoryExpanded.ShouldBeTrue();
+
+        vm.ToggleSectionCommand.Execute("Environments");
+        vm.IsEnvironmentsExpanded.ShouldBeFalse();
+        host.Settings.Sidebar.EnvironmentsExpanded.ShouldBeFalse();
+        host.Settings.Sidebar.EnvironmentsWeight.ShouldBe(2);
+
+        // Ctrl+E opens the section again, at the active environment.
+        vm.ShowEnvironments();
+        vm.IsEnvironmentsExpanded.ShouldBeTrue();
+        vm.Environments!.SelectedScope!.Key.ShouldBe(workspace.Session.ActiveEnvironmentKey);
+
+        // Dragged pixel sizes are kept as a ratio on the old scale.
+        vm.SetSectionWeights(600, 200, null);
+        host.Settings.Sidebar.CollectionsWeight.ShouldBe(3.75);
+        host.Settings.Sidebar.EnvironmentsWeight.ShouldBe(1.25);
+        host.Settings.Sidebar.HistoryWeight.ShouldBe(1.5);
+    }
+
+    [Fact]
+    public async Task Filter_NarrowsEnvironmentsAndHistory()
+    {
+        using var workspace = await TempWorkspace.CreateAsync();
+        await workspace.Session.AddEnvironmentAsync("Staging", cancellationToken: TestContext.Current.CancellationToken);
+        using var vm = workspace.CreateViewModel(new FakeDialogs());
+        vm.EnvironmentList.Environments.Count.ShouldBeGreaterThan(1);
+
+        vm.FilterText = "stag";
+        vm.EnvironmentList.Environments.Where(e => e.IsVisible).Select(e => e.Name).ShouldBe(["Staging"]);
+        vm.EnvironmentList.OtherScopes.ShouldAllBe(e => !e.IsVisible);
+        vm.FilterText = "zzz-no-such-thing";
+        vm.EnvironmentList.HasNoMatches.ShouldBeTrue();
+        vm.HasNoCollectionMatches.ShouldBeTrue();
+        vm.EnvironmentList.HasVisibleOtherScopes.ShouldBeFalse();
+        vm.HistoryEmptyText.ShouldBe(Loc.Get("Side_EmptyHistory"));
+        vm.FilterText = string.Empty;
+        vm.EnvironmentList.Environments.ShouldAllBe(e => e.IsVisible);
+        vm.HasNoCollectionMatches.ShouldBeFalse();
     }
 
     [Fact]

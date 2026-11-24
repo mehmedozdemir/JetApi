@@ -5,6 +5,16 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+### Changed
+
+- Kenar çubuğu Postman'deki gibi: soldaki ikon şeridi kaldırıldı; koleksiyonlar, environment'lar ve geçmiş alt alta,
+  başlığına tıklanarak daraltılıp açılan bölümlerde aynı anda görünür. İki açık bölüm arasındaki çizgi sürüklenerek
+  yükseklik ayarlanır; hangi bölümlerin açık olduğu ve yükseklikleri hatırlanır. Üstteki filtre kutusu üç bölümü birden
+  süzer, yanındaki **+** menüsü yeni istek, klasör, koleksiyon ve environment oluşturur veya Postman'den içe aktarır.
+- Environment listesi artık hep görünür: bir environment'a tıklayınca ana alanda açılır, bir istek açılınca değişiklikleri
+  kaydedilerek kapanır. Aktif environment sağda onay işaretiyle gösterilir; başka bir environment'ın üzerine gelince
+  çıkan onay işaretine tıklayarak onu aktif yapabilirsiniz.
+
 ## [0.3.2] - 2026-11-11
 
 gRPC mesaj editöründe alan önerisi ve sekme sabitleme ile sekme menüsü. Paketler güncel .NET çalışma zamanıyla gelir.
