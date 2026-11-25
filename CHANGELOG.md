@@ -5,6 +5,10 @@ Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/) standardını
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-11-25
+
+Postman tarzı kenar çubuğu: koleksiyonlar, environment'lar ve geçmiş alt alta, daraltılabilir bölümlerde.
+
 ### Changed
 
 - Kenar çubuğu Postman'deki gibi: soldaki ikon şeridi kaldırıldı; koleksiyonlar, environment'lar ve geçmiş alt alta,
